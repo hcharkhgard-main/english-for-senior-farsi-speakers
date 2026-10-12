@@ -11,7 +11,7 @@
   "them": { "role": "همسایه", "voice": "b" },
   "phrases": [
     { "en": "It's a beautiful day, isn't it?", "fa": "روز قشنگی است، نه؟", "ph": "ایتس اِ بیوتیفول دِی، ایزِنت ایت؟", "note": "آمریکایی‌ها برای شروع صحبت اغلب از هوا حرف می‌زنند.", "chunks": ["It's a beautiful day,", "isn't it?"] },
-    { "en": "How is your family?", "fa": "خانواده‌تان چطورند؟", "ph": "هاو ایز یور فَمیلی؟", "note": "برای کسی که قبلاً با او آشنا شده‌اید.", "chunks": ["How is", "your family?"] },
+    { "en": "How is your family?", "fa": "خانواده‌تان چطورند؟", "ph": "هاو ایز یُر فَمیلی؟", "note": "برای کسی که قبلاً با او آشنا شده‌اید.", "chunks": ["How is", "your family?"] },
     { "en": "Would you like to come over for tea?", "fa": "دوست دارید برای چای به خانهٔ ما بیایید؟", "ph": "وُد یو لایک تو کام اُوِر فُر تی؟", "note": "دعوت دوستانه. come over یعنی به خانهٔ ما بیایید.", "chunks": ["Would you like", "to come over", "for tea?"] },
     { "en": "Thank you, I'd love to.", "fa": "ممنون، با کمال میل.", "ph": "تَنک یو، آیْد لاو تو", "note": "برای قبول کردن دعوت.", "chunks": ["Thank you,", "I'd love to."] },
     { "en": "I'm sorry, I can't. Maybe another time.", "fa": "متأسفم، نمی‌توانم. شاید یک وقت دیگر.", "ph": "آیْم ساری، آی کَنت. مِی‌بی اَنادِر تایم", "note": "برای رد کردن مؤدبانه. لازم نیست دلیل بیاورید.", "chunks": ["I'm sorry,", "I can't.", "Maybe another time."] }

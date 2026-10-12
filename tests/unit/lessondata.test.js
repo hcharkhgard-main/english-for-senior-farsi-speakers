@@ -91,9 +91,11 @@ test('"variants": each stands for a line of its lesson, is new, and keeps at lea
   has('clinic-checkin', 'Can you confirm your date of birth?'); has('clinic-checkin', 'Can I get your last name?');
   has('my-name', 'Last name?'); has('my-name', 'How do you spell that?');
   has('my-numbers', "What's a good number to reach you?");
-  has('insurance-coverage', 'Who is your insurance with?');
-  has('store-checkout', 'How would you like to pay?'); has('store-checkout', 'Credit or debit?');
-  has('coffee-order', 'Will that be all?');
+  // QA round 3 (M1–M3): "Who is your insurance with?", "Credit or debit?" and "Will that be all?" did not mean the
+  // same as their line (a different question, or "yes" meaning the opposite); replaced by true equivalents
+  has('insurance-coverage', 'Are you insured?');
+  has('store-checkout', 'How would you like to pay?'); has('store-checkout', 'Are you paying with cash or card?');
+  has('coffee-order', 'Can I get you anything else?');
   has('clinic-understand', 'Take a seat.');
   has('clinic-symptoms', 'How long have you had this?');
   has('bank-help', 'Do you have your ID with you?');

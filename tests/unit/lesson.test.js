@@ -234,6 +234,7 @@ test('variants: the wrong answers never mean the same as the variant or as the l
   const seat = variantWrong(L, L.variants[2]);
   assert.ok(!seat.includes('لطفاً بنشینید.'), 'the line a variant stands for is never a wrong answer');
   assert.ok(seat.length >= 2);
+  assert.ok(!(seat.includes('کی به دنیا آمده‌اید؟') && seat.includes('می‌شود تاریخ تولدتان را تأیید کنید؟')), 'two variants of one line are one meaning: never both wrong answers (QA round 3, L6)');
   assert.equal(lessonVariants(L).length, 3);
   // a variant that cannot get two safe wrong answers is not asked at all
   const thin = { ...L, phrases: [L.phrases[0]], dialogue: { lines: [L.dialogue.lines[1]] }, respond: { them: { en: 'Date of birth?', fa: 'تاریخ تولد؟' } }, variants: [L.variants[0]] };

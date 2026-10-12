@@ -47,12 +47,15 @@ export function variantWrong(L, v) {
   const said = [...L.dialogue.lines, L.respond.them, ...L.phrases, ...(L.variants || [])];
   const like = said.find((x) => x.en === v.like);
   const pool = [...(L.variants || []).filter((x) => x !== v && x.like !== v.like), ...partnerLines(L), L.respond.them, ...L.phrases];
-  const out = [];
+  const out = [], took = [];
+  // a variant and the line it stands for (or a dialogue line that has it: "You're all set. Would you like your
+  // receipt?"), or two variants of one line, say the same thing (QA round 3, L6)
+  const twins = (x, y) => (x.like && (y.en.includes(x.like) || x.like === y.like)) || (y.like && x.en.includes(y.like));
   for (const x of pool) {
     if (!x.fa || x.en === v.en || x.en === v.like || OPENER.test(x.en)) continue;
     if (faAlike(x.fa, v.fa) || (like && faAlike(x.fa, like.fa)) || enAlike(x.en, v.en) || enAlike(x.en, v.like)) continue;
-    if (out.some((fa) => faAlike(fa, x.fa))) continue;      // two wrong answers that say nearly the same thing are one too many
-    out.push(x.fa);
+    if (out.some((fa) => faAlike(fa, x.fa)) || took.some((y) => twins(x, y))) continue;      // two wrong answers that say nearly the same thing are one too many
+    out.push(x.fa); took.push(x);
   }
   return out;
 }

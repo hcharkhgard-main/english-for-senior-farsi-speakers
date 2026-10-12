@@ -74,7 +74,7 @@
           "check": { "right": "امروز فقط به شما تذکر می‌دهم. با احتیاط برانید.", "wrong": ["امروز جریمه‌تان می‌کنم.", "باید همراه من بیایید."] },
           "replies": [
             { "en": "Thank you, officer.", "fa": "ممنون، جناب افسر.", "keys": ["thank"] },
-            { "en": "Can I go now, officer?", "fa": "جناب افسر، می‌توانم بروم؟", "keys": ["go"], "then": ["Yes, you can go.", "بله، می‌توانید بروید."] }
+            { "en": "Can I go now, officer?", "fa": "جناب افسر، حالا می‌توانم بروم؟", "keys": ["go"], "then": ["Yes, you can go.", "بله، می‌توانید بروید."] }
           ] }
       ],
       "praise": "خیلی خوب بود. آرام ماندید و مؤدبانه جواب دادید."
@@ -99,7 +99,7 @@
           ] },
         { "them": ["Please take a seat.", "لطفاً بنشینید."],
           "replies": [
-            { "en": "Please tell me when to get off.", "fa": "لطفاً بگویید کی پیاده شوم.", "keys": ["tell", "get off"], "then": ["Sure. I will tell you.", "حتماً. خبرتان می‌کنم."] },
+            { "en": "Please tell me when to get off.", "fa": "لطفاً بگویید کی پیاده شوم.", "keys": ["tell", "get off"], "then": ["Sure. I'll tell you.", "حتماً. خبرتان می‌کنم."] },
             { "en": "Thank you.", "fa": "ممنون.", "keys": ["thank"] }
           ] },
         { "them": ["This is your stop!", "این ایستگاه شماست!"],
@@ -118,8 +118,8 @@
       "turns": [
         { "them": ["Hi! What can I get for you?", "سلام! چه میل دارید؟"],
           "replies": [
-            { "en": "Can I get a small coffee, please?", "fa": "می‌شود یک قهوهٔ کوچک بدهید؟", "keys": ["coffee"] },
-            { "en": "Can I get a tea, please?", "fa": "می‌شود یک چای بدهید؟", "keys": ["tea"] }
+            { "en": "Can I get a small coffee, please?", "fa": "می‌شود لطفاً یک قهوهٔ کوچک بدهید؟", "keys": ["coffee"] },
+            { "en": "Can I get a tea, please?", "fa": "می‌شود لطفاً یک چای بدهید؟", "keys": ["tea"] }
           ], "open": true },
         { "them": ["Do you want milk or sugar?", "شیر یا شکر می‌خواهید؟"],
           "check": { "q": "چه پرسید؟", "right": "شیر یا شکر می‌خواهید؟", "wrong": ["کوچک می‌خواهید یا بزرگ؟", "گرم می‌خواهید یا سرد؟"] },
@@ -185,8 +185,8 @@
           "check": { "q": "چه پرسید؟", "right": "کسی همراهتان هست؟", "wrong": ["تنها زندگی می‌کنید؟", "با چه وسیله‌ای آمده‌اید؟"] },
           "replies": [
             { "en": "No. Please call my daughter.", "fa": "نه. لطفاً به دخترم زنگ بزنید.", "keys": ["no", "alone"] },
-            { "en": "Yes, my son is here.", "fa": "بله، پسرم اینجاست.", "keys": ["yes", "is here", "daughter"] }
-          ] }
+            { "en": "Yes, my son is here.", "fa": "بله، پسرم اینجاست.", "keys": ["yes", "is here"] }
+          ], "open": true }
       ],
       "praise": "خیلی خوب بود. کوتاه و روشن جواب دادید. این دقیقاً همان چیزی است که در اورژانس لازم است."
     },
@@ -197,7 +197,7 @@
       "goal": "یک بسته بفرستید.",
       "them": { "role": "کارمند پست", "persona": "a post office clerk helping a customer mail a package", "voice": "m" },
       "turns": [
-        { "them": ["Next! How can I help you?", "نفر بعد! بفرمایید."],
+        { "them": ["Next! How can I help you?", "نفر بعد! چه کمکی از من برمی‌آید؟"],
           "replies": [
             { "en": "I'd like to mail this package.", "fa": "می‌خواهم این بسته را پست کنم.", "keys": ["package"] },
             { "en": "I need to send this box.", "fa": "باید این جعبه را بفرستم.", "keys": ["box"], "then": ["Sure. But there's no address on it. Please write it here.", "حتماً. ولی آدرس رویش نیست. لطفاً همین‌جا بنویسید."], "thenCheck": { "right": "آدرس رویش نیست. لطفاً همین‌جا بنویسید.", "wrong": ["آدرسش درست است. لازم نیست چیزی بنویسید.", "این جعبه را نمی‌توانیم بفرستیم."] } }
@@ -207,7 +207,8 @@
           "replies": [
             { "en": "Regular mail is okay.", "fa": "پست معمولی خوب است.", "keys": ["regular"] },
             { "en": "How long will it take?", "fa": "چقدر طول می‌کشد؟", "keys": ["long"], "then": ["Regular mail takes about three days. I'll send it that way.", "پست معمولی حدود سه روز طول می‌کشد. همان‌طور می‌فرستمش."], "thenCheck": { "q": "پست معمولی چقدر طول می‌کشد؟", "right": "حدود سه روز", "wrong": ["حدود سیزده روز", "حدود سه هفته"] } },
-            { "en": "How much does it cost?", "fa": "هزینه‌اش چقدر می‌شود؟", "keys": ["much", "cost"], "then": ["Regular mail is nine fifty. I'll send it that way.", "پست معمولی نُه دلار و پنجاه سنت است. همان‌طور می‌فرستمش."], "thenCheck": { "q": "هزینه‌اش چقدر است؟", "right": "$9.50", "wrong": ["$9.15", "$5.90"] } }
+            { "en": "How much does it cost?", "fa": "هزینه‌اش چقدر می‌شود؟", "keys": ["much", "cost"], "then": ["Regular mail is nine fifty. I'll send it that way.", "پست معمولی نُه دلار و پنجاه سنت است. همان‌طور می‌فرستمش."], "thenCheck": { "q": "هزینه‌اش چقدر است؟", "right": "$9.50", "wrong": ["$9.15", "$5.90"] } },
+            { "en": "Fast, please.", "fa": "سریع، لطفاً.", "keys": ["fast"], "then": ["Okay. Fast mail is twenty-five dollars.", "باشد. پست سریع بیست و پنج دلار است."] }
           ] },
         { "them": ["Would you like anything else today?", "امروز چیز دیگری هم می‌خواهید؟"],
           "replies": [

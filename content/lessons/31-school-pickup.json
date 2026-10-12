@@ -12,7 +12,7 @@
     { "en": "I'm here to pick up my grandson.", "fa": "آمده‌ام نوه‌ام را ببرم.", "ph": "آیْم هی‌یِر تو پیک آپ مای گْرَند‌سان", "note": "grandson یعنی نوه‌ای که پسر است و granddaughter یعنی نوه‌ای که دختر است.", "chunks": ["I'm here", "to pick up", "my grandson."], "own": ["grandson"] },
     { "en": "His name is Arman Ahmadi.", "fa": "اسمش آرمان احمدی است.", "ph": "هِز نِیم ایز آرمان احمدی", "note": "برای دختر: «Her name is …\u200e»", "chunks": ["His name is", "Arman Ahmadi."], "own": ["Arman", "Ahmadi"] },
     { "en": "I'm his grandmother.", "fa": "من مادربزرگش هستم.", "ph": "آیْم هِز گْرَند‌مادِر", "note": "آقایان می‌گویند: «I'm his grandfather.\u200e» (grandfather یعنی پدربزرگ). معمولاً کارت شناسایی هم می‌خواهند و اسمتان باید از قبل در فهرست مدرسه باشد؛ از پدر یا مادر بچه بخواهید اسمتان را بدهند.", "chunks": ["I'm", "his grandmother."], "own": ["grandmother"] },
-    { "en": "How was his day?", "fa": "روزش چطور بود؟", "ph": "هاو واز هِز دِی؟", "note": "سؤال دوستانه از معلم. برای نوهٔ دختر: «How was her day?\u200e»", "chunks": ["How was", "his day?"] },
+    { "en": "How was his day?", "fa": "روزش چطور بود؟", "ph": "هاو واز هِز دِی؟", "note": "سؤال دوستانه از معلم. اگر نوه‌تان دختر است، بپرسید: «How was her day?\u200e»", "chunks": ["How was", "his day?"] },
     { "en": "What time does school end?", "fa": "مدرسه چه ساعتی تعطیل می‌شود؟", "ph": "وات تایم داز سْکول اِند؟", "note": "start یعنی شروع شدن.", "chunks": ["What time", "does school end?"] }
   ],
   "dialogue": {

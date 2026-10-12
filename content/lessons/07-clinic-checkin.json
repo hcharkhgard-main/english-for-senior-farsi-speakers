@@ -43,7 +43,7 @@
   "variants": [
     { "en": "Can you confirm your date of birth?", "fa": "می‌شود برای تأیید، تاریخ تولدتان را بگویید؟", "like": "And your date of birth?", "voice": "m" },
     { "en": "Can I get your last name?", "fa": "می‌شود نام خانوادگی‌تان را بگویید؟", "like": "What is your last name?" },
-    { "en": "Are you checking in?", "fa": "برای پذیرش آمده‌اید؟", "like": "Hello. Do you have an appointment?" }
+    { "en": "Do you have an appointment with us today?", "fa": "امروز اینجا وقت دارید؟", "like": "Hello. Do you have an appointment?" }
   ],
   "task": [
     ["منشی کارت بیمه‌تان را می‌خواهد.", 4],

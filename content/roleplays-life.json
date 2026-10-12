@@ -74,7 +74,7 @@
           "replies": [
             { "en": "Can you call my doctor?", "fa": "می‌شود به دکترم زنگ بزنید؟", "keys": ["can you call", "please call"], "then": ["Yes. We'll call your doctor today.", "بله. همین امروز به دکترتان زنگ می‌زنیم."], "thenCheck": { "q": "کی به دکترتان زنگ می‌زنند؟", "right": "همین امروز", "wrong": ["سه‌شنبه", "فردا"] } },
             { "en": "Okay. I will call my doctor.", "fa": "باشد. خودم به دکترم زنگ می‌زنم.", "keys": ["i will call"], "then": ["That works, too. Ask for a new prescription.", "این‌طور هم می‌شود. نسخهٔ تازه بخواهید."], "thenCheck": { "q": "از دکتر چه بخواهید؟", "right": "نسخهٔ تازه", "wrong": ["وقت تازه", "داروی دیگر"] } },
-            { "en": "What do I need to do?", "fa": "چه کار باید بکنم؟", "keys": ["need to do", "what do i do"], "then": ["Nothing. We need to call your doctor for a new prescription.", "هیچ. ما باید برای نسخهٔ تازه به دکترتان زنگ بزنیم."], "thenCheck": { "q": "حالا چه می‌شود؟", "right": "داروخانه برای نسخهٔ تازه به دکترتان زنگ می‌زند.", "wrong": ["شما باید پیش دکتر بروید و نسخهٔ تازه بیاورید.", "شما باید فردا دوباره به داروخانه زنگ بزنید."] } }
+            { "en": "What do I need to do?", "fa": "چه کار باید بکنم؟", "keys": ["need to do", "what do i do"], "then": ["You don't need to do anything. We'll call your doctor for a new prescription.", "لازم نیست کاری بکنید. خودمان برای نسخهٔ تازه به دکترتان زنگ می‌زنیم."], "thenCheck": { "q": "حالا چه می‌شود؟", "right": "داروخانه برای نسخهٔ تازه به دکترتان زنگ می‌زند.", "wrong": ["شما باید پیش دکتر بروید و نسخهٔ تازه بیاورید.", "شما باید فردا دوباره به داروخانه زنگ بزنید."] } }
           ] },
         { "them": ["It can take a day or two. We'll text you when it's ready.", "یکی دو روز طول می‌کشد. وقتی آماده شد برایتان پیامک می‌فرستیم."],
           "check": { "q": "چقدر طول می‌کشد و چطور خبر می‌دهند؟", "right": "یکی دو روز؛ پیامک می‌فرستند.", "wrong": ["یکی دو ساعت؛ پیامک می‌فرستند.", "یکی دو روز؛ خودتان باید زنگ بزنید."] },
@@ -105,7 +105,7 @@
       "note": "این فقط تمرین زبان است و توصیهٔ پزشکی نیست. حرف‌های دندان‌پزشک و وقتِ این تمرین ساختگی‌اند.",
       "them": { "role": "منشی و دندان‌پزشک", "persona": "a dental office receptionist and then a calm dentist named Doctor Lee in a clearly simulated practice visit; use short sentences (a fifteen-minute wait, sit back and open wide, does this hurt, an X-ray, come back next Thursday at two thirty); never give a diagnosis, treatment advice or medicine instructions, and never ask for real personal or insurance details", "voice": "k" },
       "turns": [
-        { "them": ["Good afternoon. What can we do for you today?", "بعدازظهر به‌خیر. امروز چه کاری برایتان انجام بدهیم؟"],
+        { "them": ["Good afternoon. What can we do for you today?", "بعدازظهر به‌خیر. بفرمایید، امروز برای چه آمده‌اید؟"],
           "replies": [
             { "en": "I have a toothache.", "fa": "دندانم درد می‌کند.", "keys": ["toothache", "tooth ache", "tooth hurts"] },
             { "en": "My tooth broke.", "fa": "دندانم شکسته است.", "keys": ["broke", "broken"] }
@@ -136,7 +136,7 @@
             { "en": "Will it hurt?", "fa": "درد دارد؟", "keys": ["will it hurt", "hurt"], "then": ["No, not at all.", "نه، اصلاً."], "thenCheck": { "right": "نه، اصلاً درد ندارد.", "wrong": ["بله، کمی درد دارد.", "بله، خیلی درد دارد."] } }
           ] },
         { "them": ["All done for today. You need to come back next Thursday at two thirty.", "برای امروز تمام شد. باید پنج‌شنبهٔ آینده ساعت دو و نیم دوباره بیایید."],
-          "check": { "q": "وقت بعدی شما کی است؟", "right": "پنج‌شنبهٔ آینده، ساعت ۲:۳۰", "wrong": ["سه‌شنبهٔ آینده، ساعت ۲:۳۰", "پنج‌شنبهٔ آینده، ساعت ۱۲:۳۰"] },
+          "check": { "q": "وقت بعدی شما کی است؟", "right": "پنج‌شنبهٔ آینده، ساعت 2:30", "wrong": ["سه‌شنبهٔ آینده، ساعت 2:30", "پنج‌شنبهٔ آینده، ساعت 12:30"] },
           "replies": [
             { "en": "Next Thursday at two thirty. Thank you.", "fa": "پنج‌شنبهٔ آینده ساعت دو و نیم. ممنون.", "keys": ["thursday", "two thirty", "okay"] },
             { "en": "Can I come in the morning?", "fa": "می‌توانم صبح بیایم؟", "keys": ["morning"], "then": ["I'm sorry, the mornings are full. Two thirty is the only time.", "متأسفم، صبح‌ها وقت نداریم. فقط همان ساعت دو و نیم هست."], "thenCheck": { "right": "صبح‌ها وقت ندارند؛ فقط همان ساعت دو و نیم هست.", "wrong": ["بله، می‌توانید صبح بیایید.", "صبح‌ها وقت ندارند؛ باید هفتهٔ بعدش بیایید."] } }
@@ -207,7 +207,7 @@
       "note": "این فقط تمرین زبان است و راهنمایی حقوقی یا راهنمایی دربارهٔ کمک‌های دولتی نیست. نامه، مدرک و تاریخ‌های این تمرین ساختگی‌اند. دربارهٔ نامهٔ خودتان از همان اداره بپرسید و چیزی را که نمی‌فهمید امضا نکنید.",
       "them": { "role": "کارمند اداره", "persona": "a patient clerk at a public benefits office in a clearly simulated practice visit, explaining a fictional letter in short sentences (the office needs proof of address, a bill is enough, it can be brought or mailed, by March fifteenth); never give legal, immigration or benefits advice, never say what any real programme requires, and never ask for a Social Security number, a case number, bank details or any other real personal information", "voice": "k" },
       "turns": [
-        { "them": ["Good morning. What can I do for you?", "صبح به‌خیر. چه کاری برایتان انجام بدهم؟"],
+        { "them": ["Good morning. What can I do for you?", "صبح به‌خیر. بفرمایید، چه کمکی از دستم برمی‌آید؟"],
           "replies": [
             { "en": "I got this letter. What does it mean?", "fa": "این نامه برایم آمده است. یعنی چه؟", "keys": ["letter"] },
             { "en": "Hello. I got this letter. Can I get this in Farsi?", "fa": "سلام. این نامه برایم آمده است. می‌شود این را به فارسی بگیرم؟", "keys": ["can i get", "get this in"], "then": ["I'm sorry, we don't have this letter in Farsi. But I can explain it slowly.", "متأسفم، این نامه را به فارسی نداریم. ولی می‌توانم آهسته توضیحش بدهم."], "thenCheck": { "right": "این نامه را به فارسی ندارند؛ ولی آهسته توضیحش می‌دهد.", "wrong": ["این نامه را به فارسی دارند و الان می‌آورد.", "این نامه را به فارسی ندارند؛ باید با مترجم برگردید."] } },
@@ -267,7 +267,7 @@
         { "them": ["Main Street is next. That's your stop.", "(چند دقیقه بعد) ایستگاه بعدی خیابان مِین است. همان‌جا باید پیاده شوید."],
           "check": { "q": "راننده چه گفت؟", "right": "ایستگاه بعدی خیابان مِین است؛ آنجا پیاده شوید.", "wrong": ["از خیابان مِین رد شده‌ایم.", "تا خیابان مِین هنوز چهار ایستگاه مانده است."] },
           "replies": [
-            { "en": "Thank you. The number forty is across the street, right?", "fa": "ممنون. اتوبوس شمارهٔ چهل آن طرف خیابان است، درست است؟", "keys": ["across"], "then": ["That's right. Cross at the light.", "درست است. از محل چراغ راهنمایی رد شوید."], "thenCheck": { "right": "بله؛ از محل چراغ راهنمایی از خیابان رد شوید.", "wrong": ["نه؛ ایستگاه همین طرف خیابان است.", "بله؛ ولی باید تا چهارراه بعدی پیاده بروید."] } },
+            { "en": "Thank you. The number forty is across the street, right?", "fa": "ممنون. اتوبوس شمارهٔ چهل آن طرف خیابان است، درست است؟", "keys": ["across"], "then": ["That's right. Cross at the light.", "درست است. سرِ چراغ راهنمایی از خیابان رد شوید."], "thenCheck": { "right": "بله؛ سرِ چراغ راهنمایی از خیابان رد شوید.", "wrong": ["نه؛ ایستگاه همین طرف خیابان است.", "بله؛ ولی باید تا چهارراه بعدی پیاده بروید."] } },
             { "en": "Thank you very much.", "fa": "خیلی ممنون.", "keys": ["thank", "okay"] }
           ] },
         { "them": ["You're welcome. Have a good day!", "خواهش می‌کنم. روز خوبی داشته باشید!"],
@@ -350,8 +350,8 @@
         { "them": ["Thank you. We know about the outage in your area. A crew is on the way.", "ممنون. از قطع برق در منطقهٔ شما خبر داریم. گروه تعمیر در راه است."],
           "check": { "q": "کارمند چه گفت؟", "right": "از قطع برق خبر دارند و گروه تعمیر در راه است.", "wrong": ["در منطقهٔ شما قطع برقی نیست.", "باید خودتان برق‌کار خبر کنید."] },
           "replies": [
-            { "en": "When will the power be back on?", "fa": "برق کی وصل می‌شود؟", "keys": ["when", "back on", "what time"], "then": ["We expect it back on by six tonight.", "انتظار داریم تا ساعت شش عصرِ امروز وصل شود."], "thenCheck": { "q": "برق کی وصل می‌شود؟", "right": "تا ساعت شش عصرِ امروز", "wrong": ["تا ساعت شش صبحِ فردا", "تا شانزده ساعت دیگر"] } },
-            { "en": "How long will it take?", "fa": "چقدر طول می‌کشد؟", "keys": ["how long"], "then": ["About four hours. It should be back on by six tonight.", "حدود چهار ساعت. تا ساعت شش عصرِ امروز باید وصل شود."], "thenCheck": { "q": "چقدر طول می‌کشد؟", "right": "حدود چهار ساعت؛ تا شش عصرِ امروز", "wrong": ["حدود چهارده ساعت؛ تا شش صبحِ فردا", "حدود چهل دقیقه"] } }
+            { "en": "When will the power be back on?", "fa": "برق کی وصل می‌شود؟", "keys": ["when", "back on", "what time"], "then": ["We expect it back on by six tonight.", "فکر می‌کنیم تا ساعت شش عصرِ امروز وصل شود."], "thenCheck": { "q": "برق کی وصل می‌شود؟", "right": "تا ساعت شش عصرِ امروز", "wrong": ["تا ساعت شش صبحِ فردا", "تا شانزده ساعت دیگر"] } },
+            { "en": "How long will it take?", "fa": "چقدر طول می‌کشد؟", "keys": ["how long"], "then": ["About four hours. It should be back on by six tonight.", "حدود چهار ساعت. احتمالاً تا ساعت شش عصرِ امروز وصل می‌شود."], "thenCheck": { "q": "چقدر طول می‌کشد؟", "right": "حدود چهار ساعت؛ تا شش عصرِ امروز", "wrong": ["حدود چهارده ساعت؛ تا شش صبحِ فردا", "حدود چهل دقیقه"] } }
           ] },
         { "them": ["Do you see any power lines on the ground?", "سیم برقی می‌بینید که روی زمین افتاده باشد؟"],
           "check": { "q": "چه پرسید؟", "right": "سیم برقی می‌بینید که روی زمین افتاده باشد؟", "wrong": ["چراغ‌های خیابان روشن است؟", "برقتان دوباره وصل شده است؟"] },

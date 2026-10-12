@@ -14,7 +14,7 @@
   "them": { "role": "پرستار", "voice": "b" },
   "phrases": [
     { "en": "Please have a seat.", "fa": "لطفاً بنشینید.", "ph": "پْلیز هَو اِ سیت", "note": "این را منشی یا پرستار می‌گوید.", "voice": "b", "chunks": ["Please", "have a seat."] },
-    { "en": "Please roll up your sleeve.", "fa": "لطفاً آستینتان را بالا بزنید.", "ph": "پْلیز رُول آپ یور سْلیو", "note": "برای گرفتن فشار خون یا آزمایش خون.", "voice": "b", "chunks": ["Please roll up", "your sleeve."] },
+    { "en": "Please roll up your sleeve.", "fa": "لطفاً آستینتان را بالا بزنید.", "ph": "پْلیز رُول آپ یُر سْلیو", "note": "برای گرفتن فشار خون یا آزمایش خون.", "voice": "b", "chunks": ["Please roll up", "your sleeve."] },
     { "en": "Take a deep breath.", "fa": "نفس عمیق بکشید.", "ph": "تِیک اِ دیپ بْرِت", "note": "وقتی دکتر به صدای قلب و ریه گوش می‌دهد.", "voice": "b", "chunks": ["Take", "a deep breath."] },
     { "en": "Does it hurt here?", "fa": "اینجا درد می‌کند؟", "ph": "داز ایت هِرت هی‌یِر؟", "note": "جواب کوتاه: Yes (بله) یا No (نه).", "voice": "b", "chunks": ["Does it hurt", "here?"] },
     { "en": "Do you have any questions?", "fa": "سؤالی دارید؟", "ph": "دو یو هَو اِنی کوئِسچِنز؟", "note": "اگر چیزی را نفهمیدید، همین‌جا بپرسید یا بخواهید دوباره توضیح بدهند.", "voice": "b", "chunks": ["Do you have", "any questions?"] }

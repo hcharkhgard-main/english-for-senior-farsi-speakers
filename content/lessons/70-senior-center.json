@@ -19,7 +19,7 @@
     "setting": "در مرکز سالمندان محله، جلوی میز پذیرش هستید.",
     "lines": [
       ["you", "Good morning. It's good to see you again.", "صبح به‌خیر. خوشحالم که دوباره می‌بینمتان."],
-      ["them", "Good morning! You too. What can I do for you?", "صبح به‌خیر! من هم همین‌طور. چه کاری برایتان انجام بدهم؟"],
+      ["them", "Good morning! You too. What can I do for you?", "صبح به‌خیر! من هم همین‌طور. بفرمایید، چه کمکی از دستم برمی‌آید؟"],
       ["you", "I'd like to join the exercise class. Do I need to sign up?", "می‌خواهم در کلاس ورزش شرکت کنم. باید اسم بنویسم؟"],
       ["them", "Yes. Please write your name on this list. It's free.", "بله. لطفاً اسمتان را در این فهرست بنویسید. رایگان است."],
       ["you", "Thank you. I'd like to book a ride for Wednesday.", "ممنون. می‌خواهم برای چهارشنبه ماشین رزرو کنم."],

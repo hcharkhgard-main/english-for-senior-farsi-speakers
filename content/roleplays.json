@@ -263,7 +263,7 @@
       "phone": true,
       "them": { "role": "منشی (پشت تلفن)", "persona": "a clinic receptionist on the phone scheduling an appointment", "voice": "b" },
       "turns": [
-        { "them": ["Good afternoon, Lakeside Clinic. How can I help you?", "بعدازظهر به‌خیر، درمانگاه لِیک‌ساید. بفرمایید."],
+        { "them": ["Good afternoon, Lakeside Clinic. How can I help you?", "بعدازظهر به‌خیر، درمانگاه لِیک‌ساید. چه کمکی از من برمی‌آید؟"],
           "replies": [
             { "en": "Hello, this is Maryam Ahmadi. I'd like to make an appointment.", "fa": "سلام، مریم احمدی هستم. می‌خواهم وقت بگیرم.", "keys": ["this is"] },
             { "en": "I'd like to make an appointment.", "fa": "می‌خواهم وقت بگیرم.", "keys": ["make an appointment", "need an appointment", "appointment please"] }
@@ -275,7 +275,7 @@
             { "en": "Do you have anything on Friday?", "fa": "برای جمعه وقت دارید؟", "keys": ["friday"] }
           ] },
         { "them": ["We have nine thirty or eleven o'clock. Which do you prefer?", "ساعت نُه و نیم یا یازده وقت داریم. کدام را ترجیح می‌دهید؟"],
-          "check": { "q": "کدام ساعت‌ها را گفت؟", "right": "۹:۳۰ یا ۱۱:۰۰", "wrong": ["۹:۱۳ یا ۱۱:۰۰", "۹:۳۰ یا ۷:۰۰"] },
+          "check": { "q": "کدام ساعت‌ها را گفت؟", "right": "9:30 یا 11:00", "wrong": ["9:13 یا 11:00", "9:30 یا 7:00"] },
           "replies": [
             { "en": "Nine thirty, please.", "fa": "نُه و نیم، لطفاً.", "keys": ["nine", "thirty"] },
             { "en": "Eleven o'clock, please.", "fa": "ساعت یازده، لطفاً.", "keys": ["eleven"] }
@@ -283,7 +283,7 @@
         { "them": ["Can I have your name and phone number?", "می‌شود اسم و شمارهٔ تلفنتان را بگویید؟"],
           "check": { "q": "چه خواست؟", "right": "اسم و شمارهٔ تلفنتان را", "wrong": ["اسم و آدرستان را", "اسم و تاریخ تولدتان را"] },
           "replies": [
-            { "en": "Maryam Ahmadi. My phone number is 555-0142.", "fa": "مریم احمدی. شمارهٔ تلفن من \u200e۵۵۵-۰۱۴۲ است. (شمارهٔ تمرینی)", "keys": ["number", "five", "ahmadi"] }
+            { "en": "Maryam Ahmadi. My phone number is 212-555-0142.", "fa": "مریم احمدی. شمارهٔ تلفن من \u200e۲۱۲-۵۵۵-۰۱۴۲ است. (شمارهٔ تمرینی)", "keys": ["number", "five", "ahmadi"] }
           ], "open": true },
         { "them": ["You're all set. See you then!", "وقتتان ثبت شد. می‌بینیمتان!"],
           "check": { "right": "وقتتان ثبت شد.", "wrong": ["وقت خالی نداریم.", "باید دوباره زنگ بزنید."] },
@@ -338,7 +338,7 @@
       "phone": true,
       "them": { "role": "مدیر ساختمان", "persona": "an apartment property manager taking a repair request by phone", "voice": "b" },
       "turns": [
-        { "them": ["Maple Apartments. How can I help you?", "آپارتمان‌های مِیپل. بفرمایید."],
+        { "them": ["Maple Apartments. How can I help you?", "آپارتمان‌های مِیپل. چه کمکی از من برمی‌آید؟"],
           "replies": [
             { "en": "The sink is leaking.", "fa": "سینک نشتی دارد.", "keys": ["sink"] },
             { "en": "The heater is not working.", "fa": "بخاری کار نمی‌کند.", "keys": ["heater"] },
@@ -347,7 +347,7 @@
         { "them": ["I'm sorry about that. What is your apartment number?", "متأسفم. شمارهٔ آپارتمانتان چند است؟"],
           "check": { "q": "چه پرسید؟", "right": "شمارهٔ آپارتمانتان چند است؟", "wrong": ["شمارهٔ تلفنتان چند است؟", "اسمتان چیست؟"] },
           "replies": [
-            { "en": "I live in apartment 12.", "fa": "من در آپارتمان ۱۲ زندگی می‌کنم.", "keys": ["apartment", "twelve"] }
+            { "en": "I live in apartment 12.", "fa": "من در آپارتمان شمارهٔ ۱۲ زندگی می‌کنم.", "keys": ["apartment", "twelve"] }
           ], "open": true },
         { "them": ["Okay. I can send someone tomorrow morning. Is that okay?", "باشد. می‌توانم فردا صبح کسی را بفرستم. خوب است؟"],
           "check": { "q": "کی کسی را می‌فرستد؟", "right": "فردا صبح", "wrong": ["امروز صبح", "فردا بعدازظهر"] },

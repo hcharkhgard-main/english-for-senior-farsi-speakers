@@ -224,7 +224,7 @@
         "bag"
        ],
        "then": [
-        "Of course. I will put it up here.",
+        "Of course. I'll put it up here.",
         "البته. آن را این بالا می‌گذارم."
        ]
       },
@@ -348,7 +348,7 @@
         "well"
        ],
        "then": [
-        "I'm sorry. I will bring you some water.",
+        "I'm sorry. I'll bring you some water.",
         "متأسفم. برایتان آب می‌آورم."
        ],
        "thenCheck": {
@@ -443,7 +443,7 @@
         "yes"
        ],
        "then": [
-        "Sure. I will put them in the trunk.",
+        "Sure. I'll put them in the trunk.",
         "حتماً. آن‌ها را در صندوق عقب می‌گذارم."
        ]
       },
@@ -858,7 +858,7 @@
         "when"
        ],
        "then": [
-        "It is due on Friday.",
+        "It's due on Friday.",
         "مهلت پرداختش جمعه است."
        ],
        "thenCheck": {
@@ -921,7 +921,7 @@
         "number"
        ],
        "then": [
-        "Yes. It is four, seven, two, nine.",
+        "Yes. It's four, seven, two, nine.",
         "بله. چهار، هفت، دو، نُه."
        ],
        "thenCheck": {
@@ -963,7 +963,7 @@
     {
      "them": [
       "Hi! Welcome. What can I do for you today?",
-      "سلام! خوش آمدید. امروز چه کاری برایتان انجام بدهم؟"
+      "سلام! خوش آمدید. بفرمایید، امروز چه کمکی از دستم برمی‌آید؟"
      ],
      "replies": [
       {

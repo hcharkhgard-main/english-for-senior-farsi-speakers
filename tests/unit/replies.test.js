@@ -156,9 +156,11 @@ test('the findings of QA round 2, as the reviewer verified them', () => {
   check('rp-er', 4, 'r3', ["I don't know", 'I am not sure']);
   check('rp-er', 4, 'r2', ['No', 'No I am not', 'No allergies']);
   check('rp-er', 4, 'r1', ['Yes', 'Penicillin']);
-  check('rp-er', 5, 'unsure', ['Please call my son']);
-  check('rp-er', 5, 'r2', ['Yes', 'My son is here', 'My daughter is here', 'Yes, my daughter']);
-  check('rp-er', 5, 'r1', ['No', 'No, I am alone']);
+  // (round 3, M1: the turn is open; a daughter or a husband is shown in the learner's own words, never as "my son")
+  check('rp-er', 5, 'own', ['Please call my son', 'My daughter is here', 'Yes, my daughter', 'My husband is here']);
+  check('rp-er', 5, 'r2', ['Yes', 'My son is here', 'Yes, my son is here']);
+  check('rp-er', 5, 'r1', ['No', 'No, I am alone', "I'm alone"]);
+  check('rp-er', 5, 'repeat', ["I don't understand"]);
   check('rp-er', 3, 'unsure', ['I do not know']);
   // M2
   check('rp-support', 2, 'repeat', ['I do not understand']);

@@ -14,13 +14,13 @@
 
    Cache names carry the path this copy is served from, so two copies on one origin
    (user.github.io/hamrah and user.github.io/hamrah-test) never touch each other's files. */
-const BUILD = '228f2a2d41';
+const BUILD = '879db33a55';
 const SCOPE = new URL(self.registration.scope).pathname;
 const PREFIX = `hamrah|${SCOPE}|`;
 const SHELL = `${PREFIX}shell-${BUILD}`;
 const AUDIO = `${PREFIX}audio`;
 const ASR = `${PREFIX}asr-c15fea8a96`;
-const PRECACHE = ["index.html","app.js","app.css","content.json","manifest.webmanifest","audio/index.json","fonts/atkinson-400.woff2","fonts/atkinson-700.woff2","fonts/vazirmatn-400.woff2","fonts/vazirmatn-600.woff2","fonts/vazirmatn-800.woff2","icons/apple-touch-icon.png","icons/icon-192.png","icons/icon-512.png","icons/icon-maskable-512.png","icons/icon.svg","audio/core.fffd2c16.mp3","audio/words.b83f234c.mp3"];
+const PRECACHE = ["index.html","app.js","app.css","content.json","manifest.webmanifest","audio/index.json","fonts/atkinson-400.woff2","fonts/atkinson-700.woff2","fonts/vazirmatn-400.woff2","fonts/vazirmatn-600.woff2","fonts/vazirmatn-800.woff2","icons/apple-touch-icon.png","icons/icon-192.png","icons/icon-512.png","icons/icon-maskable-512.png","icons/icon.svg","audio/core.fffd2c16.mp3","audio/words.046953f8.mp3"];
 // without these the app cannot start; the rest (fonts, pictures, first sounds) is fetched again on first use if it failed here
 const CORE = PRECACHE.filter((u) => !/^(fonts|icons)\/|\.mp3$/.test(u));
 const EXTRA = PRECACHE.filter((u) => !CORE.includes(u));

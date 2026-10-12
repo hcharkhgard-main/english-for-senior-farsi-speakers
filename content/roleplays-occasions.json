@@ -55,8 +55,8 @@
             { "en": "How much is it after the discount?", "fa": "بعد از تخفیف چقدر می‌شود؟", "keys": ["much", "discount"], "then": ["It's thirty dollars.", "سی دلار."], "thenCheck": { "q": "بعد از تخفیف چقدر می‌شود؟", "right": "$30", "wrong": ["$13", "$33"] } },
             { "en": "Yes. I'll take it.", "fa": "بله. همین را می‌خرم.", "keys": ["yes", "i'll take"] }
           ] },
-        { "them": ["You can pay at the front.", "می‌توانید جلوی فروشگاه پرداخت کنید."],
-          "check": { "q": "کجا می‌توانید پرداخت کنید؟", "right": "جلوی فروشگاه", "wrong": ["همین‌جا", "تهِ فروشگاه"] },
+        { "them": ["You can pay at the front.", "می‌توانید قسمت جلوی فروشگاه، نزدیک در، پرداخت کنید."],
+          "check": { "q": "کجا می‌توانید پرداخت کنید؟", "right": "قسمت جلوی فروشگاه", "wrong": ["همین‌جا", "تهِ فروشگاه"] },
           "replies": [
             { "en": "Where does the line start?", "fa": "صف از کجا شروع می‌شود؟", "keys": ["line"], "then": ["The line starts by the door.", "صف از کنار در شروع می‌شود."], "thenCheck": { "q": "صف از کجا شروع می‌شود؟", "right": "از کنار در", "wrong": ["از کنار صندوق", "از تهِ فروشگاه"] } },
             { "en": "Thank you.", "fa": "ممنون.", "keys": ["thank"] }
@@ -149,7 +149,7 @@
           "replies": [
             { "en": "Good morning. Thank you.", "fa": "صبح به‌خیر. ممنون.", "keys": ["morning", "thank"] }
           ] },
-        { "them": ["You will work at this table. Do you have any questions?", "شما سر این میز کار می‌کنید. سؤالی دارید؟"],
+        { "them": ["You'll work at this table. Do you have any questions?", "شما سر این میز کار می‌کنید. سؤالی دارید؟"],
           "replies": [
             { "en": "Yes. Can you show me how to do this?", "fa": "بله. می‌شود نشانم بدهید این را چطور انجام بدهم؟", "keys": ["show"], "then": ["Of course. Watch me first, then you try.", "البته. اول نگاه کنید، بعد خودتان امتحان کنید."], "thenCheck": { "right": "اول نگاه کنید، بعد خودتان امتحان کنید.", "wrong": ["اول خودتان امتحان کنید، بعد من نشان می‌دهم.", "لازم نیست یاد بگیرید. خودم انجام می‌دهم."] } },
             { "en": "When is my break?", "fa": "وقت استراحتم کی است؟", "keys": ["break"], "then": ["Your break is at twelve. Now, please start here.", "استراحتتان ساعت دوازده است. حالا لطفاً از اینجا شروع کنید."], "thenCheck": { "q": "وقت استراحت چه ساعتی است؟", "right": "ساعت ۱۲", "wrong": ["ساعت ۲", "ساعت ۱۱"] } }

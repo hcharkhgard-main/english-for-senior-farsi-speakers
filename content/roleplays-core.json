@@ -74,7 +74,7 @@
         { "them": ["This is David. I work with Ali. Please ask him to call me at 555-0199.", "دیوید هستم. همکار علی‌ام. لطفاً بگویید به شمارهٔ \u200e۵۵۵-۰۱۹۹ به من زنگ بزند."],
           "check": { "q": "کدام شماره را گفت؟", "right": "555-0199", "wrong": ["555-0159", "555-0195"] },
           "replies": [
-            { "en": "David, 555-0199. Okay. I will tell him.", "fa": "دیوید، \u200e۵۵۵-۰۱۹۹. باشد. به او می‌گویم.", "keys": ["tell", "will"] },
+            { "en": "David, 555-0199. Okay. I'll tell him.", "fa": "دیوید، \u200e۵۵۵-۰۱۹۹. باشد. به او می‌گویم.", "keys": ["tell", "will"] },
             { "en": "Can you say the number again, please?", "fa": "می‌شود لطفاً شماره را دوباره بگویید؟", "keys": ["again", "say"], "then": ["Sure. Five, five, five. Zero, one, nine, nine.", "حتماً. پنج، پنج، پنج. صفر، یک، نُه، نُه."] }
           ] },
         { "them": ["Thank you so much. Have a nice day!", "خیلی ممنون. روز خوبی داشته باشید!"],
@@ -111,7 +111,7 @@
         { "them": ["Is there anything else I can help you with?", "کار دیگری هم هست که بتوانم کمکتان کنم؟"],
           "replies": [
             { "en": "No, that's all. Thank you.", "fa": "نه، همین بود. ممنون.", "keys": ["all", "no"] },
-            { "en": "Yes. Do you have a Farsi interpreter?", "fa": "بله. مترجم فارسی دارید؟", "keys": ["interpreter", "farsi"], "then": ["Yes. I will call an interpreter for your visit.", "بله. برای ویزیتتان مترجم خبر می‌کنم."], "thenCheck": { "right": "بله. برای ویزیتتان مترجم خبر می‌کنم.", "wrong": ["نه. مترجم فارسی نداریم.", "بله، ولی باید خودتان مترجم بیاورید."] } }
+            { "en": "Yes. Do you have a Farsi interpreter?", "fa": "بله. مترجم فارسی دارید؟", "keys": ["interpreter", "farsi"], "then": ["Yes. I'll call an interpreter for your visit.", "بله. برای ویزیتتان مترجم خبر می‌کنم."], "thenCheck": { "right": "بله. برای ویزیتتان مترجم خبر می‌کنم.", "wrong": ["نه. مترجم فارسی نداریم.", "بله، ولی باید خودتان مترجم بیاورید."] } }
           ] },
         { "them": ["All right. Please have a seat. The nurse will call your name.", "بسیار خب. لطفاً بنشینید. پرستار اسمتان را صدا می‌کند."],
           "replies": [
@@ -167,12 +167,12 @@
     {
       "id": "rp-medicine", "scenario": "clinic", "stage": 2, "safetyCritical": true,
       "title": "شنیدن دستور مصرف دارو",
-      "setting": "تمرین: در داروخانه هستید. داروساز دارو را به شما می‌دهد و طرز مصرفش را می‌گوید.",
+      "setting": "تمرین: جمله‌های نمونه‌ای را می‌شنوید که داروساز یا دکتر دربارهٔ طرز مصرف دارو می‌گوید.",
       "goal": "به هر جمله خوب گوش کنید و ببینید درست فهمیده‌اید یا نه.",
       "note": "این جمله‌ها فقط نمونه‌اند، برای یادگیری زبان. دستور واقعی داروی شما همان است که روی برچسب داروی خودتان نوشته شده و داروساز خودتان می‌گوید. همیشه بخواهید دستور را برایتان بنویسند.",
       "banner": "این جمله‌ها فقط نمونه‌اند. دستور داروی خودتان روی برچسب آن نوشته شده است.",
       "scripted": true,
-      "them": { "role": "داروساز (تمرینی)", "persona": "", "voice": "m" },
+      "them": { "role": "داروساز یا دکتر (تمرینی)", "persona": "", "voice": "m" },
       "turns": [
         { "them": ["Here is your medicine. Take one tablet twice a day.", "این داروی شماست. روزی دو بار، هر بار یک قرص بخورید."],
           "check": { "q": "چطور باید بخورید؟", "right": "روزی دو بار، هر بار یک قرص", "wrong": ["روزی یک بار، هر بار دو قرص", "روزی سه بار، هر بار یک قرص"] },

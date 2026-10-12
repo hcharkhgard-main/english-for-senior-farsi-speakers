@@ -41,7 +41,7 @@
   },
   "variants": [
     { "en": "How would you like to pay?", "fa": "چطور می‌خواهید پرداخت کنید؟", "like": "Cash or card?" },
-    { "en": "Credit or debit?", "fa": "کارت اعتباری یا دبیت (برداشت از حساب خودتان)؟", "like": "Cash or card?", "voice": "m" },
+    { "en": "Are you paying with cash or card?", "fa": "نقد پرداخت می‌کنید یا با کارت؟", "like": "Cash or card?", "voice": "m" },
     { "en": "Would you like a bag?", "fa": "کیسه می‌خواهید؟", "like": "Do you need a bag?" }
   ],
   "task": [

@@ -72,7 +72,7 @@
           "check": { "right": "من دو تا جعبه سفارش داده بودم. آن یکی کجاست؟", "wrong": ["من فقط یک جعبه سفارش داده بودم. این یکی مال من نیست.", "این جعبه را کجا بگذارم؟"] },
           "replies": [
             { "en": "I only have one box today.", "fa": "امروز فقط یک جعبه دارم.", "keys": ["today", "one box"], "then": ["Oh, okay. Maybe it will come tomorrow.", "آها، باشد. شاید فردا برسد."] },
-            { "en": "I'm sorry, I don't know. I only have this one.", "fa": "متأسفم، نمی‌دانم. فقط همین یکی را دارم.", "keys": ["sorry", "know", "this one"], "then": ["That's okay. I will call the company.", "اشکالی ندارد. به شرکت زنگ می‌زنم."] }
+            { "en": "I'm sorry, I don't know. I only have this one.", "fa": "متأسفم، نمی‌دانم. فقط همین یکی را دارم.", "keys": ["sorry", "know", "this one"], "then": ["That's okay. I'll call the company.", "اشکالی ندارد. به شرکت زنگ می‌زنم."] }
           ] },
         { "them": ["This one is heavy. Can you leave it by the garage, please?", "این یکی سنگین است. می‌شود لطفاً آن را کنار گاراژ بگذارید؟"],
           "check": { "q": "جعبه را کجا بگذارید؟", "right": "کنار گاراژ", "wrong": ["داخل گاراژ", "جلوی درِ خانه"] },
@@ -176,7 +176,7 @@
           ] },
         { "them": ["Oh no. When can you come back?", "ای وای. کی می‌توانید برگردید؟"],
           "replies": [
-            { "en": "I'll come back tomorrow morning.", "fa": "فردا صبح برمی‌گردم.", "keys": ["come back", "morning", "tomorrow"], "then": ["Okay. I will be home in the morning.", "باشد. صبح خانه هستم."] },
+            { "en": "I'll come back tomorrow morning.", "fa": "فردا صبح برمی‌گردم.", "keys": ["come back", "morning", "tomorrow"], "then": ["Okay. I'll be home in the morning.", "باشد. صبح خانه هستم."] },
             { "en": "Tomorrow, between nine and eleven.", "fa": "فردا، بین ساعت نُه و یازده.", "keys": ["between", "nine"], "then": ["Okay. That's fine.", "باشد. خوب است."] }
           ] },
         { "them": ["Can I use the sink tonight?", "امشب می‌توانم از سینک استفاده کنم؟"],
@@ -209,7 +209,7 @@
           "check": { "right": "این شلوار زیادی بلند است. این کت هم زیادی گشاد است.", "wrong": ["این شلوار زیادی کوتاه است. این کت هم زیادی تنگ است.", "این شلوار زیادی گشاد است. این کت هم زیادی بلند است."] },
           "replies": [
             { "en": "No problem. Please try them on.", "fa": "مشکلی نیست. لطفاً آن‌ها را پرو کنید.", "keys": ["try", "problem"], "then": ["Okay. One minute, please.", "باشد. یک دقیقه، لطفاً."] },
-            { "en": "Could you say that again, please?", "fa": "می‌شود لطفاً دوباره بگویید؟", "keys": ["again", "say"], "then": ["Sure. The pants are too long. The jacket is too big. I will try them on.", "حتماً. شلوار زیادی بلند است. کت زیادی گشاد است. الان می‌پوشمشان."] }
+            { "en": "Could you say that again, please?", "fa": "می‌شود لطفاً دوباره بگویید؟", "keys": ["again", "say"], "then": ["Sure. The pants are too long. The jacket is too big. I'll try them on.", "حتماً. شلوار زیادی بلند است. کت زیادی گشاد است. الان می‌پوشمشان."] }
           ] },
         { "them": ["Okay, I'm ready. How do they look?", "خب، آماده‌ام. چطور است؟"],
           "replies": [

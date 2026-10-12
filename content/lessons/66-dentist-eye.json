@@ -60,7 +60,7 @@
   "variants": [
     { "en": "Open your mouth wide, please.", "fa": "لطفاً دهانتان را کاملاً باز کنید.", "like": "Okay. Please sit back and open wide." },
     { "en": "Tell me if this hurts.", "fa": "اگر درد گرفت، به من بگویید.", "like": "Does this hurt?" },
-    { "en": "What can I do for you today?", "fa": "امروز چه کاری برایتان انجام بدهم؟", "like": "Hello. What seems to be the problem?" }
+    { "en": "What can I do for you today?", "fa": "امروز چه کمکی از دستم برمی‌آید؟", "like": "Hello. What seems to be the problem?" }
   ],
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }

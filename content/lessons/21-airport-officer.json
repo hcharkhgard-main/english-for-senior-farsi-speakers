@@ -61,7 +61,7 @@
     ],
     "wrong": "I will stay three month.",
     "right": "I will stay for three months.",
-    "why": "قبل از مدت «for» می‌آید و months آخرش «s» دارد."
+    "why": "کلمهٔ months آخرش «s» دارد. بهتر است قبل از مدت «for» هم بگویید: «for three months»."
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }

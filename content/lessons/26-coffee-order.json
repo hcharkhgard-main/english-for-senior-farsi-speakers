@@ -39,7 +39,7 @@
     "off2": 5
   },
   "variants": [
-    { "en": "Will that be all?", "fa": "همین بود؟", "like": "Anything else?" },
+    { "en": "Can I get you anything else?", "fa": "چیز دیگری هم برایتان بیاورم؟", "like": "Anything else?" },
     { "en": "What can I get started for you?", "fa": "چه چیزی برایتان آماده کنم؟", "like": "Hi! What can I get for you?" },
     { "en": "Would you like cream or sugar?", "fa": "خامه یا شکر می‌خواهید؟", "like": "Sure. Do you want milk or sugar?", "voice": "m" }
   ],

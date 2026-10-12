@@ -14,7 +14,7 @@
     { "en": "Where is the milk?", "fa": "شیر کجاست؟", "ph": "وِر ایز دِ میلک؟", "note": "به‌جای milk اسم هر چیزی را که می‌خواهید بگویید. برای چند تا: «Where are the eggs?\u200e»", "chunks": ["Where is", "the milk?"] },
     { "en": "I'm looking for bread.", "fa": "دنبال نان می‌گردم.", "ph": "آیْم لُکینگ فُر بْرِد", "note": "راه دیگری برای گفتن اینکه چه می‌خواهید.", "chunks": ["I'm looking for", "bread."] },
     { "en": "How much is this?", "fa": "قیمت این چقدر است؟", "ph": "هاو ماچ ایز دیس؟", "note": "وقتی جنس در دستتان است یا به آن اشاره می‌کنید.", "chunks": ["How much", "is this?"] },
-    { "en": "Thank you for your help.", "fa": "ممنون از کمکتان.", "ph": "تَنک یو فُر یور هِلپ", "note": "بعد از اینکه کسی کمکتان کرد.", "chunks": ["Thank you", "for your help."] }
+    { "en": "Thank you for your help.", "fa": "ممنون از کمکتان.", "ph": "تَنک یو فُر یُر هِلپ", "note": "بعد از اینکه کسی کمکتان کرد.", "chunks": ["Thank you", "for your help."] }
   ],
   "dialogue": {
     "setting": "در فروشگاه مواد غذایی دنبال شیر می‌گردید.",

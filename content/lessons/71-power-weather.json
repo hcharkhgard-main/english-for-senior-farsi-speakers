@@ -26,14 +26,14 @@
       ["you", "25 Oak Street.", "خیابان اوک، پلاک ۲۵."],
       ["them", "Thank you. We know about the outage in your area. A crew is working on it.", "ممنون. از قطع برق در منطقهٔ شما خبر داریم. گروه تعمیر دارد روی آن کار می‌کند."],
       ["you", "When will the power be back on?", "برق کی وصل می‌شود؟"],
-      ["them", "We expect it back on by six tonight.", "انتظار داریم تا ساعت شش عصرِ امروز وصل شود."],
+      ["them", "We expect it back on by six tonight.", "فکر می‌کنیم تا ساعت شش عصرِ امروز وصل شود."],
       ["you", "Okay. Thank you.", "باشد. ممنون."],
       ["them", "You're welcome. If you see a power line on the ground, stay away and call 911.", "خواهش می‌کنم. اگر دیدید سیم برق روی زمین افتاده، نزدیک نشوید و به ۹۱۱ زنگ بزنید."]
     ]
   },
   "respond": {
     "setting": "پرسیده‌اید برق کی وصل می‌شود و کارمند شرکت برق جواب می‌دهد.",
-    "them": ["We expect it back on by six tonight.", "انتظار داریم تا ساعت شش عصرِ امروز وصل شود."],
+    "them": ["We expect it back on by six tonight.", "فکر می‌کنیم تا ساعت شش عصرِ امروز وصل شود."],
     "ok": [
       ["Okay. Thank you.", "باشد. ممنون."],
       ["By six tonight. Thank you.", "تا شش عصرِ امروز. ممنون."],
@@ -59,7 +59,7 @@
     "why": "برای کلمه‌های کوتاهی مثل near، «ترین» را با «est» در آخرِ کلمه می‌سازند: nearest. «most near» نمی‌گویند."
   },
   "variants": [
-    { "en": "Power should be restored by six p.m.", "fa": "برق باید تا ساعت شش عصر وصل شود.", "like": "We expect it back on by six tonight." },
+    { "en": "Power should be restored by six p.m.", "fa": "برق احتمالاً تا ساعت شش عصر وصل می‌شود.", "like": "We expect it back on by six tonight." },
     { "en": "We're aware of the outage in your neighborhood.", "fa": "از قطع برق در محلهٔ شما باخبریم.", "like": "Thank you. We know about the outage in your area. A crew is working on it." },
     { "en": "Stay away from downed power lines.", "fa": "به سیم‌های برقی که روی زمین افتاده‌اند نزدیک نشوید.", "like": "You're welcome. If you see a power line on the ground, stay away and call 911." }
   ],

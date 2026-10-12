@@ -32,7 +32,7 @@
   },
   "respond": {
     "setting": "وارد بانک شده‌اید و نوبتتان رسیده است.",
-    "them": ["Welcome! What can I do for you today?", "خوش آمدید! امروز چه کاری برایتان انجام بدهم؟"],
+    "them": ["Welcome! What can I do for you today?", "خوش آمدید! بفرمایید، امروز چه کمکی از دستم برمی‌آید؟"],
     "ok": [
       ["I'd like to check my balance.", "می‌خواهم موجودی حسابم را بدانم."],
       ["I'd like to deposit this check.", "می‌خواهم این چک را به حسابم واریز کنم."],
@@ -42,7 +42,7 @@
   },
   "variants": [
     { "en": "Do you have your ID with you?", "fa": "کارت شناسایی همراهتان هست؟", "like": "Sure. Can I see your ID, please?" },
-    { "en": "Will that be all for today?", "fa": "برای امروز همین بود؟", "like": "Thank you. Is there anything else I can help you with?", "voice": "b" }
+    { "en": "Can I help you with anything else?", "fa": "کار دیگری هم هست که برایتان بکنم؟", "like": "Thank you. Is there anything else I can help you with?", "voice": "b" }
   ],
   "task": [
     ["در صورت‌حسابتان یک کارمزد (fee) نوشته‌اند و می‌خواهید بپرسید برای چیست.", 4],

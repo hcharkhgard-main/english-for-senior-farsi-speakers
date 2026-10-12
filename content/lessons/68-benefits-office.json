@@ -33,7 +33,7 @@
   },
   "respond": {
     "setting": "این بار نامه‌ای ندارید. خانه‌تان را عوض کرده‌اید و آمده‌اید آدرس تازه را به اداره بدهید.",
-    "them": ["Good morning. What can I do for you?", "صبح به‌خیر. چه کاری برایتان انجام بدهم؟"],
+    "them": ["Good morning. What can I do for you?", "صبح به‌خیر. بفرمایید، چه کمکی از دستم برمی‌آید؟"],
     "ok": [
       ["I need to report a change of address.", "باید تغییر آدرسم را خبر بدهم."],
       ["Hello. I moved. I need to report a change of address.", "سلام. خانه‌ام را عوض کرده‌ام. باید تغییر آدرسم را خبر بدهم."]
@@ -59,7 +59,6 @@
   },
   "variants": [
     { "en": "It's due by March fifteenth.", "fa": "مهلتش تا پانزدهم مارس است.", "like": "Yes. We need it by March fifteenth." },
-    { "en": "You have to send us proof of address.", "fa": "باید مدرکی برای ما بفرستید که آدرستان را نشان بدهد.", "like": "Let me see. We need proof of your address." },
     { "en": "We can get an interpreter on the phone.", "fa": "می‌توانیم تلفنی مترجم بیاوریم.", "like": "I'm sorry, we don't have it in Farsi. But I can call an interpreter." }
   ],
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }

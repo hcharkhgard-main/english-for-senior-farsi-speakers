@@ -95,7 +95,7 @@
     { "kind": "date", "say": "The bill is due on the thirtieth.", "show": "30th", "alts": ["13th", "3rd"], "fa": "مهلت پرداخت قبض سی‌امِ ماه است." },
     { "kind": "date", "say": "Please come back on the fourteenth.", "show": "14th", "alts": ["4th", "24th"], "fa": "لطفاً چهاردهمِ ماه دوباره بیایید." },
     { "kind": "date", "say": "My birthday is July twenty-first.", "show": "July 21", "alts": ["July 1", "June 21"], "fa": "تولد من بیست و یکمِ ماه ژوئیه است." },
-    { "kind": "date", "say": "Your card expires in November, twenty twenty-eight.", "show": "November 2028", "alts": ["November 2020", "September 2028"], "fa": "اعتبار کارت شما در نوامبرِ ۲۰۲۸ تمام می‌شود." },
+    { "kind": "date", "say": "Your card expires in November twenty twenty-eight.", "show": "November 2028", "alts": ["November 2020", "September 2028"], "fa": "اعتبار کارت شما در نوامبرِ ۲۰۲۸ تمام می‌شود." },
     { "kind": "date", "say": "The class starts on Monday, September seventh.", "show": "Monday, September 7", "alts": ["Monday, September 17", "Sunday, September 7"], "fa": "کلاس دوشنبه، هفتمِ ماه سپتامبر شروع می‌شود." },
     { "kind": "date", "say": "The water will be off on Wednesday the twelfth.", "show": "Wednesday the 12th", "alts": ["Wednesday the 20th", "Monday the 12th"], "fa": "آب چهارشنبه، دوازدهمِ ماه قطع می‌شود." },
     { "kind": "date", "say": "Were you born on January third, nineteen fifty-five?", "show": "January 3, 1955", "alts": ["January 30, 1955", "January 3, 1959"], "fa": "شما سومِ ژانویهٔ ۱۹۵۵ به دنیا آمده‌اید؟" },
@@ -109,7 +109,7 @@
     { "kind": "date", "say": "Your next visit is on Thursday, April thirtieth.", "show": "Thursday, April 30", "alts": ["Tuesday, April 30", "Thursday, April 13"], "fa": "وقت بعدی شما پنج‌شنبه، سی‌امِ ماه آوریل است." },
     { "kind": "date", "say": "It's valid until June seventeenth.", "show": "June 17", "alts": ["June 7", "July 17"], "fa": "تا هفدهمِ ماه ژوئن اعتبار دارد." },
 
-    { "kind": "phone", "say": "Call me back at five five five, zero one one five.", "show": "555-0115", "alts": ["555-0150", "555-0105"], "fa": "به شمارهٔ \u200e۵۵۵-۰۱۱۵ به من زنگ بزنید." },
+    { "kind": "phone", "say": "Call me back at five five five, zero one one five.", "show": "555-0115", "alts": ["555-0150", "555-0105"], "fa": "به شمارهٔ \u200e۵۵۵-۰۱۱۵ دوباره به من زنگ بزنید." },
     { "kind": "phone", "say": "The clinic's number is five five five, oh one six oh.", "show": "555-0160", "alts": ["555-0116", "555-0106"], "fa": "شمارهٔ درمانگاه \u200e۵۵۵-۰۱۶۰ است." },
     { "kind": "phone", "say": "For outages, call five five five, zero one eight eight.", "show": "555-0188", "alts": ["555-0118", "555-0180"], "fa": "برای قطع برق به شمارهٔ \u200e۵۵۵-۰۱۸۸ زنگ بزنید." },
     { "kind": "phone", "say": "My cell number is five five five, zero one two seven.", "show": "555-0127", "alts": ["555-0172", "555-0137"], "fa": "شمارهٔ موبایل من \u200e۵۵۵-۰۱۲۷ است." },
