@@ -388,14 +388,15 @@ export function gistTargets(L, seed) {
 //    between, the first not a question (after a question the other person waits for the answer) and the second not
 //    beginning as an answer ("Yes, …", "Okay. …"), both three words or longer; or
 //  · one line of the other person that carries two things or more: two sentences of three words or more besides the
-//    small words of a reply ("Thank you.", "Yes.") and the opening offer of help ("How can I help you?"), ten words
-//    or more in all, with as many sentences in its Farsi meaning as in its English (so each half has its meaning).
+//    small words of a reply ("Thank you.", "Yes.", "I'm so sorry!") and the opening offer of help ("How can I help you?"),
+//    eight words or more in all ("You owe eighty-two dollars. It's due on Friday."; QA round 5, teaching L1), with as many sentences in its Farsi meaning as in its English (so each half has its meaning).
 // longTurns(L): those turns, in dialogue order, each as { lines: [line] or [first, second], parts: [{ en, fa }] }.
 // longGist(L, seed, g): { lines, options: [{ fa, right }] } for the longest turn (the options in a fixed order: the view
 // mixes them), or null when the lesson has none (or fewer than three different lines of the other person). Each wrong
 // answer changes one of the two halves for another thing the same person says, so both halves must be caught.
 // (a sentence that begins as an answer — "Yes, …", "Okay. …", "Thank you." — answers something the learner said)
-const REPLY_START = /^(?:yes|no|yeah|okay|ok|sure|of course|thank|thanks|great|good|oh|here|hi|hello|that's|i'm sorry|sorry|alright|all right|perfect|you're welcome|let me)\b/i;
+const REPLY_START = /^(?:yes|no|yeah|okay|ok|sure|of course|thank|thanks|great|good|oh|here|hi|hello|that's|i'm (?:so |very )?sorry|sorry|alright|all right|perfect|you're welcome|let me)\b/i;
+const GREETING = /^(?:hi|hello|welcome|good (?:morning|afternoon|evening)|nice to meet you|thank you for calling)\b/i;
 const OFFER = /\b(?:how (?:can|may) i help|what can i do for you|can i help you)\b/i;
 const wordCount = (s) => String(s).trim().split(/\s+/).filter(Boolean).length;
 // "Thank you. We know about the outage." -> ['Thank you.', 'We know about the outage.'] (English and Farsi alike)
@@ -403,7 +404,7 @@ export const sentencesOf = (s) => String(s || '').trim().split(/(?<=[.!?؟])\s+/
 // the two (or more) things one line says, with their meanings; null when it says only one, or its halves have no meanings of their own
 export function lineParts(line) {
   const en = sentencesOf(line.en), fa = sentencesOf(line.fa);
-  if (en.length < 2 || en.length !== fa.length || wordCount(line.en) < 10) return null;
+  if (en.length < 2 || en.length !== fa.length || wordCount(line.en) < 8) return null;
   const parts = en.map((e, i) => ({ en: e, fa: fa[i] })).filter((p) => wordCount(p.en) >= 3 && !REPLY_START.test(p.en) && !OFFER.test(p.en));
   return parts.length >= 2 ? parts : null;
 }
@@ -429,7 +430,10 @@ export function longGist(L, seed, g = 0) {
   const T = turns.slice().sort((p, q) => size(q) - size(p))[0];      // the longest: most often two facts
   const [first, last] = [T.parts[0], T.parts[T.parts.length - 1]];
   // a stand-in for one half: something else this person says, of different meaning
-  const others = shuffle(partnerLines(L).filter((l) => !T.lines.includes(l) && l.fa.trim() !== first.fa.trim() && l.fa.trim() !== last.fa.trim()), mix(seed, 73 + g));
+  // (only lines that state something: not a greeting or the offer of help, and not one that, without the small words of a
+  // reply, is only a fragment such as «بفرمایید.» — those are ruled out without listening; QA round 5, teaching L2)
+  const solid = (l) => { const said = sentencesOf(l.en).filter((e) => !(REPLY_START.test(e) && wordCount(e) <= 3)); return !OFFER.test(l.en) && !said.some((e) => GREETING.test(e)) && wordCount(said.join(' ')) >= 3; };
+  const others = shuffle(partnerLines(L).filter((l) => !T.lines.includes(l) && solid(l) && l.fa.trim() !== first.fa.trim() && l.fa.trim() !== last.fa.trim()), mix(seed, 73 + g));
   if (!others.length) return null;
   const x = others[0], y = others[1] || others[0];
   // the whole meaning: for one line its own Farsi (the halves in it are the sentences the line has); for two lines, both

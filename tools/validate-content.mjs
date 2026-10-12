@@ -278,9 +278,10 @@ const used = new Set([...all.matchAll(/\bt\('([A-Za-z0-9_.]+)'/g)].map((m) => m[
 for (const m of all.matchAll(/para\('([A-Za-z0-9_.]+)'\)/g)) used.add(m[1]);
 const prefixes = [...used].filter((k) => k.endsWith('.'));
 for (const k of used) if (!k.endsWith('.') && strings[k] == null) err('interface text', `missing "${k}"`);
-for (const k of ['say.good.title', 'say.good.almost', 'say.close.title']) if (strings[k] == null) err('interface text', `missing "${k}"`);
+// (offline.page.*, with app.name and sos.noCall, are put into sw.js by tools/build.mjs)
+for (const k of ['say.good.title', 'say.good.almost', 'say.close.title', 'offline.page.title', 'offline.page.body', 'app.name', 'sos.noCall']) if (strings[k] == null) err('interface text', `missing "${k}"`);
 for (const p of prefixes) if (!Object.keys(strings).some((k) => k.startsWith(p))) err('interface text', `nothing under "${p}"`);
-for (const k of Object.keys(strings)) { isFa(`interface text ${k}`, strings[k], { allowLatin: true }); if (!used.has(k) && !prefixes.some((p) => k.startsWith(p)) && !['say.good.title', 'say.good.almost', 'say.close.title'].includes(k)) warn('interface text', `"${k}" is never used`); }
+for (const k of Object.keys(strings)) { isFa(`interface text ${k}`, strings[k], { allowLatin: true }); if (!used.has(k) && !prefixes.some((p) => k.startsWith(p)) && !['say.good.title', 'say.good.almost', 'say.close.title', 'offline.page.title', 'offline.page.body'].includes(k)) warn('interface text', `"${k}" is never used`); }
 
 // safety flags: a lesson, conversation or paper about a clinic, a bank, an emergency, scams, passwords… must be flagged
 // for the extra review (tools/safety-flags.mjs; QA round 4, security L3)

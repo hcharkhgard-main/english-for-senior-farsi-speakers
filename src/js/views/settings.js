@@ -58,7 +58,7 @@ export function settingsView(app) {
       if (all && have >= all) box.append(h('p', null, t('off.all')));
       else if (parts) {
         const mark = (ready) => { const i = icon(ready ? 'check' : 'wifiOff'); Object.assign(i.style, { width: '1.5rem', height: '1.5rem', color: ready ? 'var(--good)' : 'var(--ink-2)' }); return i; };
-        // ready: true (a tick and «آماده است»), false («هنوز نه») or 'some' (no tick: «بعضی آماده است») — a part is
+        // ready: true (a tick and «آماده است»), false («هنوز نه») or 'some' (no tick: «بخشی آماده است») — a part is
         // "ready" only when all of it is (QA round 4, accessibility M2: «درس‌ها: ۱۱ از ۷۲ ✓ آماده است» read as "all lessons")
         const row = (label, ready) => h('li', { class: 'row', style: 'align-items:center;gap:.5rem', 'data-ready': String(ready) }, mark(ready === true), h('span', { class: 'grow' }, label),
           h('strong', null, ready === true ? t('off.yes') : ready === 'some' ? t('off.some') : t('off.no')));

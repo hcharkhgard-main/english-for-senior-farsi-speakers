@@ -102,6 +102,14 @@ if (target === 'pwa') {
     // a plain host name only: "https://a.com;script-src …" or "https://*.com" must not reach the policy
     if (!u.username && !u.password && /^[a-z0-9.-]+$/i.test(u.hostname.replace(/^\[::1\]$/, 'localhost')) && (u.protocol === 'https:' || (u.protocol === 'http:' && local))) connect = ' ' + u.origin;
   } catch { /* no service configured */ }
+  // the page sw.js shows when the app cannot be opened at all without a connection (strings "offline.page.*")
+  const offlinePage = (S) => {
+    const esc = (x) => String(x).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/[A-Za-z0-9][A-Za-z0-9 .-]*/g, '<bdi>$&</bdi>');
+    return '<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
+      + `<title>${esc(S['app.name'])}</title><style>body{font:20px/1.8 system-ui,-apple-system,sans-serif;margin:0;padding:24px;background:#faf6ee;color:#1d2433}h1{font-size:26px;line-height:1.5}`
+      + '@media (prefers-color-scheme:dark){body{background:#151a24;color:#eef1f6}}</style></head><body>'
+      + `<h1>${esc(S['offline.page.title'])}</h1><p>${esc(S['offline.page.body'])}</p><p>${esc(S['sos.noCall'])}</p></body></html>`;
+  };
   const htmlSrc = fs.readFileSync(src('index.html'), 'utf8'), swSrc = fs.readFileSync(src('sw.js'), 'utf8');
   const audioIdx = fs.existsSync(path.join(out, 'audio', 'index.json')) ? fs.readFileSync(path.join(out, 'audio', 'index.json'), 'utf8') : '';
   // everything a phone stores as "one version of the app" goes into the id; any change makes a new version
@@ -128,7 +136,7 @@ if (target === 'pwa') {
   // what is stored): the sound packs and the pronunciation-checker files are listed for that too
   const packSums = Object.fromEntries(idx.packs.filter((p) => fs.existsSync(path.join(out, 'audio', p.file))).map((p) => { const b = fs.readFileSync(path.join(out, 'audio', p.file)); return ['audio/' + p.file, [b.length, sha256(b)]]; }));
   fs.writeFileSync(path.join(out, 'sw.js'), swSrc.replaceAll('__BUILD__', build_id).replaceAll('__ASR__', asrVer).replace('__PRECACHE__', JSON.stringify(precache)).replace('__INTEGRITY__', JSON.stringify(integrity))
-    .replace('__PACK_SUMS__', JSON.stringify(packSums)).replace('__ASR_FILES__', JSON.stringify(target === 'pwa' ? asrFiles : {})));
+    .replace('__OFFLINE_PAGE__', JSON.stringify(offlinePage(content.ui.strings))).replace('__PACK_SUMS__', JSON.stringify(packSums)).replace('__ASR_FILES__', JSON.stringify(target === 'pwa' ? asrFiles : {})));
   if (checking) {
     // site/ is what gets published. It must be exactly what this source builds: same page, script, styles, lessons, worker, fonts and pictures.
     const files = ['index.html', 'app.js', 'app.css', 'content.json', 'sw.js', 'manifest.webmanifest', 'config.json', '.nojekyll',

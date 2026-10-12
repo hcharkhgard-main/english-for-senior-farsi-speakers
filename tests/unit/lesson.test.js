@@ -375,7 +375,7 @@ test('the longer turn (QA round 4, M1): only what the other person says in one t
     } else {
       const parts = lineParts(G.lines[0]);
       assert.ok(parts && parts.length >= 2, `${L.id}: one line that says two things: ${G.lines[0].en}`);
-      assert.ok(G.lines[0].en.split(/\s+/).length >= 10);
+      assert.ok(G.lines[0].en.split(/\s+/).length >= 8);      // QA round 5, teaching L1 (was 10)
     }
     assert.equal(G.options.length, 3);
     assert.equal(G.options.filter((o) => o.right).length, 1);
@@ -390,6 +390,19 @@ test('the longer turn (QA round 4, M1): only what the other person says in one t
   for (const L of lessons) for (const T of longTurns(L)) if (T.lines.length === 2) assert.equal(lineAt(L, T.lines[1]), lineAt(L, T.lines[0]) + 1);
   const pay = content.lessons['pay-bill-phone'];
   if (pay) assert.ok(!longTurns(pay).some((T) => T.lines.some((l) => /Take your time/.test(l.en))));
+  // QA round 5, teaching L1: an 8-word line with two facts is a longer turn; an apology and a question are not two facts
+  if (pay) assert.ok(longTurns(pay).some((T) => T.lines.length === 1 && /^You owe eighty-two dollars\. It's due on Friday\.$/.test(T.lines[0].en)));
+  assert.equal(lineParts({ who: 'them', en: 'Oh no. I\'m so sorry! Are you okay?', fa: 'ای وای. خیلی متأسفم! حالتان خوب است؟' }), null);
+  // QA round 5, teaching L2: a wrong answer never borrows a greeting, the offer of help or a fragment such as «بفرمایید.»
+  for (const id of ['driving-police', 'power-weather', 'pay-bill-phone', 'work-first-day', 'customer-service']) {
+    const L = content.lessons[id];
+    if (!L) continue;
+    for (let i = 0; i < 20; i++) for (const g of [0, 1]) {
+      const G = longGist(L, i / 20 + 0.01, g);
+      assert.ok(G, id);
+      for (const o of G.options.filter((x) => !x.right)) assert.ok(!/(^|\. )بردارید\.|بفرمایید\.|شرکت برق، بخش|خوش آمدید|چه کمکی از من برمی‌آید/.test(o.fa), `${id}: ${o.fa}`);
+    }
+  }
   // a made-up dialogue: two lines with the learner between are never one turn; two side by side are
   const D = (lines) => ({ dialogue: { lines }, phrases: [] });
   const them = (en, fa) => ({ who: 'them', en, fa }), you = (en) => ({ who: 'you', en, fa: 'ـ' });

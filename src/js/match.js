@@ -469,17 +469,23 @@ const CLASH = [
 ];
 const KIN = group('son daughter husband wife brother sister mother father grandson granddaughter grandmother grandfather friend neighbor family children');
 for (const g of [FUNC, ...CLASH, [...ORD_ONES, ...ORD_TENS.filter(Boolean)]]) for (const w of g) EXACT.add(w);
+// Places: "Is there a hospital near here?" is not "Is there a bank near here?". Kept out of the exact-word list
+// above, so a place word the recogniser spells a little differently is still recognised. Words for the same kind
+// of place count as one ("drugstore" / "pharmacy").
+const PLACE = group('bank hospital pharmacy drugstore supermarket grocery library clinic restaurant school airport church mosque hotel museum mall post');
+const PLACE_SAME = { drugstore: 'pharmacy', grocery: 'supermarket' };
 const singular = (w) => (w.length > 3 && w.endsWith('s') && !w.endsWith('ss') ? w.slice(0, -1) : w);
-const groupOf = (w, groups) => { const c = CARDINAL.get(w) || w; return groups.findIndex((g) => g.has(c) || g.has(singular(c))); };
+const groupOf = (w, groups) => { const c = CARDINAL.get(w) || w; return groups.findIndex((g) => g.has(c) || g.has(singular(c)) || g.has(c.replace(/ies$/, 'y'))); };
 function clashes(t, hrd, al, own) {
-  const groups = own ? [...CLASH, KIN] : CLASH;
-  const value = (w) => singular(CARDINAL.get(w) || w);
+  const groups = own ? [...CLASH, PLACE, KIN] : [...CLASH, PLACE];
+  const value = (w) => { const v = singular((CARDINAL.get(w) || w).replace(/ies$/, 'y')); return PLACE_SAME[v] || v; };
   // homophones do not count here: "for" is not "four". A target word counts as heard when it was lined up with a heard word.
   for (let g = 0; g < groups.length; g++) {
     const want = t.filter((w) => groupOf(w, groups) === g).map(value), got = hrd.filter((w) => groupOf(w, groups) === g).map(value);
     if (!want.length || !got.length) continue;
     const missing = t.some((w, i) => groupOf(w, groups) === g && al[i].m < 0.6 && !got.includes(value(w)));
     if (missing && got.some((v) => !want.includes(v))) return true;
+    if (groups[g] === PLACE && got.some((v) => !want.includes(v))) return true;      // "a hospital near the bank" asks about the hospital
   }
   return false;
 }

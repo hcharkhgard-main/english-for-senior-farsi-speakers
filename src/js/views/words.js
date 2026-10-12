@@ -57,15 +57,17 @@ function wordRow(app, it) {
 }
 
 // The numbers are 62 words — 25 screens of buttons in one list (QA round 4, accessibility L8). They are shown in three
-// parts, one at a time: 0 to 20, the tens with a hundred and a thousand, and the ordinals ("first", "twenty-first").
+// parts, one at a time: 0 to 20, the tens with a hundred and a thousand, the ordinals to "tenth", and those after it
+// ("eleventh" … "thirty-first", the days of a date): 31 ordinals in one list were 13 screens (QA round 5, usability L3).
 const ORDINAL = /(?:first|second|third|th)$/;
+const DATE_ORDINAL = /^(?:eleventh|twelfth|.*teenth|twentieth|twenty-|thirtieth|thirty-)/;
 export function numberPart(en) {
   const w = String(en).toLowerCase();
-  if (ORDINAL.test(w)) return 'ord';
+  if (ORDINAL.test(w)) return DATE_ORDINAL.test(w) ? 'date' : 'ord';
   const n = Number(digitsOf(w));
   return digitsOf(w) !== '' && n <= 20 ? 'small' : 'big';
 }
-export const NUMBER_PARTS = ['small', 'big', 'ord'];
+export const NUMBER_PARTS = ['small', 'big', 'ord', 'date'];
 
 export function catView(app, catId) {
   const { t, content } = app;
@@ -75,11 +77,11 @@ export function catView(app, catId) {
   const main = h('main', { class: 'wrap' }, h('h1', { class: 'section-title' }, cat.title), h('p', { class: 'muted' }, t('words.cat.hint')));
   if (cat.id === 'numbers' && words.length > 24) {
     const part = NUMBER_PARTS.includes(app.ui.part) ? app.ui.part : 'small';
-    main.append(h('div', { class: 'seg', role: 'group', 'aria-label': t('words.num.parts') }, NUMBER_PARTS.map((x) =>
+    main.append(h('div', { class: 'seg seg-2', role: 'group', 'aria-label': t('words.num.parts') }, NUMBER_PARTS.map((x) =>
       h('button', { type: 'button', 'aria-pressed': String(x === part), onclick: () => { app.ui.part = x; app.render(); } }, x === part ? icon('check') : null, h('span', null, t('words.num.' + x))))));
     words = words.filter((w) => numberPart(w.en) === part);
     const value = (en) => (digitsOf(en) !== '' ? Number(digitsOf(en)) : { half: 0.5, 'one thousand': 1000 }[en] ?? 1e6);
-    if (part !== 'ord') words.sort((a, b) => value(a.en) - value(b.en));      // in counting order: 0, 1, 2 … (the file has them in the order they were added)
+    if (part === 'small' || part === 'big') words.sort((a, b) => value(a.en) - value(b.en));      // in counting order: 0, 1, 2 … (the file has them in the order they were added)
   }
   main.append(...words.map((w) => wordRow(app, app.item(w.id))));
   return { main };
@@ -182,8 +184,9 @@ export function reviewView(app) {
   // change, and «توانستید با اطلاعات خودتان بگویید؟» (QA round 4, M2).
   const sample = !word && !it.mine && Array.isArray(it.own) && it.own.length > 0 && sampleIdentity(it.en);
   const ownHint = () => (!word && !it.mine && Array.isArray(it.own) && it.own.length ? h('p', { class: 'when', 'data-own': '' }, t('phrase.own', { words: it.own.join(' ') })) : null);
-  const answerRow = (ask) => [h('p', { class: 'section-title center' }, ask),
-    h('div', { class: 'row' }, btn(t('rev.knew'), { cls: 'btn-primary grow', icon: 'check', onclick: () => answer(true) }), btn(t('rev.notYet'), { cls: 'btn-ghost grow', icon: 'repeat', onclick: () => answer(false) }))];
+  // (the yes-answer fits its question: «توانستید جملهٔ خودتان را بگویید؟» — «بله، گفتم»; QA round 5, usability L4)
+  const answerRow = (ask, yes = t('rev.knew')) => [h('p', { class: 'section-title center' }, ask),
+    h('div', { class: 'row' }, btn(yes, { cls: 'btn-primary grow', icon: 'check', onclick: () => answer(true) }), btn(t('rev.notYet'), { cls: 'btn-ghost grow', icon: 'repeat', onclick: () => answer(false) }))];
 
   if (sample) {
     add(h('p', { class: 'eyebrow' }, t('rev.ownSay')), english(), listen(), ownHint(),
@@ -191,7 +194,7 @@ export function reviewView(app) {
       h('div', { class: 'row' }, favBtn(app, id), micOn(app) ? btn(t('rev.say'), { cls: 'btn-ghost', icon: 'mic', small: true, onclick: () => { S.say = !S.say; if (!S.say) app.speech.cancel(); app.render(); } }) : null));
     main.append(card);
     if (S.say) main.append(sayPanel(app, { key: 'say-rev', target: it.en, say: it.say, voice: it.voice, own: it.own }));
-    main.append(...answerRow(t('rev.ownAsk')));
+    main.append(...answerRow(t('rev.ownAsk'), t('rev.ownYes')));
   } else if (!S.shown && mode === 'say') {
     // Farsi first: the direction a speaker needs. The answer is shown — and heard — when the learner asks for it.
     add(mine, h('p', { class: 'eyebrow' }, t('rev.sayIt')), picture(), h('p', { class: 'fa-line', 'data-rev': 'say' }, it.fa), ownHint(), h('p', { class: 'muted' }, t('rev.sayIt.hint')));
@@ -291,9 +294,10 @@ export function grammarView(app) {
   seen.forEach((id) => { main.append(head(id)); if (id === open) main.append(card(id)); });
   if (rest.length) {
     // the patterns of the lessons still to come: a list of titles, behind one button once some have been met
-    const later = !seen.length || !!app.ui.gramLater;
+    // (before any lesson too: 71 titles were 9 screens — QA round 5, usability L3)
+    const later = !!app.ui.gramLater;
     main.append(h('h2', { class: 'section-title' }, t('gram.later')));
-    if (seen.length) main.append(btn(later ? t('gram.later.hide') : t('gram.later.show', { n: fnum(rest.length) }), { cls: 'btn-ghost', icon: later ? 'close' : 'bulb', block: true, 'aria-expanded': String(later), 'data-gram-later': '', onclick: () => { app.ui.gramLater = !later; app.render(); } }));
+    main.append(btn(later ? t('gram.later.hide') : t('gram.later.show', { n: fnum(rest.length) }), { cls: 'btn-ghost', icon: later ? 'close' : 'bulb', block: true, 'aria-expanded': String(later), 'data-gram-later': '', onclick: () => { app.ui.gramLater = !later; app.render(); } }));
     if (later) rest.forEach((id) => { const L = content.lessons[id]; main.append(h('button', { type: 'button', class: 'item', onclick: () => app.go('lesson.' + id) },
       h('span', { class: 'body' }, h('span', { class: 't' }, L.grammar.title), h('span', { class: 's' }, L.title.fa)), h('span', { class: 'go' }, icon('next')))); });
   }

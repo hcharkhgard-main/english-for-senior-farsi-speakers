@@ -262,7 +262,7 @@ async function boot() {
     const bar = h('div', { class: 'wrap' });
     const sos = () => h('button', { type: 'button', class: 'tb-btn tb-sos', onclick: () => go('sos') }, icon('sos'), h('span', null, t('nav.sos')));
     if (name === 'home' || name === 'onboard') {
-      // (on a phone narrower than 360 px only the mark is shown, so that the three controls fit: see .tb-name in styles.css)
+      // (on a phone only the mark is shown, so that the controls keep their shape: see .tb-name in styles.css)
       bar.append(h('div', { class: 'tb-brand' }, mark(), h('span', { class: 'tb-name' }, t('app.name'))));
       bar.append(sos());                                                    // help is one tap away from every screen: home too (QA round 4, M1), and before the first question is answered
       if (name === 'home') bar.append(h('button', { type: 'button', class: 'tb-btn', onclick: () => go('settings') }, icon('gear'), h('span', null, t('nav.settings'))));

@@ -8,6 +8,7 @@ import { shuffle, mix, micOn, later, pathLesson } from '../learn.js';
 import { ownReplies } from '../own.js';
 import { me } from '../me.js';
 import { quiz } from './lesson.js';
+import { packsStored } from '../stored.js';
 
 // A question about what the partner has just said ("check" on a turn, "thenCheck" on a reply, in
 // content/roleplays*.json): one right answer and one to three wrong ones, with an optional question of its own
@@ -31,6 +32,22 @@ export function talkView(app) {
   const here = next ? app.lessonStage(next) : 0;
   const stages = content.stages.filter((stage) => content.roleplays.some((r) => (r.stage || 1) === stage.id));
   const all = !stages.some((x) => x.id === here) || app.ui.allStages;
+  // Without a connection each conversation says in words whether its sound is on the phone (QA round 5, usability M1):
+  // the ones of the lessons done so far are kept ahead (ahead.js); another one still works, with its text to read.
+  if (app.online) app.ui.talkKept = null;
+  else if (!app.ui.talkKept) {
+    const ui = app.ui, kept = (ui.talkKept = {});
+    app.audio.loadIndex().then(async () => {
+      for (const r of content.roleplays) kept[r.id] = await packsStored(app.audio, app.audio.deps('r-' + r.id));
+      if (app.ui === ui && ui.talkKept === kept) app.render();
+    }).catch(() => {});
+  }
+  const keptLine = (rid) => {
+    const k = !app.online && app.ui.talkKept ? app.ui.talkKept[rid] : undefined;
+    if (k == null) return null;
+    const i = icon(k ? 'check' : 'wifiOff'); Object.assign(i.style, { width: '1.25rem', height: '1.25rem', verticalAlign: 'middle', marginInlineEnd: '.3rem' });
+    return h('span', { class: 's', 'data-kept': String(k) }, i, k ? t('talk.kept') : t('talk.notKept'));
+  };
   for (const stage of stages) {
     const list = content.roleplays.filter((r) => (r.stage || 1) === stage.id);
     if (!all && stage.id !== here) continue;
@@ -39,7 +56,7 @@ export function talkView(app) {
       const sc = app.scenario(r.scenario);
       main.append(h('button', { type: 'button', class: 'item', onclick: () => app.go('rp.' + r.id) },
         h('span', { class: 'pic', style: 'width:3.25rem;height:3.25rem' }, icon(r.phone ? 'phone' : (sc ? sc.icon : 'chat'))),
-        h('span', { class: 'body' }, h('span', { class: 't' }, r.title), h('span', { class: 's' }, r.goal)),
+        h('span', { class: 'body' }, h('span', { class: 't' }, r.title), h('span', { class: 's' }, r.goal), keptLine(r.id)),
         store.state.rp[r.id] ? h('span', { class: 'badge' }, icon('check'), t('place.done')) : null));
     }
   }
@@ -62,7 +79,14 @@ export function roleplayView(app, id) {
   // the one request that is offered at every turn of every conversation: "Could you repeat that, please?"
   const ask = (content.ui.fixed && content.ui.fixed.repeat && content.ui.fixed.repeat.en) ? content.ui.fixed.repeat : null;
 
-  if (!S.probed) { S.probed = true; app.partner.probe().then((ok) => { S.aiOk = ok && app.partner.allows(R) && !R.safetyCritical && !personal; if (S.aiOk) app.render(); }); audio.loadIndex().then(() => audio.warm(audio.deps('r-' + id))).catch(() => {}); }
+  if (!S.probed) { S.probed = true; app.partner.probe().then((ok) => { S.aiOk = ok && app.partner.allows(R) && !R.safetyCritical && !personal; if (S.aiOk) app.render(); }); audio.loadIndex().then(async () => {
+    const deps = audio.deps('r-' + id);
+    audio.warm(deps);
+    // is its sound on the phone? Without a connection and without it, the conversation is not played in silence: a note says so and the partner's words are shown
+    S.kept = await packsStored(audio, deps);
+    if (app.ui.rp === S && !S.kept && !app.online) app.render();
+  }).catch(() => {}); }
+  const noSound = () => !app.online && S.kept === false;
 
   // a line of the partner; `check` is the question the learner is asked about it before the conversation goes on
   const themLine = (line, check = null) => ({ who: 'them', en: line.en, fa: line.fa, check: checkOf(check) });
@@ -85,7 +109,7 @@ export function roleplayView(app, id) {
 
   const begin = (mode) => {
     const first = themLine(R.turns[0].them, mode === 'script' ? R.turns[0].check : null);
-    Object.assign(S, { started: true, mode, turn: 0, done: false, log: [first], queue: [], fresh: 0, note: null, unsure: null, again: null, seed: Math.random() });
+    Object.assign(S, { started: true, mode, turn: 0, done: false, log: [first], queue: [], fresh: 0, note: null, unsure: null, again: null, seed: Math.random(), silent: noSound() });
     if (mode === 'ai') S.ai = { sugg: R.turns[0].replies.map((r) => ({ en: r.en, fa: r.fa })), busy: false, error: null, n: 0 };
     app.render(true);
     speakThem([first]);
@@ -222,7 +246,8 @@ export function roleplayView(app, id) {
       h('p', { class: 'lead' }, R.setting), h('p', null, h('b', null, t('rp.goal') + ' '), R.goal),
       h('p', { class: 'muted' }, t('rp.partner', { role: R.them.role }))));
     if (R.note) main.append(note(R.note, R.safetyCritical ? 'danger' : 'care', R.safetyCritical ? 'sos' : 'info'));
-    if (R.phone) main.append(note(t('rp.phone'), 'info', 'phone'));
+    if (noSound()) main.append(note(t('talk.offline'), 'info', 'wifiOff'));
+    else if (R.phone) main.append(note(t('rp.phone'), 'info', 'phone'));
     else if (!S.showText) main.append(note(t('rp.listenFirst'), 'info', 'ear'));
     if (personal) main.append(note(t('rp.madeUp'), 'info', 'lock'));
     main.append(btn(t('rp.start'), { cls: 'btn-primary', icon: 'chat', block: true, onclick: () => begin('script') }));
@@ -263,7 +288,7 @@ export function roleplayView(app, id) {
     const isLast = m === lastThem && !S.done;
     const held = m === asked;        // the learner is being asked what this line said: no text yet, and its buttons are in the question below
     // heard but not yet read; when the conversation is over everything can be read
-    const masked = them && !S.done && !m.shown && (held || !S.showText);
+    const masked = them && !S.done && !m.shown && !S.silent && (held || !S.showText);
     const withFa = !masked && m.fa && (S.showFa || S.done || !them || m.asked === 'shown');
     return h('div', { class: `bubble ${m.who}`, 'data-new': i === S.fresh && !S.again && !S.done ? '' : null },
       h('span', { class: 'who' }, them ? R.them.role : t('talk.you')),
@@ -314,7 +339,8 @@ export function roleplayView(app, id) {
       app.ui.rpq = state;        // the question keeps its tries with its line, not with the screen
       const options = shuffle([{ id: 'r', right: true, text: c.right }, ...c.wrong.map((x, k) => ({ id: 'w' + k, right: false, text: x }))], mix(S.seed, 50 + S.log.indexOf(asked)))
         .map((o) => ({ ...o, label: h('span', null, answerText(o.text)) }));
-      main.append(h('section', { class: 'card', 'data-check': '' }, h('p', { class: 'eyebrow' }, t('rp.check.eyebrow')), h('h2', { tabindex: '-1', 'data-check-q': '' }, c.q || t('rp.check.q')), hear()));
+      main.append(h('section', { class: 'card', 'data-check': '' }, S.silent ? null : h('p', { class: 'eyebrow' }, t('rp.check.eyebrow')),      // («درست شنیدید؟» not where the line could only be read)
+        h('h2', { tabindex: '-1', 'data-check-q': '' }, c.q || t('rp.check.q')), hear()));
       const choices = quiz(app, 'rpq', options, { missNote: t('listen.again'),
         onMiss: () => { if (Object.keys(state.tried).length >= Math.min(CHECK_TRIES, c.wrong.length)) { asked.reveal = true; S.lock = performance.now() + 600; } },
         onSolved: () => checked(asked, 'right') });

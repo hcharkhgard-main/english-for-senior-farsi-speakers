@@ -520,7 +520,8 @@ export function lessonView(app, id) {
     const hard = phrases.filter((p) => store.state.hard[hardKey(p)]);
     // On a narrow phone the bar's main button says only «تمرین مکالمه» / «درس بعدی» (a three-line label made the two bars
     // a third of the screen at 320 px and large text — QA round 4, accessibility L1); what exactly comes next is said here.
-    const narrow = window.innerWidth < 360;
+    // Narrow is measured in text widths, so large text on a wider phone counts too (390 px at 150 %: QA round 5, usability L2).
+    const narrow = window.innerWidth / (parseFloat(getComputedStyle(document.documentElement).fontSize) || 16) < 22.5;
     const nextWhat = rp ? t('done.practice', { title: rp.title }) : nextId ? t('done.next', { title: content.lessons[nextId].title.fa }) : '';
     main.append(h('section', { class: 'card center' }, h('span', { class: 'big-check' }, icon('check')), h('h1', { style: 'font-size:1.6rem' }, t('done.title')), h('p', { class: 'lead' }, L.canDo), faListen(app, L.canDo, t('audio.listenFa')),
       narrow && nextWhat ? h('p', { class: 'muted', 'data-done-then': '' }, t('done.then', { what: nextWhat })) : null));

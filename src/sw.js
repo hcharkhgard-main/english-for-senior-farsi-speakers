@@ -152,6 +152,10 @@ self.addEventListener('activate', (e) => {
 });
 
 const offline = () => new Response('Offline', { status: 503, headers: { 'Content-Type': 'text/plain' } });
+// Opening the app with no usable stored page and no connection: a short page in Farsi (its text is put here from
+// content/ui.fa.json by tools/build.mjs) instead of the English word (QA round 5, usability L5)
+const OFFLINE_PAGE = __OFFLINE_PAGE__;
+const offlinePage = () => new Response(OFFLINE_PAGE, { status: 503, headers: { 'Content-Type': 'text/html; charset=utf-8' } });
 
 self.addEventListener('fetch', (e) => {
   const req = e.request;
@@ -165,7 +169,7 @@ self.addEventListener('fetch', (e) => {
   // never stored — so no link can replace the stored app with something else.
   if (req.mode === 'navigate') {
     if (path !== '' && path !== 'index.html') return;
-    e.respondWith((async () => (await served(await caches.open(SHELL), 'index.html', 'index.html')) || (await again('index.html', req)))());
+    e.respondWith((async () => (await served(await caches.open(SHELL), 'index.html', 'index.html')) || (await again('index.html', req, offlinePage)))());
     return;
   }
 
@@ -207,7 +211,7 @@ self.addEventListener('fetch', (e) => {
 
 // A file of the app that is missing from the store or was not right there: fetched afresh and, if it is the listed
 // file, stored and served. Otherwise the network's answer is passed on as it is (never stored), or "offline".
-async function again(path, req) {
+async function again(path, req, fallback = offline) {
   try { const good = await fetchChecked(path); try { await (await caches.open(SHELL)).put(path, good.clone()); } catch { /* storage full */ } return good; } catch { /* not the right file now */ }
-  try { return await fetch(req); } catch (err) { return offline(); }
+  try { return await fetch(req); } catch (err) { return fallback(); }
 }

@@ -84,15 +84,14 @@ test('every conversation asks at least twice, and a first greeting is never aske
 test('the medicine listening round uses only sentences of its lesson and is closed to the live partner', () => {
   const R = byId('rp-medicine'), L = C.lessons['medicine-instructions'];
   assert.ok(R && L);
-  // besides the lesson's sentences, the one answer to "Is that right?" (QA round 4, language L7): the pharmacist says yes
-  const CONFIRM = ["Yes, that's right. One tablet, twice a day.", 'بله، درست است. روزی دو بار، هر بار یک قرص.'];
-  const own = new Set([...L.phrases.map((p) => p.en), ...L.dialogue.lines.map((l) => l.en), L.respond.them.en, ...L.respond.ok.map((o) => o.en), CONFIRM[0]]);
+  // every line, the pharmacist's "Yes, that's right." too (QA round 5, usability M2), is taught in the lesson first
+  const own = new Set([...L.phrases.map((p) => p.en), ...L.dialogue.lines.map((l) => l.en), L.respond.them.en, ...L.respond.ok.map((o) => o.en)]);
   for (const t of R.turns) for (const line of [t.them.en, ...t.replies.flatMap((r) => [r.en, ...(r.then ? [r.then.en] : [])])]) assert.ok(own.has(line), `"${line}" is not a sentence of lesson medicine-instructions`);
   // the five sample instructions, each said once by the pharmacist and each asked about
   assert.deepEqual(L.phrases.map((p) => R.turns.filter((t) => t.them.en.includes(p.en)).length), [1, 1, 1, 1, 1]);
   assert.ok(R.turns.every((t) => t.check), 'every instruction is asked about');
   // Persian of a line is the lesson's own translation of it
-  const faOf = new Map([...L.phrases.map((p) => [p.en, p.fa]), ...L.dialogue.lines.map((l) => [l.en, l.fa]), ...L.respond.ok.map((o) => [o.en, o.fa]), CONFIRM]);
+  const faOf = new Map([...L.phrases.map((p) => [p.en, p.fa]), ...L.dialogue.lines.map((l) => [l.en, l.fa]), ...L.respond.ok.map((o) => [o.en, o.fa])]);
   for (const t of R.turns) for (const x of [t.them, ...t.replies, ...t.replies.map((r) => r.then).filter(Boolean)]) assert.equal(x.fa, faOf.get(x.en), `the Persian of "${x.en}" differs from the lesson`);
   assert.equal(R.safetyCritical, true); assert.equal(R.scripted, true);
   assert.ok(liveBlock({ ...R, turns: R.turns.map((t) => ({ ...t, them: [t.them.en, t.them.fa] })) }), 'never offered to the live partner');

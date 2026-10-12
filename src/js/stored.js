@@ -20,3 +20,16 @@ export async function isStored(address, bytes) {
     return good;
   } catch { return false; }
 }
+
+// Are all these sound packs (ids from audio.deps) on the phone? With no recorded sound at all (the device voice is
+// used) there is nothing to keep, so the answer is yes. Used to tell, without a connection, which conversations
+// still have their sound (QA round 5, usability M1).
+export async function packsStored(audio, ids) {
+  const idx = audio.index;
+  if (!idx || !Array.isArray(idx.packs)) return false;
+  for (const pid of ids) {
+    const p = idx.packs.find((x) => x.id === pid);
+    if (!p || !(await isStored(audio.packUrl(p.id), p.bytes))) return false;
+  }
+  return true;
+}

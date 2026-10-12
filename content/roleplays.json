@@ -382,7 +382,7 @@
           "replies": [
             { "en": "Yes, he is breathing.", "fa": "بله، نفس می‌کشد.", "keys": ["yes"] },
             { "en": "No, he is not breathing.", "fa": "نه، نفس نمی‌کشد.", "keys": ["no", "not breathing"], "then": ["Okay. Stay on the line. I will help you.", "باشد. تماس را قطع نکنید. کمکتان می‌کنم."], "thenCheck": { "right": "تماس را قطع نکنید. کمکتان می‌کنم.", "wrong": ["قطع کنید. خودشان دوباره زنگ می‌زنند.", "تلفن را به کس دیگری بدهید."] } },
-            { "en": "I don't know.", "fa": "نمی‌دانم.", "keys": ["don't know", "do not know"] },
+            { "en": "I don't know.", "fa": "نمی‌دانم.", "keys": ["don't know", "do not know", "not sure"] },
             { "en": "I don't know. I need an interpreter.", "fa": "نمی‌دانم. مترجم لازم دارم.", "keys": ["interpreter"], "then": ["Okay. Stay on the line. I am getting an interpreter.", "باشد. تماس را قطع نکنید. دارم مترجم می‌آورم."], "thenCheck": { "right": "تماس را قطع نکنید. دارم مترجم می‌آورم.", "wrong": ["قطع کنید. مترجم خودش به شما زنگ می‌زند.", "مترجم نداریم."] } }
           ] },
         { "them": ["Help is on the way. Stay on the line.", "کمک در راه است. تماس را قطع نکنید."],

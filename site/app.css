@@ -105,8 +105,11 @@ bdi.en { font-family: var(--en); text-align: inherit; letter-spacing: 0; }
 .tb-brand { display: flex; align-items: center; gap: .6rem; font-weight: 800; font-size: clamp(18px, 1.25rem, 24px); min-width: 0; }
 .tb-brand svg { width: clamp(36px, 2.25rem, 44px); height: clamp(36px, 2.25rem, 44px); color: var(--primary); }
 .tb-spacer { flex: 1; }
-/* a phone narrower than 360 px: the home screen's bar shows the mark without the name, so that «اضطراری» fits beside «تنظیمات» */
-@media (max-width: 359px) { .tb-brand .tb-name { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } }
+/* on a phone (and on a larger screen with very large text) the home screen's bar shows the mark without the name, so that
+   «اضطراری» and «تنظیمات» keep the same one-line shape and place as on every other screen (QA round 5, usability L1).
+   The name is still read by a screen reader. */
+@media (max-width: 429px) { .tb-brand .tb-name { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } }
+@media (max-width: 575px) { :root[data-big] .tb-brand .tb-name { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } }
 
 /* ---- buttons ---------------------------------------------------------- */
 .btn {
@@ -374,6 +377,7 @@ bdi.en { font-family: var(--en); text-align: inherit; letter-spacing: 0; }
 
 /* ---- settings ----------------------------------------------------------------------- */
 .seg { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 4.75rem), 1fr)); gap: .5rem; }
+.seg.seg-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }      /* the four parts of the numbers: two by two, so each label has room */
 .seg button { min-height: var(--tap); min-width: 0; padding: .3rem .4rem; border-radius: 14px; border: 2px solid var(--edge); background: var(--surface); font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: .3rem; }
 .seg button svg { width: 1.3rem; height: 1.3rem; }
 .seg button[aria-pressed="true"] { background: var(--primary); color: var(--primary-ink); border-color: var(--primary); }

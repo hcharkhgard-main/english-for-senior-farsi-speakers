@@ -237,6 +237,22 @@ try {
     // a part is "ready" only when all of it is: two lessons of seventy-odd are «بعضی», with no tick (QA round 4, accessibility M2)
     const lessonsRow = await page.evaluate(() => { const li = [...document.querySelectorAll('[data-offline-parts] li')][1]; return li ? { state: li.querySelector('strong').textContent.trim(), ready: li.dataset.ready, tick: !!li.querySelector('svg') && li.querySelector('svg').style.color.includes('good') } : null; });
     check('…and the lessons are not called ready while only some are stored', !!lessonsRow && lessonsRow.ready === 'some' && lessonsRow.state === T['off.some'] && !lessonsRow.tick, lessonsRow);
+    // the conversation list says, in words, which conversations have their sound on the phone; one that has not
+    // does not start in silence: a calm note, and the other person's words to read (QA round 5, usability M1)
+    const firstTalks = await page.evaluate((first) => (window.hamrah.content.practiceAll || {})[first] || [], first);
+    await page.evaluate(() => window.hamrah.go('talk')); await page.waitForTimeout(4000);
+    const marks = await page.evaluate(() => [...document.querySelectorAll('main button.item')].map((b) => ({ t: (b.querySelector('.t') || {}).textContent, kept: (b.querySelector('[data-kept]') || { dataset: {} }).dataset.kept || null, text: (b.querySelector('[data-kept]') || {}).textContent || '' })).filter((x) => x.t && window.hamrah.content.roleplays.some((r) => r.title === x.t)));
+    const titleOf = await page.evaluate((ids) => ids.map((id) => window.hamrah.content.roleplays.find((r) => r.id === id).title), firstTalks);
+    check('…the conversation list marks, in words, which conversations work offline and which have no sound yet',
+      marks.length > 0 && marks.every((m) => m.kept === 'true' || m.kept === 'false') && marks.filter((m) => titleOf.includes(m.t)).every((m) => m.kept === 'true' && m.text.includes(T['talk.kept'])) && marks.some((m) => m.kept === 'false' && m.text.includes(T['talk.notKept'])), { marks: marks.slice(0, 6), titleOf });
+    const phoneTalks = await page.evaluate(async () => { const a = window.hamrah; await a.audio.loadIndex(); return a.content.roleplays.filter((r) => r.phone).map((r) => r.id); });
+    let silentId = null;      // a phone conversation of which a sound pack is not stored
+    for (const rid of phoneTalks) { const has = await page.evaluate(async (rid) => { const a = window.hamrah; const deps = a.audio.deps('r-' + rid); const names = await caches.keys(); for (const d of deps) { const p = a.audio.index.packs.find((x) => x.id === d); let ok = false; for (const n of names) { const c = await caches.open(n); if (await c.match(new URL(a.audio.packUrl(p.id), document.baseURI).href)) ok = true; } if (!ok) return false; } return true; }, rid); if (!has) { silentId = rid; break; } }
+    await page.evaluate((rid) => window.hamrah.go('rp.' + rid), silentId); await page.waitForTimeout(2500);
+    const before = await page.evaluate(() => [...document.querySelectorAll('main .note')].map((n) => n.textContent).join(' | '));
+    await page.getByText(T['rp.start']).click(); await page.waitForSelector('.bubble.them'); await page.waitForTimeout(800);
+    const shown = await page.evaluate(() => { const b = document.querySelector('.bubble.them'); return { mask: !!b.querySelector('.phone-mask'), en: (b.querySelector('[lang="en"]') || {}).textContent || '' }; });
+    check('…a phone conversation whose sound is not on the phone says so calmly, and its first line can be read', !!silentId && before.includes(T['talk.offline']) && !shown.mask && shown.en.length > 5, { silentId, before: before.slice(0, 120), shown });
     await plug(ctx); await ctx.close();
   }
   // ---- another site on the same address replaces stored files (QA round 4, security M1) ----------
@@ -271,7 +287,9 @@ try {
     await unplug(ctx);
     const p3 = await ctx.newPage(); await p3.goto(ORIGIN + '/one/').catch(() => {}); await p3.waitForTimeout(1500);
     const off = await p3.evaluate(() => ({ replaced: !!window.__replaced, app: !!window.hamrah })).catch(() => ({ replaced: false, app: false }));
+    const offText = await p3.evaluate(() => ({ lang: document.documentElement.lang, dir: document.documentElement.dir, text: document.body ? document.body.innerText : '' })).catch(() => ({ text: '' }));
     check('…and without a connection a replaced page is not run at all', !off.replaced && !off.app, off);
+    check('…the learner sees a calm page in Farsi instead of the English word "Offline" (QA round 5, usability L5)', offText.lang === 'fa' && offText.dir === 'rtl' && offText.text.includes(T['offline.page.title']) && offText.text.includes('911') && !/^Offline$/.test(offText.text.trim()), offText);
     await plug(ctx); await ctx.close();
   }
   // ---- update while in a lesson: nothing happens until home ------------------------------------
