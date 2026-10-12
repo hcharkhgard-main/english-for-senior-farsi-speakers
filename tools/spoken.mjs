@@ -32,7 +32,25 @@ export function enYear(y) {
 export function spokenEn(text, say) {
   if (say.exact && say.exact[text] != null) return say.exact[text];
   let t = text;
-  for (const [from, to] of say.replace || []) t = t.split(from).join(to);
+  // printed papers and signs: read them the way a person reads them aloud
+  const ACRO = new Set(['ID', 'PIN', 'ATM', 'TV', 'AM', 'PM', 'OK', 'US', 'USA', 'MG', 'ST', 'AVE', 'QTY', 'DR']);
+  const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  t = t
+    .replace(/\b(\d{1,2})\/(\d{1,2})\/(\d{4})\b/g, (_, m, d, y) => `${MONTHS[m - 1]} ${d}th, ${y}`)
+    .replace(/\b(\d{1,2})\/(\d{4})\b/g, (_, m, y) => `${MONTHS[m - 1]} ${y}`)
+    .replace(/\$(\d+)\.00\b/g, '$$$1')
+    .replace(/\b(\d{4})-(\d{4})\b/g, (_, a, b) => `${a.split('').join(' ')}, ${b.split('').join(' ')}`)
+    .replace(/\s+\/\s+/g, ', ')
+    .replace(/\s+&\s+/g, ' and ')
+    .replace(/\s+-\s+/g, '. ')
+    .replace(/\bQTY\b/g, 'Quantity').replace(/\bMG\b/g, 'milligram').replace(/\bST\b/g, 'Street').replace(/\bAVE\b/g, 'Avenue')
+    .replace(/\bDr\.\s/g, 'Doctor ').replace(/\bDR\.\s/g, 'Doctor ').replace(/\bApt\b/g, 'apartment').replace(/\b(\d+) gal\b/g, '$1 gallon').replace(/\b(\d+) lb\b/g, '$1 pounds')
+    .replace(/\b([A-Z]{2,})\b/g, (w) => (ACRO.has(w) ? w : w.charAt(0) + w.slice(1).toLowerCase()));
+  // whole-word replacements from content/pronunciation.json ("ID" must not touch "RESIDENTS")
+  for (const [from, to] of say.replace || []) {
+    const esc = from.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    t = t.replace(new RegExp((/^\w/.test(from) ? '\\b' : '') + esc + (/\w$/.test(from) ? '\\b' : ''), 'g'), to);
+  }
   t = t
     .replace(/\b(\d{3})-(\d{3})-(\d{4})\b/g, (_, a, b, c) => `${enDigits(a)}, ${enDigits(b)}, ${enDigits(c)}`)
     .replace(/\b(\d{3})-(\d{4})\b/g, (_, a, b) => `${enDigits(a)}, ${enDigits(b)}`)
@@ -40,7 +58,7 @@ export function spokenEn(text, say) {
     .replace(/\$(\d+)\.(\d\d)\b/g, (_, d, c) => `${enNumber(d)} dollar${d === '1' ? '' : 's'} and ${enNumber(c)} cents`)
     .replace(/\$(\d+)\b/g, (_, d) => `${enNumber(d)} dollar${d === '1' ? '' : 's'}`)
     .replace(/\b(\d{1,2}):(\d\d)\b/g, (_, hh, mm) => `${enNumber(hh)} ${mm === '00' ? "o'clock" : (mm[0] === '0' ? 'oh ' + ONES[mm[1]] : enNumber(mm))}`)
-    .replace(/\b(\d{1,2})(st|nd|rd|th)\b/g, (_, d) => enOrdinal(d))
+    .replace(/\b(\d{1,2})(st|nd|rd|th)\b/gi, (_, d) => enOrdinal(d))
     .replace(/\b(1[5-9]\d\d|20\d\d)\b/g, (y) => enYear(y))
     .replace(/\b(\d{5})\b/g, (z) => enDigits(z))
     .replace(/\b\d{1,4}\b/g, (d) => enNumber(d))
