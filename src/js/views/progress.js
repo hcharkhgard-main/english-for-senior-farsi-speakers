@@ -11,27 +11,22 @@ import { quiz } from './lesson.js';
 import { grade } from '../srs.js';
 import { todayOffer, checkpointPlan, checkpointMark, checkpointDue, canDoList, missionDue, laterChoice, pathLesson, later } from '../learn.js';
 import { ownLines, ownMissing } from '../own.js';
+import { me, mayAsk, decline } from '../me.js';
 import { papersFor } from './papers.js';
 
 // ---- «جملهٔ خودِ شما» ---------------------------------------------------------------------------------
 // The sentences of the lesson with the learner's own name, number or date in them (curriculum.json "mine" says
 // which). Played from single recordings — letters, numbers, months — so nothing about the learner is ever sent
-// anywhere. When «اطلاعات من» is empty the learner is invited to fill it in: once as a card, afterwards as one
-// quiet line; the lesson never waits for it.
+// anywhere. When «اطلاعات من» is empty (it is kept in memory only, so it is empty again every time the app is opened)
+// the learner is invited to fill it in — with an equal «no» beside it — until they say no in this session, and never
+// when Settings «هیچ‌وقت نپرس» is on. The lesson never waits for it.
 export function ownCard(app, lessonId) {
   const { t, store, content } = app;
   const kinds = (content.mine || {})[lessonId];
   if (!kinds || !kinds.length) return null;
-  const me = store.state.me;
   const lines = ownLines(me, kinds);
   const goMe = () => app.go('me');
-  if (!lines.length) {
-    // the invitation is a card the first time only (remembered a moment later: nothing is saved while a screen is being drawn)
-    if (!store.state.told.me && !app.ui.ownInvite) { app.ui.ownInvite = true; setTimeout(() => store.update((s) => { s.told.me = 1; }), 0); }
-    if (!app.ui.ownInvite) return h('button', { type: 'button', class: 'linkish', onclick: goMe }, t('own.more'));
-    return h('section', { class: 'card' }, h('h2', null, t('own.title')), h('p', null, t('own.invite')),
-      btn(t('own.invite.go'), { cls: 'btn-soft', icon: 'people', block: true, onclick: goMe }));
-  }
+  if (!lines.length) return mayAsk(store.state) ? invite(app, t('own.title'), t('own.invite')) : null;
   if (!app.ui.ownWarm) { app.ui.ownWarm = true; app.audio.loadIndex().then(() => app.audio.warm(app.audio.deps('me'))).catch(() => {}); }
   const clips = (line, speed) => line.say.map((text) => clipEn(text, 's', speed));
   const card = h('section', { class: 'card' }, h('h2', null, t('own.title')), h('p', { class: 'muted' }, t('own.sub')));
@@ -44,6 +39,17 @@ export function ownCard(app, lessonId) {
   if (lines.some((l) => !l.say)) card.append(h('p', { class: 'small muted' }, t('own.readAloud')));
   card.append(h('button', { type: 'button', class: 'linkish', onclick: goMe }, ownMissing(me, kinds).length ? t('own.more') : t('own.edit')));
   return card;
+}
+
+// An invitation to fill in «اطلاعات من»: what it is for, that it is optional and not saved, and two equal buttons —
+// «وارد کردن اطلاعات من» and «نه، بدون اطلاعات ادامه می‌دهم». «No» closes it, and no invitation is shown again until the
+// app is opened again (me.js decline). Used at the end of a lesson and on the emergency page.
+export function invite(app, title, text) {
+  const { t } = app;
+  return h('section', { class: 'card', 'data-invite': '' }, h('h2', null, title), h('p', null, text),
+    h('div', { class: 'stack' },
+      btn(t('own.invite.go'), { cls: 'btn-soft', icon: 'people', block: true, onclick: () => app.go('me') }),
+      btn(t('own.invite.no'), { cls: 'btn-ghost', block: true, 'data-invite-no': '', onclick: () => { decline(); toast(t('own.invite.later')); app.render(); } })));
 }
 
 // ---- the last screen of a lesson ------------------------------------------------------------------

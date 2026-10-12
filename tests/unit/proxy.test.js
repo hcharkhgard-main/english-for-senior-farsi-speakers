@@ -6,6 +6,7 @@ import fs from 'node:fs';
 import net from 'node:net';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { setMe, clearMe } from '../../src/js/me.js';
 import { createHandler, validateTurn, parseOrigins, clientKey } from '../../ai-proxy/handler.mjs';
 import { createServer } from '../../ai-proxy/node-server.mjs';
 import { buildPersonas, PERSONAS_FILE } from '../../tools/make-personas.mjs';
@@ -479,7 +480,8 @@ test('the app sends the conversation id, never role text or anything personal, a
     return new Response(good, { status: 200 });
   };
   await withFetch(net, async () => {
-    const app = fakeApp({ store: { state: { settings: { ai: true }, onboard: { level: 'some' }, me: { name: 'Real Name', address: '1 Real Street' } } } });
+    setMe('name', 'Real Name'); setMe('address', '1 Real Street');      // «اطلاعات من» filled in (in memory)
+    const app = fakeApp({ store: { state: { settings: { ai: true }, onboard: { level: 'some' } } } });
     const partner = createPartner(app);
     assert.equal(await partner.probe(), true);
     assert.equal(partner.kind, 'proxy');
@@ -495,6 +497,7 @@ test('the app sends the conversation id, never role text or anything personal, a
     const body = JSON.parse(calls[0].init.body);
     assert.deepEqual(body, { v: 1, id: OPEN_ID, level: 'elementary', history: [{ who: 'them', en: 'Hello! Can I help you find something?' }, { who: 'you', en: 'Where is milk' }, { who: 'them', en: 'In aisle five.' }], said: 'How much is this?' });
     assert.ok(!calls[0].init.body.includes('Real'), 'nothing from the personal card is sent');
+    clearMe();
     assert.ok(validateTurn(body, PERSONAS).turn, 'and the proxy accepts exactly this shape');
 
     // closed conversations and a switched-off partner send nothing

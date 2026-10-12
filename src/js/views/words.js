@@ -6,6 +6,7 @@ import { shuffle, mix, numberRound, micOn, later, todaysSet, heardOnly } from '.
 import { quiz } from './lesson.js';
 import { papersLink } from './papers.js';
 import { ownItem } from '../own.js';
+import { me } from '../me.js';
 
 export function wordsView(app) {
   const { t, store, content } = app;
@@ -63,7 +64,7 @@ export function catView(app, catId) {
 export function savedView(app) {
   const { t, store } = app;
   // (a saved sentence about the sample person is shown as the learner's own, as on its review card)
-  const items = Object.keys(store.state.fav).map((id) => ownItem(app.item(id), store.state.me, { month: (m) => t('month.' + m) })).filter(Boolean);
+  const items = Object.keys(store.state.fav).map((id) => ownItem(app.item(id), me, { month: (m) => t('month.' + m) })).filter(Boolean);
   const main = h('main', { class: 'wrap' }, h('h1', { class: 'section-title' }, t('saved.title')));
   if (!items.length) main.append(note(t('saved.none'), 'info', 'star'));
   items.forEach((it) => main.append(wordRow(app, it)));
@@ -118,7 +119,7 @@ export function reviewView(app) {
 
   const id = list[S.i];
   // a sentence about the sample person ("My name is Maryam.") is shown with the learner's own detail, once «اطلاعات من» has it
-  const it = ownItem(app.item(id), store.state.me, { month: (m) => t('month.' + m) });
+  const it = ownItem(app.item(id), me, { month: (m) => t('month.' + m) });
   if (!it) { S.i++; return reviewView(app); }
   const word = it.kind === 'word';
   const mode = S.pass === 1 ? S.mode[id] || 'read' : 'read';     // the repeat at the end of a set shows everything

@@ -1,6 +1,7 @@
 // Boot, navigation and the frame every screen sits in.
 import { h, icon, mark, toast, announce, liveRegion, closeSheets, sheet, setStrings, noteTap, inUse, focusKey, refocus } from './ui.js';
 import { createStore, today } from './store.js';
+import { me } from './me.js';
 import { createAudio } from './audio.js';
 import { createSpeech } from './speech.js';
 import { createPartner } from './partner.js';
@@ -96,6 +97,7 @@ async function boot() {
   const order = content.stages.flatMap((st) => st.lessons.filter((id) => content.lessons[id]));
   const app = {
     target: TARGET, version: VERSION, content, store, audio, speech, t, order,
+    me,                                                          // «اطلاعات من»: in memory only, never saved (me.js)
     online: navigator.onLine !== false,
     go, back, render, hold, home: () => go(store.state.onboard.done ? 'home' : 'onboard', { reset: true }),
     get ui() { return entries[entries.length - 1].ui; },        // the state of the screen on show; kept while another screen is opened on top of it

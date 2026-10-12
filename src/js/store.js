@@ -1,10 +1,13 @@
 // Learner progress and settings. Everything stays on this device (localStorage);
-// nothing is sent anywhere. Reads and writes are guarded so the app still works
+// nothing is sent anywhere. The learner's personal details («اطلاعات من») are NOT part of this: they are kept in
+// memory only (me.js) and are never written here — `toStored` is the one door to the storage. Reads and writes are guarded so the app still works
 // when storage is blocked (private windows, embedded previews).
 
 // The name the progress is stored under carries the path this copy of the app is served from, as the names of its
 // stored files do (sw.js): two copies on one address (user.github.io/hamrah and …/hamrah-test) share the browser's
 // storage, and must not read, overwrite or wipe each other's learner. OLD_KEY is the name earlier builds used.
+import { forgetAll } from './me.js';
+
 const OLD_KEY = 'hamrah.v1';
 const copyPath = () => { try { return typeof document === 'undefined' ? '' : '|' + new URL('./', document.baseURI).pathname; } catch { return ''; } };
 const KEY = OLD_KEY + copyPath();
@@ -15,10 +18,9 @@ export function blank() {
   return {
     v: 1,
     onboard: { done: false, step: 0, level: 'none', focus: 'both', scenario: '' },   // step: which first-run question is on screen
-    settings: { scale: 1, rate: 1, ph: true, faVoice: true, auto: true, ai: false, micOk: false },
-    // «اطلاعات من»: the learner's own details. They never leave this phone. phone: the learner's own number;
-    // contact: a family member's number; born: date of birth as "1955-12-14" (a part not chosen yet is 0) — see own.js
-    me: { name: '', address: '', contact: '', phone: '', born: '' },
+    // neverAsk: «هیچ‌وقت نپرس» — never invite the learner to enter their personal details (a choice, not a detail)
+    settings: { scale: 1, rate: 1, ph: true, faVoice: true, auto: true, ai: false, micOk: false, neverAsk: false },
+    // (no `me`: the learner's personal details are kept in memory only, see me.js)
     at: {},                     // lessonId -> { pos, scr, short, t, seed, warm } — where the learner stopped in each lesson they have started
     done: {},                   // lessonId -> { t, n }
     hard: {},                   // "lessonId:p2" -> times it needed another try
@@ -33,7 +35,7 @@ export function blank() {
     later: {},                  // lessonId -> 1: «این درس الان به کارم نمی‌آید», moved to the end of the path; 2: set aside again there, no longer offered
     cp: { n: 0, t: 0 },         // review checkpoints: n = how many groups of five finished lessons have had theirs (or were passed over), t = when
     tried: {},                  // lessonId -> 1: the learner tried the lesson's small real-life task; 0: asked once, "not yet"
-    told: {},                   // things said once only (name -> 1), e.g. the invitation to fill in «اطلاعات من»
+    told: {},                   // things said once only (name -> 1)
   };
 }
 
@@ -47,7 +49,16 @@ function screenOf(x) {
   return o;
 }
 
+// What is written to the storage: the fields of blank() and nothing else. Whatever else a state object may carry —
+// above all `me`, the learner's personal details that earlier builds kept here — is never written. Exported for the tests.
+export function toStored(state) {
+  const out = {};
+  for (const k of Object.keys(blank())) if (k !== 'me' && state && state[k] !== undefined) out[k] = state[k];
+  return JSON.stringify(out);
+}
+
 // Brings whatever was saved by an earlier build (or damaged by hand) into today's shape. Exported for the tests.
+// Personal details saved by an earlier build (`me`) are dropped here; createStore then writes the cleaned copy at once.
 export function migrate(s) {
   const b = blank();
   if (!isObj(s) || s.v !== 1) return b;
@@ -55,15 +66,13 @@ export function migrate(s) {
     if (isObj(b[k])) { if (isObj(s[k])) b[k] = { ...b[k], ...s[k] }; }
     else if (typeof s[k] === typeof b[k]) b[k] = s[k];
   }
-  // the learner's own details are short texts, whatever was stored
-  for (const k of Object.keys(b.me)) if (typeof b.me[k] !== 'string') b.me[k] = ''; else b.me[k] = b.me[k].slice(0, 200);
   b.cp = { n: Math.max(0, Math.floor(Number(b.cp.n)) || 0), t: Number(b.cp.t) || 0 };
   // settings are only ever one of the choices Settings offers: a damaged text size (1e9) would make every screen,
   // Settings too, unusable. Anything else goes back to the usual value; the switches are true or false.
   const d = blank().settings, st = b.settings;
   if (![1, 1.15, 1.3, 1.5].includes(Number(st.scale))) st.scale = d.scale; else st.scale = Number(st.scale);
   if (![1, 0.88, 0.78].includes(Number(st.rate))) st.rate = d.rate; else st.rate = Number(st.rate);
-  for (const k of ['ph', 'faVoice', 'auto', 'ai', 'micOk']) st[k] = typeof st[k] === 'boolean' ? st[k] : d[k];
+  for (const k of ['ph', 'faVoice', 'auto', 'ai', 'micOk', 'neverAsk']) st[k] = typeof st[k] === 'boolean' ? st[k] : d[k];
   // Earlier builds remembered one lesson in progress: current = { id, pos, short }. Positions are now kept per lesson.
   const c = s.current;
   if (isObj(c) && typeof c.id === 'string' && !b.at[c.id]) b.at[c.id] = { pos: c.pos, short: c.short, t: Date.now() };
@@ -86,26 +95,43 @@ export function createStore(storage, { events = typeof window !== 'undefined' ? 
   // and what is stored is the newer truth: this page takes it over and never writes its own older copy on top.
   let last = null;
   let state;
+  let persistent = true;
   const read = () => { try { return storage ? storage.getItem(KEY) : null; } catch { return undefined; } };      // undefined: storage cannot be read just now
+  const hadMe = (raw) => { try { const o = JSON.parse(raw); return isObj(o) && 'me' in o; } catch { return false; } };
   const parse = (raw) => { try { return migrate(raw ? JSON.parse(raw) : null); } catch { return blank(); } };
   // Progress saved under the earlier name moves to this copy's own name, once; the earlier entry is then removed,
   // so that «پاک کردن همه‌چیز» leaves nothing behind that a later start could bring back.
   if (KEY !== OLD_KEY && storage) { try { const old = storage.getItem(OLD_KEY); if (old != null) { if (storage.getItem(KEY) == null) storage.setItem(KEY, old); storage.removeItem(OLD_KEY); } } catch { /* storage cannot be used: nothing to move */ } }
   last = read() ?? null;
   state = parse(last);
+  // A copy saved by an earlier build may still hold the learner's personal details: it is replaced at once by the
+  // cleaned one (save, below), so that they are gone from the phone on the first start of this version.
+  if (last && hadMe(last)) save();
+  // The same for other copies of the app on this address (…/hamrah-test): only their `me` is removed, the rest of their
+  // entry is left exactly as it is.
+  try {
+    for (let i = 0; storage && typeof storage.key === 'function' && i < storage.length; i++) {
+      const k = storage.key(i);
+      if (k === KEY || typeof k !== 'string' || !(k === OLD_KEY || k.startsWith(OLD_KEY + '|'))) continue;
+      try { const o = JSON.parse(storage.getItem(k)); if (isObj(o) && 'me' in o) { delete o.me; storage.setItem(k, JSON.stringify(o)); } } catch { /* a damaged entry: left alone */ }
+    }
+  } catch { /* storage cannot be listed: nothing more to clean */ }
   const subs = new Set();
-  let persistent = true;
   const tell = (why) => subs.forEach((f) => f(state, why));
   // true when the stored copy was newer than ours and has replaced it
   const adopt = () => {
     const raw = read();
     if (raw === undefined || raw === last) return false;
+    // another tab of this app deleted everything: the personal details this tab holds in memory go as well
+    // (they are never carried from tab to tab otherwise — each tab has only what was typed into it)
+    if (raw === null && last !== null) forgetAll();
     last = raw; state = parse(raw);
+    if (raw && hadMe(raw)) save();      // an older version open in another tab wrote personal details: write them out again
     return true;
   };
-  const save = () => {
-    try { if (storage) { const text = JSON.stringify(state); storage.setItem(KEY, text); last = text; } } catch { persistent = false; }
-  };
+  function save() {
+    try { if (storage) { const text = toStored(state); storage.setItem(KEY, text); last = text; } } catch { persistent = false; }
+  }
   // Called when another tab may have written: the browser's 'storage' event, and — because a tab asleep in the
   // background can miss that event — whenever this page comes back into view. Subscribers are told 'external':
   // the app then redraws from its first screen, so that no open screen keeps showing or holding the older data.
@@ -128,10 +154,10 @@ export function createStore(storage, { events = typeof window !== 'undefined' ? 
       const newer = adopt();
       const old = state;
       state = blank();
-      if (keepSettings) { state.settings = old.settings; state.onboard = { ...old.onboard }; state.me = old.me; }
+      if (keepSettings) { state.settings = old.settings; state.onboard = { ...old.onboard }; }      // («اطلاعات من» is in memory and is not touched)
       save();
       tell(newer ? 'external' : undefined);
     },
-    wipe() { state = blank(); try { storage && storage.removeItem(KEY); } catch { /* ignore */ } last = read() ?? null; tell(); },
+    wipe() { state = blank(); forgetAll(); try { storage && storage.removeItem(KEY); } catch { /* ignore */ } last = read() ?? null; tell(); },
   };
 }

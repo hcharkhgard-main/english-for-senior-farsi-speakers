@@ -89,7 +89,8 @@ is absent or empty in the file is absent in the app's data too.
 | `curriculum.json` | `"mine": { lesson: ["phone", "age", "name", "address", "born"] }` | Which of the learner's own sentences the last screen of that lesson builds from «اطلاعات من» (`src/js/own.js`). | Known lessons and kinds |
 | `content/papers.json` (optional file) | `{ "papers": [{ "id", "title", "kind", "stage", "lesson"?, "note"?, "safetyCritical"?, "lines": [{ "en", "fa", "strong"? }], "questions": [{ "fa", "line" }] }] }` | A piece of paper or a screen to read. `kind` is `reminder`, `label`, `bill`, `letter`, `sign`, `receipt` or `form`; `line` is the number of the line that answers the question, counted from 1. Each line is recorded in voice `s` (audio pack `papers`). | Unique lower-case `id`; known `kind`, `stage` and `lesson`; every line has `en` and `fa`; every `line` points at a line |
 
-The learner's own details («اطلاعات من») are never content: they stay in the phone's storage. The app says the
+The learner's own details («اطلاعات من») are never content, and are never saved: they are kept in memory only while
+the app is open (`src/js/me.js`). The app says the
 learner's own phone number, age, spelled name and date of birth by playing single recordings one after another
 (letters, numbers 0–99, ordinals 1st–31st, months, "nineteen", "two thousand"); `tools/content.mjs` asks for those
 recordings under the audio pack `me`.

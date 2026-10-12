@@ -32,7 +32,10 @@ page.on('pageerror', (e) => errors.push('PAGEERROR ' + e.message));
 const shot = async (n) => { if (shots) await page.screenshot({ path: path.join(shots, n + '.png'), fullPage: true }); };
 const TAP_GAP = 450;      // the app ignores a tap that follows a screen change by less than 350 ms
 const wait = (ms = TAP_GAP) => page.waitForTimeout(ms);
-const st = () => page.evaluate(() => JSON.parse(JSON.stringify(window.hamrah.store.state)));
+// the saved state, with «اطلاعات من» beside it as `me` (kept in memory only: window.hamrah.me, me.js)
+const st = () => page.evaluate(() => ({ ...JSON.parse(JSON.stringify(window.hamrah.store.state)), me: { ...window.hamrah.me } }));
+// everything the page has stored: localStorage, IndexedDB database names, and the names of what is in Cache Storage
+const storedEverywhere = () => page.evaluate(async () => { const out = []; for (const k of Object.keys(localStorage)) out.push(k, localStorage.getItem(k)); for (const k of Object.keys(sessionStorage)) out.push(k, sessionStorage.getItem(k)); try { for (const d of await indexedDB.databases()) out.push('idb:' + d.name); } catch {} if (self.caches) for (const n of await caches.keys()) for (const r of await (await caches.open(n)).keys()) out.push(r.url); return out.join('\n'); });
 const route = () => page.evaluate(() => location.hash);
 const sub = () => page.locator('.choice.is-primary .s').textContent();
 const go = async (r) => { await page.evaluate((r) => window.hamrah.go(r), r); await wait(); };
@@ -69,13 +72,17 @@ try {
   await shot('02-me-empty');
   await page.fill('#me-name', 'Hossein Karimi'); await page.fill('#me-address', '1420 Wilshire Boulevard, Apartment 5'); await page.fill('#me-phone', '(310) 555-0142');
   await page.selectOption('#me-born-m', '12'); await page.selectOption('#me-born-d', '14'); await page.selectOption('#me-born-y', '1955'); await wait(150);
-  check('…the date is stored and shown as the sentence the learner will say', (await st()).me.born === '1955-12-14' && await page.locator('#app').getByText('I was born on December 14th, 1955.').isVisible());
+  check('…the date is kept and shown as the sentence the learner will say', (await st()).me.born === '1955-12-14' && await page.locator('#app').getByText('I was born on December 14th, 1955.').isVisible());
   await page.selectOption('#me-born-m', '2'); await page.selectOption('#me-born-d', '30'); await wait(150);
   check('…a day the month does not have is asked for again, in Farsi', (await st()).me.born === '1955-2-0' && await page.locator('#app').getByText(T('me.born.noDay')).isVisible());
   await page.selectOption('#me-born-m', '12'); await page.selectOption('#me-born-d', '14'); await wait(150);
   await shot('03-me-filled');
+  check('…while the app is open nothing of it is stored on the phone', !/Karimi|Wilshire|555-0142|1955-12-14/.test(await storedEverywhere()));
   await page.reload(); await page.waitForFunction(() => window.hamrah && document.querySelector('.topbar')); await wait();
-  check('…and everything is still there after the app is closed and opened again', (await st()).me.phone === '(310) 555-0142' && (await page.locator('#me-born-y').inputValue()) === '1955' && (await page.locator('#me-born-m').inputValue()) === '12');
+  check('…and after the app is closed and opened again it is gone, from the screen and from the phone', (await st()).me.phone === '' && (await st()).me.name === '' && (await page.locator('#me-name').inputValue()) === '' && (await page.locator('#me-born-y').inputValue()) === '0' && !/Karimi|Wilshire|555-0142/.test(await storedEverywhere()));
+  // typed in again for the rest of this session
+  await page.fill('#me-name', 'Hossein Karimi'); await page.fill('#me-address', '1420 Wilshire Boulevard, Apartment 5'); await page.fill('#me-phone', '(310) 555-0142');
+  await page.selectOption('#me-born-m', '12'); await page.selectOption('#me-born-d', '14'); await page.selectOption('#me-born-y', '1955'); await wait(150);
 
   // ---- «جملهٔ خودِ شما» at the end of the three lessons ----
   const want = { 'my-numbers': ['My phone number is 310-555-0142.', 'three one zero, five five five, zero one four two', 'years old.'], 'my-name': ['My first name is Hossein.', 'My last name is Karimi.', "It's spelled K-A-R-I-M-I."], 'my-address-birthday': ['I live at 1420 Wilshire Boulevard, Apartment 5.', 'I was born on December 14th, 1955.', 'December fourteenth, nineteen fifty-five'] };
@@ -91,20 +98,31 @@ try {
   await page.locator('.own-line .btn-sound').last().click(); await wait(300);
   const played = await page.evaluate(() => { window.hamrah.audio.stop(); return window.__played[0]; });
   check('the date of birth is played from single recordings: month, day as an ordinal, the year in two pairs', JSON.stringify(played) === JSON.stringify(['I was born on', 'December', 'fourteenth', 'nineteen', 'fifty-five']), played);
-  check('«پاک کردن همه‌چیز» would remove these details too (they are part of the saved state and nowhere else)', await page.evaluate(() => { const keys = Object.keys(localStorage).filter((k) => localStorage.getItem(k).includes('Karimi')); return keys.length === 1 && keys[0].startsWith('hamrah.v1'); }));
+  check('after three lessons with the learner\'s own sentences, still nothing of the details is stored', !/Karimi|Wilshire|555-0142/.test(await storedEverywhere()));
 
   // ---- nothing filled in: one gentle invitation, never in the way ----
   await learner('');
   await finishLesson(C.mine[1]);
-  check('empty «اطلاعات من»: the end of the lesson invites the learner once', await page.getByText(T('own.invite.go')).isVisible() && (await page.locator('#app .btn-primary').count()) >= 1);
+  check('empty «اطلاعات من»: the end of the lesson invites the learner, with an equal way to continue without', await page.getByText(T('own.invite.go')).isVisible() && await page.getByText(T('own.invite.no')).isVisible() && (await page.locator('#app .btn-primary').count()) >= 1);
   await shot('05-done-invite');
-  await wait(100);
-  await finishLesson(C.mine[0]);
-  check('…at the next lesson it is one quiet line, not a card again', (await page.getByText(T('own.invite.go')).count()) === 0 && await page.getByText(T('own.more')).isVisible());
-  await page.getByText(T('own.more')).click(); await wait();
-  check('…which opens «اطلاعات من», and Back returns to the end of the lesson', (await route()) === '#me');
+  await page.getByText(T('own.invite.go')).click(); await wait();
+  check('…«وارد کردن اطلاعات من» opens «اطلاعات من»', (await route()) === '#me');
   await page.locator('.tb-btn').first().click(); await wait(700);
-  check('…back at the end of the lesson', (await route()) === '#lesson.' + C.mine[0] && (await page.locator('.big-check').count()) === 1, await route());
+  check('…and Back returns to the end of the lesson', (await route()) === '#lesson.' + C.mine[1] && (await page.locator('.big-check').count()) === 1, await route());
+  await page.getByText(T('own.invite.no')).click(); await wait();
+  check('…«نه، بدون اطلاعات ادامه می‌دهم» closes it, the end of the lesson stays', (await page.locator('[data-invite]').count()) === 0 && (await page.locator('.big-check').count()) === 1);
+  await finishLesson(C.mine[0]);
+  check('…and once declined it is not shown again in this session: not at the next lesson', (await page.locator('[data-invite]').count()) === 0 && (await page.getByText(T('own.more')).count()) === 0);
+  await go('sos');
+  check('…nor on the emergency page, which shows the phrases and the paper-card tip', (await page.locator('[data-invite]').count()) === 0 && await page.getByText(T('sos.paper')).isVisible());
+  // «هیچ‌وقت نپرس» (stored): no invitation anywhere, from the start; «اطلاعات من» stays in Settings
+  await learner('s.settings.neverAsk = true;');
+  await finishLesson(C.mine[1]);
+  const noAsk1 = await page.locator('[data-invite]').count();
+  await go('sos');
+  check('«هیچ‌وقت نپرس»: no invitation at the end of a lesson or on the emergency page', noAsk1 === 0 && (await page.locator('[data-invite]').count()) === 0);
+  await go('settings');
+  check('…«اطلاعات من» is still one tap away in Settings, and the switch is on', (await page.getByText(T('me.title')).count()) >= 1 && (await page.locator('.switch', { hasText: T('set.neverAsk') }).getAttribute('aria-checked')) === 'true');
 
   // ---- more practice on the last screen of a lesson ----
   if (C.numbersAfter.length) {
@@ -214,7 +232,7 @@ try {
   check('…the home screen never says that nothing is left', ((await sub()).startsWith(P('home.lesson.talk')) || (await sub()).startsWith(P('home.lesson.talkHear'))) && !(await page.locator('main').innerText()).includes(T('home.lesson.none')), await sub());
 
   // ---- damaged saved state does not break these screens ----
-  await learner(`s.done.constructor = { t: 5, n: 1 }; s.at.constructor = { pos: 3, t: 9 }; s.later = { constructor: 1 }; s.tried = { nope: 1 }; s.me.born = 'x'; s.cp = { n: 'a' };`);
+  await learner(`s.done.constructor = { t: 5, n: 1 }; s.at.constructor = { pos: 3, t: 9 }; s.later = { constructor: 1 }; s.tried = { nope: 1 }; s.me = { born: 'x' }; a.me.born = 'x'; s.cp = { n: 'a' };`);
   for (const r of ['home', 'cando', 'me', 'checkpoint', 'places']) { await go(r); if ((await page.locator('#app h1').count()) !== 1 || (await page.locator('main').innerText()).includes(T('err.title'))) check(`damaged state: ${r} still opens`, false); }
   check('damaged saved state: home, the list, «اطلاعات من» and the look back still open', true);
   check('no JavaScript errors', errors.length === 0, [...new Set(errors)].slice(0, 3).join(' | '));

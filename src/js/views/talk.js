@@ -6,6 +6,7 @@ import { pickReply, correct, repairKind } from '../match.js';
 import { AI_MAX_TURNS } from '../ai-prompt.js';
 import { shuffle, mix, micOn, later, pathLesson } from '../learn.js';
 import { ownReplies } from '../own.js';
+import { me } from '../me.js';
 import { quiz } from './lesson.js';
 
 // A question about what the partner has just said ("check" on a turn, "thenCheck" on a reply, in
@@ -360,7 +361,7 @@ export function roleplayView(app, id) {
     const turn = R.turns[S.turn];
     // the replies are offered in a different order every time, so the place on the screen is never the clue — except
     // that, when «اطلاعات من» has the detail a turn asks for, the learner's own answer comes first (own.js ownReplies)
-    const replies = turn.open ? ownReplies(turn.replies, store.state.me, { month: (m) => t('month.' + m) }) : turn.replies;
+    const replies = turn.open ? ownReplies(turn.replies, me, { month: (m) => t('month.' + m) }) : turn.replies;
     const mixed = shuffle(replies, mix(S.seed, S.turn));
     if (turn.open) main.append(h('p', { class: 'muted small' }, replies.some((r) => r.mine) ? t('rp.open.mine') : t('rp.open')));
     main.append(h('div', { class: 'stack replies' }, [...mixed.filter((r) => r.mine), ...mixed.filter((r) => !r.mine)].map((r) => h('div', { class: 'opt-wrap' }, miniPlay(app, replyClip(r), t('audio.listen')),

@@ -23,9 +23,11 @@ GitHub's current size limits for repositories and Pages sites if you add much mo
 
 **Use an address of its own.** Every repository of one GitHub account is served from the same origin
 (`USERNAME.github.io`). Any other Pages project of that account could read what this app stores on the
-phone (including the optional name, address and family phone number) and could use the optional AI
-service. Publish Hamrah from an account or organisation that hosts nothing else, or give it a custom
-domain.
+phone — the learning progress and settings — and could use the optional AI service. The learner's personal
+details («اطلاعات من»: name, address, phone numbers, date of birth) are no longer stored at all: they are kept
+in memory only while the app is open (`src/js/me.js`), and a version that finds them saved by an earlier build
+erases them on its first start. Publish Hamrah from an account or organisation that hosts nothing else, or give it
+a custom domain.
 
 ## 2. On each parent's iPhone (not yet tried on a real device)
 
@@ -36,8 +38,11 @@ domain.
    - **دانلود همهٔ درس‌ها** — downloads all audio so every lesson works without a connection.
    - **دانلود بررسی تلفظ** — downloads the pronunciation checker. The first time the microphone is
      used, the app explains why, and then iOS asks for permission; tap **Allow**.
-   - **اطلاعات من** — type their name, address and your phone number in English. It stays on the phone and
-     appears as ready-made sentences on the emergency page.
+   - **اطلاعات من** (optional) — their name, address and your phone number in English, which then appear as
+     ready-made sentences on the emergency page and at the end of three lessons. These details are **not saved**:
+     they are kept only while the app is open and must be typed again after it is closed. Nothing in the app needs
+     them. A paper card with the address in English, kept by the phone, does the same job permanently. If they
+     would rather not be asked, switch on **هیچ‌وقت نپرس** in the same screen.
 5. Set the text size they like on the same screen.
 
 Things to expect on iPhones (from documentation; confirm on the device):

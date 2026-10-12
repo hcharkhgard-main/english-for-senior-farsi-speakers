@@ -164,7 +164,7 @@ for (const [W, H, scale] of [[390, 844, 1], [390, 844, 1.5], [320, 568, 1], [320
   }
 
   // ---- everything else ---------------------------------------------------------------------------
-  const done = () => page.evaluate(() => { const a = window.hamrah; a.store.update((s) => { for (const id of a.order.slice(0, 12)) { s.done[id] = { t: Date.now(), n: 1 }; for (const p of a.content.lessons[id].phrases) s.srs[`p:${id}:${p.id}`] = { b: 0, d: a.today(), n: 0 }; } s.fav = { w1: 1, w2: 1, [`p:${a.order[0]}:p1`]: 1 }; s.read = {}; for (const p of (a.content.papers || []).slice(0, 2)) s.read[p.id] = 1; s.me = { name: 'Maryam Ahmadi-Tehrani', address: '2500 North Washington Boulevard, Apartment 1204, Springfield', contact: '212-555-0142' }; }); });
+  const done = () => page.evaluate(() => { const a = window.hamrah; a.store.update((s) => { for (const id of a.order.slice(0, 12)) { s.done[id] = { t: Date.now(), n: 1 }; for (const p of a.content.lessons[id].phrases) s.srs[`p:${id}:${p.id}`] = { b: 0, d: a.today(), n: 0 }; } s.fav = { w1: 1, w2: 1, [`p:${a.order[0]}:p1`]: 1 }; s.read = {}; for (const p of (a.content.papers || []).slice(0, 2)) s.read[p.id] = 1; }); Object.assign(a.me, { name: 'Maryam Ahmadi-Tehrani', address: '2500 North Washington Boulevard, Apartment 1204, Springfield', contact: '212-555-0142' }); });
   const routes = ['home', 'talk', 'words', 'saved', 'grammar', 'build', 'build.mix', 'places', 'settings', 'me', 'sos', 'about', 'numbers', 'papers', 'paper.nosuchpaper', 'nosuchpage', 'lesson.nosuchlesson',
     ...info.cats.map((c) => 'cat.' + c), ...info.places.map((c) => 'place.' + c), ...pick(info.patterns).map((c) => 'build.' + c)];
   for (const route of routes) {
@@ -180,7 +180,7 @@ for (const [W, H, scale] of [[390, 844, 1], [390, 844, 1.5], [320, 568, 1], [320
   // ---- a lesson set aside, and «درس امروز» when no new lesson is left (views/progress.js) -------------------------
   {
     const longMe = { name: 'Mohammadreza Hosseinzadeh-Tabatabaei', address: '14200 North Washington Boulevard, Apartment 1204, Springfield', contact: '212-555-0142', phone: '310-555-0142', born: '1947-9-27' };
-    const ago = (hours, me) => page.evaluate(({ hours, me }) => { const a = window.hamrah; a.store.update((s) => { for (const id of Object.keys(s.done)) s.done[id].t = Date.now() - hours * 3600000; if (me) s.me = me; }); a.go('home', { reset: true }); }, { hours, me });
+    const ago = (hours, me) => page.evaluate(({ hours, me }) => { const a = window.hamrah; a.store.update((s) => { for (const id of Object.keys(s.done)) s.done[id].t = Date.now() - hours * 3600000; }); if (me) Object.assign(a.me, me); a.go('home', { reset: true }); }, { hours, me });
     const finished = (id) => page.evaluate((id) => { const a = window.hamrah; a.go('lesson.' + id); a.ui.finished = true; a.ui.cur = { pos: 999, short: false, warm: [] }; a.store.update((s) => { s.done[id] = { t: Date.now(), n: 1 }; }); a.render(true); }, id);
     await fresh('home'); await done(); await ago(20, longMe);
     await look('home with the question about the small task and the look back offered');
@@ -206,7 +206,7 @@ for (const [W, H, scale] of [[390, 844, 1], [390, 844, 1.5], [320, 568, 1], [320
     }
     await page.evaluate(() => window.hamrah.go('cando')); await look('cando (every lesson finished)');
     // a name and address typed in Persian letters: «اطلاعات من» explains, the emergency page does not use them
-    await page.evaluate(() => { const a = window.hamrah; a.store.update((s) => { s.me = { name: 'محمدرضا حسین‌زاده طباطبایی', address: 'خیابان واشنگتن شمالی، پلاک ۱۴۲۰۰، واحد ۱۲۰۴', contact: '۲۱۲-۵۵۵-۰۱۴۲', phone: '', born: '' }; }); a.go('me'); });
+    await page.evaluate(() => { const a = window.hamrah; Object.assign(a.me, { name: 'محمدرضا حسین‌زاده طباطبایی', address: 'خیابان واشنگتن شمالی، پلاک ۱۴۲۰۰، واحد ۱۲۰۴', contact: '۲۱۲-۵۵۵-۰۱۴۲', phone: '', born: '' }); a.go('me'); });
     await look('me (name and address in Persian letters)');
     await page.evaluate(() => window.hamrah.go('sos')); await look('sos (name and address in Persian letters)');
   }

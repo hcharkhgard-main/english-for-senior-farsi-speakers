@@ -6,7 +6,8 @@ Last updated: 12 October 2026. This page says plainly what has been checked, how
 
 Hamrah is a working app: lessons in three stages, simulated conversations, a word review that plans itself,
 number listening, reading practice with real-looking papers, a sentence builder, a pronunciation check that runs
-on the phone, the learner's own details, emergency phrases, and offline use. Everything was written and checked by
+on the phone, the learner's own details (optional, kept only while the app is open, never saved), emergency
+phrases, and offline use. Everything was written and checked by
 AI (Claude) and by automated tests. **No native Farsi-speaking teacher has reviewed it, it has not been opened on a
 real iPhone, and no older learner has tried it yet.** Treat the first weeks of use as a pilot.
 
@@ -51,7 +52,8 @@ Latest review scores (0–10, from the reviewers' own reports):
    (see `THIRD-PARTY.md`).
 6. **The optional live AI partner** has been tested only against a simulated model, never a real one.
 7. **Address of its own.** The live site is on `hcharkhgard-main.github.io`, an address shared with every other
-   GitHub Pages project of that account: any of them could read what Hamrah keeps on the phone, including
-   «اطلاعات من» (see `docs/DEPLOYMENT.md`, "Use an address of its own"). Move it to an account or organisation that
-   hosts nothing else, or to a custom domain, before the learners rely on it — progress and «اطلاعات من» do not
-   move with the address.
+   GitHub Pages project of that account: any of them could read what Hamrah keeps on the phone — which is now only
+   the learning progress and settings. Personal details («اطلاعات من») are no longer stored at all (kept in memory
+   while the app is open, erased from phones that had them saved by an earlier version), so they are not exposed
+   (see `docs/DEPLOYMENT.md`, "Use an address of its own"). Move it to an account or organisation that hosts nothing
+   else, or to a custom domain, before the learners rely on it — progress does not move with the address.

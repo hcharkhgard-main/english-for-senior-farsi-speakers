@@ -29,7 +29,8 @@ const mk = async (vp = { width: 390, height: 844 }, mobile = true) => {
   await page.evaluate(() => { window.hamrah.store.update((s) => { s.onboard.done = true; s.settings.auto = false; }); window.hamrah.go('home', { reset: true }); });
   return { ctx, page, errors };
 };
-const st = (page) => page.evaluate(() => JSON.parse(JSON.stringify(window.hamrah.store.state)));
+// the saved state, with «اطلاعات من» beside it as `me` (it is kept in memory only: window.hamrah.me, me.js)
+const st = (page) => page.evaluate(() => ({ ...JSON.parse(JSON.stringify(window.hamrah.store.state)), me: { ...window.hamrah.me } }));
 const route = (page) => page.evaluate(() => location.hash);
 const h1 = (page) => page.evaluate(() => (document.querySelector('#app h1') || {}).textContent || '');
 const act = (page) => page.evaluate(() => { const el = document.activeElement; return el ? el.tagName + ':' + el.textContent.trim().slice(0, 30) : null; });
@@ -48,7 +49,7 @@ const lessonScreen = async (page, id, want) => {
 // ---- 1. a double tap can never confirm a deletion ---------------------------------------------
 for (const vp of [{ width: 320, height: 568 }, { width: 375, height: 667 }, { width: 390, height: 844 }, { width: 430, height: 932 }]) {
   const { ctx, page } = await mk(vp);
-  await page.evaluate(() => { window.hamrah.store.update((s) => { s.me.name = 'Maryam'; s.done.x = { t: 1, n: 1 }; }); window.hamrah.go('settings'); });
+  await page.evaluate(() => { window.hamrah.me.name = 'Maryam'; window.hamrah.store.update((s) => { s.done.x = { t: 1, n: 1 }; }); window.hamrah.go('settings'); });
   await page.waitForTimeout(500);
   for (const [idx, label] of [[1, 'delete everything'], [0, 'reset progress']]) {
     const btn = page.locator('#app main .btn-danger').nth(idx);
@@ -73,7 +74,7 @@ for (const vp of [{ width: 320, height: 568 }, { width: 375, height: 667 }, { wi
 }
 {
   const { ctx, page, errors } = await mk({ width: 820, height: 900 }, false);
-  await page.evaluate(() => { window.hamrah.store.update((s) => { s.me.name = 'Maryam'; }); window.hamrah.go('settings'); });
+  await page.evaluate(() => { window.hamrah.me.name = 'Maryam'; window.hamrah.go('settings'); });
   await page.waitForTimeout(300);
   await page.evaluate(() => document.querySelectorAll('#app main .btn-danger')[1].focus());
   await page.keyboard.press('Enter'); await page.waitForTimeout(100);
@@ -101,7 +102,7 @@ for (const vp of [{ width: 320, height: 568 }, { width: 375, height: 667 }, { wi
   await page.evaluate(() => window.hamrah.go('home', { reset: true })); await page.waitForTimeout(100);
   check('a sheet is closed when the app moves to another screen', await page.evaluate(() => !document.querySelector('.sheet-back') && !document.querySelector('#app').hasAttribute('inert')));
   // clearing the personal card asks first
-  await page.evaluate(() => { window.hamrah.store.update((s) => { s.me = { name: 'Maryam Ahmadi', address: '25 Oak Street', contact: '212-555-0142' }; }); window.hamrah.go('me'); }); await page.waitForTimeout(450);      // (a tap within 350 ms of the last tap, after a screen change, is ignored)
+  await page.evaluate(() => { Object.assign(window.hamrah.me, { name: 'Maryam Ahmadi', address: '25 Oak Street', contact: '212-555-0142' }); window.hamrah.go('me'); }); await page.waitForTimeout(450);      // (a tap within 350 ms of the last tap, after a screen change, is ignored)
   await page.locator('#app main .btn-danger').click(); await page.waitForTimeout(100);
   check('"clear my details" opens a confirmation instead of deleting', (await page.evaluate(() => !!document.querySelector('.sheet'))) && (await st(page)).me.name === 'Maryam Ahmadi');
   await page.waitForTimeout(650); await page.locator('.sheet .btn-danger').click(); await page.waitForTimeout(200);
@@ -388,12 +389,12 @@ const live = (page) => page.evaluate(() => document.getElementById('live').textC
   // the emergency page: phrases first; the learner's own lines after «I need help.»; no double full stop; Persian letters not put into English
   for (const [w, sc] of [[390, 1], [320, 1.5]]) {
     await page.setViewportSize({ width: w, height: w === 320 ? 568 : 844 });
-    await page.evaluate((sc) => { const a = window.hamrah; a.store.update((s) => { s.settings.scale = sc; s.me = { name: 'Maryam Ahmadi', address: '25 Oak St.', contact: '212-555-0142', phone: '', born: '' }; }); a.applyScale(); a.go('home', { reset: true }); a.go('sos'); }, sc); await page.waitForTimeout(300);
+    await page.evaluate((sc) => { const a = window.hamrah; a.store.update((s) => { s.settings.scale = sc; }); Object.assign(a.me, { name: 'Maryam Ahmadi', address: '25 Oak St.', contact: '212-555-0142', phone: '', born: '' }); a.applyScale(); a.go('home', { reset: true }); a.go('sos'); }, sc); await page.waitForTimeout(300);
     const sos = await page.evaluate(() => ({ lines: [...document.querySelectorAll('main .en-line')].slice(0, 4).map((e) => e.textContent), firstTop: document.querySelector('main .en-line').getBoundingClientRect().top, vh: innerHeight }));
     check(`emergency page (${w} px, text ×${sc}): a phrase is in the first view, and the learner's own lines follow «I need help.»`, sos.firstTop < sos.vh - 60 && sos.lines[0] === 'I need help.' && sos.lines[1] === 'My name is Maryam Ahmadi.' && sos.lines[2] === 'My address is 25 Oak St.' && sos.lines[3].startsWith('Please call my family'), sos);
   }
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.evaluate(() => { const a = window.hamrah; a.store.update((s) => { s.settings.scale = 1; s.me.name = 'مریم احمدی'; }); a.applyScale(); a.render(true); }); await page.waitForTimeout(200);
+  await page.evaluate(() => { const a = window.hamrah; a.store.update((s) => { s.settings.scale = 1; }); a.me.name = 'مریم احمدی'; a.applyScale(); a.render(true); }); await page.waitForTimeout(200);
   const fa = await page.evaluate(() => ({ english: [...document.querySelectorAll('main .en-line')].map((e) => e.textContent).filter((x) => /[\u0600-\u06FF]/.test(x)), fill: document.querySelectorAll('main .btn-ghost .icon, main button').length }));
   check('emergency page: a name in Persian letters is never put inside an English sentence', fa.english.length === 0, fa);
   await page.evaluate(() => window.hamrah.go('me')); await page.waitForTimeout(300);
@@ -416,22 +417,24 @@ const live = (page) => page.evaluate(() => document.getElementById('live').textC
   await two.goto(BASE); await two.waitForFunction(() => window.hamrah && document.querySelector('.topbar'));
   // (what is stored is read in the tab that wrote last: the browser passes a write on to its other tabs a moment later)
   const stored = (page = one) => page.evaluate(() => { const key = Object.keys(localStorage).find((k) => k.startsWith('hamrah.v1')); return key ? JSON.parse(localStorage.getItem(key)) : null; });      // (the name carries the path of this copy of the app: store.js)
-  // tab 1: personal details; tab 2 is somewhere inside the app
-  await one.evaluate(() => { window.hamrah.store.update((s) => { s.me.name = 'Zahra Secretname'; s.me.address = '987 Private Lane'; s.me.contact = '310-555-0177'; s.me.born = '1950-1-2'; }); });
+  // tab 1: personal details (in memory only) and some progress; tab 2 is somewhere inside the app
+  await one.evaluate(() => { Object.assign(window.hamrah.me, { name: 'Zahra Secretname', address: '987 Private Lane', contact: '310-555-0177', born: '1950-1-2' }); window.hamrah.store.update((s) => { s.onboard.done = true; s.done.x = { t: 1, n: 1 }; }); });
   await two.waitForTimeout(300);
-  check('two tabs: the second tab sees what the first one saved', (await st(two)).me.name === 'Zahra Secretname');
+  check('two tabs: the second tab sees the progress the first one saved', !!(await st(two)).done.x);
+  check('two tabs: …but never the personal details, which are not saved (in memory of the first tab only)', (await st(two)).me.name === '' && !JSON.stringify(await stored(one)).includes('Secretname'));
   await go(two, 'settings');
+  await two.evaluate(() => { window.hamrah.me.name = 'Typed In Tab Two'; });
   // tab 1: Settings → «پاک کردن همه‌چیز» → yes
   await go(one, 'settings'); await one.waitForTimeout(400);      // (a tap right after a screen change is ignored)
   await one.getByText(T('reset.all')).click(); await one.waitForTimeout(700);
   await one.getByText(T('reset.yes')).click(); await one.waitForTimeout(400);
   check('two tabs: «پاک کردن همه‌چیز» empties the storage', (await stored()) === null);
   await two.waitForTimeout(300);
-  check('two tabs: the other tab is back on its first screen with nothing kept', (await route(two)) === '#onboard' && (await st(two)).me.name === '' && (await st(two)).onboard.done === false, await route(two));
+  check('two tabs: the other tab is back on its first screen with nothing kept — the details typed there too', (await route(two)) === '#onboard' && (await st(two)).me.name === '' && (await st(two)).onboard.done === false && !(await st(two)).done.x, await route(two));
   // tab 2 now saves something: the deleted details must not come back
   await two.evaluate(() => window.hamrah.store.update((s) => { s.settings.ph = false; }));
   const after = await stored(two);
-  check('two tabs: a save in the other tab does not bring the deleted details back', after && after.me.name === '' && after.me.address === '' && after.me.born === '' && after.settings.ph === false, JSON.stringify(after && { me: after.me, ph: after.settings.ph }));
+  check('two tabs: a save in the other tab does not bring the deleted progress back', after && !after.done.x && !('me' in after) && after.settings.ph === false, JSON.stringify(after && { done: after.done, ph: after.settings.ph }));
   // progress: a lesson finished in tab 2 is not lost when tab 1 saves, even if tab 1 never received the browser's event
   await two.evaluate(() => window.hamrah.store.update((s) => { s.onboard.done = true; s.done['social-hello'] = { t: Date.now(), n: 1 }; }));
   await one.waitForTimeout(400);

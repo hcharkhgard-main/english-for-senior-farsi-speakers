@@ -15,36 +15,36 @@ test('each copy stores its progress under a name that carries its own path', asy
   const two = await copyAt('https://someone.github.io/hamrah-test/index.html?x=1#home', 'two');
   const storage = bagStorage();
   const a = one.createStore(storage, quiet), b = two.createStore(storage, quiet);
-  a.update((s) => { s.me.name = 'Maryam'; s.done['social-hello'] = { t: 1, n: 1 }; });
+  a.update((s) => { s.done['social-hello'] = { t: 1, n: 1 }; });
   b.update((s) => { s.settings.scale = 1.5; });
   assert.deepEqual(Object.keys(storage.bag).sort(), ['hamrah.v1|/hamrah-test/', 'hamrah.v1|/hamrah/']);
-  assert.equal(JSON.parse(storage.bag['hamrah.v1|/hamrah/']).me.name, 'Maryam');
-  assert.equal(JSON.parse(storage.bag['hamrah.v1|/hamrah-test/']).me.name, '', 'the test copy never sees the learner\'s details');
+  assert.ok(JSON.parse(storage.bag['hamrah.v1|/hamrah/']).done['social-hello']);
+  assert.deepEqual(JSON.parse(storage.bag['hamrah.v1|/hamrah-test/']).done, {}, 'the test copy never sees the learner\'s progress');
   b.wipe();
-  assert.equal(JSON.parse(storage.bag['hamrah.v1|/hamrah/']).me.name, 'Maryam', '"delete everything" in one copy leaves the other copy alone');
+  assert.ok(JSON.parse(storage.bag['hamrah.v1|/hamrah/']).done['social-hello'], '"delete everything" in one copy leaves the other copy alone');
   assert.equal(storage.bag['hamrah.v1|/hamrah-test/'], undefined);
 });
 
 test('progress saved by an earlier build (the old name) is taken over once, and the old entry is removed', async () => {
   const m = await copyAt('https://someone.github.io/hamrah/', 'old');
-  const old = m.blank(); old.me.name = 'Zahra'; old.done['store-where'] = { t: 5, n: 2 };
+  const old = { ...m.blank(), me: { name: 'Zahra' } }; old.done['store-where'] = { t: 5, n: 2 };
   const storage = bagStorage({ 'hamrah.v1': JSON.stringify(old), 'something.else': 'kept' });
   const store = m.createStore(storage, quiet);
-  assert.equal(store.state.me.name, 'Zahra');
   assert.equal(store.state.done['store-where'].n, 2);
+  assert.ok(!storage.bag['hamrah.v1|/hamrah/'].includes('Zahra'), 'the personal details an earlier build saved are not carried over');
   assert.equal(storage.bag['hamrah.v1'], undefined, 'nothing is left under the old name');
   assert.equal(storage.bag['something.else'], 'kept');
   store.wipe();
   assert.deepEqual(Object.keys(storage.bag), ['something.else'], 'after "delete everything" no copy of the learner\'s data remains');
-  assert.equal(m.createStore(storage, quiet).state.me.name, '', 'and the next start does not bring it back');
+  assert.deepEqual(m.createStore(storage, quiet).state.done, {}, 'and the next start does not bring it back');
 });
 
 test('an old entry does not overwrite progress this copy already has', async () => {
   const m = await copyAt('https://someone.github.io/hamrah/', 'both');
-  const older = m.blank(); older.me.name = 'Old';
-  const newer = m.blank(); newer.me.name = 'New';
+  const older = m.blank(); older.done.old = { t: 1, n: 1 };
+  const newer = m.blank(); newer.done.new = { t: 2, n: 1 };
   const storage = bagStorage({ 'hamrah.v1': JSON.stringify(older), 'hamrah.v1|/hamrah/': JSON.stringify(newer) });
-  assert.equal(m.createStore(storage, quiet).state.me.name, 'New');
+  assert.deepEqual(Object.keys(m.createStore(storage, quiet).state.done), ['new']);
   assert.equal(storage.bag['hamrah.v1'], undefined);
 });
 

@@ -33,8 +33,9 @@ adults with a lifetime of experience; nothing in the product should feel like a 
    tap what was said.
 7. **Making their own sentences.** *جمله‌سازی* → Farsi prompt → tap English word tiles in order.
 8. **Something goes wrong in real life.** Any screen → *اضطراری* → emergency phrases with large play
-   buttons, and the learner's own name and address as ready sentences if they entered them. Works offline.
-   The app never dials.
+   buttons. If the learner entered their name, address and a family number in this session, they appear as
+   ready sentences; otherwise the generic phrases ("My address is …") come with a short tip to keep the address
+   in English on paper by the phone. Works offline. The app never dials.
 
 ## Rules the interface follows
 
@@ -59,6 +60,10 @@ one has been checked only by reading the code and by the QA rounds.
 - **Mistakes are never punished.** A wrong tap is set aside and the learner tries again. Speech the phone
   could not understand is reported as "I'm not sure I heard correctly", never as an error. No timers.
 - **No typing in the learning flows.** Typing exists only for the optional personal card and the optional AI chat.
+- **Personal details are never required and never pressed for.** Every invitation to fill in «اطلاعات من» (the end
+  of the three "my information" lessons, the emergency page) has an equal "no, continue without" button; after a no
+  it is not shown again until the app is opened again, and Settings «هیچ‌وقت نپرس» (stored) turns all of them off.
+  Nothing waits for the details.
 - **Calm.** No animation beyond the microphone level bar; light and dark themes.
 - **Destructive actions are confirmed** in a sheet whose safe choice comes first and which ignores a
   second tap that arrives immediately.
@@ -160,8 +165,16 @@ position in `vocabulary.json`, so words are only ever added at the end of that f
 
 ## Privacy
 
-- No account, no analytics, no cookies. Progress, settings and the optional personal card are one entry
-  in the browser's storage on the phone, and can be reset or wiped from Settings.
+- No account, no analytics, no cookies. Progress and settings are one entry in the browser's storage on the
+  phone, and can be reset or wiped from Settings.
+- **The optional personal card («اطلاعات من»: name, address, own and family phone numbers, date of birth) is
+  never saved on the device** (the owner's decision). It lives in one in-memory object (`src/js/me.js`) for as
+  long as the page is open; closing or reloading the app forgets it, and the screen says so. The boundary is in
+  `store.js`: `toStored` writes only the fields of `blank()`, which has no `me`; `migrate` drops a `me` saved by
+  an earlier build and the store rewrites the entry at once on the first start (other copies of the app on the
+  same address are cleaned of it too); the cross-tab sync never carries it; «پاک کردن همه‌چیز» clears it.
+  `tests/unit/me.test.js` fills every field, saves in every way the app saves, and checks the stored text holds
+  none of the values.
 - The microphone opens only after the learner presses its button, and is released when the check ends
   or the learner leaves the screen. Speech is recognised on the phone; audio is never uploaded or stored.
 - The only thing that can leave the phone is text in the optional AI conversation, and only after the
@@ -183,7 +196,7 @@ content/roleplays*.json ──► tools/make-personas.mjs ──► ai-proxy/per
   return DOM; state that must survive a re-render lives in `app.ui`, state that must survive a restart
   lives in the store.
 - **Store** (`store.js`): one versioned JSON document in `localStorage`, guarded for blocked storage,
-  with a migration for older saved data.
+  with a migration for older saved data. The personal card is not in it (`me.js`, memory only).
 - **What comes next** (`learn.js`, `srs.js`): plain functions that choose today's lesson, the review
   sitting and the order of answer options.
 - **Audio** (`audio.js`): clips are byte ranges inside per-lesson "packs", so a lesson is one download and

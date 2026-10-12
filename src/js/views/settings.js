@@ -14,6 +14,8 @@ export const tidy = (x) => toLatinDigits(x).replace(/\s+/g, ' ').replace(/[\s.,;
 
 import { isStored } from '../stored.js';
 import { aheadParts } from '../ahead.js';
+import { me, setMe, clearMe, mayAsk } from '../me.js';
+import { invite } from './progress.js';
 
 // A row of choices where exactly one is on. The chosen one carries a tick as well as its colour.
 function seg(labelId, options, value, onpick) {
@@ -41,6 +43,8 @@ export function settingsView(app) {
 
   main.append(h('button', { type: 'button', class: 'item', onclick: () => app.go('me') }, h('span', { class: 'pic', style: 'width:3rem;height:3rem' }, icon('people')),
     h('span', { class: 'body' }, h('span', { class: 't' }, t('me.title')), h('span', { class: 's' }, t('me.sub'))), h('span', { class: 'go' }, icon('next'))));
+  // «هیچ‌وقت نپرس»: no invitation to enter personal details, anywhere; «اطلاعات من» stays here, one tap above
+  main.append(h('section', { class: 'card' }, toggle(t('set.neverAsk'), st.neverAsk, (v) => set('neverAsk', v)), h('p', { class: 'small muted' }, t('set.neverAsk.hint'))));
 
   // ---- offline -----------------------------------------------------------------------------
   if (app.target === 'pwa') {
@@ -151,12 +155,11 @@ async function countCached(app) {
 }
 
 // «اطلاعات من»: the learner's own name, address, phone number and date of birth, and a family member's number.
-// They stay on this phone (store.js) and are used for the learner's own sentences at the end of the three
+// They are kept in memory only (me.js) — never saved on the phone, gone when the app is closed — and are used for the learner's own sentences at the end of the three
 // "my information" lessons and on the emergency page. Nothing on this screen is redrawn while the learner is
 // typing or choosing, so the keyboard and the phone's date wheels are never closed under their fingers.
 export function meView(app) {
-  const { t, store } = app;
-  const me = store.state.me;
+  const { t } = app;
   const MAX = 120;
   const field = (key, label, hint, attrs = {}, latin = false) => {
     // name and address: a gentle line under the field as soon as Persian letters are typed (shown, not redrawn: the keyboard stays open)
@@ -164,7 +167,7 @@ export function meView(app) {
     if (warn) { warn.id = `me-${key}-latin`; warn.hidden = !farsiLetters(me[key]); }
     const input = h('input', { id: 'me-' + key, type: 'text', value: me[key] || '', autocomplete: 'off', maxlength: MAX, 'aria-describedby': `me-${key}-hint${latin ? ` me-${key}-latin` : ''}`,
       oninput: (e) => {
-        store.update((s) => { s.me[key] = e.target.value.slice(0, MAX); });
+        setMe(key, e.target.value.slice(0, MAX));
         if (e.target.value.length >= MAX) toast(t('me.tooLong'));          // the field stops taking letters: say so instead of cutting silently
         if (warn) { const bad = farsiLetters(e.target.value); if (bad && warn.hidden) announce(t('me.latinOnly')); warn.hidden = !bad; }
       }, ...attrs });
@@ -185,21 +188,24 @@ export function meView(app) {
   const year = list('y', t('me.born.y'), years);
   const noDay = h('p', { class: 'small', hidden: true }, t('me.born.noDay'));
   const said = en('', 'p', 'en-line');      // the date as the learner will say it, shown as soon as it is complete
-  const showSaid = () => { const line = ownLines(store.state.me, ['born'])[0]; said.textContent = line ? line.en : ''; said.hidden = !line; };
+  const showSaid = () => { const line = ownLines(me, ['born'])[0]; said.textContent = line ? line.en : ''; said.hidden = !line; };
   function bornChanged() {
     const b = { y: +year.sel.value || 0, m: +month.sel.value || 0, d: +day.sel.value || 0 };
     const wrong = !!(b.m && b.d && b.d > daysIn(b.m, b.y));      // 31 June: ask for the day again, keep the rest
     if (wrong) { b.d = 0; day.sel.value = '0'; }
     noDay.hidden = !wrong;
     if (wrong) announce(t('me.born.noDay'));
-    store.update((s) => { s.me.born = formatBorn(b); });
+    setMe('born', formatBorn(b));
     showSaid();
   }
   showSaid();
   const clear = () => sheet(t('me.clear'), h('p', null, t('me.clear.ask')), [
-    { label: t('reset.yes'), cls: 'btn-danger', run: () => { store.update((s) => { s.me = { name: '', address: '', contact: '', phone: '', born: '' }; }); toast(t('reset.done')); app.render(); } },
+    { label: t('reset.yes'), cls: 'btn-danger', run: () => { clearMe(); toast(t('reset.done')); app.render(); } },
     { label: t('reset.no'), cls: 'btn-primary' }]);
-  const main = h('main', { class: 'wrap' }, h('h1', { class: 'section-title' }, t('me.title')), h('p', null, t('me.what')), note(t('me.private'), 'good', 'lock'),
+  const main = h('main', { class: 'wrap' }, h('h1', { class: 'section-title' }, t('me.title')),
+    // first: kept only while the app is open, never saved, entirely optional
+    note(h('div', { class: 'stack', 'data-me-memory': '' }, h('p', null, t('me.private')), h('p', null, t('me.optional'))), 'good', 'lock'),
+    h('p', null, t('me.what')),
     h('section', { class: 'card' },
       field('name', t('me.name'), t('me.name.hint'), { class: 'en', dir: 'ltr', lang: 'en', autocapitalize: 'words' }, true),
       field('address', t('me.address'), t('me.address.hint'), { class: 'en', dir: 'ltr', lang: 'en', autocapitalize: 'words' }, true),
@@ -208,14 +214,14 @@ export function meView(app) {
       month.box, day.box, year.box, noDay, said),
     h('section', { class: 'card' }, h('h2', null, t('me.emergency')),
       field('contact', t('me.contact'), t('me.contact.hint'), { class: 'en', dir: 'ltr', lang: 'en', inputmode: 'tel' })),
-    btn(t('me.done'), { cls: 'btn-primary', icon: 'check', block: true, onclick: () => { toast(t('me.saved')); app.back(); } }),
+    btn(t('me.done'), { cls: 'btn-primary', icon: 'check', block: true, onclick: () => { toast(t('me.kept')); app.back(); } }),
     btn(t('me.clear'), { cls: 'btn-danger', icon: 'trash', block: true, onclick: clear }));
   return { main };
 }
 
 export function sosView(app) {
   const { t, content, store } = app;
-  const E = content.emergency, me = store.state.me;
+  const E = content.emergency;
   const main = h('main', { class: 'wrap' }, h('h1', { class: 'section-title' }, t('sos.title')));
   // a name or address in Persian letters is treated as not filled in (the «وارد کردن اطلاعات خودم» button shows instead)
   const usable = (x) => (x && !farsiLetters(x) ? tidy(x) : '');
@@ -234,13 +240,15 @@ export function sosView(app) {
     const mine = p.slot ? fill(p) : null;
     return h('section', { class: 'card' },
       h('div', { class: 'opt-wrap' }, miniPlay(app, clipEn(p.say || p.en, 's', 'n')), h('div', { class: 'grow' }, en(mine || p.en, 'p', 'en-line'), h('p', { class: 'fa-line' }, p.fa))),
-      p.slot && !mine ? btn(t('sos.fill'), { cls: 'btn-ghost', small: true, icon: 'people', onclick: () => app.go('me') }) : null,
+      p.slot === 'address' && !mine ? note(t('sos.paper'), 'info', 'paper') : null,      // without «اطلاعات من»: the address from a paper by the phone
       p.slot && mine ? note(t('sos.show'), 'info', 'ear') : null,      // the recording cannot know the learner's own name or address
       h('div', { class: 'row' }, listenBtn(app, clipEn(p.say || p.en, 's', 's'), { label: t('audio.slow'), cls: 'btn-ghost', ic: 'slow', small: true }), p.slot ? null : faListen(app, p.fa, t('audio.fa'))),
       store.state.settings.ph ? h('p', { class: 'ph-line' }, h('b', null, t('phrase.phLabel') + ' '), p.ph) : null);
   });
   cards.splice(Math.min(Math.max(3, 1 + own.length), cards.length), 0, note(E.intro, 'danger', 'sos'));
   main.append(h('div', { class: 'stack' }, cards));
+  // one quiet invitation, after every phrase, while the learner has not said no (never in the way of the phrases above)
+  if (!own.length && mayAsk(store.state)) main.append(invite(app, t('sos.invite.t'), t('sos.invite')));
   main.append(h('section', { class: 'card' }, h('h2', null, t('sos.tips')), h('ul', { class: 'steps' }, E.tips.map((x) => h('li', null, x)))));
   main.append(note(t('sos.noCall'), 'care'));
   return { main };
@@ -251,7 +259,7 @@ export function aboutView(app) {
   const para = (k) => h('p', null, t(k));
   const main = h('main', { class: 'wrap' }, h('h1', { class: 'section-title' }, t('about.title')),
     h('section', { class: 'card' }, h('h2', null, t('about.what.t')), para('about.what')),
-    h('section', { class: 'card' }, h('h2', null, t('about.privacy.t')), para('about.privacy.1'), para('about.privacy.2'), para('about.privacy.3')),
+    h('section', { class: 'card' }, h('h2', null, t('about.privacy.t')), para('about.privacy.1'), para('about.privacy.me'), para('about.privacy.2'), para('about.privacy.3')),
     h('section', { class: 'card' }, h('h2', null, t('about.voice.t')), para('about.voice')),
     h('section', { class: 'card' }, h('h2', null, t('about.limits.t')), para('about.limits.1'), para('about.limits.2')),
     h('p', { class: 'small muted center' }, `${t('app.name')} · ${app.version}`));

@@ -304,8 +304,9 @@ test('migration: the old single "current" lesson becomes that lesson\'s own save
   assert.ok(s.at['store-where'].t > 0);
   assert.equal('current' in s, false);
   // everything else is carried over untouched
-  for (const k of ['settings', 'done', 'hard', 'rp', 'srs', 'fav', 'newDay', 'said', 'built']) assert.deepEqual(s[k], old[k], k);
-  assert.deepEqual(s.me, { ...blank().me, ...old.me }, 'me: what was saved is kept; details added by a newer build start empty');
+  assert.deepEqual(s.settings, { ...old.settings, neverAsk: false });
+  for (const k of ['done', 'hard', 'rp', 'srs', 'fav', 'newDay', 'said', 'built']) assert.deepEqual(s[k], old[k], k);
+  assert.equal('me' in s, false, 'me: personal details saved by an earlier build are dropped (they are kept in memory only now)');
   assert.deepEqual(s.onboard, { ...old.onboard, step: 0 });
   // and it is stable: saving and loading again changes nothing
   assert.deepEqual(migrate(JSON.parse(JSON.stringify(s))), s);

@@ -787,12 +787,12 @@ function twoTabs() {
 test('two tabs: «پاک کردن همه‌چیز» in one tab is not undone by the other, with or without the browser\'s storage event', () => {
   for (const events of [true, false]) {
     const { data, storage, wb, a, b } = twoTabs();
-    a.update((s) => { s.me.name = 'Zahra Secretname'; s.me.address = '987 Private Lane'; s.me.born = '1950-1-2'; s.onboard.done = true; });
+    a.update((s) => { s.done.x = { t: 1, n: 1 }; s.settings.scale = 1.3; s.onboard.done = true; });
     const told = [];
     b.subscribe((s, why) => told.push(why));
     if (events) wb.fire('storage', { key: 'hamrah.v1', storageArea: storage });
     else assert.equal(b.sync(), true);
-    assert.equal(b.state.me.name, 'Zahra Secretname', 'the second tab sees what the first one saved');
+    assert.ok(b.state.done.x, 'the second tab sees what the first one saved');
     assert.deepEqual(told, ['external']);
     // tab 1 deletes everything
     a.wipe();
@@ -801,20 +801,18 @@ test('two tabs: «پاک کردن همه‌چیز» in one tab is not undone by 
     // tab 2 flips a switch (with the event it already knows; without it, it finds out as it writes)
     b.update((s) => { s.settings.ph = false; });
     const stored = JSON.parse(data.get('hamrah.v1'));
-    assert.deepEqual(stored.me, blank().me, 'the deleted name, address and date of birth are not written back');
+    assert.deepEqual(stored.done, {}, 'the deleted progress is not written back');
+    assert.equal(stored.settings.scale, 1, 'nor the deleted settings');
     assert.equal(stored.onboard.done, false);
     assert.equal(stored.settings.ph, false, 'the new change itself is kept');
-    assert.equal(b.state.me.name, '');
     assert.equal(told.filter((w) => w === 'external').length, 2, 'the app is told, so that it redraws from its first screen');
-    // «پاک کردن این اطلاعات» and a reset of progress behave the same way
+    // a reset of progress in one tab is not undone by the other
     a.sync();
-    a.update((s) => { s.me.name = 'Again'; s.done.x = { t: 1, n: 1 }; });
-    if (events) wb.fire('storage', { key: 'hamrah.v1', storageArea: storage });
-    a.update((s) => { s.me = blank().me; });
+    a.update((s) => { s.done.x = { t: 1, n: 1 }; });
     if (events) wb.fire('storage', { key: 'hamrah.v1', storageArea: storage });
     b.reset(true);
-    assert.equal(JSON.parse(data.get('hamrah.v1')).me.name, '', 'a reset in the other tab does not bring the cleared details back');
     assert.deepEqual(JSON.parse(data.get('hamrah.v1')).done, {});
+    assert.equal('me' in JSON.parse(data.get('hamrah.v1')), false, 'no personal details are ever part of what is stored');
   }
 });
 
@@ -863,14 +861,17 @@ test('two tabs: a tab left open does not write its older progress over lessons f
 
 test('saved state: the new fields have safe defaults, and damaged values are brought back into shape', () => {
   const b = blank();
-  assert.deepEqual(b.me, { name: '', address: '', contact: '', phone: '', born: '' });
+  assert.equal('me' in b, false, 'the personal details are not part of the saved state (me.js keeps them in memory)');
+  assert.equal(b.settings.neverAsk, false);
   assert.deepEqual([b.later, b.cp, b.tried, b.told], [{}, { n: 0, t: 0 }, {}, {}]);
-  // a state saved before this version gains them; the learner's details stay
+  // a state saved before this version gains them; personal details it held are dropped
   const old = migrate({ v: 1, me: { name: 'Maryam Ahmadi', address: '25 Oak Street', contact: '212-555-0142' }, done: { 'social-hello': { t: 5, n: 1 } } });
-  assert.deepEqual(old.me, { name: 'Maryam Ahmadi', address: '25 Oak Street', contact: '212-555-0142', phone: '', born: '' });
+  assert.equal('me' in old, false);
+  assert.deepEqual(old.done, { 'social-hello': { t: 5, n: 1 } });
   assert.deepEqual(old.cp, { n: 0, t: 0 });
-  const odd = migrate({ v: 1, me: { name: 42, born: { y: 1 }, phone: 'x'.repeat(999) }, cp: { n: 'many', t: null }, later: [1], tried: 'yes' });
-  assert.equal(odd.me.name, ''); assert.equal(odd.me.born, ''); assert.equal(odd.me.phone.length, 200);
+  const odd = migrate({ v: 1, me: { name: 42, born: { y: 1 }, phone: 'x'.repeat(999) }, settings: { neverAsk: 'yes' }, cp: { n: 'many', t: null }, later: [1], tried: 'yes' });
+  assert.equal('me' in odd, false);
+  assert.equal(odd.settings.neverAsk, false);
   assert.deepEqual(odd.cp, { n: 0, t: 0 });
   assert.deepEqual([odd.later, odd.tried], [{}, {}]);
   assert.equal(typeof today(NOW), 'number');
