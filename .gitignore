@@ -12,3 +12,4 @@ __pycache__/
 audio-src/regen*.sh
 audio-src/verify-keys.txt
 audio-src/verify-report*.json
+audio-src/listened.json
