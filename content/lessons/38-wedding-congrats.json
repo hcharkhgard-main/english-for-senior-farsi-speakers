@@ -157,7 +157,8 @@
     ],
     "wrong": "Congratulation for wedding.",
     "right": "Congratulations on your wedding!",
-    "why": "«Congratulations» آخرش «s» دارد، بعدش «on» می‌آید و قبل از wedding هم «your»."
+    "why": "«Congratulations» آخرش «s» دارد، بعدش «on» می‌آید و قبل از wedding هم «your».",
+    "fresh": { "en": "Congratulations on your new home!", "wrong": "Congratulation for new home.", "fa": "خانهٔ نو مبارک!" }
   },
   "review": {
     "status": "draft",

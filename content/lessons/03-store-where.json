@@ -55,7 +55,8 @@
     ],
     "wrong": "Where is milk?",
     "right": "Where is the milk?",
-    "why": "در فارسی «the» نداریم. در انگلیسی وقتی جای یک چیز مشخص را می‌پرسید، قبل از اسمش «the» می‌گویند."
+    "why": "در فارسی «the» نداریم. در انگلیسی وقتی جای یک چیز مشخص را می‌پرسید، قبل از اسمش «the» می‌گویند.",
+    "fresh": { "en": "Where is the bread?", "wrong": "Where is bread?", "fa": "نان کجاست؟" }
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }

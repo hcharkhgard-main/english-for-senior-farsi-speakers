@@ -9,9 +9,11 @@ import { chromium } from 'playwright';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawn } from 'node:child_process';
+import { uiText } from './strings.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const PORT = +(process.env.PORT || 8139), SITE = process.env.HAMRAH_SITE ? path.resolve(process.env.HAMRAH_SITE) : path.join(ROOT, 'site'), BASE = `http://localhost:${PORT}/`;
+const { T } = uiText(SITE);      // interface text, read from the built site (strings.mjs)
 const server = spawn(process.execPath, [path.join(ROOT, 'tools/serve.mjs'), SITE, String(PORT)], { stdio: 'ignore' });
 process.on('exit', () => server.kill());        // also when a check throws
 await new Promise((r) => setTimeout(r, 700));
@@ -82,7 +84,7 @@ for (const vp of [{ width: 320, height: 568 }, { width: 375, height: 667 }, { wi
   check('Tab and Shift+Tab stay inside the sheet', !seq.includes('OUT'), seq.join(','));
   await page.waitForTimeout(650);
   await page.keyboard.press('Escape'); await page.waitForTimeout(100);
-  check('Escape closes the sheet and focus returns to the button that opened it', (await page.evaluate(() => !document.querySelector('.sheet'))) && (await act(page)).includes('پاک کردن همه‌چیز'), await act(page));
+  check('Escape closes the sheet and focus returns to the button that opened it', (await page.evaluate(() => !document.querySelector('.sheet'))) && (await act(page)).includes(T('reset.all')), await act(page));
   check('…nothing was deleted and the page is usable again', (await st(page)).me.name === 'Maryam' && await page.evaluate(() => !document.querySelector('#app').hasAttribute('inert')));
   // Enter held down must not run through to "yes"
   await page.keyboard.press('Enter'); await page.waitForTimeout(50); await page.keyboard.press('Enter'); await page.waitForTimeout(700);
@@ -154,9 +156,9 @@ for (const vp of [{ width: 320, height: 568 }, { width: 375, height: 667 }, { wi
   for (const bad of ['constructor', '__proto__', 'toString', 'hasOwnProperty', 'lesson.nope', 'lesson', 'rp.nope', 'cat.nope', 'place.nope', 'build.nope', 'zzz', 'lesson.__proto__']) {
     await page.goto(BASE + '#' + bad); await page.reload(); await page.waitForFunction(() => window.hamrah && document.querySelector('.topbar'));
     const r = await page.evaluate(() => ({ h1: document.querySelector('#app h1').textContent, home: [...document.querySelectorAll('#app main button')].map((b) => b.textContent.trim()), body: document.querySelector('#app main').textContent.includes('undefined') }));
-    check(`#${bad} shows the "not found" card with a Home button`, r.h1 === nfTitle && r.home.includes('خانه') && !r.body, r.h1);
+    check(`#${bad} shows the "not found" card with a Home button`, r.h1 === nfTitle && r.home.includes(T('nav.home')) && !r.body, r.h1);
   }
-  await page.locator('#app main button', { hasText: 'خانه' }).click(); await page.waitForTimeout(450);
+  await page.locator('#app main button', { hasText: T('nav.home') }).click(); await page.waitForTimeout(450);
   check('its Home button goes home and the address says so', (await route(page)) === '#home' && (await page.locator('.choice').count()) === 4);
   check('no console errors from odd addresses', errors.length === 0, errors.slice(0, 3).join(' | '));
 
@@ -167,24 +169,24 @@ for (const vp of [{ width: 320, height: 568 }, { width: 375, height: 667 }, { wi
   await page.locator('#app main .item').last().click(); await page.waitForTimeout(450);    // a category
   const cat = await route(page);
   check('address follows the screens', cat.startsWith('#cat.'), cat);
-  await page.locator('.tb-btn', { hasText: 'برگشت' }).click(); await page.waitForTimeout(450);
-  check('in-app Back: screen and address both go back', (await route(page)) === '#words' && (await h1(page)) === 'یادگیری کلمات', await route(page));
+  await page.locator('.tb-btn', { hasText: T('nav.back') }).click(); await page.waitForTimeout(450);
+  check('in-app Back: screen and address both go back', (await route(page)) === '#words' && (await h1(page)) === T('words.title'), await route(page));
   await page.reload(); await page.waitForFunction(() => window.hamrah && document.querySelector('.topbar'));
-  check('reload after Back reopens the screen that was on show (not the one left behind)', (await route(page)) === '#words' && (await h1(page)) === 'یادگیری کلمات');
-  await page.locator('.tb-btn', { hasText: 'برگشت' }).click(); await page.waitForTimeout(450);
+  check('reload after Back reopens the screen that was on show (not the one left behind)', (await route(page)) === '#words' && (await h1(page)) === T('words.title'));
+  await page.locator('.tb-btn', { hasText: T('nav.back') }).click(); await page.waitForTimeout(450);
   check('Back again reaches home, address #home', (await route(page)) === '#home' && (await page.locator('.choice').count()) === 4, await route(page));
   check('in-app Back did not pile up history entries', (await page.evaluate(() => history.length)) <= len0 + 2, `${len0} -> ${await page.evaluate(() => history.length)}`);
   await page.locator('.choice').nth(2).click(); await page.waitForTimeout(450);
   await page.locator('#app main .item').first().click(); await page.waitForTimeout(450);
   await page.goBack(); await page.waitForTimeout(300);
-  check('the phone\'s Back gesture goes to the previous screen inside the app', (await route(page)) === '#words' && (await h1(page)) === 'یادگیری کلمات', await page.url());
+  check('the phone\'s Back gesture goes to the previous screen inside the app', (await route(page)) === '#words' && (await h1(page)) === T('words.title'), await page.url());
   await page.goBack(); await page.waitForTimeout(300);
   check('…and again to home (still inside the app)', (await route(page)) === '#home' && (await page.locator('.choice').count()) === 4, await page.url());
   await page.goForward(); await page.waitForTimeout(300);
   check('Forward works too', (await route(page)) === '#words');
   await page.evaluate(() => { location.hash = '#settings'; }); await page.waitForTimeout(300);
-  check('an address typed by hand opens that screen', (await h1(page)) === 'تنظیمات');
-  await page.locator('.tb-btn', { hasText: 'برگشت' }).click(); await page.waitForTimeout(700);
+  check('an address typed by hand opens that screen', (await h1(page)) === T('set.title'));
+  await page.locator('.tb-btn', { hasText: T('nav.back') }).click(); await page.waitForTimeout(700);
   check('…and Back from it leads home, not out of the app', page.url().startsWith(BASE) && (await page.locator('.topbar').count()) === 1, page.url());
 
   // "another one" buttons do not leave a duplicate under Back (finding 14)
@@ -192,7 +194,7 @@ for (const vp of [{ width: 320, height: 568 }, { width: 375, height: 667 }, { wi
   await page.evaluate(() => window.hamrah.go('talk')); await page.evaluate(() => window.hamrah.go('rp.rp-store')); await page.waitForTimeout(100);
   await page.evaluate(() => window.hamrah.go('talk', { replace: true })); await page.waitForTimeout(300);
   check('replace onto the list underneath returns to that list', (await route(page)) === '#talk');
-  await page.locator('.tb-btn', { hasText: 'برگشت' }).click(); await page.waitForTimeout(450);
+  await page.locator('.tb-btn', { hasText: T('nav.back') }).click(); await page.waitForTimeout(450);
   check('…and one Back from it is home', (await route(page)) === '#home', await route(page));
   check('no JavaScript errors (router tests)', errors.length === 0, errors.slice(0, 3).join(' | '));
   await ctx.close();
@@ -209,7 +211,7 @@ for (const vp of [{ width: 320, height: 568 }, { width: 375, height: 667 }, { wi
   const before = await page.evaluate(() => ({ lbl: document.querySelector('.progress .lbl').textContent, tried: document.querySelectorAll('.opt.is-tried, .opt.is-right').length, main: document.querySelector('main').textContent.length }));
   await page.locator('.tb-sos').click(); await page.waitForTimeout(450);
   check('emergency page opens from inside a lesson', (await route(page)) === '#sos');
-  await page.locator('.tb-btn', { hasText: 'برگشت' }).click(); await page.waitForTimeout(450);
+  await page.locator('.tb-btn', { hasText: T('nav.back') }).click(); await page.waitForTimeout(450);
   const after = await page.evaluate(() => ({ lbl: document.querySelector('.progress .lbl').textContent, tried: document.querySelectorAll('.opt.is-tried, .opt.is-right').length, main: document.querySelector('main').textContent.length }));
   check('Back from the emergency page returns to the same lesson screen, with the answers given so far', JSON.stringify(before) === JSON.stringify(after), { before, after });
   // conversation
@@ -218,7 +220,7 @@ for (const vp of [{ width: 320, height: 568 }, { width: 375, height: 667 }, { wi
   await page.locator('#app main .opt').first().click(); await page.waitForTimeout(500);
   const b1 = await page.locator('.bubble').count();
   await page.locator('.tb-sos').click(); await page.waitForTimeout(450);
-  await page.locator('.tb-btn', { hasText: 'برگشت' }).click(); await page.waitForTimeout(450);
+  await page.locator('.tb-btn', { hasText: T('nav.back') }).click(); await page.waitForTimeout(450);
   check('Back from the emergency page returns to the same turn of a conversation', (await page.locator('.bubble').count()) === b1 && b1 >= 3, `bubbles ${b1} -> ${await page.locator('.bubble').count()}`);
   // the phone's own Back does the same
   await page.locator('.tb-sos').click(); await page.waitForTimeout(450); await page.goBack(); await page.waitForTimeout(300);
@@ -242,8 +244,8 @@ for (const vp of [{ width: 320, height: 568 }, { width: 375, height: 667 }, { wi
   await page.locator('#app main .opt').first().click(); await page.waitForTimeout(450);
   const q2 = await page.evaluate(() => document.querySelector('main').textContent.slice(0, 200));
   await page.locator('.topbar .tb-sos').click(); await page.waitForTimeout(450);
-  check('emergency phrases open before the questions are finished; no Home button yet', (await page.locator('.mini-play').count()) >= 12 && (await page.locator('.tb-btn', { hasText: 'خانه' }).count()) === 0);
-  await page.locator('.tb-btn', { hasText: 'برگشت' }).click(); await page.waitForTimeout(450);
+  check('emergency phrases open before the questions are finished; no Home button yet', (await page.locator('.mini-play').count()) >= 12 && (await page.locator('.tb-btn', { hasText: T('nav.home') }).count()) === 0);
+  await page.locator('.tb-btn', { hasText: T('nav.back') }).click(); await page.waitForTimeout(450);
   const back = await page.evaluate(() => document.querySelector('main').textContent.slice(0, 200));
   check('Back returns to the same first-run question', back === q2 && q2 !== q1);
   await ctx.close();
@@ -260,7 +262,7 @@ const live = (page) => page.evaluate(() => document.getElementById('live').textC
   await lessonScreen(page, 'social-hello', 'listen');
   check('the browser title names the screen', (await page.title()).includes('·'), await page.title());
   const pb = await page.evaluate(() => { const p = document.querySelector('[role=progressbar]'); return { label: p.getAttribute('aria-label'), text: p.getAttribute('aria-valuetext'), now: p.getAttribute('aria-valuenow') }; });
-  check('the progress bar has a Farsi name and value', /مرحلهٔ/.test(pb.label) && !!pb.text && pb.now !== null, pb);
+  check('the progress bar is named after the part of the lesson, with a value', pb.label === T('step.listen') && !!pb.text && pb.now !== null, pb);
   // a wrong answer, tapped the way an iPhone does it (the button does not take focus);
   // if the first tap happens to be the right answer, go on to the next question and try again
   for (let n = 0; n < 5; n++) {
@@ -286,7 +288,7 @@ const live = (page) => page.evaluate(() => document.getElementById('live').textC
   check('the size and speed groups are named, and the chosen one has a tick as well as colour', groups.length === 2 && groups.every((g) => g.role === 'group' && g.name && g.ticks === 1 && g.pressed === 1), groups);
   await page.locator('.seg button').nth(1).click(); await page.waitForTimeout(200);
   const a3 = await actInfo(page);
-  check('after choosing a text size, focus is on the chosen size', a3.text === 'بزرگ' && a3.inApp, a3);
+  check('after choosing a text size, focus is on the chosen size', a3.text === T('set.size.2') && a3.inApp, a3);
   await page.evaluate(() => { window.hamrah.store.update((s) => { s.settings.scale = 1; }); window.hamrah.applyScale(); });
   // conversation
   await go(page, 'rp.rp-store'); await page.waitForTimeout(400);
@@ -319,7 +321,7 @@ const live = (page) => page.evaluate(() => document.getElementById('live').textC
   await page.waitForTimeout(300);
   const t0 = await page.evaluate(() => { const t = document.querySelector('.toast'); const r = t.getBoundingClientRect(); const tb = document.querySelector('.topbar').getBoundingClientRect(); const sos = document.querySelector('.btn-danger').getBoundingClientRect(); return { tag: t.tagName, h: r.height, belowBar: r.top >= tb.bottom - 1, coversSos: !(r.bottom < sos.top || r.top > sos.bottom), text: t.textContent }; });
   check('a message is a button (tap closes it), at least 56 px tall, under the top bar and not over the emergency button', t0.tag === 'BUTTON' && t0.h >= 56 && t0.belowBar && !t0.coversSos, t0);
-  check('…and it is spoken', (await live(page)).includes('اینترنت'), await live(page));
+  check('…and it is spoken', (await live(page)).includes(T('net.wentOffline')), await live(page));
   await page.waitForTimeout(5900);
   const at6 = await page.locator('.toast').count();
   await page.waitForTimeout(4500);
@@ -329,6 +331,80 @@ const live = (page) => page.evaluate(() => document.getElementById('live').textC
   check('a tap closes the message at once', (await page.locator('.toast').count()) === 0);
   await page.evaluate(() => window.dispatchEvent(new Event('online')));
   check('no JavaScript errors', errors.length === 0, errors.slice(0, 3).join(' | '));
+  await ctx.close();
+}
+
+// ---- QA round 3 (accessibility M1–M8, L1–L8; features L1, L2, L4, L7) -------------------------------------
+{
+  const { ctx, page, errors } = await mk();
+  const stray = () => page.evaluate(() => { const w = document.createTreeWalker(document.getElementById('app'), NodeFilter.SHOW_TEXT); const out = []; for (let n = w.nextNode(); n; n = w.nextNode()) if (/^(null|undefined|NaN)$|\{[a-z]+\}/.test(n.nodeValue.trim())) out.push(n.nodeValue.trim()); return out; });
+  // the welcome button: its spoken name starts with the word on it (WCAG 2.5.3)
+  const rp0 = await page.evaluate(() => { const b = document.querySelector('.round-play'); return { name: b.getAttribute('aria-label'), text: b.textContent.trim() }; });
+  check('the welcome button\'s name contains the word written on it', rp0.name.startsWith(rp0.text), rp0);
+  // first run, question 3 after «موقعیت‌های بیشتر»: no stray "null"
+  await page.evaluate(() => { const a = window.hamrah; a.store.update((s) => { s.onboard.done = false; s.onboard.step = 2; }); a.go('onboard', { reset: true }); }); await page.waitForTimeout(450);
+  await page.getByText(T('onb.more')).click(); await page.waitForTimeout(300);
+  check('first run: after «موقعیت‌های بیشتر» no stray word ("null") is shown', (await stray()).length === 0 && (await page.getByText(T('onb.more')).count()) === 0, await stray());
+  await page.evaluate(() => { const a = window.hamrah; a.store.update((s) => { s.onboard.done = true; s.onboard.step = 0; }); a.go('home', { reset: true }); });
+  // the grammar check of a lesson without a Farsi line for it: nothing stray either
+  await page.evaluate(() => { const a = window.hamrah; a.store.update((s) => { s.done['social-hello'] = { t: Date.now() - 864e5 * 3, n: 1 }; delete s.at['restaurant-order']; }); a.tapHold = 0; a.go('lesson.restaurant-order'); });
+  let grammarSeen = false;
+  for (let i = 0; i < 40 && !grammarSeen; i++) { grammarSeen = await page.evaluate((q) => [...document.querySelectorAll('main h2')].some((x) => x.textContent === q), T('grammar.which')); if (!grammarSeen) await page.evaluate(() => { const n = document.querySelector('[data-next]'); if (n) n.click(); }); await page.waitForTimeout(60); }
+  check('grammar check: no stray "null" where a lesson has no Farsi line for the question', grammarSeen && (await stray()).length === 0, { grammarSeen, stray: await stray(), at: await page.evaluate(() => location.hash + ' ' + (document.querySelector('.progress .lbl') || {}).textContent) });
+  check('inside a lesson one counter only: the part\'s name and "n of m"', !(await page.locator('.progress .lbl').innerText()).includes(':'), await page.locator('.progress .lbl').innerText());
+  // an English letter inside a Farsi answer stays inside its sentence (lesson my-name: «M» or «N»)
+  const mixedOpt = await page.evaluate(() => { const b = document.createElement('button'); b.className = 'opt'; const body = document.createElement('span'); body.className = 'body'; const sp = document.createElement('span'); sp.append('ببخشید، «'); const x = document.createElement('bdi'); x.className = 'en'; x.textContent = 'M'; sp.append(x, '» بود یا «N»؟'); body.append(sp); b.append(body); document.querySelector('main').append(b); const d = getComputedStyle(x).display; const h = b.getBoundingClientRect().height; b.remove(); return { d, h }; });
+  check('an English letter inside a Farsi answer stays on the line (not a block of its own)', mixedOpt.d === 'inline' && mixedOpt.h < 90, mixedOpt);
+  // the end of a lesson: the next step and «خانه» are in a fixed bar, in sight at once — also at the largest text size
+  for (const scale of [1, 1.5]) {
+    await page.evaluate((scale) => { const a = window.hamrah; a.store.update((s) => { s.settings.scale = scale; }); a.applyScale(); a.go('home', { reset: true }); a.go('lesson.social-hello'); a.ui.finished = true; a.ui.cur = { pos: 999, short: false, warm: [] }; a.render(true); }, scale);
+    await page.waitForTimeout(450);
+    const bar = await page.evaluate(() => { const p = document.querySelector('.bottombar .btn-primary'), hm = document.querySelector('.bottombar .btn-ghost'); if (!p || !hm) return null; const r = p.getBoundingClientRect(), q = hm.getBoundingClientRect(); return { inView: r.bottom <= innerHeight && r.top >= 0, home: hm.textContent.trim(), homeLines: (() => { const rg = document.createRange(); rg.selectNodeContents(hm.querySelector('span')); return rg.getClientRects().length; })(), main: document.querySelector('main.has-bar') !== null }; });
+    check(`end of a lesson (text ×${scale}): the next step and «خانه» are in the fixed bar, in sight without scrolling`, bar && bar.inView && bar.home === T('nav.home') && bar.homeLines === 1 && bar.main, bar);
+  }
+  // a reload on the finished screen shows it again (iOS reloads a page that was in the background)
+  await page.evaluate(() => { const a = window.hamrah; a.store.update((s) => { s.settings.scale = 1; s.done['social-hello'] = { t: Date.now(), n: 1 }; delete s.at['social-hello']; }); a.applyScale(); a.go('home', { reset: true }); a.go('lesson.social-hello'); a.ui.finished = true; a.ui.cur = { pos: 999, short: false, warm: [] }; a.render(true); });
+  await page.reload(); await page.waitForFunction(() => window.hamrah && document.querySelector('.topbar')); await page.waitForTimeout(300);
+  check('a reload on the finished screen of a lesson shows the finished screen again', (await page.locator('main .big-check').count()) === 1 && (await page.locator('.bottombar .btn-primary').count()) === 1);
+  await page.evaluate(() => { window.hamrah.go('home', { reset: true }); window.hamrah.go('lesson.social-hello'); }); await page.waitForTimeout(300);
+  check('…but opening a finished lesson from the app starts it from its first screen', (await page.locator('main .big-check').count()) === 0 && (await page.locator('[data-next]').count()) === 1);
+  // a conversation: «شروع دوباره» asks first once something has been said; the question about a line is what focus lands on
+  await page.evaluate(() => { const a = window.hamrah; a.tapHold = 0; a.go('home', { reset: true }); a.go('rp.rp-store'); }); await page.waitForTimeout(300);
+  await page.locator('main > .btn-primary').click(); await page.waitForTimeout(800);
+  await page.locator('main .replies .opt').first().focus(); await page.keyboard.press('Enter'); await page.waitForTimeout(900);
+  const chk = await page.evaluate(() => { const a = document.activeElement; return { check: !!document.querySelector('[data-check]'), focus: a ? a.tagName + ':' + a.textContent.trim() : '', restart: !!document.querySelector('[data-check]') && [...document.querySelectorAll('main button')].some((b) => b.textContent.includes(window.hamrah.t('rp.restart'))) }; });
+  check('conversation: when the question about a line appears, focus is on the question itself, not on an answer', !chk.check || chk.focus.startsWith('H2:'), chk);
+  check('conversation: «شروع دوباره» is not under the answers of that question', !chk.restart, chk);
+  for (let i = 0; i < 4 && (await page.locator('[data-check]').count()); i++) { await page.evaluate(() => { const g = document.querySelector('[data-go]'); if (g) g.click(); else document.querySelector('[data-check] ~ .stack .opt:not(.is-tried), main .stack:not(.replies) .opt:not(.is-tried)').click(); }); await page.waitForTimeout(900); }
+  await page.locator('main button', { hasText: T('rp.restart') }).click(); await page.waitForTimeout(400);
+  const asked = await page.evaluate(() => ({ sheet: !!document.querySelector('.sheet'), first: (document.querySelector('.sheet .btn') || {}).textContent, started: window.hamrah.ui.rp && window.hamrah.ui.rp.started }));
+  check('conversation: «شروع دوباره» half-way asks first, staying is the first choice, nothing is lost yet', asked.sheet && asked.first.trim() === T('rp.leave.stay') && asked.started, asked);
+  await page.keyboard.press('Escape'); await page.waitForTimeout(200);
+  check('…Escape keeps the conversation', await page.evaluate(() => window.hamrah.ui.rp.started && window.hamrah.ui.rp.turn >= 1));
+  // the 911 practice banner is at least 16 px
+  await page.evaluate(() => { const a = window.hamrah; a.go('home', { reset: true }); a.go('rp.rp-emergency'); }); await page.waitForTimeout(300);
+  await page.locator('main > .btn-primary').click(); await page.waitForTimeout(500);
+  check('the "practice only" line in a 911 practice is at least 16 px', await page.evaluate(() => parseFloat(getComputedStyle(document.querySelector('.tb-banner')).fontSize) >= 16));
+  // the emergency page: phrases first; the learner's own lines after «I need help.»; no double full stop; Persian letters not put into English
+  for (const [w, sc] of [[390, 1], [320, 1.5]]) {
+    await page.setViewportSize({ width: w, height: w === 320 ? 568 : 844 });
+    await page.evaluate((sc) => { const a = window.hamrah; a.store.update((s) => { s.settings.scale = sc; s.me = { name: 'Maryam Ahmadi', address: '25 Oak St.', contact: '212-555-0142', phone: '', born: '' }; }); a.applyScale(); a.go('home', { reset: true }); a.go('sos'); }, sc); await page.waitForTimeout(300);
+    const sos = await page.evaluate(() => ({ lines: [...document.querySelectorAll('main .en-line')].slice(0, 4).map((e) => e.textContent), firstTop: document.querySelector('main .en-line').getBoundingClientRect().top, vh: innerHeight }));
+    check(`emergency page (${w} px, text ×${sc}): a phrase is in the first view, and the learner's own lines follow «I need help.»`, sos.firstTop < sos.vh - 60 && sos.lines[0] === 'I need help.' && sos.lines[1] === 'My name is Maryam Ahmadi.' && sos.lines[2] === 'My address is 25 Oak St.' && sos.lines[3].startsWith('Please call my family'), sos);
+  }
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.evaluate(() => { const a = window.hamrah; a.store.update((s) => { s.settings.scale = 1; s.me.name = 'مریم احمدی'; }); a.applyScale(); a.render(true); }); await page.waitForTimeout(200);
+  const fa = await page.evaluate(() => ({ english: [...document.querySelectorAll('main .en-line')].map((e) => e.textContent).filter((x) => /[\u0600-\u06FF]/.test(x)), fill: document.querySelectorAll('main .btn-ghost .icon, main button').length }));
+  check('emergency page: a name in Persian letters is never put inside an English sentence', fa.english.length === 0, fa);
+  await page.evaluate(() => window.hamrah.go('me')); await page.waitForTimeout(300);
+  check('«اطلاعات من»: a name in Persian letters gets a gentle note that English letters are needed', await page.locator('#me-name-latin').isVisible() && (await page.locator('#me-name-latin').innerText()).includes(T('me.latinOnly').slice(0, 20)));
+  await page.fill('#me-name', 'Maryam Ahmadi'); await page.waitForTimeout(150);
+  check('…and the note goes away once it is written in English letters', !(await page.locator('#me-name-latin').isVisible()));
+  // a damaged text size is put right when the app starts
+  await page.evaluate(() => { const k = Object.keys(localStorage).find((x) => x.startsWith('hamrah.v1')); const v = JSON.parse(localStorage.getItem(k)); v.settings.scale = 1e9; localStorage.setItem(k, JSON.stringify(v)); });
+  await page.reload(); await page.waitForFunction(() => window.hamrah && document.querySelector('.topbar')); await page.waitForTimeout(200);
+  check('a damaged text size in storage does not make the app unusable', await page.evaluate(() => window.hamrah.store.state.settings.scale === 1 && document.documentElement.scrollWidth <= innerWidth + 1));
+  check('no JavaScript errors (round 3 checks)', errors.length === 0, errors.slice(0, 3).join(' | '));
   await ctx.close();
 }
 
@@ -347,8 +423,8 @@ const live = (page) => page.evaluate(() => document.getElementById('live').textC
   await go(two, 'settings');
   // tab 1: Settings → «پاک کردن همه‌چیز» → yes
   await go(one, 'settings'); await one.waitForTimeout(400);      // (a tap right after a screen change is ignored)
-  await one.getByText('پاک کردن همه‌چیز').click(); await one.waitForTimeout(700);
-  await one.getByText('بله، پاک شود').click(); await one.waitForTimeout(400);
+  await one.getByText(T('reset.all')).click(); await one.waitForTimeout(700);
+  await one.getByText(T('reset.yes')).click(); await one.waitForTimeout(400);
   check('two tabs: «پاک کردن همه‌چیز» empties the storage', (await stored()) === null);
   await two.waitForTimeout(300);
   check('two tabs: the other tab is back on its first screen with nothing kept', (await route(two)) === '#onboard' && (await st(two)).me.name === '' && (await st(two)).onboard.done === false, await route(two));

@@ -164,7 +164,8 @@
     ],
     "wrong": "It will ready on Friday.",
     "right": "It will be ready on Friday.",
-    "why": "بعد از «will» همیشه یک فعل می‌آید؛ اینجا آن فعل «be» است."
+    "why": "بعد از «will» همیشه یک فعل می‌آید؛ اینجا آن فعل «be» است.",
+    "fresh": { "en": "It will be ready at five.", "wrong": "It will ready at five.", "fa": "ساعت پنج آماده می‌شود." }
   },
   "review": {
     "status": "draft",

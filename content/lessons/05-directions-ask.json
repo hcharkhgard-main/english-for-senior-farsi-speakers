@@ -12,8 +12,8 @@
   "phrases": [
     { "en": "Where is the bus stop?", "fa": "ایستگاه اتوبوس کجاست؟", "ph": "وِر ایز دِ باس سْتاپ؟", "note": "به‌جای bus stop اسم هر جایی را بگویید: pharmacy (داروخانه)، bank (بانک).", "chunks": ["Where is", "the bus stop?"] },
     { "en": "Is it far from here?", "fa": "از اینجا دور است؟", "ph": "ایز ایت فار فْرام هی‌یِر؟", "note": "برای اینکه بدانید می‌شود پیاده رفت یا نه.", "chunks": ["Is it far", "from here?"] },
-    { "en": "Go straight, then turn left.", "fa": "مستقیم بروید، بعد به چپ بپیچید.", "ph": "گُو سْتْرِیت، دِن تِرن لِفت", "note": "این را بیشتر می‌شنوید. left یعنی چپ و right یعنی راست.", "chunks": ["Go straight,", "then", "turn left."] },
-    { "en": "It's on the right.", "fa": "سمت راست است.", "ph": "ایتس آن دِ رایت", "note": "on the left یعنی سمت چپ.", "chunks": ["It's", "on the right."] },
+    { "en": "Go straight, then turn left.", "fa": "مستقیم بروید، بعد به چپ بپیچید.", "ph": "گُو سْتْرِیت، دِن تِرن لِفت", "note": "این را بیشتر می‌شنوید. left یعنی چپ و right یعنی راست. گاهی فاصله را با «block» می‌گویند: «Go two blocks.‎» یعنی دو چهارراه جلو بروید (block یعنی فاصلهٔ بین دو چهارراه).", "heard": true, "voice": "m", "chunks": ["Go straight,", "then", "turn left."] },
+    { "en": "It's on the right.", "fa": "سمت راست است.", "ph": "ایتس آن دِ رایت", "note": "on the left یعنی سمت چپ. جاها را گاهی با جای دیگری نشان می‌دهند: «next to the bank» (کنار بانک)، «across the street» (آن طرف خیابان)، «on the corner» (سرِ نبش).", "heard": true, "voice": "m", "chunks": ["It's", "on the right."] },
     { "en": "Can you show me on the map?", "fa": "می‌شود روی نقشه نشانم بدهید؟", "ph": "کَن یو شُو می آن دِ مَپ؟", "note": "نقشهٔ گوشی‌تان را نشان بدهید و این را بگویید.", "chunks": ["Can you show me", "on the map?"] }
   ],
   "dialogue": {
@@ -25,8 +25,9 @@
       ["them", "Go straight, then turn left. It's on the right.", "مستقیم بروید، بعد به چپ بپیچید. سمت راست است."],
       ["you", "Is it far from here?", "از اینجا دور است؟"],
       ["them", "No, it's very close. About two minutes.", "نه، خیلی نزدیک است. حدود دو دقیقه."],
-      ["you", "Thank you very much!", "خیلی ممنون!"],
-      ["them", "You're welcome. Have a nice day!", "خواهش می‌کنم. روز خوبی داشته باشید!"]
+      ["you", "And where is the pharmacy?", "راستی، داروخانه کجاست؟"],
+      ["them", "Go two blocks and turn right. It's next to the bank.", "دو چهارراه جلو بروید و به راست بپیچید. کنار بانک است."],
+      ["you", "Thank you very much!", "خیلی ممنون!"]
     ]
   },
   "respond": {
@@ -39,6 +40,10 @@
     "off": ["It's on the right.", "سمت راست است.", "این جمله را کسی می‌گوید که دارد آدرس می‌دهد. شما باید بگویید کجا می‌خواهید بروید یا آدرس را بپرسید."],
     "off2": 3
   },
+  "variants": [
+    { "en": "Go straight and take a left.", "fa": "مستقیم بروید و به چپ بپیچید.", "like": "Go straight, then turn left." },
+    { "en": "It's just around the corner.", "fa": "همین نزدیکی است؛ پشتِ همین نبش.", "like": "No, it's very close. About two minutes." }
+  ],
   "task": [
     ["می‌خواهید بدانید می‌توانید پیاده بروید یا راه زیاد است.", 2],
     ["راهنمایی را نمی‌فهمید، ولی گوشی‌تان نقشه دارد.", 5]
@@ -53,7 +58,8 @@
     ],
     "wrong": "It's in the right.",
     "right": "It's on the right.",
-    "why": "برای «سمتِ …» می‌گوییم «on the left / on the right»، نه «in»."
+    "why": "برای «سمتِ …» می‌گوییم «on the left / on the right»، نه «in».",
+    "fresh": { "en": "The bank is on the left.", "wrong": "The bank is in the left.", "fa": "بانک سمت چپ است." }
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }

@@ -55,7 +55,8 @@
     ],
     "wrong": "What means this word?",
     "right": "What does this word mean?",
-    "why": "در این سؤال «does» لازم است و «mean» آخر جمله می‌آید: «What does this word mean?‎»"
+    "why": "در این سؤال «does» لازم است و «mean» آخر جمله می‌آید: «What does this word mean?‎»",
+    "fresh": { "en": "What does this sign mean?", "wrong": "What means this sign?", "fa": "این تابلو یعنی چه؟" }
   },
   "variants": [
     { "en": "It's due by March fifteenth.", "fa": "مهلتش تا پانزدهم مارس است.", "like": "Yes. We need it by March fifteenth." },

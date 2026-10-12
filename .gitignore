@@ -7,3 +7,5 @@ audio-src/verify-report.json
 *.tmp.mp3
 .DS_Store
 audio-src/clips/
+__pycache__/
+*.pyc

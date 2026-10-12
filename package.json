@@ -16,6 +16,8 @@
     "test:offline": "node tests/e2e/offline.mjs",
     "test:path": "node tests/e2e/path.mjs",
     "test:papers": "node tests/e2e/papers.mjs",
+    "test:mic": "node tests/e2e/mic.mjs",
+    "test:e2e:all": "node tests/e2e/all.mjs",
     "audio:collect": "node tools/collect-audio.mjs",
     "audio:generate": "python3 tools/gen_audio.py",
     "audio:pack": "node tools/pack-audio.mjs",

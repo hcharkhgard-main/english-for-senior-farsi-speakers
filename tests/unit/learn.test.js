@@ -5,9 +5,10 @@ import { blank } from '../../src/js/store.js';
 import { grade, INTERVALS, LESSON_BOX, NEW_RESERVED, SESSION_MAX } from '../../src/js/srs.js';
 import { createStore, migrate, today, DAY } from '../../src/js/store.js';
 import { todayOffer, afterPath, checkpointDue, checkpointMark, checkpointLessons, checkpointPlan, missionDue, canDoList, laterChoice, doneLessons, missesOf, CHECK_EVERY, CHECK_HEAR, CHECK_SAY, REPEAT_REST, MISSION_WAIT, MISSION_KEEP } from '../../src/js/learn.js';
-import { numberWord, ordinalWord, ordinalDigits, yearWords, parseBorn, formatBorn, bornComplete, daysIn, ageOn, nameParts, spellOut, phoneParts, ownLines, ownMissing, ownPieces, MONTHS, YEARS, CARRIERS, OWN_KINDS } from '../../src/js/own.js';
+import { numberWord, ordinalWord, ordinalDigits, yearWords, parseBorn, formatBorn, bornComplete, daysIn, ageOn, nameParts, spellOut, phoneParts, ownLines, ownMissing, ownPieces, MONTHS, YEARS, CARRIERS, OWN_KINDS, ownVersion, ownItem, ownReplies, CARRIERS_MORE } from '../../src/js/own.js';
+import { audioRequests } from '../../tools/content.mjs';
 import { enNumber, enOrdinal, enYear } from '../../tools/spoken.mjs';
-import { lessonOrder, resumeId, pathLesson, nextLesson, scenarioStart, reviewPool, todaysSet, dueSentences, inTurns, TURN, shortPhrases, partnerLines, gistCount, gistTargets, numberRound, shuffle, mix } from '../../src/js/learn.js';
+import { lessonOrder, resumeId, pathLesson, nextLesson, scenarioStart, reviewPool, lessonWords, todaysSet, dueSentences, inTurns, TURN, shortPhrases, partnerLines, gistCount, gistTargets, numberRound, shuffle, mix } from '../../src/js/learn.js';
 
 // the real curriculum, exactly as the app receives it
 const content = JSON.parse(JSON.stringify(loadContent()));
@@ -93,14 +94,17 @@ test('path: the chosen situation comes right after the essentials when it has a 
   assert.equal(scenarioStart(fresh(), content), 'none');
 });
 
-test('path: "I understand simple sentences" starts at stage 2 after the essentials — but never passes over a safety lesson — and returns to stage 1 at the end', () => {
+test('path: "I understand simple sentences" starts at stage 2 after the essentials — but never passes over a safety lesson, or prices and times — and returns to stage 1 at the end', () => {
   const all = walk(fresh({ level: 'some' }));
   const n = content.essentials.length;
   assert.equal(new Set(all).size, order.length);
   assert.equal(all.length, order.length);
-  // right after the essentials: the stage 1 lessons about safety (the scam call, the stranger at the door), in their order
-  const safety = order.filter((id) => stageOf(id) === 1 && content.lessons[id].safetyCritical && !content.essentials.includes(id));
+  // right after the essentials: the stage 1 lessons about safety (the scam call, the stranger at the door) and those that
+  // later lessons take for granted (curriculum.json "always": the checkout's prices, the days and times), in their order
+  assert.deepEqual(content.always, ['store-checkout', 'basics-time']);
+  const safety = order.filter((id) => stageOf(id) === 1 && (content.lessons[id].safetyCritical || content.always.includes(id)) && !content.essentials.includes(id));
   assert.ok(safety.includes('scam-call') && safety.includes('at-the-door'), 'the two stage 1 safety lessons are flagged safetyCritical');
+  assert.ok(all.indexOf('store-checkout') < all.indexOf('card-reader') && all.indexOf('basics-time') < all.indexOf('phone-appointment'), 'prices before the card reader, weekdays before the phone appointment (QA round 3, L6)');
   assert.deepEqual(all.slice(n, n + safety.length), safety);
   // then stage 2 and 3 in order, and the rest of stage 1 at the very end
   assert.equal(stageOf(all[n + safety.length]), 2);
@@ -248,48 +252,87 @@ test('new words: the most useful everyday words come first for everyone, in the 
   assert.ok(pool.every((id) => word(id).level === 1), 'a beginner only meets level 1 words');
 });
 
-test('new words: after the first words the groups take turns, three words each — finished lessons first', () => {
+// the words of the finished lessons that come straight after the first words (reviewPool step 2a)
+const lessonWordsOf = (s, ids) => { const stage = Math.max(...wordsOnly(reviewPool(s, content)).map((id) => word(id).level)); return new Set(ids.flatMap((id) => lessonWords(content, id)).filter((id) => !content.wordsFirst.includes(id) && word(id).level <= stage && word(id).cat !== 'letters')); };
+
+test('new words: a lesson\'s own words are the words of its sentences and dialogue — not the small words every lesson has', () => {
+  const en = (id) => lessonWords(content, id).map((w) => word(w).en);
+  if (content.lessons['pharmacy-problems']) for (const w of ['prescription', 'refill']) assert.ok(en('pharmacy-problems').includes(w), w);
+  if (content.lessons['bus-transfer']) for (const w of ['transfer', 'across the street']) assert.ok(en('bus-transfer').includes(w), w);
+  for (const id of order) for (const w of lessonWords(content, id)) { assert.ok(word(w).en.length > 2, word(w).en); assert.notEqual(word(w).cat, 'little'); }
+  assert.deepEqual(lessonWords(content, 'no-such-lesson'), []);
+});
+
+test('new words: after the first words come the finished lessons\' own words, the last lesson first; then the groups take turns, three words each — finished lessons first', () => {
   assert.deepEqual(inTurns([[1, 2, 3, 4, 5], [6], [7, 8, 9, 10]]), [1, 2, 3, 6, 7, 8, 9, 4, 5, 10]);
   const done = order.slice(0, 8);
-  const lead = done.flatMap((id) => content.wordsAfter[id] || []);
+  const s = finish(fresh(), ...done);
+  const mine = lessonWordsOf(s, done);
+  const after = wordsOnly(reviewPool(s, content)).slice(content.wordsFirst.length);
+  // the lessons' own words first …
+  const nMine = after.findIndex((id) => !mine.has(id));
+  assert.equal(nMine, mine.size);
+  assert.ok(after.slice(nMine).every((id) => !mine.has(id)));
+  // … the lesson finished last first (all were finished at the same moment here: the later in the path counts as later)
+  const newest = done[done.length - 1];
+  const own = lessonWords(content, newest).filter((id) => mine.has(id));
+  assert.deepEqual(after.slice(0, own.length), own);
+  // then the groups: those of the finished lessons before every other group, the lesson finished last first
+  const lead = [...new Set(done.slice().reverse().flatMap((id) => content.wordsAfter[id] || []))];
   assert.ok(lead.length >= 6, 'the first lessons each bring a word group');
-  const after = wordsOnly(reviewPool(finish(fresh(), ...done), content)).slice(content.wordsFirst.length);
-  const level1 = after.filter((id) => word(id).level === 1);
-  // the groups of the finished lessons come before every other group …
+  const level1 = after.slice(nMine).filter((id) => word(id).level === 1);
   const nLead = level1.filter((id) => lead.includes(word(id).cat)).length;
   assert.ok(level1.slice(0, nLead).every((id) => lead.includes(word(id).cat)));
   assert.ok(level1.slice(nLead).every((id) => !lead.includes(word(id).cat)));
-  // … in lesson order, and no group gives more than three words before another has its turn
+  // … and no group gives more than three words before another has its turn
   const turn = level1.slice(0, nLead).map((id) => word(id).cat);
   const left = lead.filter((c) => turn.includes(c));          // (a group may already be used up by the first words)
   assert.ok(left.length >= 3);
   assert.deepEqual(turn.filter((c, i) => i === 0 || turn[i - 1] !== c).slice(0, left.length), left);
   turn.forEach((c, i) => { if (i >= TURN && turn.slice(i - TURN, i).every((x) => x === c)) assert.ok(turn.slice(i).every((x) => x === c), `more than ${TURN} "${c}" words in a row while other groups are waiting`); });
   // a group keeps its own order (the order of vocabulary.json)
-  for (const c of left) assert.deepEqual(level1.filter((id) => word(id).cat === c), content.vocab.filter((w) => w.cat === c && w.level === 1 && !content.wordsFirst.includes(w.id)).map((w) => w.id), c);
+  for (const c of left) assert.deepEqual(level1.filter((id) => word(id).cat === c), content.vocab.filter((w) => w.cat === c && w.level === 1 && !content.wordsFirst.includes(w.id) && !mine.has(w.id)).map((w) => w.id), c);
+  // every word is still in the pool exactly once
+  const all = wordsOnly(reviewPool(s, content));
+  assert.equal(new Set(all).size, all.length);
 });
 
-test('new words: the words of a lesson just finished arrive straight away', () => {
-  // a learner in the second stage who has met about two hundred words and now does the first clothes lesson
-  const lesson = Object.keys(content.wordsAfter).find((id) => content.wordsAfter[id].includes('clothes'));
-  const before = order.slice(0, order.indexOf(lesson));
+test('new words: the words of a lesson just finished arrive straight away — its own words, then its word group', () => {
+  // a learner in the second stage who has met about two hundred words and now does the lesson about pharmacy problems
+  const lesson = content.lessons['pharmacy-problems'] ? 'pharmacy-problems' : order[order.length - 1];
+  const before = order.slice(0, order.indexOf(lesson)).filter((id) => stageOf(id) <= stageOf(lesson));
   const s = finish(fresh(), ...before);
   for (let day = 0; day < 33; day++) meet(s);
-  assert.ok(!meet({ ...s, srs: { ...s.srs } }).some((id) => word(id).cat === 'clothes'), 'not before the lesson');
-  finish(s, lesson);
+  const own = lessonWords(content, lesson);
+  const unmet = own.filter((id) => !s.srs[id] && !content.wordsFirst.includes(id) && word(id).level <= stageOf(lesson));
+  assert.ok(unmet.length >= 2, 'the lesson has words the learner has not met');
+  s.done[lesson] = { t: 2, n: 1 };
   const next = meet(s);
-  assert.ok(next.filter((id) => word(id).cat === 'clothes').length >= 3, next.map((id) => word(id).en).join(', '));
+  assert.deepEqual(next.slice(0, Math.min(6, unmet.length)), unmet.slice(0, 6), next.map((id) => word(id).en).join(', '));
+  if (lesson === 'pharmacy-problems') assert.ok(next.map((id) => word(id).en).includes('refill'), 'refill comes the day after the lesson (QA round 3: it used to come at place 528)');
+  // the clothes lesson: its word group comes before the groups of earlier lessons
+  const clothes = Object.keys(content.wordsAfter).find((id) => content.wordsAfter[id].includes('clothes'));
+  const c = finish(fresh(), ...order.slice(0, order.indexOf(clothes)));
+  for (let day = 0; day < 33; day++) meet(c);
+  assert.ok(!meet({ ...c, srs: { ...c.srs } }).some((id) => word(id).cat === 'clothes'), 'not before the lesson');
+  c.done[clothes] = { t: 2, n: 1 };
+  const mineNow = lessonWordsOf(c, [clothes]);
+  const groups = wordsOnly(reviewPool(c, content)).filter((id) => !c.srs[id] && !mineNow.has(id) && !lessonWordsOf(c, Object.keys(c.done)).has(id));
+  assert.equal(word(groups[0]).cat, 'clothes', groups.slice(0, 6).map((id) => word(id).en).join(', '));
 });
 
-test('new words: easier words first — no level 2 word before a level 1 word, no rare word before a basic one', () => {
+test('new words: easier words first — no level 2 word before a level 1 word, no rare word before a basic one (the lessons\' own words aside)', () => {
   const stage1 = order.filter((id) => stageOf(id) === 1);
+  const s = finish(fresh(), ...stage1);
+  const mine = lessonWordsOf(s, stage1);
   // (the alphabet is left out here: it comes after everything else — see the next test)
-  const u = wordsOnly(reviewPool(finish(fresh(), ...stage1), content)).filter((id) => word(id).cat !== 'letters');
+  const u = wordsOnly(reviewPool(s, content)).filter((id) => word(id).cat !== 'letters' && !mine.has(id));
   assert.ok(u.some((id) => word(id).level === 2), 'level 2 words open up in stage 2');
   assert.ok(u.every((id) => word(id).level <= 2));
   const firstHard = u.findIndex((id) => word(id).level === 2);
   assert.ok(u.slice(firstHard).every((id) => word(id).level === 2), 'all level 1 words come before the first level 2 word');
-  const at = (en) => u.findIndex((id) => word(id).en === en);
+  const all1 = wordsOnly(reviewPool(s, content));
+  const at = (en) => all1.findIndex((id) => word(id).en === en);
   for (const rare of ['passport', 'Medicare']) for (const basic of ['water', 'milk', 'today', 'left', 'door', 'bus', 'cold']) assert.ok(at(basic) >= 0 && at(basic) < at(rare), `${basic} before ${rare}`);
   // every word is in the pool exactly once at the end
   const all = wordsOnly(reviewPool(finish(fresh(), ...order), content));
@@ -358,7 +401,10 @@ test('questions that open a lesson: sentences that are due, the longest-waiting 
   // the lesson being opened is left out; n limits the number; nothing that is not due yet
   assert.deepEqual(dueSentences(s, content, 101, 3, a).map((x) => x.key), [key(b, 0), key(b, 1)]);
   assert.equal(dueSentences(s, content, 101, 1).length, 1);
-  assert.equal(dueSentences(s, content, 104, 99).length, 10);
+  // (a sentence with the sample person's own details is never asked this way: "My name is Maryam.")
+  const plain = [a, b].flatMap((id) => content.lessons[id].phrases.filter((p) => !(p.own && p.own.length)));
+  assert.ok(plain.length < 10, 'the first lessons have a sentence with the sample person in it');
+  assert.equal(dueSentences(s, content, 104, 99).length, plain.length);
   // answered in the lesson: graded like a card, so it is no longer due and the day's set does not show it again
   const before = todaysSet(s, content, 101).queue;
   assert.ok(before.includes(key(a, 0)));
@@ -828,4 +874,141 @@ test('saved state: the new fields have safe defaults, and damaged values are bro
   assert.deepEqual(odd.cp, { n: 0, t: 0 });
   assert.deepEqual([odd.later, odd.tried], [{}, {}]);
   assert.equal(typeof today(NOW), 'number');
+});
+
+// ---- development pass 4 (QA round 3) ---------------------------------------------------------------------------
+test('questions that open a lesson come from different lessons first (L1): three questions from one lesson could be guessed', () => {
+  const s = fresh();
+  const [a, b, c] = order;
+  finish(s, a, b, c);
+  // every sentence of the three lessons due on the same day; lesson a's have waited longest
+  for (const id of [a, b, c]) content.lessons[id].phrases.forEach((p) => { s.srs[`p:${id}:${p.id}`] = { b: 2, d: id === a ? 95 : 99, n: 1, l: 90 }; });
+  const got = dueSentences(s, content, 100, 3);
+  assert.deepEqual(got.map((x) => x.lesson), [a, b, c]);
+  const more = dueSentences(s, content, 100, 6);
+  assert.deepEqual(more.slice(0, 3).map((x) => x.lesson), [a, b, c]);
+  assert.equal(new Set(more.map((x) => x.key)).size, 6);
+  assert.equal(more[3].lesson, a, 'then the longest-waiting again');
+});
+
+test('a look back never asks for a line other people say ("heard") or one with the sample person\'s details', () => {
+  const ids = ['pharmacy-problems', 'bus-transfer', 'on-the-plane', 'social-hello', 'my-name'].filter((id) => content.lessons[id]);
+  for (const seed of [0.1, 0.3, 0.5, 0.7, 0.9]) {
+    const s = fresh();
+    ids.forEach((id, i) => { finishAt(s, id, daysAgo(5 - i)); for (const p of content.lessons[id].phrases) s.srs[`p:${id}:${p.id}`] = { b: 2, d: 1, n: 1 }; });
+    for (const it of checkpointPlan(s, content, seed).items.filter((x) => x.kind === 'say')) {
+      const p = content.lessons[it.lesson].phrases.find((x) => x.id === it.pid);
+      assert.ok(!p.heard && !(p.own && p.own.length), `${it.lesson}: "${p.en}"`);
+    }
+  }
+});
+
+test('after the path: a repeat left half-way is offered as "continue" (features L6)', () => {
+  const s = fresh();
+  order.forEach((id, i) => finishAt(s, id, daysAgo(100 - i / 100)));
+  s.cp = checkpointMark(s, content, NOW);
+  const first = afterPath(s, content, NOW);
+  assert.equal(first.kind, 'repeat');
+  s.at[first.id] = { pos: 3, short: true, t: NOW - 1000 };
+  assert.deepEqual(afterPath(s, content, NOW), { kind: 'resume', id: first.id });
+  assert.deepEqual(todayOffer(s, content, NOW), { kind: 'resume', id: first.id });
+  s.at[first.id] = { pos: 0, short: true, t: NOW - 1000 };
+  assert.equal(afterPath(s, content, NOW).kind, 'repeat');
+});
+
+// The learner's own details instead of the sample person's (QA round 3, M2)
+const ME = { name: 'Hossein Karimi', address: '1450 Pine Ave, Apt 3', phone: '(310) 555-0199', born: '1955-12-14', contact: '' };
+const AT = new Date(2026, 9, 12, 12).getTime();
+const FA_MONTH = (m) => ['ژانویه', 'فوریه', 'مارس', 'آوریل', 'مه', 'ژوئن', 'ژوئیه', 'اوت', 'سپتامبر', 'اکتبر', 'نوامبر', 'دسامبر'][m - 1];
+const own = (en, fa, me = ME) => ownVersion(en, fa, me, { now: AT, month: FA_MONTH });
+
+test('own version: each detail of the sample person becomes the learner\'s, in English and in the Farsi meaning', () => {
+  const table = [
+    ['My name is Maryam.', 'اسم من مریم است.', 'My name is Hossein.', 'اسم من Hossein است.'],
+    ['My first name is Maryam.', 'اسم کوچک من مریم است.', 'My first name is Hossein.', 'اسم کوچک من Hossein است.'],
+    ['My last name is Ahmadi.', 'نام خانوادگی من احمدی است.', 'My last name is Karimi.', 'نام خانوادگی من Karimi است.'],
+    ["It's spelled A-H-M-A-D-I.", 'حرف‌به‌حرف: …', "It's spelled K-A-R-I-M-I.", 'حرف‌به‌حرف: …'],
+    ['Hello, this is Maryam Ahmadi.', 'سلام، مریم احمدی هستم.', 'Hello, this is Hossein Karimi.', 'سلام، Hossein Karimi هستم.'],
+    ['My date of birth is March 5th, 1958.', 'تاریخ تولد من ۵ مارس ۱۹۵۸ است.', 'My date of birth is December 14th, 1955.', 'تاریخ تولد من ۱۴ دسامبر ۱۹۵۵ است.'],
+    ['I was born on March 5th, 1958.', 'من در ۵ مارس ۱۹۵۸ به دنیا آمده‌ام.', 'I was born on December 14th, 1955.', 'من در ۱۴ دسامبر ۱۹۵۵ به دنیا آمده‌ام.'],
+    ['My phone number is 212-555-0142.', 'شمارهٔ تلفن من ‎۲۱۲-۵۵۵-۰۱۴۲ است.', 'My phone number is 310-555-0199.', 'شمارهٔ تلفن من ‎۳۱۰-۵۵۵-۰۱۹۹ است.'],
+    ['I am sixty-five years old.', 'من شصت و پنج سال دارم.', 'I am seventy years old.', 'من ۷۰ سال دارم.'],
+    ['I live at 25 Oak Street.', 'من در خیابان اوک، پلاک ۲۵ زندگی می‌کنم.', 'I live at 1450 Pine Ave, Apt 3.', 'من در 1450 Pine Ave, Apt 3 زندگی می‌کنم.'],
+    ['My address is 25 Oak Street.', 'آدرس من خیابان اوک، پلاک ۲۵ است. (آدرس تمرینی)', 'My address is 1450 Pine Ave, Apt 3.', 'آدرس من 1450 Pine Ave, Apt 3 است.'],
+    ['Maryam Ahmadi. My phone number is 212-555-0142.', 'مریم احمدی. شمارهٔ تلفن من ‎۲۱۲-۵۵۵-۰۱۴۲ است. (شمارهٔ تمرینی)', 'Hossein Karimi. My phone number is 310-555-0199.', 'Hossein Karimi. شمارهٔ تلفن من ‎۳۱۰-۵۵۵-۰۱۹۹ است.'],
+  ];
+  for (const [en, fa, wantEn, wantFa] of table) { const v = own(en, fa); assert.ok(v, en); assert.equal(v.en, wantEn); assert.equal(v.fa, wantFa); }
+  // the age follows the date: on the day before the birthday, one year less
+  assert.equal(own('I am sixty-five years old.', 'من شصت و پنج سال دارم.', { ...ME, born: '1955-10-13' }).en, 'I am seventy years old.');
+  // the learner's words are not scored by the speaking check
+  assert.deepEqual(own('My name is Maryam.', 'اسم من مریم است.').own, ['Hossein']);
+  assert.deepEqual(own('My date of birth is March 5th, 1958.', 'تاریخ تولد من ۵ مارس ۱۹۵۸ است.').own, ['December', '14th', '1955']);
+});
+
+test('own version: said from single recordings where they can say it — the same pieces as «جملهٔ خودِ شما»', () => {
+  assert.deepEqual(own('I was born on March 5th, 1958.', 'من در ۵ مارس ۱۹۵۸ به دنیا آمده‌ام.').say, [CARRIERS.born, 'December', 'fourteenth', 'nineteen', 'fifty-five']);
+  assert.deepEqual(own('My date of birth is March 5th, 1958.', 'تاریخ تولد من ۵ مارس ۱۹۵۸ است.').say, [CARRIERS_MORE.born2, 'December', 'fourteenth', 'nineteen', 'fifty-five']);
+  assert.equal(own('My date of birth is March 5th, 1958.', 'تاریخ تولد من ۵ مارس ۱۹۵۸ است.').words, 'December fourteenth, nineteen fifty-five');
+  assert.deepEqual(own('My phone number is 212-555-0142.', 'شمارهٔ تلفن من ۲۱۲-۵۵۵-۰۱۴۲ است.').say.slice(0, 2), [CARRIERS.phone, 'three']);
+  assert.deepEqual(own('I am sixty-five years old.', 'من شصت و پنج سال دارم.').say, ['I am', 'seventy', 'years old.']);
+  assert.equal(own('My name is Maryam.', 'اسم من مریم است.').say, null, 'a name has no recording: the device voice reads it, or the learner reads it aloud');
+  // every piece is asked of the voice generator (pack "me")
+  const keys = new Set(audioRequests(content).filter((r) => r.pack === 'me').map((r) => r.text));
+  assert.ok(keys.has(CARRIERS_MORE.born2));
+});
+
+test('own version: nothing when a detail is missing, when a sample detail would be left, or when the sentence is about somebody else', () => {
+  assert.equal(own('My name is Maryam.', 'اسم من مریم است.', { ...ME, name: '' }), null);
+  assert.equal(own('My name is Maryam.', 'اسم من مریم است.', { ...ME, name: 'مریم احمدی' }), null, 'a name in Farsi letters cannot stand in an English sentence');
+  assert.equal(own('Hello, this is Maryam Ahmadi.', 'سلام، مریم احمدی هستم.', { ...ME, name: 'Hossein' }), null, 'a first name only: no full name to say');
+  assert.equal(own('25 Oak Street, apartment 12. My zip code is 90024.', 'خیابان اوک، پلاک ۲۵، آپارتمان ۱۲. کد پستی من ۹۰۰۲۴ است.'), null);
+  assert.equal(own('His name is Arman Ahmadi.', 'اسمش آرمان احمدی است.'), null);
+  assert.equal(own('I live in apartment 12.', 'من در آپارتمان شمارهٔ ۱۲ زندگی می‌کنم.'), null);
+  assert.equal(own('Can you call my son, please?', 'می‌شود به پسرم زنگ بزنید؟'), null, 'nothing of the sample person: nothing to change');
+  assert.equal(own('My date of birth is March 5th, 1958.', 'تاریخ تولد من ۵ مارس ۱۹۵۸ است.', { ...ME, born: '0-12-14' }), null);
+  // the learner may live on an Oak Street too: their own address is not taken for the sample's
+  assert.equal(own('I live at 25 Oak Street.', 'من در خیابان اوک، پلاک ۲۵ زندگی می‌کنم.', { ...ME, address: '7 Oak Street' }).en, 'I live at 7 Oak Street.');
+  assert.equal(ownVersion(null, 'x', ME), null);
+});
+
+test('review cards: a sentence about the sample person is shown as the learner\'s own; other cards are unchanged', () => {
+  const item = { id: 'p:my-name:p1', kind: 'phrase', en: 'My first name is Maryam.', fa: 'اسم کوچک من مریم است.', ph: 'مای فِرست…', voice: 's', own: ['Maryam'], chunks: ['My first name', 'is Maryam.'] };
+  const it = ownItem(item, ME, { now: AT, month: FA_MONTH });
+  assert.equal(it.en, 'My first name is Hossein.');
+  assert.equal(it.mine, true);
+  assert.equal(it.ph, null, 'the sound guide was written for the sample name');
+  assert.equal(it.chunks, null);
+  assert.deepEqual(it.own, ['Hossein']);
+  assert.equal(ownItem(item, {}, { now: AT }), item, 'no details yet: the lesson\'s sentence');
+  const word = { id: 'w1', kind: 'word', en: 'hello', fa: 'سلام' };
+  assert.equal(ownItem(word, ME), word);
+  assert.equal(ownItem(null, ME), null);
+  // every sentence with "own" in the course: either the learner's own version or left as it is — never half of each
+  for (const L of Object.values(content.lessons)) for (const p of L.phrases.filter((x) => x.own)) {
+    const v = ownItem({ id: `p:${L.id}:${p.id}`, kind: 'phrase', ...p }, ME, { now: AT, month: FA_MONTH });
+    if (v.mine) assert.ok(!/Maryam|Ahmadi|A-H-M|1958|0142|Oak Street|مریم|احمدی|اِیچ|۱۹۵۸/.test(v.en + v.fa), `${L.id}: ${v.en} / ${v.fa}`);
+  }
+});
+
+const SAMPLE = /Maryam|Ahmadi|A-H-M-A-D-I|1958|0142|Oak Street|مریم|احمدی|اِیچ|۱۹۵۸|۰۱۴۲/;
+test('conversations (M2): the answer to tap for a personal question is the learner\'s own once «اطلاعات من» has it', () => {
+  let turns = 0;
+  for (const R of content.roleplays) for (const turn of R.turns.filter((x) => x.open)) {
+    const got = ownReplies(turn.replies, ME, { now: AT, month: FA_MONTH });
+    if (!turn.replies.some((r) => SAMPLE.test(r.en))) { assert.equal(got, turn.replies, `${R.id}: nothing personal to change`); continue; }
+    if (!got.some((r) => r.mine)) continue;
+    turns++;
+    assert.ok(got.length >= 1);
+    for (const r of got.filter((x) => x.mine)) assert.ok(!SAMPLE.test(r.en + r.fa), `${R.id}: ${r.en} / ${r.fa}`);
+    assert.ok(!got.some((r) => !r.mine && SAMPLE.test(r.en)), `${R.id}: the sample person's answer is left out next to the learner's own`);
+    for (const r of got) assert.ok(turn.replies.some((x) => x.then === r.then && x.keys === r.keys), 'what follows an answer stays the same');
+  }
+  assert.ok(turns >= 10, `${turns} turns`);
+  // the clinic's date of birth, in the conversation, with the recordings
+  const clinic = content.roleplays.find((r) => r.id === 'rp-clinic');
+  const t = clinic.turns.find((x) => x.open && x.replies.some((r) => /1958/.test(r.en)));
+  const mine = ownReplies(t.replies, ME, { now: AT, month: FA_MONTH }).filter((r) => r.mine);
+  assert.ok(mine.some((r) => r.en === 'My date of birth is December 14th, 1955.' && r.pieces && r.pieces[0] === CARRIERS_MORE.born2));
+  // no details: the conversation is as it was
+  for (const R of content.roleplays) for (const turn of R.turns.filter((x) => x.open)) assert.equal(ownReplies(turn.replies, {}), turn.replies);
 });

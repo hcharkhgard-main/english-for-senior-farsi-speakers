@@ -6,7 +6,11 @@
 // screen or the next start, with one reload; cache names carry the site's path, so a second copy
 // on the same origin does not delete the first copy's lessons; files left by the earlier naming
 // scheme are taken over; installation survives a font that fails to download; a lesson opened in the
-// first moments of the first visit (before the service worker is in charge) is kept all the same.
+// first moments of the first visit (before the service worker is in charge) is kept all the same;
+// a Wi-Fi login page ("captive portal", 200 text/html) is never stored as a sound pack or as a file of the
+// app, and the lesson plays again once the connection is normal — also with the server stopped afterwards;
+// after an ordinary first day (one lesson, then home) the next review set, number listening and the papers
+// near that lesson play with the server stopped the next day, and Settings says which parts are ready.
 //
 // "No connection" here means that the browser is told it is offline AND the test's server stops
 // answering. Playwright's setOffline alone does not cut the service worker's own requests: a file
@@ -17,6 +21,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import crypto from 'node:crypto';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const PORT = +(process.env.PORT || 8140), SITE = process.env.HAMRAH_SITE ? path.resolve(process.env.HAMRAH_SITE) : path.join(ROOT, 'site'), ORIGIN = `http://localhost:${PORT}`;
@@ -26,10 +31,19 @@ const B = fs.mkdtempSync(path.join(os.tmpdir(), 'hamrah-b-'));
 const idA = /const BUILD = '([0-9a-f]+)'/.exec(fs.readFileSync(path.join(SITE, 'sw.js'), 'utf8'))[1];
 for (const f of ['sw.js', 'index.html']) fs.writeFileSync(path.join(B, f), fs.readFileSync(path.join(SITE, f), 'utf8').replaceAll(idA, 'bbbbbbbbbb'));
 fs.writeFileSync(path.join(B, 'app.js'), fs.readFileSync(path.join(SITE, 'app.js'), 'utf8') + '\n;window.__hamrahBuild="B";');
+// the worker of B lists the size and hash of B's own files (it refuses any other: src/sw.js)
+{
+  const swB = fs.readFileSync(path.join(B, 'sw.js'), 'utf8'), m = /const INTEGRITY = (\{.*?\});/.exec(swB);
+  const list = JSON.parse(m[1]);
+  for (const f of ['index.html', 'app.js']) { const buf = fs.readFileSync(path.join(B, f)); list[f] = [buf.length, crypto.createHash('sha256').update(buf).digest('hex')]; }
+  fs.writeFileSync(path.join(B, 'sw.js'), swB.replace(m[0], `const INTEGRITY = ${JSON.stringify(list)};`));
+}
+const T = JSON.parse(fs.readFileSync(path.join(SITE, 'content.json'), 'utf8')).ui.strings;      // interface text, never written out here
 
 // a small server: / and the two "copies" /one/ and /two/ serve the site; `overlay` lays version B on top; `fail` breaks chosen files;
 // `slow` holds chosen files back for a while; `dead` drops every connection (the server is "unplugged")
-let overlay = null, fail = null, slow = null, slowMs = 2500, dead = false;
+let overlay = null, fail = null, slow = null, slowMs = 2500, dead = false, portal = null;
+// `portal` (a RegExp or a function of the path): those requests are answered by a Wi-Fi login page, 200 text/html
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json; charset=utf-8', '.webmanifest': 'application/manifest+json', '.mp3': 'audio/mpeg', '.woff2': 'font/woff2', '.png': 'image/png', '.svg': 'image/svg+xml', '.wasm': 'application/wasm', '.ort': 'application/octet-stream', '.txt': 'text/plain; charset=utf-8' };
 const server = http.createServer(async (req, res) => {
   if (dead) { req.socket.destroy(); return; }
@@ -37,6 +51,7 @@ const server = http.createServer(async (req, res) => {
   for (const pre of ['/one/', '/two/']) if (p.startsWith(pre)) p = p.slice(pre.length - 1);
   if (p.endsWith('/')) p += 'index.html';
   if (fail && fail.test(p)) { res.writeHead(503); res.end('injected failure'); return; }
+  if (portal && (typeof portal === 'function' ? portal(p) : portal.test(p))) { res.writeHead(200, { 'Content-Type': 'text/html' }); res.end('<html><body><h1>Welcome to Free WiFi</h1><a href="/login">Accept terms</a></body></html>'); return; }
   if (slow && slow.test(p)) { await new Promise((r) => setTimeout(r, slowMs)); if (dead) { req.socket.destroy(); return; } }
   let f = overlay && fs.existsSync(path.join(overlay, p)) ? path.join(overlay, p) : path.join(SITE, p);
   if (!path.resolve(f).startsWith(overlay && f.startsWith(overlay) ? overlay : SITE) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) { res.writeHead(404); res.end('not found'); return; }
@@ -124,6 +139,97 @@ try {
     check('…so with the server stopped the app restarts and the whole lesson can be heard', again && later.plays === clips.length, later);
     await plug(ctx); await ctx.close();
   }
+  // ---- a Wi-Fi login page ("captive portal") is never stored --------------------------------------
+  // Hotel, clinic and library Wi-Fi answer every request with their login page (200, text/html) until the
+  // terms are accepted. Before this was handled, one such answer stayed on the phone as the lesson's sound
+  // (silent for good) or as a file of the app (the app no longer opened).
+  {
+    const ctx = await b.newContext(phone);
+    const page = await ctx.newPage(); await page.goto(ORIGIN + '/'); await ready(page); await controlled(page); await page.waitForTimeout(1200);
+    await page.evaluate(() => window.hamrah.store.update((s) => { s.onboard.done = true; s.settings.auto = false; }));
+    const clips = await lessonClips(page, 'bank-help');
+    portal = /^\/audio\/l-bank-help\..*\.mp3$/;
+    await page.evaluate(() => window.hamrah.go('lesson.bank-help'));
+    const onPortal = await playAll(page, clips);
+    await page.waitForTimeout(800);
+    const kept = (await audioStored(page)).filter((x) => /^l-bank-help/.test(x));
+    check('on a Wi-Fi login page a lesson\'s sound is "not ready yet", nothing is stored, nothing throws', onPortal.unavailable === clips.length && kept.length === 0, { onPortal, kept });
+    // what the learner is told: tap a listen button of the lesson
+    await page.evaluate(() => { const a = window.hamrah; a.store.update((s) => { s.at['bank-help'] = { pos: 1, short: false, t: Date.now() }; }); a.go('home', { reset: true }); a.go('lesson.bank-help'); });
+    await page.waitForTimeout(800);
+    await page.locator('main [data-play]').first().click(); await page.waitForTimeout(1500);
+    const told = await page.evaluate(() => [...document.querySelectorAll('.toast')].map((e) => e.textContent).join(' '));
+    const stuck = await page.locator('[data-play].is-playing').count();
+    check('…the learner is told calmly in Farsi, and no button stays marked "playing"', told.includes(T['audio.notReady']) && stuck === 0, { told: told.slice(0, 80), stuck });
+    portal = null;
+    await page.reload(); await ready(page);
+    await page.evaluate(() => window.hamrah.go('lesson.bank-help'));
+    const back = await playAll(page, clips);
+    await page.waitForTimeout(800);
+    check('…back on a normal connection the whole lesson plays and is stored', back.plays === clips.length && (await audioStored(page)).some((x) => /^l-bank-help/.test(x)), back);
+    await unplug(ctx); await page.reload().catch(() => {}); await ready(page);
+    await page.evaluate(() => window.hamrah.go('lesson.bank-help'));
+    const off = await playAll(page, clips);
+    check('…and then also with the server stopped', off.plays === clips.length, off);
+    await plug(ctx); await ctx.close();
+  }
+  {
+    // the app installed while the worker's own download of content.json is answered by the login page
+    const ctx = await b.newContext(phone);
+    let n = 0; portal = (p) => p === '/content.json' && ++n > 1;      // the page's own request gets through, the worker's does not
+    const page = await ctx.newPage(); await page.goto(ORIGIN + '/'); await ready(page); await page.waitForTimeout(4000);
+    const shell = await page.evaluate(async () => { const k = (await caches.keys()).find((x) => x.includes('shell-')); if (!k) return null; const r = await (await caches.open(k)).match('content.json'); return r ? r.headers.get('content-type') : 'none'; });
+    check('a login page instead of a file of the app: that version is not installed (nothing half-stored)', shell === null || shell === 'none', shell);
+    portal = null;
+    await page.reload(); const opens = await ready(page).then(() => true, () => false); await controlled(page).catch(() => {}); await page.waitForTimeout(1500);
+    await unplug(ctx); await page.reload().catch(() => {});
+    const offline = await ready(page).then(() => true, () => false);
+    check('…the next normal visit installs it, and the app then opens with the server stopped', opens && offline);
+    await plug(ctx); await ctx.close();
+  }
+  // ---- an ordinary first day: tomorrow's review, number listening and papers work offline --------
+  {
+    const ctx = await b.newContext(phone);
+    const page = await ctx.newPage();
+    await page.addInitScript(() => { const RD = Date; const shift = () => Number(sessionStorage.getItem('t.shift') || 0); class D extends RD { constructor(...a) { if (a.length) super(...a); else super(RD.now() + shift()); } static now() { return RD.now() + shift(); } } window.Date = D; });
+    await page.goto(ORIGIN + '/'); await ready(page); await controlled(page);
+    // the first lesson, finished the ordinary way (its last screen's Next), then home
+    const first = await page.evaluate(() => { const a = window.hamrah; a.store.update((s) => { s.onboard.done = true; s.settings.auto = false; }); return a.nextLesson().id; });
+    await page.evaluate((id) => { const a = window.hamrah; a.store.update((s) => { s.at[id] = { pos: 999, short: false, t: Date.now() }; }); a.go('lesson.' + id); }, first);
+    for (let i = 0; i < 4 && !(await page.evaluate((id) => !!window.hamrah.store.state.done[id], first)); i++) { await page.waitForTimeout(500); await page.locator('[data-next]').last().click().catch(() => {}); }
+    check(`first day: lesson ${first} finished`, await page.evaluate((id) => !!window.hamrah.store.state.done[id], first));
+    await page.evaluate(() => window.hamrah.home());
+    // what Settings will show, once the app has had a short while at home with a connection
+    const want = await page.evaluate(async () => { const a = window.hamrah; await a.audio.loadIndex(); return a.audio.index.packs.filter((p) => ['n-numbers', 'v-basics'].includes(p.id)).map((p) => p.id); });
+    for (let i = 0; i < 60; i++) { const have = await audioStored(page); if (want.every((w) => have.includes(w))) break; await page.waitForTimeout(1000); }
+    await page.waitForTimeout(2500);
+    const kept = await audioStored(page);
+    check('…after a short while at home with a connection, the sounds of what comes next are stored', want.every((w) => kept.includes(w)), kept.join(' '));
+    await unplug(ctx);
+    await page.evaluate(() => sessionStorage.setItem('t.shift', String(86400000)));
+    await page.reload().catch(() => {}); await ready(page);
+    const day2 = await page.evaluate(() => ({ today: window.hamrah.today() }));
+    const set = await page.evaluate(async () => {
+      const a = window.hamrah;
+      // the first review set of the day, as the review screen builds it
+      a.go('review'); await new Promise((r) => setTimeout(r, 500));
+      const S = a.ui.rev; return S ? S.queue : [];
+    });
+    const reviewClips = await page.evaluate((ids) => ids.map((id) => window.hamrah.item(id)).filter(Boolean).map((it) => ({ lang: 'en', voice: it.voice || 's', speed: 'n', text: it.say || it.en })), set);
+    const rev = await playAll(page, reviewClips);
+    check('next day, server stopped: every card of the first review set has its sound', set.length > 0 && rev.plays === reviewClips.length, { cards: set.length, ...rev, day: day2.today });
+    const nums = await page.evaluate(() => window.hamrah.content.numbers.slice(0, 8).map((n, i) => ({ lang: 'en', voice: n.voice || (i % 2 ? 'm' : 's'), speed: 'n', text: n.say })));
+    const numHeard = await playAll(page, nums);
+    check('…number listening plays', numHeard.plays === nums.length, numHeard);
+    const paperClips = await page.evaluate((first) => { const a = window.hamrah; return (a.content.papers || []).filter((P) => P.stage === 1 || P.lesson === first).flatMap((P) => P.lines.map((l) => ({ lang: 'en', voice: 's', speed: 'n', text: l.en, tts: false }))).filter((c) => a.audio.has(c)); }, first);
+    const papHeard = paperClips.length ? await playAll(page, paperClips) : { plays: 0 };
+    check('…the recorded lines of the papers near that lesson play', papHeard.plays === paperClips.length, { recorded: paperClips.length, ...papHeard });
+    await page.evaluate(() => window.hamrah.go('settings')); await page.waitForTimeout(2500);
+    const parts = await page.evaluate(() => { const l = document.querySelector('[data-offline-parts]'); return l ? [...l.children].map((li) => li.textContent.trim()) : []; });
+    const ready2 = (label) => parts.some((x) => x.includes(label) && x.includes(T['off.yes']));
+    check('…and Settings says, in words, that review, number listening and the emergency phrases are ready', ready2(T['off.part.review']) && ready2(T['off.part.numbers']) && ready2(T['off.part.sos']), parts);
+    await plug(ctx); await ctx.close();
+  }
   // ---- update while in a lesson: nothing happens until home ------------------------------------
   {
     const ctx = await b.newContext(phone);
@@ -143,7 +249,7 @@ try {
     const mid = await page.evaluate(() => ({ mark: window.__mark, build: window.__hamrahBuild || 'A', hash: location.hash, lbl: document.querySelector('.progress .lbl').textContent }));
     check('a new version found in the middle of a lesson waits: no reload, same screen', mid.mark === 'same page' && mid.build === 'A' && mid.hash === '#lesson.social-hello' && (await waiting(page)), mid);
     const before = loads;
-    await page.locator('.tb-btn', { hasText: 'خانه' }).click();
+    await page.locator('.tb-btn', { hasText: T['nav.home'] }).click();
     await page.waitForFunction(() => window.__hamrahBuild === 'B' && window.hamrah && document.querySelector('.choice'), null, { timeout: 30000 }).catch(() => {});
     await page.waitForTimeout(2500);
     const fin = await page.evaluate(() => ({ mark: window.__mark || null, build: window.__hamrahBuild || 'A', hash: location.hash, choices: document.querySelectorAll('.choice').length }));

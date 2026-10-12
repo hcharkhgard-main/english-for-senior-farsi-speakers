@@ -166,7 +166,8 @@
     ],
     "wrong": "I leaved it at the front door.",
     "right": "I left it at the front door.",
-    "why": "گذشتهٔ «leave» بی‌قاعده است و «left» می‌شود، نه «leaved». این کلمه مثل «left» به معنی «چپ» نوشته می‌شود."
+    "why": "گذشتهٔ «leave» بی‌قاعده است و «left» می‌شود، نه «leaved». این کلمه مثل «left» به معنی «چپ» نوشته می‌شود.",
+    "fresh": { "en": "I left it in the lobby.", "wrong": "I leaved it in the lobby.", "fa": "آن را در لابی گذاشتم." }
   },
   "review": {
     "status": "draft",

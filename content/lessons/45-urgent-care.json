@@ -184,7 +184,8 @@
     ],
     "wrong": "I fall down yesterday.",
     "right": "I fell down yesterday.",
-    "why": "گذشتهٔ «fall» می‌شود «fell»."
+    "why": "گذشتهٔ «fall» می‌شود «fell».",
+    "fresh": { "en": "She fell down last night.", "wrong": "She fall down last night.", "fa": "دیشب زمین خورد." }
   },
   "review": {
     "status": "draft",

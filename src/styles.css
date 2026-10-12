@@ -63,6 +63,7 @@ h1, h2, h3, p { margin: 0; }
 h1, h2, h3 { text-wrap: balance; line-height: 1.45; }
 h1[tabindex="-1"]:focus, h2[tabindex="-1"]:focus { outline: none; }   /* headings receive focus so screen readers start there; nothing to show */
 svg { flex: none; }
+[hidden] { display: none !important; }      /* a hidden note stays hidden even where its class lays it out as a flex box */
 
 #app { max-width: 36rem; margin: 0 auto; min-height: 100%; display: flex; flex-direction: column; }
 #app > * { min-width: 0; }
@@ -131,6 +132,7 @@ bdi.en { font-family: var(--en); text-align: inherit; letter-spacing: 0; }
 .bottombar .btn svg { width: clamp(24px, 1.6rem, 28px); height: clamp(24px, 1.6rem, 28px); }
 .bottombar .btn-primary { flex: 2 1 auto; }
 .bottombar .btn-ghost { flex: 1 1 auto; }
+.bottombar .btn.is-fit { flex: none; white-space: nowrap; }      /* a one-word button («خانه») beside a long one keeps its word whole */
 
 /* ---- home -------------------------------------------------------------- */
 .hello { background: var(--surface); border-radius: var(--r); padding: 1.1rem; box-shadow: var(--shadow); display: flex; gap: 1rem; align-items: center; }
@@ -235,6 +237,7 @@ bdi.en { font-family: var(--en); text-align: inherit; letter-spacing: 0; }
 .opt .body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: .15rem; }
 .opt .body > span { min-width: 0; }
 .opt .en { display: block; font-size: 1.3rem; font-weight: 700; line-height: 1.5; }   /* English on its own line, from the left, in every kind of question */
+.opt bdi.en { display: inline; font-size: inherit; font-weight: inherit; line-height: inherit; }   /* …but a letter or word of English inside a Farsi answer stays in its sentence */
 .opt .sub { display: block; font-size: 1.05rem; font-weight: 500; color: var(--ink-2); }   /* the Farsi meaning never shares a line with the English */
 .opt .mark { width: 2rem; height: 2rem; flex: none; display: grid; place-items: center; }
 .opt .mark:empty { display: none; }
@@ -277,7 +280,7 @@ bdi.en { font-family: var(--en); text-align: inherit; letter-spacing: 0; }
 .again-btn .en { display: block; font-size: 1.15rem; font-weight: 700; line-height: 1.45; }
 .again-btn .sub { display: block; font-size: 1rem; color: var(--ink-2); line-height: 1.6; }
 /* a line that stays in the top bar while the page scrolls ("this is only practice"); like the bar, it has a ceiling */
-.tb-banner { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 5px 16px 6px; background: var(--danger-soft); color: var(--ink); font-weight: 700; font-size: clamp(15px, .95rem, 18px); line-height: 1.5; text-align: center; }
+.tb-banner { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 5px 16px 6px; background: var(--danger-soft); color: var(--ink); font-weight: 700; font-size: clamp(16px, 1rem, 19px); line-height: 1.5; text-align: center; }
 .tb-banner svg { width: 20px; height: 20px; color: var(--danger); }
 .tb-banner span { min-width: 0; }
 
@@ -309,7 +312,7 @@ bdi.en { font-family: var(--en); text-align: inherit; letter-spacing: 0; }
 .paper-done { font-size: 1.5rem; }
 .paper { background: var(--surface); border: 1px solid var(--edge); border-radius: 6px; box-shadow: 0 1px 2px rgba(20, 33, 61, .10), 0 8px 22px rgba(20, 33, 61, .10); padding: .4rem 0; }
 .paper-lines { list-style: none; margin: 0; padding: 0; }
-.paper-lines > li + li { border-top: 1px solid var(--line); }
+.paper-lines > li + li { border-top: 1px solid var(--line); margin-top: 3px; padding-top: 3px; }      /* 7px between two lines you can tap: room for an unsteady finger */
 .pl {
   width: 100%; min-height: var(--tap); padding: .55rem .9rem; display: flex; align-items: center; gap: .8rem; text-align: left;
   background: none; border: 0; border-radius: 0; font-family: var(--en); font-size: 1.25rem; font-weight: 500; line-height: 1.45; letter-spacing: .01em; color: var(--ink);

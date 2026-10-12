@@ -21,7 +21,22 @@
 //   logging and retention rules.
 import { AI_MAX_TURNS, AI_LEVELS, AI_LIMITS, buildSystem, buildTranscript, cleanReply } from '../src/js/ai-prompt.js';
 
-const DEFAULTS = { perIp: 30, windowMs: 10 * 60 * 1000, perDay: 600, maxBody: 8000, timeoutMs: 20000, maxTokens: 500 };
+const DEFAULTS = { perIp: 30, windowMs: 10 * 60 * 1000, perIpDay: 80, perDay: 600, maxBody: 8000, timeoutMs: 20000, maxTokens: 500 };
+
+// The address a caller is counted under. IPv6 users usually get a whole /64 network, and can pick a new address in it
+// for every request: they are counted by that network (the first four groups). IPv4 (also written as ::ffff:a.b.c.d) as it is.
+export function clientKey(ip) {
+  let a = String(ip || '').trim().toLowerCase().replace(/^\[|\]$/g, '').replace(/%.*$/, '');
+  if (!a) return 'unknown';
+  const v4 = /^(?:::ffff:)?(\d{1,3}(?:\.\d{1,3}){3})$/.exec(a);
+  if (v4) return v4[1];
+  if (!a.includes(':')) return a.slice(0, 64);
+  const [head, tail = ''] = a.split('::');
+  const h = head ? head.split(':') : [], t = a.includes('::') && tail ? tail.split(':') : [];
+  const groups = a.includes('::') ? [...h, ...new Array(Math.max(0, 8 - h.length - t.length)).fill('0'), ...t] : h;
+  if (groups.length !== 8 || !groups.every((g) => /^[0-9a-f]{1,4}$/.test(g))) return a.slice(0, 64);
+  return groups.slice(0, 4).map((g) => g.replace(/^0+(?=.)/, '')).join(':') + '::/64';
+}
 const DEFAULT_MODEL = 'claude-haiku-4-5-20251001';
 const LOCAL = /^(localhost|127\.0\.0\.1|\[::1\])$/;
 
@@ -99,6 +114,7 @@ export function createHandler(env, deps = {}) {
   const baseOk = !env.AI_BASE_URL || /^https:\/\//.test(env.AI_BASE_URL);
   const ready = !!(env.AI_API_KEY && provider && baseOk && Object.keys(personas).length);
   const hits = new Map();           // caller address -> times of recent answered turns
+  const daily = new Map();          // caller address -> answered turns today (UTC)
   let day = { d: 0, n: 0 };
 
   const cors = (origin) => ({ 'access-control-allow-origin': origin, 'access-control-allow-methods': 'POST, OPTIONS', 'access-control-allow-headers': 'content-type', 'access-control-max-age': '86400', vary: 'Origin' });
@@ -128,15 +144,17 @@ export function createHandler(env, deps = {}) {
     if (!checked.turn) return json(checked.status, { error: checked.error }, origin);
     const turn = checked.turn;
 
-    // 2. limits: per caller address in a sliding window, and for everybody together per day (UTC)
+    // 2. limits: per caller address in a sliding window and per day, and for everybody together per day (UTC)
     const t = now();
-    const ip = typeof ctx.ip === 'string' && ctx.ip ? ctx.ip.slice(0, 64) : 'unknown';
+    const ip = clientKey(typeof ctx.ip === 'string' ? ctx.ip : '');
     const recent = (hits.get(ip) || []).filter((x) => t - x < limits.windowMs);
     const today = Math.floor(t / 86400000);
-    if (day.d !== today) day = { d: today, n: 0 };
-    if (day.n >= limits.perDay) return json(429, { error: 'rate', scope: 'day' }, origin, { 'retry-after': String(Math.ceil(((today + 1) * 86400000 - t) / 1000)) });
+    if (day.d !== today) { day = { d: today, n: 0 }; daily.clear(); }
+    const untilTomorrow = { 'retry-after': String(Math.ceil(((today + 1) * 86400000 - t) / 1000)) };
+    if (day.n >= limits.perDay) return json(429, { error: 'rate', scope: 'day' }, origin, untilTomorrow);
+    if ((daily.get(ip) || 0) >= limits.perIpDay) return json(429, { error: 'rate', scope: 'visitor-day' }, origin, untilTomorrow);
     if (recent.length >= limits.perIp) return json(429, { error: 'rate', scope: 'visitor' }, origin, { 'retry-after': String(Math.ceil((recent[0] + limits.windowMs - t) / 1000)) });
-    recent.push(t); hits.set(ip, recent); day.n += 1;
+    recent.push(t); hits.set(ip, recent); daily.set(ip, (daily.get(ip) || 0) + 1); day.n += 1;
     if (hits.size > 5000) for (const [k, v] of hits) if (!v.some((x) => t - x < limits.windowMs)) hits.delete(k);
 
     // 3. ask the model; whatever comes back is checked before it is passed on

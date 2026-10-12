@@ -3,7 +3,7 @@ import { h, icon, btn, en, note, progress, fnum, toggle } from '../ui.js';
 import { clipEn, listenBtn, miniPlay, faListen, phraseCard, sayPanel, playNow, wordsLine } from '../components.js';
 import { tileBuilder, tilesFor } from './build.js';
 import { INTERVALS, LESSON_BOX, grade } from '../srs.js';
-import { shuffle, mix, shortPhrases, partnerLines, gistCount, gistTargets, dueSentences, pathLesson, micOn, later } from '../learn.js';
+import { shuffle, mix, shortPhrases, partnerLines, gistCount, gistTargets, longGist, longPairs, heardOnly, holdsOwn, dueSentences, pathLesson, micOn, later } from '../learn.js';
 import { doneExtras, laterControl } from './progress.js';
 import { numberWords } from '../match.js';
 
@@ -95,18 +95,28 @@ export function plan(L, short, warm = []) {
   for (let g = 0; g < cold; g++) screens.push({ step: 'talk', kind: 'gist', g, cold: true });
   screens.push({ step: 'talk', kind: 'dialogue' });
   for (let g = cold; g < gists; g++) screens.push({ step: 'talk', kind: 'gist', g });
+  // In the last stage one of them — the last — is a longer turn: two things the other person says one after the
+  // other, as people really answer (see longGist in learn.js).
+  if (gists && (L.stage || 1) >= 3 && longPairs(L).length) screens.filter((x) => x.kind === 'gist').pop().long = true;
   variants.forEach((_, v) => screens.push({ step: 'talk', kind: 'variant', v }));
   if (!short && L.grammar) screens.push({ step: 'talk', kind: 'grammar' });
   screens.push({ step: 'respond', kind: 'respond' });
   tasks.forEach((t) => screens.push({ step: 'task', kind: 'task', j: t.j }));
   const n = Math.min(short || variants.length >= 3 || grid ? 1 : 2, ph.length);
   for (let k = 0; k < n; k++) screens.push({ step: 'review', kind: 'review', k });
-  // build one of the lesson's sentences from word tiles (not too short, not too long)
-  const bi = ph.findIndex((p) => { const w = tilesFor(p.en).length; return w >= 3 && w <= 7 && !/\d/.test(p.en); });
+  // build one of the lesson's sentences from word tiles (not too short, not too long) — one the learner says, and not
+  // one that holds the sample person's own details (the learner builds their own at the end: «جملهٔ خودِ شما»)
+  const bi = ph.findIndex((p) => { const w = tilesFor(p.en).length; return w >= 3 && w <= 7 && !/\d/.test(p.en) && !holdsOwn(p) && !heardOnly(L, p); });
   if (!short && bi >= 0) screens.push({ step: 'review', kind: 'build', i: bi });
   screens.push({ step: 'done', kind: 'done' });
   return { screens, phrases: ph, hear, variants, warm: warmed };
 }
+
+// What identifies a screen of a lesson, whatever its number: its kind and which sentence, line, question or task it
+// shows (the saved place of a lesson, store.at[id].scr — see lessonView).
+const SCREEN_ID = ['i', 'j', 'g', 'v', 'k', 'key'];
+export const screenId = (x) => { const o = { kind: x.kind }; for (const f of SCREEN_ID) if (x[f] != null) o[f] = x[f]; return o; };
+export const sameScreen = (x, saved) => !!x && !!saved && x.kind === saved.kind && SCREEN_ID.every((f) => (x[f] ?? null) === (saved[f] ?? null));
 
 // How long a lesson takes, said honestly: a learner who listens to each sentence twice and says it once needs
 // about half a minute a screen; one who only listens and taps, a little less. Returned as [from, to] minutes.
@@ -182,15 +192,27 @@ export function lessonView(app, id) {
   // at another lesson — or at one already finished — never moves the place they stopped at in this one.
   // The questions on earlier lessons are chosen once, when the lesson is opened, and kept with that place:
   // answering them changes what is due, and the lesson must not change shape half-way.
+  // A reload within the hour after finishing (iOS reloads a page that was in the background) shows the finished screen
+  // again, with its next steps, instead of the first screen of a lesson already done. Only when the page itself opens
+  // on this lesson (app.screen 0): opening a finished lesson from a list starts it from the beginning, as before.
+  const was = store.state.done[id];
+  if (!app.ui.finished && app.screen === 0 && !store.state.at[id] && was && Date.now() - (Number(was.t) || 0) < 3600000) {
+    app.ui.finished = true;
+    app.ui.cur = { pos: 0, short: !!was.short, warm: [] };
+  }
   const saved = store.state.at[id];
   const cur = app.ui.finished ? app.ui.cur
-    : saved ? { pos: saved.pos, short: saved.short, warm: Array.isArray(saved.warm) ? saved.warm : [] }
+    : saved ? { pos: saved.pos, scr: saved.scr, short: saved.short, warm: Array.isArray(saved.warm) ? saved.warm : [] }
       : { pos: 0, short: !!app.ui.short, warm: (app.ui.warm ||= warmIds(store.state, content, app.today(), id)) };
   const warm = cur.warm.filter((key) => other(key));
   const { screens, phrases, hear, variants } = plan(L, cur.short, warm);
   const last = screens.length - 1;
   // a place saved by an earlier version of the app (whose lessons were longer) is brought back inside the lesson
-  const pos = app.ui.finished ? last : Math.max(0, Math.min(Math.floor(Number(cur.pos)) || 0, last - 1));
+  // The place is kept as the screen itself (screenId), not only as its number: when an update of the course changes the
+  // lesson's length (one "other words" question fewer), the learner comes back to the same question, not to the one
+  // that has moved into its number. A place whose screen no longer exists falls back to the number, kept inside the lesson.
+  const found = cur.scr ? screens.findIndex((x) => sameScreen(x, cur.scr)) : -1;
+  const pos = app.ui.finished ? last : found > 0 && found < last ? found : Math.max(0, Math.min(Math.floor(Number(cur.pos)) || 0, last - 1));
   const scr = screens[pos];
   const sc = app.scenario(L.scenario);
   const them = L.them.voice;
@@ -214,7 +236,7 @@ export function lessonView(app, id) {
     app.ui.cur = { pos: last, short: cur.short, warm: cur.warm };
     store.update((s) => {
       delete s.at[id];
-      s.done[id] = { t: Date.now(), n: ((s.done[id] && s.done[id].n) || 0) + 1 };
+      s.done[id] = { t: Date.now(), n: ((s.done[id] && s.done[id].n) || 0) + 1, ...(cur.short ? { short: 1 } : {}) };      // (short: for the finished screen after a reload)
       // Only the sentences the learner has seen go into review (a short lesson shows three of the five).
       // They were practised several times just now, so they start two boxes up and return in a few days;
       // the ones that needed another try can be reviewed again today.
@@ -227,18 +249,27 @@ export function lessonView(app, id) {
     audio.stop(); app.speech.cancel();
     if (np === last) finish();
     else if (np === 0) { app.ui.short = cur.short; app.ui.warm = cur.warm; store.update((s) => { delete s.at[id]; }); }   // back on the first screen: nothing to resume
-    else store.update((s) => { s.at[id] = { pos: np, short: cur.short, t: Date.now(), seed, warm: cur.warm }; });
+    else store.update((s) => { s.at[id] = { pos: np, scr: screenId(screens[np]), short: cur.short, t: Date.now(), seed, warm: cur.warm }; });
     app.render(true);
   };
 
-  const stepsHere = STEPS.filter((s) => screens.some((x) => x.step === s));
   const sameStep = screens.filter((x) => x.step === scr.step);
   const within = sameStep.length > 1 ? `${fnum(sameStep.indexOf(scr) + 1)} ${t('lesson.of')} ${fnum(sameStep.length)}` : null;
   const main = h('main', { class: 'wrap' });
-  main.append(progress(`${t('lesson.step')} ${fnum(stepsHere.indexOf(scr.step) + 1)} ${t('lesson.of')} ${fnum(stepsHere.length)}: ${t('step.' + scr.step)}`, within, (pos + 1) / screens.length));
+  // one counter only: the name of the part the learner is in and "3 of 5" inside it; the bar shows the whole lesson
+  main.append(progress(t('step.' + scr.step), within, (pos + 1) / screens.length));
   let auto = null;      // clip(s) to play once when this screen opens
+  let doneBar = null;   // the last screen's own bottom bar (the next step and «خانه»)
   const listenRow = (text, voice) => h('div', { class: 'row' }, listenBtn(app, clipEn(text, voice, 'n'), { label: t('audio.listen') }), listenBtn(app, clipEn(text, voice, 's'), { label: t('audio.slow'), cls: 'btn-ghost', ic: 'slow' }));
   const solvedAt = (key) => !!app.ui[key] && app.ui[key].solved != null;
+  // "What did they say?" and "the same thing in other words" from stage 2 on: heard at natural speed, as in real life —
+  // «آهسته» is there once the learner has missed once (or has found the answer), never as the first thing to try.
+  const heardRow = (key, texts, voice) => {
+    const clips = (speed) => texts.map((x) => clipEn(x, voice, speed));
+    const q = app.ui[key];
+    if (stage < 2 || (q && (q.solved != null || Object.keys(q.tried || {}).length))) return h('div', { class: 'row' }, listenBtn(app, clips('n'), { label: t('audio.listen') }), listenBtn(app, clips('s'), { label: t('audio.slow'), cls: 'btn-ghost', ic: 'slow' }));
+    return [h('div', { class: 'row' }, listenBtn(app, clips('n'), { label: t('audio.listen') })), h('p', { class: 'small muted' }, t('gist.natural'))];
+  };
 
   if (scr.kind === 'intro') {
     main.append(h('section', { class: 'card' },
@@ -259,7 +290,7 @@ export function lessonView(app, id) {
     // A sentence of an earlier lesson: «این را به انگلیسی چطور می‌گویید؟» — or, for a sentence the learner only
     // has to understand (a listen-first lesson), «گوش کنید. معنی‌اش کدام است؟». The answer is its review.
     const { key: rk, lid, S, p } = other(scr.key), key = `q${pos}`;
-    const hearIt = !!S.listenFirst;
+    const hearIt = heardOnly(S, p);       // a line other people say (or a listen-first lesson): heard, never asked in English
     const others = shuffle(S.phrases.filter((x) => x.id !== p.id && x.en !== p.en && x.fa !== p.fa), mix(seed, pos)).slice(0, 2);
     const opts = shuffle([p, ...others], mix(seed, pos + 0.5));
     const asked = (knew) => store.update((s) => {
@@ -283,9 +314,10 @@ export function lessonView(app, id) {
     const p = phrases[scr.i], first = scr.i === 0;
     main.append(h('h1', { class: 'sr' }, t('step.phrases')));
     main.append(phraseCard(app, p, { favId: `p:${id}:${p.id}`, first }));
-    if (L.listenFirst) {
+    if (heardOnly(L, p)) {
       // sentences other people say to the learner: understanding them is the aim, there is nothing to record
-      if (first) main.append(note(t('say.optionalHear'), 'info', 'ear'));
+      // (in a speaking lesson, each such line says so on its own card)
+      if (first || !L.listenFirst) main.append(note(t('say.optionalHear'), 'info', 'ear'));
     } else if (micOn(app) || !app.speech.hasMic) {
       main.append(sayPanel(app, { key: `say${pos}`, target: p.en, say: p.say, voice: p.voice, own: p.own, onCard: true, first,
         onScore: (r) => { if (r && r.score != null) store.update((s) => { const k = `p:${id}:${p.id}`; s.said[k] = Math.max(s.said[k] || 0, r.score); }); } }));
@@ -345,16 +377,19 @@ export function lessonView(app, id) {
     // "What did they say?" — one of the other person's lines from the dialogue, heard without its text.
     // From stage 2 the first of them comes before the dialogue is shown: the line is heard cold, as in real life.
     // Any number of replays, and a wrong tap costs nothing.
+    // In the last stage the last of them is a longer turn: two of the other person's lines, one after the other.
     const lines = partnerLines(L), key = `q${pos}`;
-    const line = gistTargets(L, seed)[scr.g];
-    const others = shuffle(lines.filter((l) => l !== line), mix(seed, pos)).slice(0, 2);
-    const options = shuffle([line, ...others], mix(seed, pos + 0.5)).map((l) => ({ id: l.en, right: l === line, label: h('span', null, l.fa) }));
+    const G = scr.long ? longGist(L, seed, scr.g) : null;
+    const said = G ? G.lines : [gistTargets(L, seed)[scr.g]];
+    const line = said[0];
+    const options = G ? shuffle(G.options.map((o, i) => ({ id: 'o' + i, right: o.right, label: h('span', null, o.fa) })), mix(seed, pos + 0.5))
+      : shuffle([line, ...shuffle(lines.filter((l) => l !== line), mix(seed, pos)).slice(0, 2)], mix(seed, pos + 0.5)).map((l) => ({ id: l.en, right: l === line, label: h('span', null, l.fa) }));
     main.append(h('section', { class: 'card' }, h('p', { class: 'eyebrow' }, L.them.role), h('h1', { style: 'font-size:1.35rem' }, t('gist.title')),
-      scr.cold ? h('p', null, L.dialogue.setting) : null, listenRow(line.en, them),
-      scr.cold ? h('p', { class: 'small muted' }, t('gist.cold')) : null));
+      scr.cold ? h('p', null, L.dialogue.setting) : null, G ? h('p', null, scr.cold ? t('gist.cold.long') : t('gist.long')) : null, heardRow(key, said.map((l) => l.en), them),
+      scr.cold && !G ? h('p', { class: 'small muted' }, t('gist.cold')) : null));
     main.append(quiz(app, key, options, { missNote: t('listen.again') }));
-    if (solvedAt(key)) main.append(h('section', { class: 'card' }, en(line.en, 'p', 'en-line'), h('p', { class: 'fa-line' }, line.fa)));
-    auto = clipEn(line.en, them, 'n');
+    if (solvedAt(key)) main.append(h('section', { class: 'card' }, said.map((l) => [en(l.en, 'p', 'en-line'), h('p', { class: 'fa-line' }, l.fa)])));
+    auto = said.map((l) => clipEn(l.en, them, 'n'));
   }
 
   else if (scr.kind === 'variant') {
@@ -364,7 +399,7 @@ export function lessonView(app, id) {
     const v = variants[scr.v], key = `q${pos}`;
     const wrong = shuffle(variantWrong(L, v).slice(0, 4), mix(seed, pos)).slice(0, 2);
     const options = shuffle([{ id: 'r', right: true, fa: v.fa }, ...wrong.map((fa, i) => ({ id: 'w' + i, right: false, fa }))], mix(seed, pos + 0.5)).map((o) => ({ ...o, label: h('span', null, o.fa) }));
-    main.append(h('section', { class: 'card' }, h('p', { class: 'eyebrow' }, t('variant.eyebrow')), h('h1', { style: 'font-size:1.35rem' }, t('gist.title')), listenRow(v.en, v.voice || them),
+    main.append(h('section', { class: 'card' }, h('p', { class: 'eyebrow' }, t('variant.eyebrow')), h('h1', { style: 'font-size:1.35rem' }, t('gist.title')), heardRow(key, [v.en], v.voice || them),
       scr.v === 0 ? h('p', { class: 'small muted' }, t('variant.hint')) : null));
     main.append(quiz(app, key, options, { missNote: t('listen.again') }));
     if (solvedAt(key)) main.append(h('section', { class: 'card' }, en(v.en, 'p', 'en-line'), h('p', { class: 'fa-line' }, v.fa),
@@ -394,7 +429,7 @@ export function lessonView(app, id) {
       main.append(h('h2', { class: 'section-title' }, t('grammar.whichHeard')), h('div', { class: 'row' }, listenBtn(app, clipEn(played, 's', 'n'), { label: t('audio.listen') })));
       main.append(quiz(app, key, shuffle([{ id: 'r', right: played === G.right, label: en(G.right) }, { id: 'w', right: played === G.wrong, label: en(G.wrong) }], mix(seed, pos)), { missNote: t('listen.again') }));
     } else {
-      main.append(h('h2', { class: 'section-title' }, t('grammar.which')), meaning ? h('p', { class: 'fa-line' }, `«${meaning}»`) : null);
+      main.append(h('h2', { class: 'section-title' }, t('grammar.which')), meaning ? h('p', { class: 'fa-line' }, `«${meaning}»`) : '');      // ('' — append(null) would print "null")
       main.append(quiz(app, key, shuffle([{ id: 'r', right: true, label: en(right) }, { id: 'w', right: false, label: en(wrong), why: G.why }], mix(seed, pos)), { rightNote: t('quiz.right') }));
       if (solved) main.append(h('section', { class: 'card' },
         h('p', null, h('b', null, t('grammar.dont') + ' '), h('s', { class: 'en', lang: 'en', dir: 'ltr' }, G.wrong)),
@@ -431,7 +466,7 @@ export function lessonView(app, id) {
     const options = shuffle([p, ...others], mix(seed, pos + 0.5)).map((x) => ({ id: x.id, right: x.id === p.id, play: clipEn(x.say || x.en, x.voice, 'n'),
       label: h('span', null, en(x.en), showFa ? h('span', { class: 'sub' }, x.fa) : null) }));
     // (a task whose own text already ends with the question does not get it a second time)
-    const ask = L.listenFirst ? t('task.askHear') : t('task.ask');
+    const ask = heardOnly(L, p) ? t('task.askHear') : t('task.ask');
     main.append(h('section', { class: 'card' }, h('p', { class: 'eyebrow' }, t('task.eyebrow')), h('h1', { style: 'font-size:1.35rem' }, T.fa), T.fa.includes(ask) ? null : h('p', { class: 'lead' }, ask)));
     main.append(quiz(app, key, options, { onMiss: () => miss(p) }));
     main.append(btn(showFa ? t('task.hideFa') : t('task.showFa'), { cls: 'btn-ghost', icon: 'eye', block: true, onclick: () => { app.ui.taskFa = !showFa; app.render(); } }));
@@ -445,7 +480,7 @@ export function lessonView(app, id) {
     const order = (app.ui.revOrder ||= ranked.slice().sort((a, b) => b.hard - a.hard || a.i - b.i).map((x) => x.p.id));
     const p = phrases.find((x) => x.id === order[scr.k % order.length]);
     const others = shuffle(phrases.filter((x) => x.id !== p.id), mix(seed, pos)).slice(0, 2);
-    const hearIt = L.listenFirst || scr.k % 2 === 1;
+    const hearIt = heardOnly(L, p) || scr.k % 2 === 1;
     const opts = shuffle([p, ...others], mix(seed, pos + 0.5));
     main.append(h('section', { class: 'card' }, h('p', { class: 'eyebrow' }, t('review.eyebrow')),
       hearIt ? [h('h1', { style: 'font-size:1.35rem' }, t('listen.title')), listenRow(p.say || p.en, p.voice)]
@@ -480,11 +515,16 @@ export function lessonView(app, id) {
     extras.cards.forEach((card) => main.append(card));
     // ---- end of the W2b part ----------------------------------------------------------------------------------
     main.append(note(t('done.review'), 'info', 'cards'));
-    main.append(h('div', { class: 'stack' },
-      rp ? btn(t('done.practice', { title: rp.title }), { cls: 'btn-primary', icon: 'chat', block: true, onclick: () => app.go('rp.' + rp.id, { replace: true }) }) : null,
+    // The one main next step — the conversation of this lesson, or else the next lesson — and «خانه» are in the fixed bar
+    // at the bottom, where «بعدی» was on every other screen: in sight however long this page is. The other choices stay here.
+    const toNext = nextId ? () => app.go('lesson.' + nextId, { replace: true }) : null;
+    const lead = rp ? btn(t('done.practice', { title: rp.title }), { cls: 'btn-primary', icon: 'chat', 'data-done-next': '', onclick: () => app.go('rp.' + rp.id, { replace: true }) })
+      : toNext ? btn(t('done.next', { title: content.lessons[nextId].title.fa }), { cls: 'btn-primary', icon: 'book', 'data-done-next': '', onclick: toNext }) : null;
+    doneBar = h('div', { class: 'bottombar' }, h('div', { class: 'inner' }, btn(t('nav.home'), { cls: 'btn-ghost is-fit', icon: 'home', onclick: app.home }), lead));
+    const rest = [
       pattern ? btn(t('build.lesson'), { cls: 'btn-soft', icon: 'pieces', block: true, onclick: () => app.go('build.' + pattern.id, { replace: true }) }) : null,
-      nextId ? btn(t('done.next', { title: content.lessons[nextId].title.fa }), { cls: rp ? 'btn-ghost' : 'btn-primary', icon: 'book', block: true, onclick: () => app.go('lesson.' + nextId, { replace: true }) }) : null,
-      btn(t('nav.home'), { cls: 'btn-ghost', icon: 'home', block: true, onclick: app.home })));
+      rp && toNext ? btn(t('done.next', { title: content.lessons[nextId].title.fa }), { cls: 'btn-ghost', icon: 'book', block: true, onclick: toNext }) : null].filter(Boolean);
+    if (rest.length) main.append(h('div', { class: 'stack' }, rest));
     // ---- W2b: more practice that belongs to this lesson (a second conversation, «شنیدن عددها», a paper to read) ----
     if (extras.more.length) main.append(h('h2', { class: 'section-title' }, t('done.more')), h('div', { class: 'stack' }, extras.more));
     main.append(extras.canDo);
@@ -492,16 +532,18 @@ export function lessonView(app, id) {
   }
 
   // "قبلی" goes one screen back inside the lesson; leaving the lesson is the top bar's job (see `exit` below)
-  const bar = scr.kind === 'done' ? null : h('div', { class: 'bottombar' }, h('div', { class: 'inner' },
+  const bar = scr.kind === 'done' ? doneBar : h('div', { class: 'bottombar' }, h('div', { class: 'inner' },
     pos > 0 ? btn(t('nav.prev'), { cls: 'btn-ghost', icon: 'back', onclick: () => move(-1) }) : null,
     btn(scr.kind === 'intro' ? t('lesson.start') : t('nav.next'), { cls: 'btn-primary', onclick: () => move(1), 'data-next': '' })));
 
+  const drawnAt = store.state.at[id] ? store.state.at[id].pos : 0;
   const after = (navigated) => {
     if (!auto || !store.state.settings.auto) return;
     if (app.ui['auto' + pos]) return;
     app.ui['auto' + pos] = true;
     // …unless the learner has already moved on (or left) by the time it would start
-    if (navigated) later(app, 250, () => { const a = store.state.at[id]; if ((a ? a.pos : 0) === pos) playNow(app, auto, { quiet: true }); });
+    // (after 1.2 s: a screen reader has read the new screen's heading first, and the sentence does not talk over it)
+    if (navigated) later(app, 1200, () => { const a = store.state.at[id]; if ((a ? a.pos : 0) === drawnAt) playNow(app, auto, { quiet: true }); });
   };
   // inside a lesson the top-bar control says what it does: it leaves the lesson (the place is kept)
   const exit = pos > 0 && scr.kind !== 'done' ? { label: t('lesson.leave') } : null;

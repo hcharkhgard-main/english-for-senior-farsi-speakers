@@ -170,7 +170,8 @@
     ],
     "wrong": "I'm here for fix the sink.",
     "right": "I'm here to fix the sink.",
-    "why": "قبل از فعل «to» می‌آید، نه «for»."
+    "why": "قبل از فعل «to» می‌آید، نه «for».",
+    "fresh": { "en": "I'm here to fix the heater.", "wrong": "I'm here for fix the heater.", "fa": "آمده‌ام بخاری را درست کنم." }
   },
   "review": {
     "status": "draft",

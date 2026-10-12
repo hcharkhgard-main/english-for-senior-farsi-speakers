@@ -160,7 +160,8 @@
     ],
     "wrong": "I can to work on Monday.",
     "right": "I can work on Monday.",
-    "why": "بعد از «can» کلمهٔ «to» نمی‌آید."
+    "why": "بعد از «can» کلمهٔ «to» نمی‌آید.",
+    "fresh": { "en": "I can work on Saturday.", "wrong": "I can to work on Saturday.", "fa": "شنبه می‌توانم کار کنم." }
   },
   "review": {
     "status": "draft",

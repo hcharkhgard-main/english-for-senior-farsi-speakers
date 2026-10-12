@@ -51,7 +51,8 @@
     ],
     "wrong": "The heater no work.",
     "right": "The heater is not working.",
-    "why": "برای وسیله‌ای که کار نمی‌کند می‌گوییم «is not working»: اول «is not» و بعد «working»."
+    "why": "برای وسیله‌ای که کار نمی‌کند می‌گوییم «is not working»: اول «is not» و بعد «working».",
+    "fresh": { "en": "The stove is not working.", "wrong": "The stove no work.", "fa": "اجاق گاز کار نمی‌کند." }
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }

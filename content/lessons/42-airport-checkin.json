@@ -173,7 +173,8 @@
     ],
     "wrong": "The flight is in time.",
     "right": "The flight is on time.",
-    "why": "برای «سرِ وقت» می‌گوییم «on time»."
+    "why": "برای «سرِ وقت» می‌گوییم «on time».",
+    "fresh": { "en": "The train is on time.", "wrong": "The train is in time.", "fa": "قطار سرِ وقت است." }
   },
   "review": {
     "status": "draft",

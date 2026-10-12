@@ -163,7 +163,8 @@
     ],
     "wrong": "It is off forty percent.",
     "right": "It's forty percent off.",
-    "why": "کلمهٔ «off» آخر می‌آید."
+    "why": "کلمهٔ «off» آخر می‌آید.",
+    "fresh": { "en": "It's twenty percent off.", "wrong": "It is off twenty percent.", "fa": "بیست درصد تخفیف دارد." }
   },
   "review": {
     "status": "draft",

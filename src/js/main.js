@@ -13,6 +13,8 @@ import { buildView } from './views/build.js';
 import { settingsView, sosView, aboutView, meView } from './views/settings.js';
 import { papersView, paperView, papersOf } from './views/papers.js';
 import { candoView, checkpointView } from './views/progress.js';
+import { aheadPacks } from './ahead.js';
+import { isStored } from './stored.js';
 
 /* global __TARGET__, __VERSION__ */
 const TARGET = typeof __TARGET__ === 'string' ? __TARGET__ : 'pwa';
@@ -43,32 +45,29 @@ function safeStorage() {
 // visit the page runs for a while before the worker takes charge, and after a forced reload the
 // worker is not in charge at all: what the learner hears then is played but would not be kept, and
 // Settings promises that a lesson opened once also works without a connection. So the page stores
-// such a file itself, at once, under the same name the worker uses. The first sounds (emergency
-// phrases, single words) also come with the app itself; once the worker has stored the app, a
-// second copy made here is dropped again, so nothing stays on the phone twice.
+// such a file itself, under the same name the worker uses — only after audio.js has checked that the
+// bytes are that pack (a Wi-Fi login page or a cut-off download is never kept). The first sounds
+// (emergency phrases, single words) also come with the app itself; once the worker has stored the app,
+// a second copy made here is dropped again, so nothing stays on the phone twice.
 const SW_OK = TARGET === 'pwa' && typeof navigator !== 'undefined' && 'serviceWorker' in navigator && typeof location !== 'undefined' && location.protocol !== 'file:';
-async function keepSound(address, res) {
-  try {
-    if (!('caches' in window)) return;
-    const url = new URL(address, document.baseURI).href;
-    const mine = `hamrah|${new URL('./', document.baseURI).pathname}|`;      // the names sw.js uses: …|audio and …|shell-<build>
-    const withApp = async () => {
-      for (const name of await caches.keys()) if (name.startsWith(mine + 'shell-') && (await (await caches.open(name)).match(url, { ignoreSearch: true }))) return true;
-      return false;
-    };
-    if (await withApp()) return;
-    const c = await caches.open(mine + 'audio');
-    if (!(await c.match(url, { ignoreSearch: true }))) await c.put(url, res);
-    await Promise.race([navigator.serviceWorker.ready, new Promise((r) => setTimeout(r, 120000))]);
-    if (await withApp()) await c.delete(url);
-  } catch { /* storage full or blocked: the sound still plays now, and is fetched again next time */ }
+const mineCaches = () => `hamrah|${new URL('./', document.baseURI).pathname}|`;      // the names sw.js uses: …|audio and …|shell-<build>
+async function inAppStore(url) {
+  for (const name of await caches.keys()) if (name.startsWith(mineCaches() + 'shell-') && (await (await caches.open(name)).match(url, { ignoreSearch: true }))) return true;
+  return false;
 }
-function audioFetch(address) {
-  const direct = SW_OK && !navigator.serviceWorker.controller;
-  return fetch(address).then((r) => {
-    if (direct && r.ok && r.status === 200 && /\.mp3$/.test(address)) keepSound(address, r.clone());
-    return r;
-  });
+// Resolves once the pack is stored (or found stored); the clean-up afterwards runs on its own.
+async function keepSound(address, buf) {
+  try {
+    if (!SW_OK || !('caches' in window)) return;
+    const url = new URL(address, document.baseURI).href;
+    if (await inAppStore(url)) return;
+    const c = await caches.open(mineCaches() + 'audio');
+    if (!(await c.match(url, { ignoreSearch: true }))) {
+      await c.put(url, new Response(new Blob([buf], { type: 'audio/mpeg' }), { headers: { 'Content-Type': 'audio/mpeg', 'Content-Length': String(buf.byteLength) } }));
+    }
+    Promise.race([navigator.serviceWorker.ready, new Promise((r) => setTimeout(r, 120000))])
+      .then(async () => { if (await inAppStore(url)) await c.delete(url); }).catch(() => {});
+  } catch { /* storage full or blocked: the sound still plays now, and is fetched again next time */ }
 }
 
 async function boot() {
@@ -81,7 +80,7 @@ async function boot() {
     return;
   }
   const store = createStore(safeStorage());
-  const audio = createAudio({ base: 'audio/', getRate: () => store.state.settings.rate || 1, fetchFn: audioFetch });
+  const audio = createAudio({ base: 'audio/', getRate: () => store.state.settings.rate || 1, onPack: keepSound });
   const speech = createSpeech({ base: 'asr/', enabled: TARGET !== 'artifact' });
   const strings = content.ui.strings || {};
   const t = (key, vars) => {
@@ -342,6 +341,7 @@ async function boot() {
       if (fresh.length) announce(fresh.join(' '));
     }
     out.after && out.after(navigated);
+    if (navigated && name === 'home') setTimeout(() => { if (top().route === 'home') app.keepAhead(); }, 4000);
   }
 
   // ---- text size: start from the phone's own Dynamic Type size, then apply the learner's choice ----
@@ -385,6 +385,28 @@ async function boot() {
   window.addEventListener('offline', () => { app.online = false; render(); toast(t('net.wentOffline')); });
 
   audio.loadIndex().then(() => audio.warm(['core'])).catch(() => {});
+  // ---- what comes next works without a connection too (ahead.js) ----------------------------------
+  // While the app is open with a connection, the sounds of the next lesson, the next review sets, number
+  // listening and the nearby papers are stored, one pack after another, a few seconds after the home
+  // screen is shown (at start and after each lesson). Not when the phone asks to save data.
+  let aheadAt = 0, aheadBusy = false, aheadAgain = false;
+  app.keepAhead = (force = false) => {
+    if (aheadBusy) { if (force) aheadAgain = true; return; }
+    if (TARGET !== 'pwa' || !app.online || (!force && Date.now() - aheadAt < 60000)) return;
+    const net = navigator.connection;
+    if (net && net.saveData) return;
+    aheadAt = Date.now(); aheadBusy = true;
+    // a new version that is waiting to be switched on goes first: the worker is replaced only when it has nothing to do
+    const updating = async () => { try { const r = SW_OK && (await navigator.serviceWorker.getRegistration()); return !!(r && (r.waiting || r.installing)); } catch { return false; } };
+    updating().then((u) => { if (u) { aheadAt = 0; throw new Error('update first'); } })
+      .then(() => audio.loadIndex())
+      .then(() => audio.keep(aheadPacks(store.state, content, audio.index, today()), { isStored: (p) => isStored(audio.packUrl(p.id), p.bytes), stop: updating }))
+      .catch(() => {}).finally(() => { aheadBusy = false; if (aheadAgain) { aheadAgain = false; app.keepAhead(true); } });
+  };
+  // a lesson just finished changes what comes next: start on the screen that says so, not only at home
+  let doneCount = Object.keys(store.state.done || {}).length;
+  store.subscribe((s) => { const n = Object.keys(s.done || {}).length; if (n > doneCount) setTimeout(() => app.keepAhead(true), 1500); doneCount = n; });
+  setTimeout(() => app.keepAhead(), 5000);
   // ---- offline support and new versions ---------------------------------------------------------
   // The service worker holds one complete version of the app. A newer version downloads in the
   // background and waits. It is switched on only at a quiet moment (the home screen, or the next

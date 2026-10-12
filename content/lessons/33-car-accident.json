@@ -53,7 +53,8 @@
     ],
     "wrong": "We call police.",
     "right": "Let's call the police.",
-    "why": "برای پیشنهاد «Let's» می‌گوییم و قبل از police کلمهٔ «the» می‌آید."
+    "why": "برای پیشنهاد «Let's» می‌گوییم و قبل از police کلمهٔ «the» می‌آید.",
+    "fresh": { "en": "Let's sit down.", "wrong": "We sit down.", "fa": "بیایید بنشینیم." }
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }

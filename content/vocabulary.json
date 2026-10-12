@@ -712,6 +712,21 @@
     ["flashlight", "چراغ‌قوه", "فْلَش‌لایت", "Do you have a flashlight?", "چراغ‌قوه دارید؟", "", "home", 3],
     ["heat", "گرما", "هیت", "There is a heat warning today.", "امروز هشدار گرما داده‌اند.", "", "weather", 3],
     ["noon", "ظهر (ساعت ۱۲)", "نون", "Lunch is served at noon.", "ناهار ساعت دوازده ظهر داده می‌شود.", "", "time", 2],
-    ["quarter", "ربع", "کْوُرتِر", "It's a quarter to five.", "ساعت یک ربع به پنج است.", "", "time", 2]
+    ["quarter", "ربع", "کْوُرتِر", "It's a quarter to five.", "ساعت یک ربع به پنج است.", "", "time", 2],
+    ["infection", "عفونت", "اینفِکشِن", "You have an infection.", "عفونت دارید.", "", "health", 2],
+    ["serious", "جدی (خطرناک)", "سیریِس", "Is it serious?", "جدی است؟", "", "health", 2],
+    ["worse", "بدتر", "وِرس", "If it gets worse, call us.", "اگر بدتر شد، به ما زنگ بزنید.", "", "describe", 2],
+    ["better", "بهتر", "بِتِر", "I feel better today.", "امروز حالم بهتر است.", "", "describe", 1],
+    ["follow-up", "(وقتِ) بعدی برای پیگیری", "فالُو آپ", "I have a follow-up appointment.", "برای پیگیری، وقتِ بعدی دارم.", "", "health", 3],
+    ["symptoms", "علائم بیماری", "سیمپْتِمز", "My symptoms are getting worse.", "علائمم دارد بدتر می‌شود.", "", "health", 3],
+    ["front desk", "پذیرش (میزِ جلوی ورودی)", "فْرانت دِسک", "Please go to the front desk.", "لطفاً به پذیرش بروید.", "", "places", 2],
+    ["block", "فاصلهٔ بین دو چهارراه", "بْلاک", "Go two blocks and turn right.", "دو چهارراه جلو بروید و به راست بپیچید.", "", "places", 2],
+    ["next to", "کنارِ", "نِکست تو", "It's next to the bank.", "کنار بانک است.", "", "places", 1],
+    ["turn", "پیچیدن (به چپ یا راست)", "تِرن", "Turn right at the light.", "سرِ چراغ راهنمایی به راست بپیچید.", "", "places", 1],
+    ["traffic light", "چراغ راهنمایی", "تْرَفیک لایت", "Turn left at the traffic light.", "سرِ چراغ راهنمایی به چپ بپیچید.", "🚦", "places", 2],
+    ["awake", "به‌هوش، بیدار", "اِوِیک", "Is he awake?", "به‌هوش است؟", "", "safety", 2],
+    ["breathing", "نفس کشیدن", "بْریدینگ", "Is he breathing?", "نفس می‌کشد؟", "", "safety", 2],
+    ["oxygen machine", "دستگاه اکسیژن", "آکْسیجِن مَشین", "My husband uses an oxygen machine.", "شوهرم از دستگاه اکسیژن استفاده می‌کند.", "", "health", 3],
+    ["interested", "علاقه‌مند", "اینتِرِستِد", "I'm not interested, thank you.", "علاقه‌ای ندارم، ممنون.", "", "describe", 2]
   ]
 }

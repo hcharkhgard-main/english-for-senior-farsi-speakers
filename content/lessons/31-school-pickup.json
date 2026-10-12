@@ -53,7 +53,8 @@
     ],
     "wrong": "This is my grandson. Her name is Arman.",
     "right": "This is my grandson. His name is Arman.",
-    "why": "grandson یعنی نوه‌ای که پسر است، پس «his» می‌گوییم."
+    "why": "grandson یعنی نوه‌ای که پسر است، پس «his» می‌گوییم.",
+    "fresh": { "en": "This is my granddaughter. Her name is Sara.", "wrong": "This is my granddaughter. His name is Sara.", "fa": "این نوهٔ من است (دختر است). اسمش سارا است." }
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }

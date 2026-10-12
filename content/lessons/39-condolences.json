@@ -154,7 +154,8 @@
     ],
     "wrong": "She passed away. She is a wonderful person.",
     "right": "She passed away. She was a wonderful person.",
-    "why": "برای کسی که درگذشته است «was» می‌گوییم."
+    "why": "برای کسی که درگذشته است «was» می‌گوییم.",
+    "fresh": { "en": "He passed away. He was a kind man.", "wrong": "He passed away. He is a kind man.", "fa": "او درگذشت. مرد مهربانی بود." }
   },
   "review": {
     "status": "draft",

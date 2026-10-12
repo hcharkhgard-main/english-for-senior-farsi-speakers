@@ -53,7 +53,8 @@
     ],
     "wrong": "I call my bank tomorrow.",
     "right": "I will call my bank tomorrow.",
-    "why": "برای آینده، قبل از فعل «will» می‌آید."
+    "why": "برای آینده، قبل از فعل «will» می‌آید.",
+    "fresh": { "en": "I will call you tomorrow.", "wrong": "I call you tomorrow.", "fa": "فردا به شما زنگ می‌زنم." }
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }

@@ -183,7 +183,8 @@
     ],
     "wrong": "How much I owe?",
     "right": "How much do I owe?",
-    "why": "در این سؤال‌ها «do» قبل از «I» لازم است: «How much do I owe?\u200e»"
+    "why": "در این سؤال‌ها «do» قبل از «I» لازم است: «How much do I owe?\u200e»",
+    "fresh": { "en": "How much do I need to pay?", "wrong": "How much I need to pay?", "fa": "چقدر باید بپردازم؟" }
   },
   "review": {
     "status": "draft",

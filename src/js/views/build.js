@@ -2,9 +2,9 @@
 // Many of the sentences are new — the same patterns as the lessons, with other words put in —
 // so this is where "I learned that sentence" turns into "I can make my own".
 import { h, icon, btn, en, note, progress, fnum } from '../ui.js';
-import { clipEn, listenBtn, playNow, wordsLine } from '../components.js';
+import { clipEn, listenBtn, playNow, wordsLine, sayPanel } from '../components.js';
 import { wordsOf, normWord } from '../audiokey.js';
-import { shuffle, mix, later } from '../learn.js';
+import { shuffle, mix, later, micOn } from '../learn.js';
 
 const strip = (t) => t.replace(/^[^A-Za-z0-9'$]+|[^A-Za-z0-9']+$/g, '');
 export function tilesFor(sentence) {
@@ -61,6 +61,8 @@ export function tileBuilder(app, key, item, { extra = [], onDone } = {}) {
   if (S.done) {
     wrap.append(note(app.t('build.right'), 'good', 'check'));
     wrap.append(h('section', { class: 'card' }, wordsLine(app, item.en, { voice: item.voice || 's' }), h('div', { class: 'row' }, listenBtn(app, clipEn(item.en, item.voice || 's', 'n'), { label: app.t('audio.listen') }), listenBtn(app, clipEn(item.en, item.voice || 's', 's'), { label: app.t('audio.slow'), cls: 'btn-ghost', ic: 'slow' }))));
+    // the sentence just built, said aloud — optional, as on every sentence card (QA round 3, L4)
+    if (micOn(app)) wrap.append(sayPanel(app, { key: key + 'say', target: item.en, voice: item.voice || 's' }));
   } else {
     if (S.checked) wrap.append(note(S.pool.length > target.length && S.placed.some((pi) => !target.some((x) => same(x, S.pool[pi]))) ? app.t('build.extra') : app.t('build.almost'), 'care', 'bulb'));
     wrap.append(h('p', { class: 'eyebrow' }, app.t('build.words')));

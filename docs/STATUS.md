@@ -50,3 +50,8 @@ Latest review scores (0–10, from the reviewers' own reports):
 5. **Licence of the Farsi voice model** used to generate the Farsi audio is not stated by its publisher
    (see `THIRD-PARTY.md`).
 6. **The optional live AI partner** has been tested only against a simulated model, never a real one.
+7. **Address of its own.** The live site is on `hcharkhgard-main.github.io`, an address shared with every other
+   GitHub Pages project of that account: any of them could read what Hamrah keeps on the phone, including
+   «اطلاعات من» (see `docs/DEPLOYMENT.md`, "Use an address of its own"). Move it to an account or organisation that
+   hosts nothing else, or to a custom domain, before the learners rely on it — progress and «اطلاعات من» do not
+   move with the address.

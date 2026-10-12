@@ -11,7 +11,34 @@ import { audioKey } from './audiokey.js';
 
 const SILENCE = 'data:audio/mpeg;base64,//NExAAAAANIAAAAAExBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMu//NExFMAAANIAAAAADEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMu//NExKYAAANIAAAAADEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMu//NExKwAAANIAAAAADEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVTEFNRTMu//NExKwAAANIAAAAADEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NExKwAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NExKwAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV';
 
-export function createAudio({ base = 'audio/', getRate = () => 1, fetchFn = (u) => fetch(u) } = {}) {
+// A pack is used (and kept on the phone) only if it is that pack: the size audio/index.json gives and the content
+// hash in its name (<id>.<first 8 hex of its SHA-1>.mp3). On a Wi-Fi that shows a login page first, every request
+// is answered with that page; a weak connection can cut a download short. Such an answer is never played, never
+// kept, and a damaged copy found on the phone is deleted, so the next tap fetches the pack again.
+const hex = (buf) => Array.from(new Uint8Array(buf), (b) => b.toString(16).padStart(2, '0')).join('');
+export async function packIsGood(p, buf) {
+  if (!p || !buf || buf.byteLength !== p.bytes) return false;
+  const m = /\.([0-9a-f]{8})\.mp3$/.exec(p.file || '');
+  if (!m) return true;                                   // a name without a hash (tests): the size is all there is
+  try {
+    const subtle = typeof crypto !== 'undefined' && crypto.subtle;
+    if (!subtle) return true;                            // no hash function on this page: the size has been checked
+    return hex(await subtle.digest('SHA-1', buf)).startsWith(m[1]);
+  } catch { return true; }
+}
+// Deletes a stored copy of this file from every store of this copy of the site (the worker's and the page's).
+async function forget(address) {
+  try {
+    if (typeof caches === 'undefined' || typeof document === 'undefined') return;
+    const url = new URL(address, document.baseURI).href, mine = `hamrah|${new URL('./', document.baseURI).pathname}|`;
+    for (const n of await caches.keys()) if (n.startsWith(mine)) await (await caches.open(n)).delete(url, { ignoreSearch: true });
+  } catch { /* nothing stored, or storage blocked */ }
+}
+const damaged = () => Object.assign(new Error('pack damaged'), { damaged: true });
+
+// onPack(address, bytes): called with every pack that has been fetched and checked (main.js keeps it on the phone
+// when the service worker could not).
+export function createAudio({ base = 'audio/', getRate = () => 1, fetchFn = (u) => fetch(u), onPack = null } = {}) {
   let index = null, indexPromise = null;
   const packs = new Map();            // pack id -> Promise<ArrayBuffer>
   const el = typeof Audio !== 'undefined' ? new Audio() : null;
@@ -34,14 +61,49 @@ export function createAudio({ base = 'audio/', getRate = () => 1, fetchFn = (u) 
     return indexPromise;
   }
 
+  // The checked bytes of pack i. A wrong answer is deleted wherever it was stored and asked for once more
+  // (the first may have come from a damaged stored copy); if the second is wrong too, the pack is "damaged".
+  async function fetchPack(i) {
+    const p = index.packs[i], address = base + p.file;
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const r = await fetchFn(address);
+      if (!r.ok) throw new Error('pack ' + r.status);
+      const buf = await r.arrayBuffer();
+      if (await packIsGood(p, buf)) {
+        if (onPack) { try { await onPack(address, buf); } catch { /* not kept: still played now */ } }
+        return buf;
+      }
+      await forget(address);
+    }
+    throw damaged();
+  }
   function loadPack(i) {
     const p = index.packs[i];
     if (!packs.has(p.id)) {
-      const pr = fetchFn(base + p.file).then((r) => { if (!r.ok) throw new Error('pack ' + r.status); return r.arrayBuffer(); });
+      const pr = fetchPack(i);
       pr.catch(() => packs.delete(p.id));
       packs.set(p.id, pr);
     }
     return packs.get(p.id);
+  }
+
+  // Makes sure these packs are on the phone, without keeping them in memory (for use without a connection later).
+  // Packs already stored are not downloaded again. Resolves with { ok, failed } pack ids; onEach(done, total) reports progress.
+  // stop(): asked before each pack; when it says yes, the rest is left for another time.
+  async function keep(packIds, { onEach = null, isStored = null, stop = null } = {}) {
+    await loadIndex();
+    const want = [...new Set(packIds)].map((id) => index.packs.findIndex((p) => p.id === id)).filter((i) => i >= 0);
+    const ok = [], failed = [];
+    for (let n = 0; n < want.length; n++) {
+      const p = index.packs[want[n]];
+      if (stop && (await stop())) { failed.push(...want.slice(n).map((i) => index.packs[i].id)); break; }
+      try {
+        if (!(isStored && (await isStored(p)))) await (packs.has(p.id) ? packs.get(p.id).then((buf) => onPack && onPack(base + p.file, buf)) : fetchPack(want[n]));
+        ok.push(p.id);
+      } catch { failed.push(p.id); }
+      if (onEach) onEach(n + 1, want.length);
+    }
+    return { ok, failed };
   }
 
   // iOS only lets a media element play freely after play() has been called on it once during
@@ -175,7 +237,7 @@ export function createAudio({ base = 'audio/', getRate = () => 1, fetchFn = (u) 
     });
   }
 
-  // Plays one clip. Resolves with 'ended' | 'stopped' | 'interrupted' | 'blocked' | 'missing' | 'offline'.
+  // Plays one clip. Resolves with 'ended' | 'stopped' | 'interrupted' | 'blocked' | 'missing' | 'offline' | 'unavailable'.
   // A clip is { lang, voice, speed, text } (looked up in the recorded audio) or { blob } (played as it is).
   async function playOne(clip, my) {
     if (clip.blob) return playBytes(clip.blob, 1, my);
@@ -183,10 +245,12 @@ export function createAudio({ base = 'audio/', getRate = () => 1, fetchFn = (u) 
     if (my !== token) return 'stopped';
     const hit = find(clip);
     if (!hit) return clip.tts === false || clip.lang === 'fa' ? 'missing' : speak(clip, my);
-    let buf;
-    try { buf = await loadPack(hit.ref[0]); } catch { return 'offline'; }
+    let buf, bytes;
+    // 'unavailable': the pack came, but not as itself (a Wi-Fi login page, a cut-off download) — the learner is told
+    // that the sound is not ready yet; 'offline': it could not be fetched at all
+    try { buf = await loadPack(hit.ref[0]); } catch (e) { return e && e.damaged ? 'unavailable' : 'offline'; }
     if (my !== token) return 'stopped';
-    const bytes = new Uint8Array(buf, hit.ref[1], hit.ref[2]);
+    try { bytes = new Uint8Array(buf, hit.ref[1], hit.ref[2]); } catch { return 'unavailable'; }
     return playBytes(bytes, hit.rate * getRate(), my);
   }
 
@@ -218,7 +282,7 @@ export function createAudio({ base = 'audio/', getRate = () => 1, fetchFn = (u) 
   }
 
   return {
-    play, stop, unlock, warm, loadIndex,
+    play, stop, unlock, warm, keep, loadIndex,
     has: (clip) => !!find(clip),
     onChange: (f) => { listeners.add(f); return () => listeners.delete(f); },
     get current() { return current; },

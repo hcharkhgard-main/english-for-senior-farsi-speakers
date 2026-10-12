@@ -58,7 +58,8 @@
     ],
     "wrong": "How I take this?",
     "right": "How do I take this?",
-    "why": "وقتی بعد از How یک کار (مثل take) می‌آید، بین How و I کلمهٔ «do» لازم است: «How do I take this?\u200e» ولی «How many» و «How much» همین‌طور که هستند درست‌اند."
+    "why": "وقتی بعد از How یک کار (مثل take) می‌آید، بین How و I کلمهٔ «do» لازم است: «How do I take this?\u200e» ولی «How many» و «How much» همین‌طور که هستند درست‌اند.",
+    "fresh": { "en": "How do I get there?", "wrong": "How I get there?", "fa": "چطور به آنجا بروم؟" }
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }

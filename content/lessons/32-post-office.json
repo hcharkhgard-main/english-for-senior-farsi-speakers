@@ -50,7 +50,8 @@
     ],
     "wrong": "I need ten stamp.",
     "right": "I need ten stamps.",
-    "why": "در فارسی می‌گوییم «ده تا تمبر» و اسم عوض نمی‌شود، ولی در انگلیسی برای بیشتر از یکی، آخرِ اسم «s» می‌آید."
+    "why": "در فارسی می‌گوییم «ده تا تمبر» و اسم عوض نمی‌شود، ولی در انگلیسی برای بیشتر از یکی، آخرِ اسم «s» می‌آید.",
+    "fresh": { "en": "I need two bags.", "wrong": "I need two bag.", "fa": "دو تا کیسه لازم دارم." }
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }

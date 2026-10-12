@@ -2,9 +2,10 @@
 import { h, icon, btn, en, note, progress, fnum } from '../ui.js';
 import { clipEn, listenBtn, miniPlay, favBtn, wordsLine, sayPanel, playNow, faListen } from '../components.js';
 import { grade, counts, answered, minutes, cardMode, SETS_PER_DAY } from '../srs.js';
-import { shuffle, mix, numberRound, micOn, later, todaysSet } from '../learn.js';
+import { shuffle, mix, numberRound, micOn, later, todaysSet, heardOnly } from '../learn.js';
 import { quiz } from './lesson.js';
 import { papersLink } from './papers.js';
+import { ownItem } from '../own.js';
 
 export function wordsView(app) {
   const { t, store, content } = app;
@@ -41,13 +42,14 @@ export function wordsView(app) {
 }
 
 function wordRow(app, it) {
+  const clipAt = (speed) => (it.pieces ? it.pieces.map((x) => clipEn(x, 's', speed)) : clipEn(it.say || it.en, it.voice, speed));
   return h('div', { class: 'card' },
-    h('div', { class: 'opt-wrap' }, miniPlay(app, clipEn(it.say || it.en, it.voice, 'n')),
+    h('div', { class: 'opt-wrap' }, miniPlay(app, clipAt('n')),
       h('div', { class: 'grow' }, en(it.en, 'p', 'en-line'), h('p', { class: 'fa-line' }, it.fa)),
       it.pic ? h('span', { class: 'emoji', 'aria-hidden': 'true' }, it.pic) : null),
     it.ph && app.store.state.settings.ph ? h('p', { class: 'ph-line' }, h('b', null, app.t('phrase.phLabel') + ' '), it.ph) : null,
     it.ex ? h('div', { class: 'opt-wrap' }, miniPlay(app, clipEn(it.ex.en, 's', 'n')), h('div', { class: 'grow' }, en(it.ex.en, 'p'), h('p', { class: 'muted' }, it.ex.fa))) : null,
-    h('div', { class: 'row' }, listenBtn(app, clipEn(it.say || it.en, it.voice, 's'), { label: app.t('audio.slow'), cls: 'btn-ghost', ic: 'slow', small: true }), favBtn(app, it.id)));
+    h('div', { class: 'row' }, listenBtn(app, clipAt('s'), { label: app.t('audio.slow'), cls: 'btn-ghost', ic: 'slow', small: true }), favBtn(app, it.id)));
 }
 
 export function catView(app, catId) {
@@ -60,7 +62,8 @@ export function catView(app, catId) {
 
 export function savedView(app) {
   const { t, store } = app;
-  const items = Object.keys(store.state.fav).map((id) => app.item(id)).filter(Boolean);
+  // (a saved sentence about the sample person is shown as the learner's own, as on its review card)
+  const items = Object.keys(store.state.fav).map((id) => ownItem(app.item(id), store.state.me, { month: (m) => t('month.' + m) })).filter(Boolean);
   const main = h('main', { class: 'wrap' }, h('h1', { class: 'section-title' }, t('saved.title')));
   if (!items.length) main.append(note(t('saved.none'), 'info', 'star'));
   items.forEach((it) => main.append(wordRow(app, it)));
@@ -76,10 +79,13 @@ export function savedView(app) {
 //   say   the Farsi is on the card — «این را به انگلیسی چطور می‌گویید؟»           every other time
 // The picture never stands beside the English question (it would be the answer): it is on the back of the card,
 // and on the front only when the question is the Farsi word.
-const sayable = (app, id, it) => {
+// (a sentence the learner only has to understand: every sentence of a listen-first lesson, and a line other people say,
+// "heard": true — QA round 3, M1)
+export const sayable = (app, id, it) => {
   if (it.kind === 'word') return !/[A-Za-z]/.test(it.fa);          // «حرف A», «ID»: the Farsi side would give the answer away
-  const L = app.content.lessons[id.split(':')[1]];
-  return !(L && L.listenFirst);                                    // sentences the learner only has to understand (the pharmacist's instructions)
+  const L = Object.prototype.hasOwnProperty.call(app.content.lessons, id.split(':')[1]) ? app.content.lessons[id.split(':')[1]] : null;
+  const p = L && L.phrases.find((x) => x.id === id.split(':')[2]);
+  return !heardOnly(L, p);
 };
 export function reviewView(app) {
   const { t, store, content } = app;
@@ -111,7 +117,8 @@ export function reviewView(app) {
   }
 
   const id = list[S.i];
-  const it = app.item(id);
+  // a sentence about the sample person ("My name is Maryam.") is shown with the learner's own detail, once «اطلاعات من» has it
+  const it = ownItem(app.item(id), store.state.me, { month: (m) => t('month.' + m) });
   if (!it) { S.i++; return reviewView(app); }
   const word = it.kind === 'word';
   const mode = S.pass === 1 ? S.mode[id] || 'read' : 'read';     // the repeat at the end of a set shows everything
@@ -132,21 +139,26 @@ export function reviewView(app) {
   main.append(progress(S.pass === 1 ? t('rev.title') : t('rev.again'), `${fnum(S.i + 1)} ${t('lesson.of')} ${fnum(list.length)}`, S.i / list.length));
   const card = h('section', { class: 'card phrase' }, h('h1', { class: 'sr' }, t('rev.title')));
   const add = (...kids) => card.append(...kids.filter(Boolean));
-  const clip = clipEn(it.say || it.en, it.voice, 'n');
+  // (the learner's own sentence is said from single recordings where it can be: digits, months, letters — own.js)
+  const clipAt = (speed) => (it.pieces ? it.pieces.map((x) => clipEn(x, 's', speed)) : clipEn(it.say || it.en, it.voice, speed));
+  const clip = clipAt('n');
+  const heardLine = !word && !sayable(app, id, it);
   const picture = () => (it.pic ? h('span', { class: 'emoji center', 'aria-hidden': 'true' }, it.pic) : null);
   // one spelling, two words (the word "I" and the letter "I"): the card says which group this one belongs to
   const twins = word ? content.vocab.filter((w) => w.en === it.en) : [];
   const group = twins.length > 1 ? content.vocabCats.find((c) => c.id === twins.find((w) => w.id === id).cat) : null;
   const english = () => wordsLine(app, it.en, { voice: it.voice, headword: word });
-  const listen = () => h('div', { class: 'row' }, listenBtn(app, clip, { label: t('audio.listen') }), listenBtn(app, clipEn(it.say || it.en, it.voice, 's'), { label: t('audio.slow'), cls: 'btn-ghost', ic: 'slow' }));
+  const listen = () => h('div', { class: 'row' }, listenBtn(app, clip, { label: t('audio.listen') }), listenBtn(app, clipAt('s'), { label: t('audio.slow'), cls: 'btn-ghost', ic: 'slow' }));
+  const mine = it.mine ? h('p', { class: 'eyebrow' }, t('own.title')) : null;
   const reveal = (label, sound) => btn(label, { cls: 'btn-primary', icon: 'eye', block: true, onclick: () => { S.shown = true; app.render(); if (sound) playNow(app, clip); } });
 
   if (!S.shown && mode === 'say') {
     // Farsi first: the direction a speaker needs. The answer is shown — and heard — when the learner asks for it.
-    add(h('p', { class: 'eyebrow' }, t('rev.sayIt')), picture(), h('p', { class: 'fa-line', 'data-rev': 'say' }, it.fa), h('p', { class: 'muted' }, t('rev.sayIt.hint')));
+    add(mine, h('p', { class: 'eyebrow' }, t('rev.sayIt')), picture(), h('p', { class: 'fa-line', 'data-rev': 'say' }, it.fa), h('p', { class: 'muted' }, t('rev.sayIt.hint')));
     main.append(card, reveal(t('rev.showEn'), true));
   } else if (!S.shown) {
     if (group) card.append(h('p', { class: 'eyebrow' }, group.title));
+    if (mine) card.append(mine);
     const hidden = mode === 'hear' && !S.text;       // heard first: the English appears when asked for
     if (!hidden) card.append(english());
     card.append(listen(), h('p', { class: 'muted', 'data-rev': hidden ? 'hear' : 'read' }, mode === 'hear' ? t('rev.hear') : t('rev.think')));
@@ -155,11 +167,12 @@ export function reviewView(app) {
     main.append(reveal(t('rev.show'), false));
   } else {
     if (group) card.append(h('p', { class: 'eyebrow' }, group.title));
-    add(picture(), english(), listen(), h('div', { class: 'row' }, h('p', { class: 'fa-line grow' }, it.fa), faListen(app, it.fa, t('audio.fa'))));
+    // (the Farsi of the learner's own sentence has no recording: it holds their name or number)
+    add(mine, picture(), english(), ...(it.words ? [h('p', { class: 'small muted' }, t('own.said')), en(it.words, 'p')] : []), listen(), h('div', { class: 'row' }, h('p', { class: 'fa-line grow' }, it.fa), it.mine ? null : faListen(app, it.fa, t('audio.fa'))));
     if (it.ph && store.state.settings.ph) card.append(h('p', { class: 'ph-line' }, h('b', null, t('phrase.phLabel') + ' '), it.ph));
     if (it.ex) card.append(h('div', { class: 'opt-wrap' }, miniPlay(app, clipEn(it.ex.en, 's', 'n')), h('div', { class: 'grow' }, en(it.ex.en, 'p'), h('p', { class: 'muted' }, it.ex.fa))));
     if (it.note) card.append(h('p', { class: 'when' }, it.note));
-    card.append(h('div', { class: 'row' }, favBtn(app, id), micOn(app) ? btn(t('rev.say'), { cls: 'btn-ghost', icon: 'mic', small: true, onclick: () => { S.say = !S.say; if (!S.say) app.speech.cancel(); app.render(); } }) : null));
+    card.append(h('div', { class: 'row' }, favBtn(app, id), micOn(app) && !heardLine ? btn(t('rev.say'), { cls: 'btn-ghost', icon: 'mic', small: true, onclick: () => { S.say = !S.say; if (!S.say) app.speech.cancel(); app.render(); } }) : null));
     main.append(card);
     if (S.say) main.append(sayPanel(app, { key: 'say-rev', target: it.en, say: it.say, voice: it.voice, headword: word, own: it.own }));      // own: "My name is Maryam." said with the learner's own name is right
     main.append(h('p', { class: 'section-title center' }, t('rev.ask')),

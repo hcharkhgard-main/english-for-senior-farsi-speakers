@@ -188,7 +188,8 @@
     ],
     "wrong": "A little more short, please.",
     "right": "A little shorter, please.",
-    "why": "برای کلمه‌های کوتاه «er» می‌گذاریم، نه «more»."
+    "why": "برای کلمه‌های کوتاه «er» می‌گذاریم، نه «more».",
+    "fresh": { "en": "A little shorter on the sides, please.", "wrong": "A little more short on the sides, please.", "fa": "دو طرف را کمی کوتاه‌تر کنید، لطفاً." }
   },
   "review": {
     "status": "draft",

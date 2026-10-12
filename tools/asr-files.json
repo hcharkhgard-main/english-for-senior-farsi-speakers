@@ -1,0 +1,37 @@
+{
+ "about": "The pronunciation checker files published in site/asr: exact size and SHA-256 of each. tools/build.mjs refuses a site/asr that differs, and the app checks every file against this list before keeping it on the phone. After replacing the model on purpose: node tools/build.mjs --asr-list",
+ "files": {
+  "MOONSHINE-LICENSE.txt": {
+   "bytes": 13344,
+   "sha256": "6148d7574a6554b7379b633cfd4c4fe5840c3f548d13bc83e00b52dc6fa00abd"
+  },
+  "ONNXRUNTIME-LICENSE.txt": {
+   "bytes": 1658,
+   "sha256": "121e4c9d5cf8de3c4a55368c7793966d16cc7ea8548c73f891bbb2a455cce024"
+  },
+  "decoder_model_merged.ort": {
+   "bytes": 30412256,
+   "sha256": "cf524c4862d36e9e5ab032eddc73637efd822d70e868ac575cf1a46e1e4708a0"
+  },
+  "encoder_model.ort": {
+   "bytes": 13281600,
+   "sha256": "94e90a4654fc45cdfedb77c4c08e1739f48862998e58fada384b25118134f221"
+  },
+  "ort-wasm-simd-threaded.mjs": {
+   "bytes": 20856,
+   "sha256": "30dd851d9c00622940500f71ddd2ff8820c5cb65270816080175b958705385a8"
+  },
+  "ort-wasm-simd-threaded.wasm": {
+   "bytes": 11210254,
+   "sha256": "71aef04959c5c1b6de461b6538e2058e306610034a85aad2742d0c7fd4533fe4"
+  },
+  "ort.wasm.min.mjs": {
+   "bytes": 48259,
+   "sha256": "6ef726f355b791129f7ddf3f62e7877a16b9b777abe87004b8ab306e6b9cf265"
+  },
+  "tokens.txt": {
+   "bytes": 549350,
+   "sha256": "2870d843e14c1e187bf1913a521562a63b53933814bd7f2145120468f494a049"
+  }
+ }
+}

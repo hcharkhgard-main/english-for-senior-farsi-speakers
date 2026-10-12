@@ -57,7 +57,8 @@
     ],
     "wrong": "I no can come.",
     "right": "I can't come.",
-    "why": "«can't» شکل منفیِ «can» است و قبل از فعل می‌آید."
+    "why": "«can't» شکل منفیِ «can» است و قبل از فعل می‌آید.",
+    "fresh": { "en": "I can't come tomorrow.", "wrong": "I no can come tomorrow.", "fa": "فردا نمی‌توانم بیایم." }
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }

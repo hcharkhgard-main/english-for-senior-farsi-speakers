@@ -108,7 +108,21 @@ export function mark() {
   return tpl.content.firstChild;
 }
 
-export const en = (text, tag = 'span', cls = '') => h(tag, { class: `en ${cls}`.trim(), lang: 'en', dir: 'ltr' }, text);
+// A phone number or a date written with hyphens or slashes (212-555-0142, 10/14) is kept in one piece: it moves to the
+// next line whole instead of breaking at a hyphen (it is still cut when it is wider than the screen itself).
+const NUMBER_RUN = /\d+(?:[-/]\d+)+[.,;:!?)]*/g;      // (with the full stop after it: a lone "." never starts a line)
+const keepNumbers = (text) => {
+  if (typeof text !== 'string' || !/\d[-/]\d/.test(text)) return text;
+  const out = []; let at = 0;
+  for (const m of text.matchAll(NUMBER_RUN)) {
+    if (m.index > at) out.push(text.slice(at, m.index));
+    out.push(h('span', { class: 'nb', dir: 'ltr' }, m[0]));
+    at = m.index + m[0].length;
+  }
+  if (at < text.length) out.push(text.slice(at));
+  return out;
+};
+export const en = (text, tag = 'span', cls = '') => h(tag, { class: `en ${cls}`.trim(), lang: 'en', dir: 'ltr' }, keepNumbers(text));
 
 export function btn(label, { icon: ic, cls = 'btn-ghost', onclick, block, small, ...rest } = {}) {
   return h('button', { type: 'button', class: `btn ${cls}${block ? ' btn-block' : ''}${small ? ' btn-small' : ''}`, onclick, ...rest }, ic ? icon(ic) : null, h('span', null, label));

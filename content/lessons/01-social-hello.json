@@ -51,7 +51,8 @@
     ],
     "wrong": "I fine.",
     "right": "I'm fine.",
-    "why": "کلمهٔ «am» نباید جا بیفتد."
+    "why": "کلمهٔ «am» نباید جا بیفتد.",
+    "fresh": { "en": "I'm tired.", "wrong": "I tired.", "fa": "خسته‌ام." }
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }

@@ -54,7 +54,8 @@
     ],
     "wrong": "I no remember.",
     "right": "I don't remember.",
-    "why": "در انگلیسی «no» قبل از فعل نمی‌آید؛ می‌گوییم «don't»."
+    "why": "در انگلیسی «no» قبل از فعل نمی‌آید؛ می‌گوییم «don't».",
+    "fresh": { "en": "I don't speak English.", "wrong": "I no speak English.", "fa": "انگلیسی بلد نیستم." }
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }

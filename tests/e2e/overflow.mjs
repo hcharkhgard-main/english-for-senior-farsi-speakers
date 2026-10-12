@@ -5,7 +5,8 @@
 // the word lists, review, the sentence builder,
 // settings, the emergency page and the first-run questions — at 320 px and 390 px wide, at text
 // size 100 % and 150 % — and fails if any element, or the text inside any button, lies outside the
-// screen. It also checks that every screen has exactly one main heading.
+// screen. It also checks that every screen has exactly one main heading, that the main button of the bottom
+// bar is on screen, and that no "null", "undefined", "NaN" or unfilled {placeholder} is shown anywhere.
 // --quick checks every sixth lesson and conversation (for a fast look while working).
 import { chromium } from 'playwright';
 import fs from 'node:fs';
@@ -50,8 +51,11 @@ function inspect(W) {
   }
   const h1 = document.querySelectorAll('#app h1').length;
   if (h1 !== 1) out.push(`${h1} main headings (h1) on this screen`);
-  const next = document.querySelector('.bottombar [data-next]');
-  if (next) { const r = next.getBoundingClientRect(); if (r.bottom > window.innerHeight + 1 || r.top < 0) out.push('the Next button is not fully on screen'); }
+  const next = document.querySelector('.bottombar [data-next], .bottombar .btn-primary');
+  if (next) { const r = next.getBoundingClientRect(); if (r.bottom > window.innerHeight + 1 || r.top < 0) out.push('the main button of the bottom bar is not fully on screen'); }
+  // a word that is not meant for the learner: "null", "undefined", "NaN" or a {placeholder} left unfilled
+  const stray = document.createTreeWalker(document.getElementById('app'), NodeFilter.SHOW_TEXT);
+  for (let n = stray.nextNode(); n; n = stray.nextNode()) if (/^(null|undefined|NaN)$|\{[a-z]+\}/.test(n.nodeValue.trim()) && !n.parentElement.closest('input, textarea')) out.push(`stray text "${n.nodeValue.trim().slice(0, 20)}" in ${name(n.parentElement)}`);
   return out.slice(0, 6);
 }
 
@@ -169,6 +173,7 @@ for (const [W, H, scale] of [[390, 844, 1], [390, 844, 1.5], [320, 568, 1], [320
       await page.evaluate((r) => window.hamrah.go(r), route);
       await look(`${route}${full ? ' (with progress)' : ''}`);
       if (route.startsWith('build.')) { for (let i = 0; i < 12; i++) if (!(await tap('.tiles-pool .wtile:not(.is-used)'))) break; await look(`${route} (tiles placed)`); }
+      if (route === 'talk' && await tap('[data-others]')) await look(`talk (every stage shown)${full ? ' (with progress)' : ''}`);
     }
   }
   // ---- the learner's own sentences, the small-task question, «کارهایی که حالا می‌توانم بکنم», the look back,
@@ -200,6 +205,10 @@ for (const [W, H, scale] of [[390, 844, 1], [390, 844, 1.5], [320, 568, 1], [320
       await look(`home when no new lesson is left (${lessonToday ? 'a conversation' : 'an earlier lesson'})`);
     }
     await page.evaluate(() => window.hamrah.go('cando')); await look('cando (every lesson finished)');
+    // a name and address typed in Persian letters: «اطلاعات من» explains, the emergency page does not use them
+    await page.evaluate(() => { const a = window.hamrah; a.store.update((s) => { s.me = { name: 'محمدرضا حسین‌زاده طباطبایی', address: 'خیابان واشنگتن شمالی، پلاک ۱۴۲۰۰، واحد ۱۲۰۴', contact: '۲۱۲-۵۵۵-۰۱۴۲', phone: '', born: '' }; }); a.go('me'); });
+    await look('me (name and address in Persian letters)');
+    await page.evaluate(() => window.hamrah.go('sos')); await look('sos (name and address in Persian letters)');
   }
 
   // review: question, answer shown, end

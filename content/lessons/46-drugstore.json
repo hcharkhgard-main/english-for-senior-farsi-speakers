@@ -162,7 +162,8 @@
     ],
     "wrong": "Where is the vitamins?",
     "right": "Where are the vitamins?",
-    "why": "vitamins چند تاست، پس «are» می‌گوییم."
+    "why": "vitamins چند تاست، پس «are» می‌گوییم.",
+    "fresh": { "en": "Where are the eggs?", "wrong": "Where is the eggs?", "fa": "تخم‌مرغ‌ها کجاست؟" }
   },
   "review": {
     "status": "draft",

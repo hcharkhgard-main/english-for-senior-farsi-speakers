@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { grade, buildQueue, answered, minutes, cardMode, counts, INTERVALS, LESSON_BOX, KNOWN_BOX, NEW_PER_DAY, SESSION_MAX, SETS_PER_DAY, NEW_RESERVED, OLDEST_KEPT } from '../../src/js/srs.js';
 import { createStore, blank, migrate, today } from '../../src/js/store.js';
 import { loadContent } from '../../tools/content.mjs';
-import { simulate, fourAWeek, everyDay } from '../../tools/simulate-review.mjs';
+import { simulate, fourAWeek, everyDay, sundayOff } from '../../tools/simulate-review.mjs';
 
 // ---- scheduling one item -----------------------------------------------------------------
 
@@ -207,7 +207,7 @@ test('plan: with two sets a day nothing waits for long, at four lessons a week a
   // (a lesson a day is the heaviest load there is: for some weeks in the second month up to a few dozen things known
   // at least twice wait a few days — never anything recently learned, and never for long)
   for (const [name, lessonDays, late, left, words] of [['4 lessons a week', fourAWeek, 4, 45, 250], ['1 lesson a day', everyDay, 10, 120, 220]]) {
-    const r = simulate(content, { lessonDays, sittings: 2, recall: 80 });
+    const r = simulate(content, { lessonDays, sittings: 2, recall: 80, decay: false });      // (the kinder model; the next test has the harder one)
     assert.equal(r.biggestSet, SESSION_MAX, name);
     assert.ok(r.log.every((x) => x.sets <= SETS_PER_DAY));
     assert.ok(r.longestWait <= late, `${name}: something waited ${r.longestWait} days`);
@@ -219,9 +219,31 @@ test('plan: with two sets a day nothing waits for long, at four lessons a week a
     assert.equal(at(r, 120).sentences, at(r, 120).lessons * 5, 'every sentence of every finished lesson is in review');
   }
   // a learner who remembers less gets fewer new words, not a pile: still nothing waits for long at four lessons a week
-  const weak = simulate(content, { lessonDays: fourAWeek, sittings: 2, recall: 65 });
+  const weak = simulate(content, { lessonDays: fourAWeek, sittings: 2, recall: 65, decay: false });
   assert.ok(weak.longestWait <= 8, `recall 65%: something waited ${weak.longestWait} days`);
   assert.ok(weak.firstListDay <= 35);
+});
+
+test('plan, with a harder learner (QA round 3, L7): recall falls with lateness, few words known at first sight, a day a week missed', () => {
+  // four lessons a week and the two sets: the plan holds — nothing waits more than a few days
+  const steady = simulate(content, { lessonDays: fourAWeek, sittings: 2, recall: 'beginner' });
+  assert.ok(steady.longestWait <= 5, `beginner, 4 a week: something waited ${steady.longestWait} days`);
+  assert.ok(steady.peak <= 40, `beginner, 4 a week: ${steady.peak} waiting at one point`);
+  assert.ok(at(steady, 120).words >= 250, `beginner, 4 a week: ${at(steady, 120).words} words`);
+  // the same learner missing a day a week still keeps up, more slowly
+  const gaps = simulate(content, { lessonDays: fourAWeek, sittings: 2, recall: 'beginner', restDay: sundayOff });
+  assert.ok(gaps.longestWait <= 10 && at(gaps, 120).late30 === 0, `beginner, 4 a week, a day off: waited ${gaps.longestWait}`);
+  assert.ok(gaps.log.filter((x) => x.day % 7 === 0).every((x) => x.cards === 0 && x.sets === 0 && !x.lesson), 'the day off has no review and no lesson');
+  // a lesson every day is more than two sets can carry for this learner: things wait (the plan says so — «اگر روزی فقط
+  // به یکی رسیدید، اشکالی ندارد») but nothing is put off for a month, and every first word and every sentence is met
+  const daily = simulate(content, { lessonDays: everyDay, sittings: 2, recall: 'beginner', restDay: sundayOff });
+  assert.ok(daily.longestWait < 30 && at(daily, 120).late30 === 0, `beginner, every day, a day off: waited ${daily.longestWait}`);
+  assert.ok(daily.firstListDay <= 45, `the first words took until day ${daily.firstListDay}`);
+  assert.equal(at(daily, 120).sentences, at(daily, 120).lessons * 5);
+  // the harder model is harder: less known, more waiting, than the kinder one
+  const kind = simulate(content, { lessonDays: everyDay, sittings: 2, recall: 80, decay: false });
+  const hard = simulate(content, { lessonDays: everyDay, sittings: 2, recall: 80 });
+  assert.ok(hard.peak >= kind.peak);
 });
 
 test('plan: with one set a day the first words are all met within about six weeks, in the order the lessons need them', () => {

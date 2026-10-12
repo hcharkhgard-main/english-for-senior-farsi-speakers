@@ -21,6 +21,7 @@ export async function playNow(app, clips, opts = {}) {
   if (r === 'blocked') toast(app.t('audio.blocked'));
   else if (r === 'offline') toast(app.t('audio.offline'));
   else if (r === 'missing') toast(app.t('audio.missing'));
+  else if (r === 'unavailable') toast(app.t('audio.notReady'));      // the download came back as something else (a Wi-Fi login page): audio.js
   return r;
 }
 
@@ -116,8 +117,10 @@ export function phraseCard(app, p, { favId, showEn = true, showChunks = true, sh
   if (showEn) card.append(more ? wordsLine(app, p.en, { voice }) : en(p.en, 'p', 'en-line'));
   if (showEn && more) card.append(h('p', { class: 'small muted' }, app.t('phrase.tapWord')));
   card.append(h('div', { class: 'row' }, h('p', { class: 'fa-line grow' }, p.fa), faListen(app, p.fa, app.t('audio.fa'))));
-  // «تلفظ تقریبی» says what it is on every card; the sentence that explains it is on the first card of a lesson
-  if (p.ph && showPh) card.append(h('p', { class: 'ph-line' }, h('b', null, app.t('phrase.phLabel') + ' '), p.ph, first ? [h('br'), h('span', { class: 'small' }, app.t('phrase.phNote'))] : null));
+  // «تلفظ تقریبی» says what it is on every card; the sentence that explains it is on the first card of each of the
+  // learner's first three lessons — after that it is known, and the card is shorter («حالا شما بگویید» stays in sight)
+  const explain = first && Object.keys(app.store.state.done || {}).length < 3;
+  if (p.ph && showPh) card.append(h('p', { class: 'ph-line' }, h('b', null, app.t('phrase.phLabel') + ' '), p.ph, explain ? [h('br'), h('span', { class: 'small' }, app.t('phrase.phNote'))] : null));
   if (showNote && p.note) card.append(h('p', { class: 'when' }, h('b', null, app.t('phrase.when') + ' '), p.note));
   // the sample name, address or number: say your own (most notes already say so in their own words)
   if (ownWords(p) && !(showNote && /خودتان/.test(p.note || ''))) card.append(h('p', { class: 'when', 'data-own': '' }, h('b', null, app.t('phrase.own', { words: ownWords(p) }))));

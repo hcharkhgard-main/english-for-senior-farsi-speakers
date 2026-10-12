@@ -6,7 +6,6 @@
       "title": "گفتن مشخصات خودتان",
       "setting": "در کتابخانهٔ محله می‌خواهید کارت عضویت بگیرید. کارمند فرم را برایتان پر می‌کند.",
       "goal": "نام خانوادگی، تاریخ تولد، آدرس و شمارهٔ تلفن را بگویید.",
-      "note": "اسم، آدرس و شماره‌های این تمرین ساختگی‌اند و فقط برای تمرین‌اند.",
       "them": { "role": "کارمند کتابخانه", "persona": "a friendly, patient library clerk filling in a library-card form for the learner; ask one short question at a time (last name, its spelling, date of birth, address, phone number); accept whatever name, date or number the learner gives without checking it; never ask for a Social Security number, bank details, passwords or any other sensitive information", "voice": "b" },
       "turns": [
         { "them": ["Hello! I can fill in this form for you. What is your last name?", "سلام! من این فرم را برایتان پر می‌کنم. نام خانوادگی‌تان چیست؟"],

@@ -161,7 +161,8 @@
     ],
     "wrong": "I have experience for cooking.",
     "right": "I have experience in cooking.",
-    "why": "بعد از experience کلمهٔ «in» می‌آید."
+    "why": "بعد از experience کلمهٔ «in» می‌آید.",
+    "fresh": { "en": "I have experience in sewing.", "wrong": "I have experience for sewing.", "fa": "در خیاطی تجربه دارم." }
   },
   "review": {
     "status": "draft",

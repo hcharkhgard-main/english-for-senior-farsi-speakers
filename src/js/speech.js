@@ -21,6 +21,17 @@ export const ASR_MB = Math.round(FILES.reduce((s, f) => s + f[1], 0));
 // (a hash made by the build): two copies on one address never mix, and a changed recogniser is fetched
 // afresh instead of the old one being kept for ever. src/sw.js builds the same name.
 const CACHE = `hamrah|${typeof document === 'undefined' ? '/' : new URL('./', document.baseURI).pathname}|asr-${typeof __ASR__ === 'string' ? __ASR__ : 'dev'}`;
+/* global __ASR_FILES__ */
+// name -> [bytes, sha256] of each file (tools/asr-files.json, put in by the build). A download that is not that file —
+// a Wi-Fi login page, a cut-off transfer — is never kept: it would stop the checker from starting for good.
+const SIZES = typeof __ASR_FILES__ === 'object' && __ASR_FILES__ ? __ASR_FILES__ : {};
+const hex = (buf) => Array.from(new Uint8Array(buf), (b) => b.toString(16).padStart(2, '0')).join('');
+export async function asrFileOk(f, buf, list = SIZES) {
+  const want = Object.prototype.hasOwnProperty.call(list, f) ? list[f] : null;
+  if (!want) return true;                                  // a development build without the list
+  if (!buf || buf.byteLength !== want[0]) return false;
+  try { return !crypto.subtle || hex(await crypto.subtle.digest('SHA-256', buf)) === want[1]; } catch { return true; }
+}
 
 // Recording limits, chosen for slow, hesitant speakers: a long pause in the middle of a
 // sentence must not end the recording, and nobody is hurried into starting.
@@ -39,22 +50,33 @@ export function createSpeech({ base = 'asr/', enabled = true } = {}) {
   const open = new Set();             // recordings that hold (or are about to hold) the microphone
   const abs = (f) => new URL(base + f, document.baseURI).href;
 
+  // a stored copy counts only if it has the right size (checked again in full when it is used)
+  const sizeOk = (f, res) => { const want = SIZES[f], len = res.headers.get('Content-Length'); return !want || len == null || +len === want[0]; };
   async function isCached() {
     try {
       if (!('caches' in window)) return false;
       const c = await caches.open(CACHE);
-      for (const [f] of FILES) if (!(await c.match(abs(f)))) return false;
+      for (const [f] of FILES) { const r = await c.match(abs(f)); if (!r || !sizeOk(f, r)) return false; }
       return true;
     } catch { return false; }
   }
+  // forgets every stored file (after the checker failed to start with them, so that the next try downloads afresh)
+  async function forgetAll() { try { if ('caches' in window) await caches.delete(CACHE); } catch { /* ignore */ } }
 
   async function getFile(f, onBytes) {
     const url = abs(f);
     let cache = null;
     try { cache = 'caches' in window ? await caches.open(CACHE) : null; } catch { cache = null; }
-    if (cache) { const hit = await cache.match(url); if (hit) { const b = await hit.arrayBuffer(); onBytes(b.byteLength); return b; } }
+    if (cache) {
+      const hit = await cache.match(url);
+      if (hit) {
+        const b = await hit.arrayBuffer();
+        if (await asrFileOk(f, b)) { onBytes(b.byteLength); return b; }
+        try { await cache.delete(url); } catch { /* ignore */ }         // a damaged copy: fetched again below
+      }
+    }
     const res = await fetch(url);
-    if (!res.ok) throw new Error(`${f}: ${res.status}`);
+    if (!res.ok || res.redirected || /^text\/html/i.test(res.headers.get('Content-Type') || '')) throw new Error(`${f}: ${res.status}`);
     let buf;
     if (res.body && res.body.getReader) {
       const reader = res.body.getReader(); const parts = []; let n = 0;
@@ -62,7 +84,8 @@ export function createSpeech({ base = 'asr/', enabled = true } = {}) {
       const all = new Uint8Array(n); let o = 0; for (const p of parts) { all.set(p, o); o += p.length; }
       buf = all.buffer;
     } else { buf = await res.arrayBuffer(); onBytes(buf.byteLength); }
-    if (cache) { try { await cache.put(url, new Response(buf.slice(0), { headers: { 'Content-Type': res.headers.get('Content-Type') || 'application/octet-stream' } })); } catch { /* storage full: still usable this session */ } }
+    if (!(await asrFileOk(f, buf))) throw new Error(`${f}: not the expected file`);
+    if (cache) { try { await cache.put(url, new Response(buf.slice(0), { headers: { 'Content-Type': res.headers.get('Content-Type') || 'application/octet-stream', 'Content-Length': String(buf.byteLength) } })); } catch { /* storage full: still usable this session */ } }
     return buf;
   }
 
@@ -77,9 +100,11 @@ export function createSpeech({ base = 'asr/', enabled = true } = {}) {
     let got = 0;
     const tell = (v) => { frac = v; watchers.forEach((f) => { try { f(v); } catch { /* a screen that has gone */ } }); };
     const tick = (n) => { got += n; tell(Math.min(0.99, got / total)); };
+    let haveAll = false;
     loading = (async () => {
       const bufs = {};
       for (const [f] of FILES) bufs[f] = await getFile(f, tick);
+      haveAll = true;                                   // from here on, a failure means the stored files do not work together
       const ortUrl = abs('ort.wasm.min.mjs');
       const ort = await import(/* webpackIgnore: true */ ortUrl);
       ort.env.wasm.numThreads = 1;
@@ -90,7 +115,7 @@ export function createSpeech({ base = 'asr/', enabled = true } = {}) {
       });
       state = 'ready'; tell(1);
       return engine;
-    })().catch((e) => { state = 'error'; loading = null; frac = 0; throw e; }).finally(() => watchers.clear());
+    })().catch(async (e) => { state = 'error'; loading = null; frac = 0; if (haveAll) await forgetAll(); throw e; }).finally(() => watchers.clear());
     return loading;
   }
 

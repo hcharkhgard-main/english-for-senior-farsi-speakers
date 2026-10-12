@@ -212,6 +212,12 @@
             { "en": "Yes, please. Please speak slowly.", "fa": "بله، لطفاً. لطفاً آهسته صحبت کنید.", "keys": ["yes", "slowly", "repeat", "again", "don't understand"], "then": ["Go straight. Then turn left.", "مستقیم بروید. بعد به چپ بپیچید."], "thenCheck": { "right": "مستقیم بروید. بعد به چپ بپیچید.", "wrong": ["مستقیم بروید. بعد به راست بپیچید.", "به چپ بپیچید. بعد مستقیم بروید."] } },
             { "en": "No, thank you. I understand.", "fa": "نه، ممنون. متوجه شدم.", "keys": ["no thank", "no thanks", "i understand"] }
           ] },
+        { "them": ["Can I help you with anything else?", "کمک دیگری هم لازم دارید؟"],
+          "replies": [
+            { "en": "Where is the post office?", "fa": "اداره پست کجاست؟", "keys": ["post office", "post"], "then": ["It's across the street, on the corner.", "آن طرف خیابان است، سرِ نبش."], "thenCheck": { "q": "اداره پست کجاست؟", "right": "آن طرف خیابان، سرِ نبش", "wrong": ["همین طرف خیابان، سرِ نبش", "آن طرف خیابان، کنار بانک"] } },
+            { "en": "Is there a bank near here?", "fa": "این نزدیکی بانک هست؟", "keys": ["bank"], "then": ["Yes. Go two blocks and turn right. It's next to the supermarket.", "بله. دو چهارراه جلو بروید و به راست بپیچید. کنار سوپرمارکت است."], "thenCheck": { "q": "بانک کجاست؟", "right": "دو چهارراه جلو بروید و به راست بپیچید؛ کنار سوپرمارکت است.", "wrong": ["دو چهارراه جلو بروید و به چپ بپیچید؛ کنار سوپرمارکت است.", "دو چهارراه جلو بروید و به راست بپیچید؛ روبه‌روی سوپرمارکت است."] } },
+            { "en": "No, thank you. That's all.", "fa": "نه، ممنون. همین بود.", "keys": ["no", "that's all"] }
+          ] },
         { "them": ["Good luck! Have a nice day.", "موفق باشید! روز خوبی داشته باشید."],
           "replies": [
             { "en": "Thank you very much!", "fa": "خیلی ممنون!", "keys": ["thank"] }
@@ -299,7 +305,7 @@
       "goal": "بگویید چه کمکی لازم دارید و آدرس بدهید.",
       "note": "این تمرین است؛ تماس واقعی نیست. این برنامه هیچ‌وقت به ۹۱۱ زنگ نمی‌زند.",
       "phone": true,
-      "them": { "role": "اپراتور ۹۱۱ (تمرینی)", "persona": "a calm 911 operator in a clearly simulated practice call; ask only: what is the emergency, the address, what happened; never give medical instructions", "voice": "m" },
+      "them": { "role": "اپراتور ۹۱۱ (تمرینی)", "persona": "a calm 911 operator in a clearly simulated practice call; ask only: what is the emergency, the address, what happened, the phone number the caller is calling from; never give medical instructions", "voice": "m" },
       "turns": [
         { "them": ["911, what is your emergency?", "۹۱۱، وضعیت اضطراری شما چیست؟"],
           "replies": [
@@ -322,6 +328,59 @@
             { "en": "There is a fire in my kitchen.", "fa": "در آشپزخانه‌ام آتش‌سوزی شده است.", "keys": ["fire", "kitchen"] },
             { "en": "Someone is in my house.", "fa": "یک نفر وارد خانه‌ام شده است.", "keys": ["in my house", "house"] },
             { "en": "I speak Farsi. I need an interpreter.", "fa": "من فارسی صحبت می‌کنم. مترجم لازم دارم.", "keys": ["farsi", "interpreter"], "then": ["Okay. Stay on the line. I am getting an interpreter.", "باشد. تماس را قطع نکنید. دارم مترجم می‌آورم."], "thenCheck": { "right": "تماس را قطع نکنید. دارم مترجم می‌آورم.", "wrong": ["قطع کنید. مترجم خودش به شما زنگ می‌زند.", "مترجم نداریم."] } }
+          ] },
+        { "them": ["What's the phone number you're calling from?", "با چه شماره‌ای زنگ می‌زنید؟"],
+          "check": { "q": "چه پرسید؟", "right": "با چه شماره‌ای زنگ می‌زنید؟", "wrong": ["آدرس محل حادثه کجاست؟", "اسمتان چیست؟"] },
+          "replies": [
+            { "en": "My number is 212-555-0142.", "fa": "شمارهٔ من \u200e۲۱۲-۵۵۵-۰۱۴۲ است. (شمارهٔ تمرینی)", "keys": ["number", "my number"] },
+            { "en": "I'm sorry, I don't know my number.", "fa": "ببخشید، شماره‌ام را نمی‌دانم.", "keys": ["don't know my number", "do not know my number"] }
+          ], "open": true },
+        { "them": ["Help is on the way. Stay on the line.", "کمک در راه است. تماس را قطع نکنید."],
+          "check": { "right": "کمک در راه است. تماس را قطع نکنید.", "wrong": ["کمک در راه است. می‌توانید قطع کنید.", "نمی‌توانیم کمک بفرستیم. دوباره زنگ بزنید."] },
+          "replies": [
+            { "en": "Okay. Thank you.", "fa": "باشد. ممنون.", "keys": ["okay", "thank"] }
+          ] }
+      ]
+    },
+    {
+      "id": "rp-911-questions", "scenario": "emergency", "stage": 1, "safetyCritical": true, "scripted": true,
+      "title": "۹۱۱: جواب دادن به سؤال‌های اپراتور",
+      "setting": "این فقط تمرین است. هیچ تماس واقعی گرفته نمی‌شود. فرض کنید شوهرتان در خانه زمین خورده و به ۹۱۱ زنگ زده‌اید.",
+      "goal": "به سؤال‌های کوتاه اپراتور جواب بدهید و تا خودش نگفته، قطع نکنید.",
+      "note": "این تمرین است؛ تماس واقعی نیست. این برنامه هیچ‌وقت به ۹۱۱ زنگ نمی‌زند. جواب‌های این تمرین فقط نمونه‌اند؛ در تماس واقعی همان چیزی را بگویید که واقعاً می‌بینید. اگر سؤالی را نفهمیدید، بگویید «I need an interpreter.\u200e»",
+      "phone": true,
+      "them": { "role": "اپراتور ۹۱۱ (تمرینی)", "persona": "a calm 911 operator in a clearly simulated practice call about a husband who fell at home; ask only the address, the phone number the caller is calling from, what happened, whether he is awake and whether he is breathing, one short question at a time, and tell the caller to stay on the line; never give medical instructions", "voice": "m" },
+      "turns": [
+        { "them": ["911, what is the address of your emergency?", "۹۱۱، آدرس محل حادثه کجاست؟"],
+          "check": { "q": "چه پرسید؟", "right": "آدرس محل حادثه کجاست؟", "wrong": ["چه اتفاقی افتاده؟", "اسمتان چیست؟"] },
+          "replies": [
+            { "en": "My address is 25 Oak Street.", "fa": "آدرس من خیابان اوک، پلاک ۲۵ است. (آدرس تمرینی)", "keys": ["address", "street"] }
+          ], "open": true },
+        { "them": ["What's the phone number you're calling from?", "با چه شماره‌ای زنگ می‌زنید؟"],
+          "check": { "q": "چه پرسید؟", "right": "با چه شماره‌ای زنگ می‌زنید؟", "wrong": ["آدرس محل حادثه کجاست؟", "اسمتان چیست؟"] },
+          "replies": [
+            { "en": "My number is 212-555-0142.", "fa": "شمارهٔ من \u200e۲۱۲-۵۵۵-۰۱۴۲ است. (شمارهٔ تمرینی)", "keys": ["number", "my number"] },
+            { "en": "I'm sorry, I don't know my number.", "fa": "ببخشید، شماره‌ام را نمی‌دانم.", "keys": ["don't know my number", "do not know my number"] }
+          ], "open": true },
+        { "them": ["Okay. Tell me exactly what happened.", "بسیار خب. دقیقاً بگویید چه اتفاقی افتاده."],
+          "check": { "q": "چه خواست؟", "right": "بگویید دقیقاً چه اتفاقی افتاده.", "wrong": ["بگویید دقیقاً کجا هستید.", "بگویید شوهرتان چند سال دارد."] },
+          "replies": [
+            { "en": "My husband fell. He is hurt.", "fa": "شوهرم زمین خورده. آسیب دیده.", "keys": ["hurt"] },
+            { "en": "My husband fell. He can't get up.", "fa": "شوهرم زمین خورده. نمی‌تواند بلند شود.", "keys": ["can't get up", "cannot get up"] }
+          ] },
+        { "them": ["Is he awake?", "به‌هوش است؟"],
+          "check": { "q": "چه پرسید؟", "right": "به‌هوش است؟", "wrong": ["آسیب دیده است؟", "چند سال دارد؟"] },
+          "replies": [
+            { "en": "Yes, he is awake.", "fa": "بله، به‌هوش است.", "keys": ["yes"] },
+            { "en": "No, he is not awake.", "fa": "نه، به‌هوش نیست.", "keys": ["no", "not awake"] },
+            { "en": "I don't know.", "fa": "نمی‌دانم.", "keys": ["don't know", "do not know"] }
+          ] },
+        { "them": ["Is he breathing?", "نفس می‌کشد؟"],
+          "check": { "q": "چه پرسید؟", "right": "نفس می‌کشد؟", "wrong": ["حرف می‌زند؟", "درد دارد؟"] },
+          "replies": [
+            { "en": "Yes, he is breathing.", "fa": "بله، نفس می‌کشد.", "keys": ["yes"] },
+            { "en": "No, he is not breathing.", "fa": "نه، نفس نمی‌کشد.", "keys": ["no", "not breathing"], "then": ["Okay. Stay on the line. I will help you.", "باشد. تماس را قطع نکنید. کمکتان می‌کنم."], "thenCheck": { "right": "تماس را قطع نکنید. کمکتان می‌کند.", "wrong": ["قطع کنید. خودشان دوباره زنگ می‌زنند.", "تلفن را به کس دیگری بدهید."] } },
+            { "en": "I don't know. I need an interpreter.", "fa": "نمی‌دانم. مترجم لازم دارم.", "keys": ["interpreter"], "then": ["Okay. Stay on the line. I am getting an interpreter.", "باشد. تماس را قطع نکنید. دارم مترجم می‌آورم."], "thenCheck": { "right": "تماس را قطع نکنید. دارم مترجم می‌آورم.", "wrong": ["قطع کنید. مترجم خودش به شما زنگ می‌زند.", "مترجم نداریم."] } }
           ] },
         { "them": ["Help is on the way. Stay on the line.", "کمک در راه است. تماس را قطع نکنید."],
           "check": { "right": "کمک در راه است. تماس را قطع نکنید.", "wrong": ["کمک در راه است. می‌توانید قطع کنید.", "نمی‌توانیم کمک بفرستیم. دوباره زنگ بزنید."] },

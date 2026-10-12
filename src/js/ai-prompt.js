@@ -125,9 +125,17 @@ export function buildPrompt({ persona, level, history, said }) {
 //     ("four one five, eight six seven …") or toll-free with letters (1-800-MEDICARE);
 //   · a medicine dose (500 mg, two tablets, half a pill, three drops; «دو قرص»);
 //   · the name of a secret nobody may be asked for (PIN, password, verification code, card, account,
-//     Social Security or passport number, date of birth, home address) or a request for the learner's
-//     own name, address, phone number, birthday or e-mail;
-//   · the usual ways of a scam payment (reading out a gift card, wiring money, crypto …).
+//     Social Security or passport number, date of birth, home address);
+//   · a question for the learner's own details in the usual wordings ("What's your name / address /
+//     phone?", "Where do you live?", "When were you born?", "How old are you?", "Spell your name");
+//   · a request for a code or digits that were texted or are on the screen, or for remote access
+//     (AnyDesk, TeamViewer, "download this app");
+//   · the usual ways of a scam payment (reading out a gift card, wiring money, crypto, "send me money",
+//     a grandchild in jail who needs money, "don't tell your family", the IRS threatening arrest);
+//   · advice about medicine or emergencies (stop / skip / double a medicine, "take two Advil", "don't
+//     call 911", "you don't need a doctor"), alcohol, and "just sign it";
+//   · a spelled-out address ("bob at gmail dot com", "w w w dot …", "slash pay").
+// The list of lines it must refuse and the lines it must let through are in tests/unit/proxy.test.js.
 // It is a filter of patterns, not of meaning: it cannot recognise every harmful sentence, and it
 // errs on the side of dropping a harmless one (the learner is then asked to try again).
 const latinDigits = (s) => s.replace(/[۰-۹]/g, (d) => d.charCodeAt(0) - 0x06f0).replace(/[٠-٩]/g, (d) => d.charCodeAt(0) - 0x0660);
@@ -144,12 +152,24 @@ const hasLink = (s) => LINK.test(s) || [...s.matchAll(LINK2)].some((m) => m[1] =
 const DOSE = /\d\s*(?:mg|mcg|ml|cc|milligrams?|micrograms?|millilit(?:er|re)s?)\b|\d\s*(?:میلی‌?\s?گرم|سی‌?\s?سی)|\b(?:\d+|one|two|three|four|half|a)\s+(?:tablets?|pills?|capsules?|puffs?)\b|\b(?:\d+|one|two|three|four|half|a)\s+(?:teaspoons?|tablespoons?|drops?)\b(?![^.?!]*\b(?:sugar|salt|milk|honey|oil|cream|lemon|vanilla|butter|flour|rain)\b)|(?:\d+|یک|دو|سه|نصف|نیم)\s*(?:عدد\s*)?(?:قرص|کپسول|قطره)|قاشق\s*(?:چای‌?\s?خوری|غذاخوری|مرباخوری)/i;
 // toll-free numbers, also with letters: 1-800-MEDICARE, 800-633-4227, 1 800 …  ("800 dollars" is not one)
 const TOLLFREE = /\b1[\s-]?8(?:00|33|44|55|66|77|88)\b|\b8(?:00|33|44|55|66|77|88)-[a-z0-9]{3,}/i;
-const SECRET = /\b(?:social security|ssn|passport number|card number|account number|routing number|pin\b|password|passcode|verification code|security code|medicare number|date of birth|home address|maiden name)|رمز\s*(?:کارت|عبور|حساب)|کد\s*(?:تأیید|تایید|امنیتی)|شماره[ٔ‌]?\s*(?:کارت|حساب|تأمین|سوشال)|گذرواژه|تأمین\s*اجتماعی|سوشال\s*سکیوریتی/i;
+const SECRET = /\b(?:social security|ssn|passport number|card number|account number|routing number|pin\b|password|passcode|verification code|security code|medicare number|date of birth|home address|maiden name)|رمز\s*(?:کارت|عبور|حساب)|کد\s*(?:تأیید|تایید|امنیتی)|شماره[ٔ‌]?\s*ی?\s*(?:کارت|حساب|تأمین|سوشال)|گذرواژه|تأمین\s*اجتماعی|سوشال\s*سکیوریتی/i;
 const ASK = /\b(?:what(?:'s| is| are)|tell me|give me|read me|send me|can i (?:have|get)|may i (?:have|get)|could i (?:have|get)|i need|confirm|verify)\b[^.?!]*\byour\b[^.?!]*\b(?:full name|last name|address|zip code|(?:phone|cell|mobile) number|birthday|email|e-mail|insurance (?:number|id))\b/i;
 const PAY = /\bgift ?cards?\b[^.?!]*\b(?:code|numbers?|read|scratch)\b|\b(?:read|scratch)\b[^.?!]*\bgift ?cards?\b|\bwire (?:me |the )?(?:money|transfer)\b|\bwestern union\b|\bmoneygram\b|\bzelle\b|\bbitcoin\b|\bcrypto|کارت\s*هدیه[^.؟!]*(?:کد|شماره|بخوان)|بیت‌?\s?کوین/i;
+// Round 3 of the security review (the lines in tests/unit/proxy.test.js): personal questions in everyday wordings,
+// texted codes and remote access, scam payments and pressure, medicine and emergency advice, spelled-out addresses.
+const MORE = [
+  /\bwhat(?:'s| is)\s+your\s+(?:first |last |full )?(?:name|address|phone|cell|number|birthday|age)\b|\bwhere do you live\b|\bwhich street\b[^.?!]*\byou\b|\bwhen were you born\b|\bhow old are you\b|\bspell your (?:first |last )?name\b/i,
+  /\b(?:code|digits|numbers)\b[^.?!]*\b(?:texted|sent you|text message|on your screen)\b|\b(?:read|tell|give)\b[^.?!]*\b(?:the|that|this) code\b|\bone-time (?:code|password|pin)\b|\btell me the (?:numbers|digits|code)\b/i,
+  /\b(?:anydesk|teamviewer|remote access|screen ?shar\w*)\b|\b(?:download|install)\b[^.?!]*\bapp\b/i,
+  /\bsend\b[^.?!]*\b(?:me|us)\b[^.?!]*(?:\$|\bdollars?\b|\bmoney\b)|\bsend (?:me |us )?money\b|\b(?:grandson|granddaughter|grandchild|son|daughter)\b[^.?!]*\b(?:jail|arrested|trouble|hospital)\b[^.]*\bmoney\b|\b(?:jail|arrested|bail)\b[\s\S]{0,60}\b(?:money|pay|dollars|gift ?cards?)\b/i,
+  /\b(?:stop|skip|double)\b[^.?!]*\b(?:medicine|medication|pills?|dose)\b|\bdouble dose\b|\bdon'?t (?:call 911|go to the (?:doctor|hospital|er|emergency room))\b|\b(?:no need|don'?t need) (?:a|to see a) doctor\b|\btake\b[^.?!]*\b(?:tylenol|advil|aspirin|ibuprofen|acetaminophen|aleve|benadryl|motrin|antibiotics?)\b/i,
+  /\b(?:dot|d o t)\s+(?:com|org|net|gov)\b|\bat\s+(?:gmail|yahoo|hotmail|outlook)\b|\bslash\b|\bw\s*w\s*w\b/i,
+  /\byour\s+(?:bank|passport|medicare|a-number|green card|id card|wallet|purse|keys)\b[^.?!]*\??|\bgive me your (?:card|wallet|purse|keys|money|phone)\b|\b(?:apple|google play|itunes|steam|amazon|target|walmart) (?:gift )?cards?\b[^.?!]*\b(?:numbers?|code)\b|\b(?:last|first) (?:four|4) digits\b|\bdon'?t tell (?:your family|anyone|your (?:son|daughter|children))\b|\b(?:irs|tax office)\b[^?!]*\b(?:owe|pay|arrest|police)\b|\bdon'?t need to read\b|\bjust sign\b|\balcohol\b/i,
+  /کد[^.؟!]*بخوان|قرص[^.؟!]*بخورید|شماره[ٔ‌]?\s*ی?\s*(?:کارت|حساب)|آدرس\s*خانه/,
+];
 export function unsafeText(text) {
   const s = spokenDigits(latinDigits(String(text || '')));
-  if (hasLink(s) || DOSE.test(s) || TOLLFREE.test(s) || SECRET.test(s) || ASK.test(s) || PAY.test(s)) return true;
+  if (hasLink(s) || DOSE.test(s) || TOLLFREE.test(s) || SECRET.test(s) || ASK.test(s) || PAY.test(s) || MORE.some((r) => r.test(s))) return true;
   return (s.match(/\d(?:[\s().,-]*\d){6,}/g) || []).some((run) => !/55501\d\d$/.test(run.replace(/\D/g, '')));
 }
 

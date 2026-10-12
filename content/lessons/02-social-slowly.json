@@ -51,7 +51,8 @@
     ],
     "wrong": "You repeat.",
     "right": "Could you repeat that, please?",
-    "why": "با «Could you» و «please» جمله مؤدبانه می‌شود."
+    "why": "با «Could you» و «please» جمله مؤدبانه می‌شود.",
+    "fresh": { "en": "Could you speak slowly, please?", "wrong": "You speak slowly.", "fa": "می‌شود لطفاً آهسته صحبت کنید؟" }
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }

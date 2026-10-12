@@ -62,6 +62,7 @@
       "fa": "لطفاً کمربندتان را ببندید.",
       "ph": "پْلیز فَسِن یُر سیت بِلت",
       "note": "این را مهماندار می‌گوید. حرف t در fasten خوانده نمی‌شود.",
+      "heard": true,
       "voice": "b",
       "chunks": [
         "Please fasten",
@@ -160,7 +161,8 @@
     ],
     "wrong": "I am think this is my seat.",
     "right": "I think this is my seat.",
-    "why": "بعد از «I» مستقیم «think» می‌آید، بدون am."
+    "why": "بعد از «I» مستقیم «think» می‌آید، بدون am.",
+    "fresh": { "en": "I think it's my turn.", "wrong": "I am think it's my turn.", "fa": "فکر می‌کنم نوبت من است." }
   },
   "review": {
     "status": "draft",

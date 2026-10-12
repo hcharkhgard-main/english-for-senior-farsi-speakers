@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import net from 'node:net';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { createHandler, validateTurn, parseOrigins } from '../../ai-proxy/handler.mjs';
+import { createHandler, validateTurn, parseOrigins, clientKey } from '../../ai-proxy/handler.mjs';
 import { createServer } from '../../ai-proxy/node-server.mjs';
 import { buildPersonas, PERSONAS_FILE } from '../../tools/make-personas.mjs';
 import { AI_MAX_TURNS, AI_LIMITS, liveAllowed, liveBlock, asksPersonal, personaOf, buildSystem, buildTranscript, buildPrompt, cleanReply, unsafeText } from '../../src/js/ai-prompt.js';
@@ -174,6 +174,31 @@ test('a body of any shape gets a clean 4xx, never a crash, and never reaches the
   assert.deepEqual(validateTurn({ id: OPEN_ID, said: ' Hi ' }, PERSONAS).turn, { id: OPEN_ID, persona: PERSONAS[OPEN_ID], level: 'beginner', history: [], said: 'Hi', last: false });
 });
 
+// QA round 3, security L1: one address cannot use the whole day's turns, and an IPv6 caller cannot escape the limit
+// by taking a new address of its own /64 network for every request.
+test('callers are counted by address, IPv6 by its /64 network', () => {
+  assert.equal(clientKey('203.0.113.7'), '203.0.113.7');
+  assert.equal(clientKey('::ffff:203.0.113.7'), '203.0.113.7');
+  assert.equal(clientKey('2001:db8:aa:bb:1:2:3:4'), '2001:db8:aa:bb::/64');
+  assert.equal(clientKey('2001:0db8:00aa:00bb::9'), '2001:db8:aa:bb::/64');
+  assert.equal(clientKey('[2001:db8:aa:bb::1]'), clientKey('2001:db8:aa:bb:ffff::2'));
+  assert.notEqual(clientKey('2001:db8:aa:bb::1'), clientKey('2001:db8:aa:bc::1'));
+  assert.equal(clientKey(''), 'unknown');
+});
+
+test('one address (or one IPv6 network) gets at most perIpDay turns a day', async () => {
+  let t = Date.UTC(2026, 0, 5, 8);
+  const h = handler({}, { now: () => t, limits: { perIp: 100, perIpDay: 3, perDay: 50, windowMs: 60000 } });
+  const ask = (ip) => h(post(turn), { ip }).then((r) => r.status);
+  const v6 = ['2001:db8:1:2::a', '2001:db8:1:2::b', '2001:db8:1:2:ffff::c', '2001:db8:1:2::d'];
+  const got = [];
+  for (const ip of v6) got.push(await ask(ip));
+  assert.deepEqual(got, [200, 200, 200, 429], 'four addresses of one /64 count as one caller');
+  assert.equal(await ask('2001:db8:9:9::a'), 200, 'another network is not affected');
+  t += 86400000;
+  assert.equal(await ask('2001:db8:1:2::e'), 200, 'a new day starts afresh');
+});
+
 test('invalid requests are not counted against the limits', async () => {
   const h = handler({}, { limits: { perIp: 2, perDay: 3, windowMs: 60000 } });
   for (let i = 0; i < 50; i++) {
@@ -298,6 +323,34 @@ test('replies are checked for shape, size and unsafe content', () => {
   assert.equal(d.correction_en, null); assert.equal(d.correction_fa, null); assert.deepEqual(d.suggestions, [{ en: 'Thanks.', fa: '' }]);
 });
 
+// QA round 3, security M3: 41 of these 46 lines got through the round-2 filter. Each is a shape of harm a model could
+// produce in a role-play with an older learner: a personal question in everyday words, a texted code, remote access,
+// a scam payment or its pressure, medicine or emergency advice, a spelled-out address. All are refused now; the
+// conversations' own lines (next test) and these everyday lines are not.
+test('the check on model replies refuses the round-3 attack lines, and still lets everyday lines through', () => {
+  const UNSAFE = [
+    "What's your name?", 'Where do you live?', 'Which street do you live on?', "What's your phone?", 'How old are you?', 'When were you born?',
+    'Tell me the code we just texted you.', 'Read me the six numbers on your screen.', 'Please send me 500 dollars today.',
+    'Pay with an Apple card from the store and tell me the numbers.', 'Download AnyDesk so I can help you.', 'Install the TeamViewer app now.',
+    'What is your Medicare ID?', "What's your bank?", 'What is the name of your bank?', 'Give me your card, I will keep it.',
+    'Your grandson is in jail. He needs money now.', "Don't tell your family about this call.", 'You owe the IRS. Pay today or police will come.',
+    'Take one pill twice a day.', 'Take a double dose if it hurts.', 'Stop taking your medicine.', "You don't need a doctor for chest pain.",
+    "Don't call 911, just rest.", 'Take 2 Tylenol.', 'Take two Advil now.', 'Take ibuprofen every 4 hours.', 'You can drink alcohol with it.',
+    'Call 415-867-5309.', 'Call (415) 867 53 09', 'Visit irs gov slash pay.', 'Go to w w w dot evil dot com.', 'example dot com', 'Email me at bob at gmail dot com.',
+    'Your account is locked. What is the one-time code?', 'What are the last four digits of your card?', "What's your mother's maiden name?",
+    "Sign here, you don't need to read it.", "Just sign it, it's fine.", 'Give me your passport.', 'What is your A-number?', "What's your green card number?",
+    'قرص را دو بار در روز بخورید.', 'کد را برای من بخوانید.', 'شماره‌ی کارتتان را بگویید.', 'آدرس خانه‌تان چیست؟',
+  ];
+  assert.equal(UNSAFE.length, 46);
+  for (const s of UNSAFE) assert.ok(unsafeText(s), `shown: ${s}`);
+  const HARMLESS = [
+    'Call me at 555-0199.', 'If this is a real emergency, call 911 now.', 'The gate code is two, five, eight, zero.', "That's twenty-five dollars.",
+    'Your total is eight dollars and fifty cents.', 'Is this a gift?', 'We have gift cards at the front.', 'Nice to meet you. My name is Linda.',
+    'The pharmacy is next to the bank.', 'Your table is ready.', 'Do you need a bag?', 'The bus comes twice a day.', 'Have a nice day!',
+  ];
+  for (const s of HARMLESS) assert.ok(!unsafeText(s), `refused: ${s}`);
+});
+
 // QA round 2, security M1: the lines a model must never get through to an older learner — reproduced by the
 // reviewer against the earlier filter — and the harmless lines that must not be lost with them.
 test('the check on model replies refuses scam-shaped, personal-detail and dose lines, and lets the conversations\' own lines through', () => {
@@ -411,7 +464,7 @@ test('the app accepts only an https proxy address (http for this computer only)'
   assert.equal(safeProxyUrl(' https://proxy.example/turn '), 'https://proxy.example/turn');
   assert.equal(safeProxyUrl('http://localhost:8787'), 'http://localhost:8787/');
   assert.equal(safeProxyUrl('http://127.0.0.1:8787/'), 'http://127.0.0.1:8787/');
-  for (const bad of ['http://proxy.example', 'http://localhost.evil.example', 'ftp://proxy.example', 'javascript:alert(1)', 'data:text/plain,x', '//proxy.example', 'proxy.example', 'https://user:pw@proxy.example', '', '   ', null, undefined, 5, {}]) assert.equal(safeProxyUrl(bad), '', String(bad));
+  for (const bad of ['http://proxy.example', 'http://localhost.evil.example', 'ftp://proxy.example', 'javascript:alert(1)', 'data:text/plain,x', '//proxy.example', 'proxy.example', 'https://user:pw@proxy.example', 'https://a.com;script-src', 'https://*.com', '', '   ', null, undefined, 5, {}]) assert.equal(safeProxyUrl(bad), '', String(bad));
 });
 
 const fakeApp = (over = {}) => ({ target: 'pwa', store: { state: { settings: { ai: true }, onboard: { level: 'none' } } }, ...over });

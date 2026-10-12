@@ -51,7 +51,8 @@
     ],
     "wrong": "My car no start.",
     "right": "My car won't start.",
-    "why": "وقتی وسیله‌ای کاری را که باید بکند نمی‌کند (روشن نمی‌شود، باز نمی‌شود)، بگویید «won't» و بعد فعل."
+    "why": "وقتی وسیله‌ای کاری را که باید بکند نمی‌کند (روشن نمی‌شود، باز نمی‌شود)، بگویید «won't» و بعد فعل.",
+    "fresh": { "en": "The window won't close.", "wrong": "The window no close.", "fa": "پنجره بسته نمی‌شود." }
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }

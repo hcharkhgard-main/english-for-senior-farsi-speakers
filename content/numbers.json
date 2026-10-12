@@ -149,6 +149,12 @@
     { "kind": "number", "say": "Take the number nine bus to Oak Street.", "show": "9", "alts": ["5", "19"], "fa": "با اتوبوس شمارهٔ نُه به خیابان اوک بروید." },
     { "kind": "number", "say": "Your seat is thirty C.", "show": "30C", "alts": ["13C", "30E"], "fa": "صندلی شما «30C» است." },
     { "kind": "number", "say": "The apartment is on Twelfth Street.", "show": "12th Street", "alts": ["20th Street", "2nd Street"], "fa": "آپارتمان در خیابان دوازدهم است." },
-    { "kind": "number", "say": "This lane is for fifteen items or fewer.", "show": "15 items", "alts": ["50 items", "5 items"], "fa": "این صندوق برای پانزده قلم جنس یا کمتر است." }
+    { "kind": "number", "say": "This lane is for fifteen items or fewer.", "show": "15 items", "alts": ["50 items", "5 items"], "fa": "این صندوق برای پانزده قلم جنس یا کمتر است." },
+
+    { "kind": "number", "say": "Go two blocks and turn right.", "show": "2 blocks", "alts": ["12 blocks", "20 blocks"], "fa": "دو چهارراه جلو بروید و به راست بپیچید." },
+    { "kind": "number", "say": "It's three blocks from here.", "show": "3 blocks", "alts": ["13 blocks", "30 blocks"], "fa": "از اینجا سه چهارراه فاصله دارد." },
+    { "kind": "number", "say": "The clinic is on Fourteenth Street.", "show": "14th Street", "alts": ["40th Street", "4th Street"], "fa": "درمانگاه در خیابان چهاردهم است." },
+    { "kind": "number", "say": "It's about fifteen minutes on foot.", "show": "15 minutes", "alts": ["50 minutes", "5 minutes"], "fa": "پیاده حدود پانزده دقیقه راه است." },
+    { "kind": "number", "say": "The pharmacy is at fifteen twenty Oak Street.", "show": "1520 Oak St.", "alts": ["5020 Oak St.", "1502 Oak St."], "fa": "داروخانه در خیابان اوک، پلاک ۱۵۲۰ است." }
   ]
 }

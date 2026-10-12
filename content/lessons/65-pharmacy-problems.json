@@ -14,8 +14,8 @@
     { "en": "I need a refill.", "fa": "دارویم تمام شده و دوباره لازم دارم.", "ph": "آی نید اِ ریفیل", "note": "refill یعنی دوباره گرفتنِ همان دارو با همان نسخه. قوطی دارو را همراهتان ببرید و نشان بدهید.", "chunks": ["I need", "a refill."] },
     { "en": "When will it be ready?", "fa": "کی آماده می‌شود؟", "ph": "وِن ویل ایت بی رِدی؟", "note": "جواب معمولاً یک زمان است: «in twenty minutes» (بیست دقیقهٔ دیگر) یا «tomorrow» (فردا).", "chunks": ["When will it", "be ready?"] },
     { "en": "Can you call my doctor?", "fa": "می‌شود به دکترم زنگ بزنید؟", "ph": "کَن یو کال مای داکتِر؟", "note": "وقتی نسخهٔ تازه لازم است، داروخانه معمولاً خودش با مطب دکتر تماس می‌گیرد. اگر نگفتند، با این جمله بخواهید.", "chunks": ["Can you call", "my doctor?"] },
-    { "en": "It's not ready yet. Come back in twenty minutes.", "fa": "هنوز آماده نیست. بیست دقیقهٔ دیگر برگردید.", "ph": "ایتس نات رِدی یِت. کام بَک این تْوِنتی مینِتس", "note": "این را داروساز می‌گوید. به عدد خوب گوش کنید؛ «twenty» (بیست) و «twelve» (دوازده) شبیه هم‌اند.", "voice": "m", "chunks": ["It's not ready yet.", "Come back", "in twenty minutes."] },
-    { "en": "You have no refills left.", "fa": "با این نسخه دیگر نمی‌توانید دارو بگیرید.", "ph": "یو هَو نُو ریفیلز لِفت", "note": "این را داروساز می‌گوید. یعنی دفعه‌هایی که می‌شد با این نسخه دارو گرفت تمام شده و دکتر باید نسخهٔ تازه بدهد.", "voice": "m", "chunks": ["You have", "no refills left."] }
+    { "en": "It's not ready yet. Come back in twenty minutes.", "fa": "هنوز آماده نیست. بیست دقیقهٔ دیگر برگردید.", "ph": "ایتس نات رِدی یِت. کام بَک این تْوِنتی مینِتس", "note": "این را داروساز می‌گوید. به عدد خوب گوش کنید؛ «twenty» (بیست) و «twelve» (دوازده) شبیه هم‌اند.", "heard": true, "voice": "m", "chunks": ["It's not ready yet.", "Come back", "in twenty minutes."] },
+    { "en": "You have no refills left.", "fa": "با این نسخه دیگر نمی‌توانید دارو بگیرید.", "ph": "یو هَو نُو ریفیلز لِفت", "note": "این را داروساز می‌گوید. یعنی دفعه‌هایی که می‌شد با این نسخه دارو گرفت تمام شده و دکتر باید نسخهٔ تازه بدهد.", "heard": true, "voice": "m", "chunks": ["You have", "no refills left."] }
   ],
   "dialogue": {
     "setting": "در داروخانه هستید و دارویتان تمام شده است.",
@@ -55,7 +55,8 @@
     ],
     "wrong": "I don't have no pills left.",
     "right": "I have no pills left.",
-    "why": "در فارسی می‌گوییم «هیچ قرصی ندارم» و دو بار منفی می‌کنیم، ولی در انگلیسی یک منفی کافی است: «I have no pills left.‎» یا «I don't have any pills left.‎»"
+    "why": "در فارسی می‌گوییم «هیچ قرصی ندارم» و دو بار منفی می‌کنیم، ولی در انگلیسی یک منفی کافی است: «I have no pills left.‎» یا «I don't have any pills left.‎»",
+    "fresh": { "en": "I have no money left.", "wrong": "I don't have no money left.", "fa": "دیگر پولی برایم نمانده است." }
   },
   "variants": [
     { "en": "You're out of refills.", "fa": "دفعه‌های تمدید این نسخه تمام شده است.", "like": "You have no refills left." },

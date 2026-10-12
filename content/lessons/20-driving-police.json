@@ -58,7 +58,8 @@
     ],
     "wrong": "Here my license.",
     "right": "Here is my license.",
-    "why": "کلمهٔ «is» نباید جا بیفتد."
+    "why": "کلمهٔ «is» نباید جا بیفتد.",
+    "fresh": { "en": "Here is my ID.", "wrong": "Here my ID.", "fa": "بفرمایید، این کارت شناسایی من است." }
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }

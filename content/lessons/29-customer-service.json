@@ -55,7 +55,8 @@
     ],
     "wrong": "I want talk to a person.",
     "right": "I want to talk to a person.",
-    "why": "بعد از want کلمهٔ «to» می‌آید: «I want to talk …»."
+    "why": "بعد از want کلمهٔ «to» می‌آید: «I want to talk …».",
+    "fresh": { "en": "I want to pay my bill.", "wrong": "I want pay my bill.", "fa": "می‌خواهم قبضم را بپردازم." }
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }

@@ -147,6 +147,8 @@ open and which are closed, and why. To close one by hand, add `"live": false` to
    If it runs behind your own reverse proxy, set `CLIENT_IP_HEADER` to the header that proxy writes the
    visitor's address into (for example `x-forwarded-for`); otherwise all visitors count as one for the
    per-visitor limit. Do not set it if requests can reach the server directly: the header could then be faked.
+   Also set a connection limit and a header timeout at that reverse proxy (for nginx: `limit_conn` and
+   `client_header_timeout 10s`): the Node server alone keeps a connection that sends its headers very slowly open.
 
    Settings (environment variables / `wrangler.toml` vars): `AI_API_KEY` (secret), `ALLOWED_ORIGINS`
    (comma-separated https origins), optional `AI_MODEL` (default `claude-haiku-4-5-20251001`),
@@ -176,19 +178,25 @@ proxy again. `npm test` fails while `ai-proxy/personas.json` is missing or out o
   shape are refused. So the service cannot be used as a general chatbot: the most a stranger can obtain
   is short in-role replies ("The milk is in aisle five.") for the listed everyday scenes.
 - **Replies are checked** before they are shown, and a reply that fails is dropped: wrong shape; a web or
-  e-mail address; a phone number that is not a 555-01xx practice number (in digits, spelled out, or
-  toll-free with letters); a medicine dose; the name of a secret (PIN, password, verification code, card,
-  account, Social Security or passport number, date of birth, home address) or a request for the learner's
-  name, address, phone number, birthday or e-mail; gift-card codes, wire transfers and crypto. This is a
-  filter of patterns (`unsafeText` in `src/js/ai-prompt.js`, with its test lists in
+  e-mail address, also spelled out ("bob at gmail dot com"); a phone number that is not a 555-01xx practice
+  number (in digits, spelled out, or toll-free with letters); a medicine dose, or advice to stop, skip or
+  double a medicine, to take a named painkiller, not to call 911 or not to see a doctor; the name of a secret
+  (PIN, password, verification code, card, account, Social Security or passport number, date of birth, home
+  address); a question for the learner's own details in the usual wordings ("What's your name?", "Where do
+  you live?", "When were you born?", "How old are you?"); a texted or on-screen code; remote access
+  (AnyDesk, "download this app"); gift-card codes, wire transfers, crypto, "send me money", a grandchild in
+  jail who needs money, "don't tell your family", "just sign it". Exactly which lines are refused and which
+  must pass is pinned by the lists in `tests/unit/proxy.test.js`. This is a filter of patterns (`unsafeText` in `src/js/ai-prompt.js`, with its test lists in
   `tests/unit/proxy.test.js`), not of meaning: it stops the usual shapes of a harmful line, not every
   harmful sentence a model could write, and it has never been tried against a real model.
-- **A conversation ends** after 8 learner turns, enforced by the proxy as well as the app.
+- **A conversation ends** after 8 learner turns in the app; the proxy refuses a request that shows more than
+  8 learner turns, but a script can simply start a new conversation.
 - **The Origin check is not access control.** It stops other *websites* from using your service through
   their visitors' browsers. A script can send any `Origin` header it likes, and your proxy address is
   public (it is in `config.json`).
 - **The built-in limits slow abuse down; they do not stop it.** 30 answered turns per visitor address per
-  10 minutes and 600 per day for everybody together — but the counters are kept in memory, start again
+  10 minutes, 80 per visitor address per day (an IPv6 visitor is counted by its /64 network, since it can
+  take a new address in it for every request) and 600 per day for everybody together — but the counters are kept in memory, start again
   whenever the process or Worker restarts, and on Cloudflare each location counts on its own. Invalid
   requests are refused before they are counted and never reach the model.
 - **Therefore the provider's monthly spend limit is the cost control.** With it set, the worst case is

@@ -59,7 +59,8 @@
     ],
     "wrong": "I have appointment.",
     "right": "I have an appointment.",
-    "why": "قبل از appointment کلمهٔ «an» می‌آید."
+    "why": "قبل از appointment کلمهٔ «an» می‌آید.",
+    "fresh": { "en": "I have an appointment today.", "wrong": "I have appointment today.", "fa": "امروز وقت دارم." }
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }

@@ -5,10 +5,11 @@ import assert from 'node:assert/strict';
 import { loadContent } from '../../tools/content.mjs';
 import { blank, migrate } from '../../src/js/store.js';
 import { grade, INTERVALS, LESSON_BOX } from '../../src/js/srs.js';
-import { lessonOrder, shortPhrases, gistCount } from '../../src/js/learn.js';
+import { lessonOrder, shortPhrases, gistCount, heardOnly, holdsOwn, longGist, longPairs, partnerLines } from '../../src/js/learn.js';
 import { scoreSpeech, markWords } from '../../src/js/match.js';
 import { wordsOf } from '../../src/js/audiokey.js';
-import { plan, STEPS, WARM_FULL, WARM_SHORT, lessonMinutes, warmIds, variantWrong, lessonVariants, faAlike, enAlike, digitsOf } from '../../src/js/views/lesson.js';
+import { plan, STEPS, WARM_FULL, WARM_SHORT, lessonMinutes, warmIds, variantWrong, lessonVariants, faAlike, enAlike, digitsOf, screenId, sameScreen } from '../../src/js/views/lesson.js';
+import { normaliseLesson } from '../../tools/content.mjs';
 
 const content = JSON.parse(JSON.stringify(loadContent()));
 const order = lessonOrder(content);
@@ -278,4 +279,123 @@ test('respond: a second unsuitable answer, where a lesson names one, is a senten
     assert.ok(!L.respond.ok.some((o) => o.en === p.en || o.en.includes(p.en.replace(/[.?!]$/, ''))), `${L.id}: "${p.en}" is (part of) a good answer`);
     assert.notEqual(p.en, L.respond.off.en, `${L.id}: off2 repeats the first unsuitable answer`);
   }
+});
+
+// ---- development pass 4 (QA round 3) ---------------------------------------------------------------------------
+test('heard lines (M1): a line other people say is marked "heard" in the content, and only such lines are in another person\'s voice', () => {
+  const named = [['pharmacy-problems', "It's not ready yet. Come back in twenty minutes."], ['pharmacy-problems', 'You have no refills left.'], ['bus-transfer', 'You need the number forty.'], ['bus-transfer', "It's across the street."], ['on-the-plane', 'Please fasten your seat belt.']];
+  for (const [id, en] of named) { const p = content.lessons[id].phrases.find((x) => x.en === en); assert.ok(p && p.heard === true, `${id}: "${en}"`); assert.ok(heardOnly(content.lessons[id], p)); }
+  for (const L of lessons) for (const p of L.phrases) {
+    if (!L.listenFirst && p.voice !== 's') assert.ok(p.heard, `${L.id} ${p.id}: another person's voice without "heard"`);
+    if (L.listenFirst) assert.ok(heardOnly(L, p));
+    assert.ok(p.heard === undefined || p.heard === true, 'the loader gives true or nothing');
+  }
+  assert.ok(!heardOnly({ listenFirst: false }, { en: 'Hello.' }) && !heardOnly(null, null));
+});
+
+test('heard lines: the loader takes "heard": true, drops false, and reports a wrong shape or the slip "hear"', () => {
+  const base = JSON.parse(JSON.stringify(content.lessons[order[0]]));
+  const raw = { ...base, phrases: base.phrases.map((p) => { const { id, ...rest } = p; return rest; }), dialogue: { setting: base.dialogue.setting, lines: base.dialogue.lines.map((l) => [l.who, l.en, l.fa]) }, respond: { setting: base.respond.setting, them: [base.respond.them.en, base.respond.them.fa], ok: base.respond.ok.map((o) => [o.en, o.fa]), off: [base.respond.off.en, base.respond.off.fa, base.respond.off.why] }, task: base.task.map((t) => [t.fa, Number(t.answer.slice(1))]) };
+  delete raw.grammar; delete raw.variants; delete raw.grid;
+  raw.phrases[0].heard = true; raw.phrases[1].heard = false; raw.phrases[2].heard = 'yes'; raw.phrases[3].hear = true;
+  const problems = [];
+  const L = normaliseLesson(raw, problems);
+  assert.equal(L.phrases[0].heard, true);
+  assert.ok(!('heard' in L.phrases[1]) && !('heard' in L.phrases[2]) && !('hear' in L.phrases[3]));
+  assert.equal(problems.length, 2, problems.join(' / '));
+  assert.ok(problems.some((p) => /phrase 3: "heard" must be true or false/.test(p)) && problems.some((p) => /phrase 4: "hear" is not a field/.test(p)));
+});
+
+test('heard lines and own details are never built from tiles; a lesson with no other sentence of the right size builds none', () => {
+  for (const L of lessons) {
+    const P = plan(L, false, []);
+    const b = P.screens.find((x) => x.kind === 'build');
+    if (!b) continue;
+    const p = P.phrases[b.i];
+    assert.ok(!heardOnly(L, p), `${L.id}: builds "${p.en}", a line other people say`);
+    assert.ok(!holdsOwn(p), `${L.id}: builds "${p.en}", the sample person's details`);
+  }
+  // the reviewer's examples (QA round 3, M2)
+  const built = (id) => { const P = plan(content.lessons[id], false, []); const b = P.screens.find((x) => x.kind === 'build'); return b ? P.phrases[b.i].en : null; };
+  assert.ok(built('my-name') && !/Maryam|Ahmadi|A-H-M/.test(built('my-name')), built('my-name'));
+  assert.equal(built('phone-appointment'), "I'd like to make an appointment.");
+  assert.ok(!/Maryam|Ahmadi|sixty-five/.test(built('my-numbers') || ''));
+});
+
+test('warm-up questions never ask a sentence that holds the sample person\'s details', () => {
+  const s = blank(); s.onboard.done = true;
+  for (const id of order.slice(0, 10)) { s.done[id] = { t: 1, n: 1 }; for (const p of content.lessons[id].phrases) s.srs[`p:${id}:${p.id}`] = { b: 2, d: 100, n: 1, l: 96 }; }
+  for (let k = 0; k < 10; k++) for (const key of warmIds(s, content, 101 + k, order[10])) {
+    const [, lid, pid] = key.split(':');
+    assert.ok(!holdsOwn(content.lessons[lid].phrases.find((p) => p.id === pid)), key);
+  }
+});
+
+test('listening grows (M7): in the last stage one "what did they say?" is a longer turn of two lines; never in stages 1 and 2', () => {
+  let n3 = 0;
+  for (const L of lessons) for (const short of [false, true]) {
+    const gists = plan(L, short, []).screens.filter((x) => x.kind === 'gist');
+    const long = gists.filter((x) => x.long);
+    if (L.stage < 3 || !gists.length || !longPairs(L).length) { assert.equal(long.length, 0, L.id); continue; }
+    n3++;
+    assert.equal(long.length, 1, `${L.id}: one longer turn`);
+    assert.equal(long[0], gists[gists.length - 1], `${L.id}: the last one`);
+  }
+  assert.ok(n3 >= 16, `stage 3 lessons with a longer turn (full and short): ${n3 / 2}`);
+});
+
+test('the longer turn: two of the other person\'s lines one after the other; each wrong answer changes one half', () => {
+  let checked = 0;
+  for (const L of lessons.filter((x) => partnerLines(x).length >= 3)) for (const seed of [0.11, 0.52, 0.93]) for (const g of [0, 1]) {
+    const G = longGist(L, seed, g);
+    if (!longPairs(L).length) { assert.equal(G, null, L.id); continue; }
+    const all = partnerLines(L);
+    assert.equal(G.lines.length, 2);
+    assert.equal(all.indexOf(G.lines[1]), all.indexOf(G.lines[0]) + 1, `${L.id}: two lines that follow each other`);
+    // said in one breath: not a question first, not an answer to the learner second, three words or more each
+    assert.ok(!/\?\s*$/.test(G.lines[0].en) && !/^(yes|no|okay|sure|thank|of course)\b/i.test(G.lines[1].en), `${L.id}: ${G.lines.map((l) => l.en).join(' + ')}`);
+    for (const l of G.lines) assert.ok(l.en.split(/\s+/).length >= 3);
+    assert.equal(G.options.length, 3);
+    assert.equal(G.options.filter((o) => o.right).length, 1);
+    const [a, b] = G.lines.map((l) => l.fa.trim());
+    assert.equal(G.options.find((o) => o.right).fa, `${a} ${b}`);
+    for (const o of G.options.filter((x) => !x.right)) {
+      assert.ok(o.fa.startsWith(a + ' ') !== o.fa.endsWith(' ' + b), `${L.id}: a wrong answer keeps exactly one half: ${o.fa}`);
+      assert.notEqual(o.fa, `${a} ${b}`);
+    }
+    assert.equal(new Set(G.options.map((o) => o.fa)).size, 3, L.id);
+    checked++;
+  }
+  assert.ok(checked > 100);
+  assert.equal(longGist({ dialogue: { lines: [{ who: 'them', en: 'A b c.', fa: 'الف' }, { who: 'you', en: 'D.', fa: 'د' }] }, phrases: [] }, 0.5), null);
+});
+
+test('a saved place is the screen itself (L3): a lesson that changed length in an update reopens on the same question', () => {
+  const L = content.lessons['phone-appointment'] || lessons.find((x) => (x.variants || []).length >= 3);
+  const P = plan(L, false, WARM);
+  const at = P.screens.findIndex((x) => x.kind === 'respond');
+  const saved = screenId(P.screens[at]);
+  assert.deepEqual(saved, { kind: 'respond' });
+  // the same lesson with one "other words" question fewer: the respond question moves one place up
+  const fewer = { ...L, variants: (L.variants || []).slice(1) };
+  const Q = plan(fewer, false, WARM);
+  const now = Q.screens.findIndex((x) => sameScreen(x, saved));
+  assert.equal(Q.screens[now].kind, 'respond');
+  assert.ok(now !== at || lessonVariants(fewer).length === lessonVariants(L).length);
+  // every screen of every lesson is found again by its id, and only that screen
+  for (const M of lessons.slice(0, 30)) for (const short of [false, true]) {
+    const S = plan(M, short, WARM).screens;
+    S.forEach((x, i) => { assert.equal(S.findIndex((y) => sameScreen(y, screenId(x))), i, `${M.id} ${short} ${i} ${x.kind}`); });
+  }
+  // the saved form survives storage; a damaged one is dropped and the number is used
+  const s = blank();
+  s.at.a = { pos: 5, short: false, t: 1, scr: { kind: 'variant', v: 1 } };
+  s.at.b = { pos: 5, short: false, t: 1, scr: { kind: 'variant', v: 'x' } };
+  s.at.c = { pos: 5, short: false, t: 1, scr: { kind: '<b>', i: 1 } };
+  s.at.d = { pos: 5, short: false, t: 1, scr: { kind: 'warm', k: 0, key: 'p:social-hello:p2' } };
+  const m = migrate(JSON.parse(JSON.stringify(s)));
+  assert.deepEqual(m.at.a.scr, { kind: 'variant', v: 1 });
+  assert.ok(!('scr' in m.at.b) && !('scr' in m.at.c));
+  assert.deepEqual(m.at.d.scr, { kind: 'warm', k: 0, key: 'p:social-hello:p2' });
+  assert.equal(m.at.b.pos, 5);
 });

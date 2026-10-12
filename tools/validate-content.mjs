@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { loadContent, audioRequests, VOICES, ROOT } from './content.mjs';
 import { wordsOf } from '../src/js/audiokey.js';
-import { partnerLines } from '../src/js/learn.js';
+import { partnerLines, shortPhrases } from '../src/js/learn.js';
 import { OWN_KINDS } from '../src/js/own.js';
 
 const content = loadContent();
@@ -55,6 +55,7 @@ for (const n of content.notes) warn('curriculum', n);
 for (const st of content.stages) if (![1, 2, 3].includes(st.id)) err('curriculum', `stage id "${st.id}" (word levels and the app expect 1, 2, 3)`);
 if (!content.essentials.length) err('curriculum', 'no essential first lessons (the first stage needs at least its first two lessons)');
 for (const id of content.essentials) { if (!content.lessons[id]) err('curriculum', `essentials lists unknown lesson "${id}"`); else if (content.lessons[id].stage !== 1) err('curriculum', `essential lesson "${id}" must be in stage 1`); }
+for (const id of content.always) { if (!content.lessons[id]) err('curriculum', `always lists unknown lesson "${id}"`); else if (content.essentials.includes(id)) warn('curriculum', `"${id}" is in both essentials and always`); }
 if (!content.essentials.some((id) => content.lessons[id] && content.lessons[id].scenario === 'emergency')) warn('curriculum', 'no emergency lesson among the essential first lessons');
 
 for (const L of Object.values(content.lessons)) {
@@ -77,7 +78,18 @@ for (const L of Object.values(content.lessons)) {
     // "own": the learner's own details in this sentence — every entry must be words of the sentence itself
     for (const o of p.own || []) if (!hasWords(p.en, o)) err(P, `"own" names "${o}", which is not a word of "${p.en}"`);
     if (p.own && new Set(p.own).size !== p.own.length) err(P, '"own" names a word twice');
+    // "heard": a line other people say. In a lesson where the learner speaks, a sentence in another person's voice
+    // must say so, or the app would ask the learner to say it and to recall it from Farsi (QA round 3, M1).
+    if (!L.listenFirst && p.voice !== 's' && !p.heard) err(P, `is said in another person's voice ("${p.voice}") but has no "heard": true — the learner would be asked to say it`);
+    if (p.heard && p.voice === 's') warn(P, '"heard": true, but it is played in the learner\'s own voice ("s"): give it the voice of the person who says it');
+    if (p.heard && p.own) err(P, '"heard" and "own" together: the learner\'s own details are in sentences they say');
   });
+  if (!L.listenFirst) {
+    const sayable = L.phrases.filter((p) => !p.heard);
+    if (sayable.length < 3) warn(W, `only ${sayable.length} of its sentences are for the learner to say: a lesson of lines to understand should be "listenFirst"`);
+    L.task.forEach((t, i) => { const p = L.phrases.find((x) => x.id === t.answer); if (p && p.heard) warn(W, `task ${i + 1} is answered by a line other people say ("heard"): the task should ask what that person means`); });
+    if (shortPhrases(L).every((p) => p.heard)) err(W, 'the short lesson would have only lines other people say');
+  }      // (in a listenFirst lesson every sentence is heard; "heard" there is allowed and changes nothing)
   if (L.mission) { isFa(`${W} mission`, L.mission, { allowLatin: true }); if (L.mission.length > 220) warn(W, 'long mission (one short sentence is meant)'); }
   else warn(W, 'no mission (the small real-life task shown when the lesson is finished)');
   if (L.variants) {

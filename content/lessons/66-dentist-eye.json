@@ -55,7 +55,8 @@
     ],
     "wrong": "I need a new glasses.",
     "right": "I need new glasses.",
-    "why": "در فارسی «عینک» مفرد است، ولی در انگلیسی «glasses» جمع است و «a» نمی‌گیرد. اگر بخواهید بگویید «یک عینک»، بگویید «a pair of glasses»."
+    "why": "در فارسی «عینک» مفرد است، ولی در انگلیسی «glasses» جمع است و «a» نمی‌گیرد. اگر بخواهید بگویید «یک عینک»، بگویید «a pair of glasses».",
+    "fresh": { "en": "I need reading glasses.", "wrong": "I need a reading glasses.", "fa": "عینک مطالعه لازم دارم." }
   },
   "variants": [
     { "en": "Open your mouth wide, please.", "fa": "لطفاً دهانتان را کاملاً باز کنید.", "like": "Okay. Please sit back and open wide." },

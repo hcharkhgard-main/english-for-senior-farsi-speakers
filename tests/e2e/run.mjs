@@ -10,11 +10,16 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { execFileSync, spawn } from 'node:child_process';
+import { uiText } from './strings.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const shots = process.argv.includes('--shots') ? process.argv[process.argv.indexOf('--shots') + 1] : path.join(ROOT, 'tests/e2e/shots');
 fs.mkdirSync(shots, { recursive: true });
 const PORT = +(process.env.PORT || 8137), SITE = process.env.HAMRAH_SITE ? path.resolve(process.env.HAMRAH_SITE) : path.join(ROOT, 'site'), URL0 = `http://localhost:${PORT}/`;
+// interface text and content, read from the built site (strings.mjs): a wording change in content/ui.fa.json does not break the suite
+const { T: UI, P: UIP, re: UIRE, content: CONTENT } = uiText(SITE);
+const RP_STORE = CONTENT.roleplays.find((r) => r.id === 'rp-store'), MILK = RP_STORE.turns[0].replies.find((r) => /milk/.test(r.en));
+const RP_MED = CONTENT.roleplays.find((r) => r.id === 'rp-medicine');
 const server = spawn(process.execPath, [path.join(ROOT, 'tools/serve.mjs'), SITE, String(PORT)], { stdio: 'ignore' });
 await new Promise((r) => setTimeout(r, 700));
 
@@ -64,21 +69,21 @@ try {
   await page.waitForSelector('h1');
   check('page is Farsi, right-to-left', (await page.evaluate(() => document.documentElement.lang + document.documentElement.dir)) === 'fartl');
   await shot('01-onboarding');
-  check('onboarding can be skipped', await page.getByText('بدون جواب دادن شروع می‌کنم').isVisible());
+  check('onboarding can be skipped', await page.getByText(UI('onb.skip')).isVisible());
   check('the emergency phrases are one tap away during onboarding', (await page.locator('.topbar .tb-sos').count()) === 1);
   await page.locator('.opt').first().click(); await page.waitForTimeout(TAP_GAP);
-  check('onboarding shows which question it is and lets the learner go back', (await page.getByText('سؤال ۲ از ۳').count()) === 1 && (await page.getByText('سؤال قبلی').count()) === 1);
+  check('onboarding shows which question it is and lets the learner go back', (await page.getByText(UI('onb.count', { n: '۲', all: '۳' })).count()) === 1 && (await page.getByText(UI('onb.back')).count()) === 1);
   await page.locator('.opt').first().click(); await page.waitForTimeout(TAP_GAP);
-  check('onboarding asks at most three questions', (await page.getByText('سؤال ۳ از ۳').count()) === 1 && (await page.locator('.tile').count()) >= 6);
+  check('onboarding asks at most three questions', (await page.getByText(UI('onb.count', { n: '۳', all: '۳' })).count()) === 1 && (await page.locator('.tile').count()) >= 6);
   await page.locator('.tile').nth(2).click(); await page.waitForTimeout(TAP_GAP);
-  check('onboarding ends by saying where the learner starts', (await page.getByText('از اینجا شروع می‌کنیم').count()) === 1);
-  await page.getByText('شروع کنیم').click();
+  check('onboarding ends by saying where the learner starts', (await page.getByText(UI('onb.plan.title')).count()) === 1);
+  await page.getByText(UI('onb.start')).click();
   await page.waitForSelector('.choice');
   check('whatever was answered, the first lesson is lesson 1', await page.evaluate(() => window.hamrah.nextLesson().id === window.hamrah.order[0]));
   await page.waitForTimeout(TAP_GAP);
   await shot('02-home');
   check('home shows exactly four main choices', (await page.locator('.choice').count()) === 4);
-  check('home choices are in Farsi', (await page.locator('.choice .t').allInnerTexts()).join('|') === 'درس امروز|تمرین مکالمه|یادگیری کلمات|موقعیت‌های روزمره');
+  check('home choices are in Farsi', (await page.locator('.choice .t').allInnerTexts()).join('|') === ['home.lesson', 'home.talk', 'home.words', 'home.places'].map((k) => UI(k)).join('|'));
   { const o = await overflow(); check('nothing sticks out of a 390px screen (home)', o.length === 0, o.join(' ; ')); }
   const small = await page.evaluate(() => [...document.querySelectorAll('button')].filter((b) => { const r = b.getBoundingClientRect(); return r.width && (r.height < 44 || r.width < 44); }).map((b) => b.textContent.trim().slice(0, 20)));
   check('every button on home is at least 44px', small.length === 0, small.join(', '));
@@ -96,10 +101,10 @@ try {
   const title = await page.locator('h1').first().innerText();
   await shot('03-lesson-intro');
   check('the very first lesson already offers the short lesson', (await page.locator('main .switch').count()) === 1);
-  check('the lesson says honestly how long it takes (a range of minutes, not "about 7")', /حدود [۰-۹]+ تا [۰-۹]+ دقیقه/.test(await page.locator('main').innerText()), (await page.locator('main .muted.small').first().innerText()).slice(0, 40));
+  check('the lesson says honestly how long it takes (a range of minutes, not "about 7")', new RegExp(UI('lesson.about', { min: UI('lesson.minutes', { lo: '[۰-۹]+', hi: '[۰-۹]+' }) }).split('.')[0]).test(await page.locator('main').innerText()), (await page.locator('main .muted.small').first().innerText()).slice(0, 40));
   await next();
   await shot('04-phrase');
-  check('the sentence card carries the optional «حالا شما بگویید» button (no separate speaking screens)', (await page.locator('main .mic-btn').count()) === 1 && (await page.locator('main .mic-btn').innerText()).includes('حالا شما بگویید'));
+  check('the sentence card carries the optional «حالا شما بگویید» button (no separate speaking screens)', (await page.locator('main .mic-btn').count()) === 1 && (await page.locator('main .mic-btn').innerText()).includes(UI('say.title')));
   const dirs = await page.evaluate(() => { const e = document.querySelector('.en-line'), f = document.querySelector('.fa-line'); return [getComputedStyle(e).direction, getComputedStyle(f).direction, getComputedStyle(e).fontFamily]; });      // (the list starts with the app's own digits, then the high-legibility face)
   check('English is left-to-right, Farsi right-to-left', dirs[0] === 'ltr' && dirs[1] === 'rtl', dirs.slice(0, 2).join(' / '));
   check('English uses the high-legibility typeface', /^"?Hamrah Digits"?, "?Atkinson Hyperlegible"?/.test(dirs[2]) && await page.evaluate(() => document.fonts.check('700 28px "Atkinson Hyperlegible"')), dirs[2].slice(0, 60));
@@ -119,24 +124,24 @@ try {
 
   // leave mid-lesson and come back: the app offers to continue
   await next(); await next();
-  await page.locator('.tb-btn', { hasText: 'خانه' }).click();
+  await page.locator('.tb-btn', { hasText: UI('nav.home') }).click();
   await page.waitForSelector('.choice'); await page.waitForTimeout(TAP_GAP);
-  check('home offers to continue the unfinished lesson', (await page.locator('.choice .s').first().innerText()).includes('ادامهٔ درس'));
+  check('home offers to continue the unfinished lesson', (await page.locator('.choice .s').first().innerText()).includes(UIP('home.lesson.resume')));
   await page.reload(); await page.waitForSelector('.choice');
-  check('progress survives closing and reopening', (await page.locator('.choice .s').first().innerText()).includes('ادامهٔ درس'));
+  check('progress survives closing and reopening', (await page.locator('.choice .s').first().innerText()).includes(UIP('home.lesson.resume')));
   await page.locator('.choice').first().click();
   await page.waitForSelector('.progress'); await page.waitForTimeout(TAP_GAP);
-  check('lesson resumes at the same place', (await page.locator('.progress .lbl').innerText()).includes('۳ از ۵'), await page.locator('.progress .lbl').innerText());
+  check('lesson resumes at the same place', (await page.locator('.progress .lbl').innerText()).includes(`۳ ${UI('lesson.of')} ۵`), await page.locator('.progress .lbl').innerText());
 
-  check('inside a lesson the top bar says «خروج از درس» and the bottom bar «قبلی»', (await page.locator('.topbar .tb-btn').first().innerText()).trim() === 'خروج از درس' && (await page.locator('.bottombar .btn').first().innerText()).trim() === 'قبلی');
+  check('inside a lesson the top bar says «خروج از درس» and the bottom bar «قبلی»', (await page.locator('.topbar .tb-btn').first().innerText()).trim() === UI('lesson.leave') && (await page.locator('.bottombar .btn').first().innerText()).trim() === UI('nav.prev'));
   // (the walk starts on the third sentence card; counting it, the intro and the two cards before it, four screens have been seen)
   let guard = 0, screens = 4, sawSay = false, sawQuiz = 0, sawDialogue = false, sawGrammar = false, sawGist = 0, sawSayScreen = false, grammarHidden = null, grammarShown = null;
   while (!(await page.locator('.big-check').count()) && guard++ < 60) {
     if (guard > 1) screens++;
-    const grammar = (await page.getByText('یک نکتهٔ کوچک').count()) > 0;
+    const grammar = (await page.getByText(UI('grammar.eyebrow')).count()) > 0;
     // the grammar check is a real one: the mistake and the right form are not shown side by side until it is answered
     if (grammar) { sawGrammar = true; grammarHidden = (await page.locator('main s').count()) === 0; await shot('06-grammar'); }
-    if (await page.getByText('او چه می‌گوید؟').count()) sawGist += (await page.locator('main [lang="en"]').count()) === 0 ? 1 : 0;
+    if (await page.getByText(UI('gist.title')).count()) sawGist += (await page.locator('main [lang="en"]').count()) === 0 ? 1 : 0;
     if (await page.locator('.opt').count()) { sawQuiz += (await solve()) ? 1 : 0; }
     if (grammar) grammarShown = (await page.locator('main s').count()) === 1;
     if (await page.locator('.mic-btn').count()) { sawSay = true; if (!(await page.locator('.phrase, .opt').count())) sawSayScreen = true; }
@@ -153,25 +158,29 @@ try {
   check('finished lesson is recorded and its phrases queued for review', Object.keys(st.done).length === 1 && Object.keys(st.srs).length >= 5 && Object.keys(st.at).length === 0);
   // (two lines of the dialogue — or one, plus "the same thing in other words" where the lesson has such questions)
   check('the lesson asked what the other person said, without showing the text', sawGist >= 2 && sawGist <= 4, `"what did they say?" screens: ${sawGist}`);
-  check('the end of the lesson offers the conversation that practises it', await page.evaluate(() => { const c = window.hamrah.content, id = Object.keys(window.hamrah.store.state.done)[0], rp = c.roleplays.find((r) => r.id === c.practice[id]); return !!rp && [...document.querySelectorAll('main .btn')].some((b) => b.textContent.includes(rp.title)); }));
+  check('the end of the lesson offers the conversation that practises it', await page.evaluate(() => { const c = window.hamrah.content, id = Object.keys(window.hamrah.store.state.done)[0], rp = c.roleplays.find((r) => r.id === c.practice[id]); return !!rp && [...document.querySelectorAll('.bottombar .btn-primary')].some((b) => b.textContent.includes(rp.title)); }));
 
   // ---- conversation practice ---------------------------------------------------------------------
-  await page.locator('.tb-btn', { hasText: 'خانه' }).click(); await page.waitForTimeout(TAP_GAP);
+  await page.locator('.tb-btn', { hasText: UI('nav.home') }).click(); await page.waitForTimeout(TAP_GAP);
   await page.locator('.choice').nth(1).click();
   await page.waitForSelector('.item');
-  check('conversation list offers many situations', (await page.locator('.item').count()) >= 15, String(await page.locator('.item').count()));
+  // the conversations of the learner's own stage first; the other stages one tap away
+  const ownStage = await page.locator('.item').count();
+  check('the conversation list starts with the learner\'s own stage, the others one tap away', ownStage >= 5 && ownStage < 20 && (await page.locator('[data-others]').count()) === 1, String(ownStage));
   await page.waitForTimeout(TAP_GAP);
-  await page.getByText('در فروشگاه').first().click(); await page.waitForTimeout(TAP_GAP);
-  await page.getByText('شروع گفت‌وگو').click();
+  await page.locator('[data-others]').click(); await page.waitForTimeout(TAP_GAP);
+  check('conversation list offers many situations', (await page.locator('.item').count()) >= 15 && (await page.locator('[data-others]').count()) === 0, String(await page.locator('.item').count()));
+  await page.getByText(RP_STORE.title).first().click(); await page.waitForTimeout(TAP_GAP);
+  await page.getByText(UI('rp.start')).click();
   await page.waitForSelector('.bubble.them');
   await shot('08-roleplay');
   await page.waitForTimeout(TAP_GAP);
   // under the answers of every turn: "Could you repeat that, please?" — the line is said again and the turn stays
   const againBtn = page.locator('.again-btn');
   const againText = (await againBtn.count()) === 1 ? await againBtn.innerText() : '';
-  check('every turn offers "Could you repeat that, please?" with its meaning', /Could you repeat that, please\?/.test(againText) && /دوباره بگویید/.test(againText), againText.replace(/\n/g, ' / '));
+  check('every turn offers "Could you repeat that, please?" with its meaning', /Could you repeat that, please\?/.test(againText) && againText.includes(CONTENT.ui.fixed.repeat.fa), againText.replace(/\n/g, ' / '));
   await againBtn.click(); await page.waitForTimeout(700);
-  check('…a tap has the line said again and the turn stays where it is', (await page.locator('.bubble.you').count()) === 0 && (await page.locator('.note', { hasText: 'خواستید دوباره بگوید' }).count()) === 1 && (await page.locator('.replies .opt').count()) === 3);
+  check('…a tap has the line said again and the turn stays where it is', (await page.locator('.bubble.you').count()) === 0 && (await page.locator('.note', { hasText: UI('rp.repeat.again') }).count()) === 1 && (await page.locator('.replies .opt').count()) === 3);
   // a line that carries something to act on is asked about before the answers appear, with its text hidden
   const asking = 'main > .stack:not(.replies) .opt';
   await page.locator('.replies .opt', { hasText: 'milk' }).click(); await page.waitForTimeout(700);
@@ -180,11 +189,11 @@ try {
   check('after "The milk is in aisle five …" the learner is asked what was said: three choices, no answers yet, the text hidden, the line can be heard again at both speeds',
     ask1.card && ask1.options === 3 && ask1.replies === 0 && ask1.masked && !ask1.readable && ask1.listen === 2, JSON.stringify(ask1));
   await shot('08b-roleplay-asked');
-  await page.locator(asking, { hasText: 'راهروی نُه' }).click(); await page.waitForTimeout(200);
+  await page.locator(asking, { hasText: MILK.thenCheck.wrong[0] }).click(); await page.waitForTimeout(200);
   check('a wrong tap only sets that choice aside', (await page.locator('.opt.is-tried').count()) === 1 && (await page.locator('[data-check="shown"]').count()) === 0 && (await page.locator('.replies .opt').count()) === 0);
-  await page.locator(asking, { hasText: 'کنار نان' }).click(); await page.waitForTimeout(700);
+  await page.locator(asking, { hasText: MILK.thenCheck.wrong[1] }).click(); await page.waitForTimeout(700);
   const shown = await page.evaluate(() => { const c = document.querySelector('[data-check="shown"]'); return c ? c.textContent : ''; });
-  check('after two tries the line and its meaning are shown, with a button to go on', shown.includes('The milk is in aisle five') && shown.includes('شیر در راهروی پنج است') && shown.includes('ادامهٔ گفت‌وگو'), shown.slice(0, 90));
+  check('after two tries the line and its meaning are shown, with a button to go on', shown.includes('The milk is in aisle five') && shown.includes(MILK.then.fa) && shown.includes(UI('rp.check.go')), shown.slice(0, 90));
   await page.locator('[data-go]').click(); await page.waitForTimeout(700);
   check('…and the conversation goes on with the next line and its answers', (await page.locator('.replies .opt').count()) === 2 && (await page.locator('[data-check]').count()) === 0 && (await page.locator('.bubble.you').count()) === 1);
   await page.locator('.replies .opt', { hasText: 'How much' }).click(); await page.waitForTimeout(700);
@@ -204,39 +213,39 @@ try {
   check('conversation shows both speakers', (await page.locator('.bubble.you').count()) >= 4 && (await page.locator('.bubble.them').count()) >= 5);
   check('when it is over every line can be read, and nothing is counted or scored', await page.evaluate(() => !document.querySelector('.phone-mask') && !/\d+\s*(از|\/)\s*\d+|امتیاز|نمره/.test(document.querySelector('main').textContent)));
   // the second time through, the partner is heard first: the text is behind «نمایش متن»
-  await page.getByText('یک بار دیگر').click(); await page.waitForTimeout(TAP_GAP);
-  await page.getByText('شروع گفت‌وگو').click(); await page.waitForSelector('.bubble.them'); await page.waitForTimeout(TAP_GAP);
-  check('a conversation done before starts with the text hidden and a «نمایش متن» button', (await page.locator('.bubble.them .phone-mask').count()) === 1 && (await page.locator('.bubble.them .btn', { hasText: 'نمایش متن' }).count()) === 1);
+  await page.getByText(UI('rp.again')).click(); await page.waitForTimeout(TAP_GAP);
+  await page.getByText(UI('rp.start')).click(); await page.waitForSelector('.bubble.them'); await page.waitForTimeout(TAP_GAP);
+  check('a conversation done before starts with the text hidden and a «نمایش متن» button', (await page.locator('.bubble.them .phone-mask').count()) === 1 && (await page.locator('.bubble.them .btn', { hasText: UI('rp.showText') }).count()) === 1);
   await page.locator('.replies .opt').first().click(); await page.waitForTimeout(600);
-  await page.locator('.tb-btn', { hasText: 'خانه' }).click();
+  await page.locator('.tb-btn', { hasText: UI('nav.home') }).click();
   await page.waitForSelector('.sheet');
-  check('leaving a conversation half-way asks first, with staying as the first choice', (await page.locator('.sheet .btn').first().innerText()).trim() === 'می‌مانم و ادامه می‌دهم');
+  check('leaving a conversation half-way asks first, with staying as the first choice', (await page.locator('.sheet .btn').first().innerText()).trim() === UI('rp.leave.stay'));
   await page.waitForTimeout(700);
-  await page.locator('.sheet .btn', { hasText: 'بله، بیرون می‌روم' }).click();
+  await page.locator('.sheet .btn', { hasText: UI('rp.leave.go') }).click();
   await page.waitForSelector('.choice'); await page.waitForTimeout(TAP_GAP);
 
   // the 911 practice: "this is only practice" is part of the top bar, so it stays in sight to the last line
   await page.evaluate(() => window.hamrah.go('rp.rp-emergency')); await page.waitForTimeout(TAP_GAP);
-  await page.getByText('شروع گفت‌وگو').click(); await page.waitForSelector('.bubble.them'); await page.waitForTimeout(TAP_GAP);
+  await page.getByText(UI('rp.start')).click(); await page.waitForSelector('.bubble.them'); await page.waitForTimeout(TAP_GAP);
   const bannerInSight = (word) => page.evaluate((word) => { const b = document.querySelector('.topbar .tb-banner'); if (!b) return false; const r = b.getBoundingClientRect(); return r.top >= 0 && r.bottom <= innerHeight && r.height > 20 && b.textContent.includes(word); }, word);
   let inSight = true, taps = 0, scrolled = 0;
-  while (!(await page.locator('.big-check').count()) && taps++ < 24) { inSight = inSight && await bannerInSight('هیچ تماس واقعی'); scrolled = Math.max(scrolled, await page.evaluate(() => Math.round(scrollY))); await walk(); await page.waitForTimeout(700); }
-  check('in the 911 practice «این فقط تمرین است. هیچ تماس واقعی گرفته نمی‌شود.» stays in sight from the first line to the last', inSight && await bannerInSight('هیچ تماس واقعی') && (await page.locator('.big-check').count()) === 1 && scrolled > 200, `taps ${taps}, page scrolled to ${scrolled}`);
+  while (!(await page.locator('.big-check').count()) && taps++ < 24) { inSight = inSight && await bannerInSight(UI('rp.practiceOnly')); scrolled = Math.max(scrolled, await page.evaluate(() => Math.round(scrollY))); await walk(); await page.waitForTimeout(700); }
+  check('in the 911 practice «این فقط تمرین است. هیچ تماس واقعی گرفته نمی‌شود.» stays in sight from the first line to the last', inSight && await bannerInSight(UI('rp.practiceOnly')) && (await page.locator('.big-check').count()) === 1 && scrolled > 200, `taps ${taps}, page scrolled to ${scrolled}`);
   await shot('08c-roleplay-911');
   // the listening round for medicine instructions: the lesson's own sample sentences, each one asked about, under its note
   await page.evaluate(() => window.hamrah.go('home', { reset: true })); await page.waitForTimeout(TAP_GAP);
   await page.evaluate(() => window.hamrah.go('rp.rp-medicine')); await page.waitForTimeout(TAP_GAP);
   const medNote = await page.evaluate(() => (document.querySelector('main .note.is-danger') || { textContent: '' }).textContent);
-  await page.getByText('شروع گفت‌وگو').click(); await page.waitForSelector('.bubble.them'); await page.waitForTimeout(TAP_GAP);
+  await page.getByText(UI('rp.start')).click(); await page.waitForSelector('.bubble.them'); await page.waitForTimeout(TAP_GAP);
   const medFirst = await page.evaluate(() => ({ asked: !!document.querySelector('[data-check]'), replies: document.querySelectorAll('.replies .opt').length }));
   let medSight = true; taps = 0;
-  while (!(await page.locator('.big-check').count()) && taps++ < 30) { medSight = medSight && await bannerInSight('برچسب'); await walk(); await page.waitForTimeout(700); }
+  while (!(await page.locator('.big-check').count()) && taps++ < 30) { medSight = medSight && await bannerInSight(RP_MED.banner); await walk(); await page.waitForTimeout(700); }
   const med = await page.evaluate(() => { const a = window.hamrah, R = a.content.roleplays.find((r) => r.id === 'rp-medicine'), L = a.content.lessons['medicine-instructions'];
     const own = new Set([...L.phrases.map((p) => p.en), ...L.dialogue.lines.map((l) => l.en), L.respond.them.en, ...L.respond.ok.map((o) => o.en)]);
     const said = R.turns.flatMap((t) => [t.them.en, ...t.replies.flatMap((r) => [r.en, ...(r.then ? [r.then.en] : [])])]);
     return { asked: a.ui.rp.log.filter((m) => m.asked).length, foreign: said.filter((x) => !own.has(x)), practice: a.content.practice['medicine-instructions'], flags: [R.safetyCritical, R.scripted] }; });
   check('the medicine listening round asks about each of its five sentences before any answer, under the note about the learner\'s own label',
-    medFirst.asked && medFirst.replies === 0 && med.asked === 5 && medSight && medNote.includes('برچسب') && (await page.locator('.big-check').count()) === 1, JSON.stringify({ medFirst, asked: med.asked, medSight }));
+    medFirst.asked && medFirst.replies === 0 && med.asked === 5 && medSight && medNote.includes(RP_MED.note.slice(0, 30)) && (await page.locator('.big-check').count()) === 1, JSON.stringify({ medFirst, asked: med.asked, medSight }));
   check('…it uses only sentences of the lesson, is scripted and safety-critical, and the lesson leads to it', med.foreign.length === 0 && med.practice === 'rp-medicine' && med.flags.every(Boolean), JSON.stringify(med));
   await page.evaluate(() => window.hamrah.go('home', { reset: true })); await page.waitForSelector('.choice'); await page.waitForTimeout(TAP_GAP);
 
@@ -256,7 +265,7 @@ try {
   await page.waitForSelector('.sheet');
   check('the microphone is explained before the phone asks, and is not opened yet', (await page.evaluate(() => window.__micOpened())) === 0);
   await page.waitForTimeout(700);                       // the explanation sheet ignores taps for its first moment (double-tap safety)
-  await page.getByText('قبول، شروع کنیم').click();
+  await page.getByText(UI('mic.yes')).click();
   const t0 = Date.now();
   await page.waitForSelector('main .result-title, main .note.is-care', { timeout: 120000 }).catch(() => {});
   await shot('09-pronunciation');
@@ -266,7 +275,7 @@ try {
   check('the result is brought into sight, between the top bar and the bar with «بعدی»', await page.evaluate(() => { const r = document.querySelector('main .result-title').getBoundingClientRect(), top = document.querySelector('.topbar').getBoundingClientRect().bottom, bar = document.querySelector('.bottombar').getBoundingClientRect().top; return r.top >= top - 1 && r.bottom <= bar + 1; }));
   check('the microphone is released as soon as the recording ends', (await page.evaluate(() => window.__micLive())) === 0 && (await page.evaluate(() => window.__micOpened())) === 1);
   // start again and leave while it is listening: the microphone must close with the screen
-  await page.getByText('دوباره می‌گویم').click();
+  await page.getByText(UI('say.again')).click();
   await page.waitForSelector('.mic-btn.is-live', { timeout: 15000 }).catch(() => {});
   const liveWhileListening = await page.evaluate(() => window.__micLive());
   await page.evaluate(() => window.hamrah.home());
@@ -276,9 +285,9 @@ try {
   // ---- review queue --------------------------------------------------------------------------------
   await page.evaluate(() => window.hamrah.go('review'));
   await page.waitForSelector('.phrase');
-  await page.getByText('معنی را ببینم').click();
+  await page.getByText(UI('rev.show')).click();
   await shot('10-review');
-  await page.getByText('بلد بودم').click(); await page.waitForTimeout(TAP_GAP);
+  await page.getByText(UI('rev.knew')).click(); await page.waitForTimeout(TAP_GAP);
   check('review moves to the next item and schedules the first', await page.evaluate(() => Object.values(window.hamrah.store.state.srs).some((e) => e.n === 1 && e.d > window.hamrah.today())));
   check('the card answered is counted towards today\'s first set', await page.evaluate(() => { const n = window.hamrah.store.state.newDay; return n.d === window.hamrah.today() && n.c === 1; }));
 
@@ -308,7 +317,7 @@ try {
     c = await card();
     check('a word known once is heard first: no English on the card', c.kind === 'hear' && c.en === '' && !c.pic, JSON.stringify({ ...c, text: '' }));
     await tapBtn(T.word); c = await card();
-    check('«نمایش کلمه» shows the English without the meaning', c.en === 'water' && !c.text.includes('آب'), c.en);
+    check('«نمایش کلمه» shows the English without the meaning', c.en === 'water' && !c.text.includes(CONTENT.vocab.find((w) => w.en === 'water').fa), c.en);
     await tapBtn(T.show); await tapBtn(T.knew);
     check('…and knowing it moves it on', (await entry('water')).b === 3);
 
@@ -352,12 +361,12 @@ try {
   // first a wrong order: the app must not accept it, and must say so gently
   for (const w of [...targetWords].reverse()) await page.locator('.tiles-pool .wtile:not(.is-used)', { hasText: new RegExp('^' + w + '$', 'i') }).first().click();
   check('sentence builder does not accept a wrong word order', (await page.locator('.tiles-line.is-right').count()) === 0 && (await page.locator('.note.is-care').count()) === 1);
-  await page.getByText('پاک کردن').click();
+  await page.getByText(UI('build.clear')).click();
   for (const w of targetWords) await page.locator('.tiles-pool .wtile:not(.is-used)', { hasText: new RegExp('^' + w + '$', 'i') }).first().click();
   await shot('10b-sentence-builder');
   check('sentence builder accepts the right order and shows the sentence', (await page.locator('.tiles-line.is-right').count()) === 1 && (await page.locator('.en-line').innerText()).replace(/\s+/g, ' ').includes('Where is the bank?'));   // each word is its own button
   await next();
-  await page.getByText('کمک: کلمهٔ بعدی').click();
+  await page.getByText(UI('build.hint')).click();
   check('the hint places the next correct word', (await page.locator('.tiles-line .wtile').count()) === 1);
   // «شنیدن عددها»: hear a price, a time or a phone number and tap what was said
   await page.waitForTimeout(TAP_GAP);
@@ -377,7 +386,7 @@ try {
   await page.evaluate(() => { const P = HTMLMediaElement.prototype.play; if (!P.__counted) { const f = function () { this.addEventListener('ended', () => { window.__ended = (window.__ended || 0) + 1; }, { once: true }); return P.call(this); }; f.__counted = true; HTMLMediaElement.prototype.play = f; } window.hamrah.go('lesson.my-numbers'); });
   await page.waitForSelector('.progress'); await next();
   const warmLbl = await page.locator('.progress .lbl').innerText();
-  check('a lesson after the first opens with «این را به انگلیسی چطور می‌گویید؟» on a sentence of an earlier lesson', warmLbl.includes('یادآوری') && (await page.getByText('این را به انگلیسی چطور می‌گویید؟').count()) === 1 && (await page.locator('main .fa-line').count()) === 1, warmLbl.replace(/\n/g, ' | '));
+  check('a lesson after the first opens with «این را به انگلیسی چطور می‌گویید؟» on a sentence of an earlier lesson', warmLbl.includes(UI('step.warm')) && (await page.getByText(UI('review.how')).count()) === 1 && (await page.locator('main .fa-line').count()) === 1, warmLbl.replace(/\n/g, ' | '));
   check('…with three English answers, each with its own play button', (await page.locator('main .opt').count()) === 3 && (await page.locator('main .opt-wrap .mini-play').count()) === 3 && (await page.locator('main .opt .en').count()) === 3);
   await solve();
   const warmed = await page.evaluate(() => { const a = window.hamrah, s = a.store.state, at = s.at['my-numbers']; return { saved: at && Array.isArray(at.warm) ? at.warm.length : 0, graded: !!(at && at.warm && s.srs[at.warm[0]] && s.srs[at.warm[0]].l === a.today()) }; });
@@ -392,7 +401,7 @@ try {
       await page.locator('main .wcell').first().click();
       gridPlays = await page.waitForFunction(() => window.__ended > 0, null, { timeout: 15000 }).then(() => true).catch(() => false);
     }
-    if (sawVariant == null && await page.getByText('همان حرف، با کلمه‌های دیگر').count()) { sawVariant = (await page.locator('main [lang="en"]').count()) === 0 && (await page.locator('main .opt').count()) === 3; await shot('10e-other-words'); }
+    if (sawVariant == null && await page.getByText(UI('variant.eyebrow')).count()) { sawVariant = (await page.locator('main [lang="en"]').count()) === 0 && (await page.locator('main .opt').count()) === 3; await shot('10e-other-words'); }
     if (await page.locator('.opt').count()) await solve();
     if (sawGrid && (sawVariant != null || !hasVariants)) break;
     await next();
@@ -405,7 +414,7 @@ try {
   await page.waitForSelector('.progress');
   let gistAt = -1, talkAt = -1;
   for (let i = 0; i < 20 && talkAt < 0; i++) {
-    if (gistAt < 0 && await page.getByText('او چه می‌گوید؟').count()) gistAt = i;
+    if (gistAt < 0 && await page.getByText(UI('gist.title')).count()) gistAt = i;
     if (await page.locator('.bubble').count() > 3) talkAt = i;
     if (await page.locator('.opt').count()) await solve();
     await next();
@@ -415,7 +424,7 @@ try {
   await page.waitForTimeout(TAP_GAP);
   await page.evaluate(() => { const a = window.hamrah; a.store.update((s) => { s.at['store-where'] = { pos: 99, short: false, t: Date.now() }; }); a.go('lesson.store-where'); });
   await page.waitForTimeout(TAP_GAP);
-  check('a saved place beyond the end of the lesson opens on its last screen before the end, not on an error', (await page.locator('.progress').count()) === 1 && (await page.locator('[data-next]').count()) === 1 && (await page.locator('.big-check').count()) === 0 && (await page.getByText('مشکلی پیش آمد').count()) === 0);
+  check('a saved place beyond the end of the lesson opens on its last screen before the end, not on an error', (await page.locator('.progress').count()) === 1 && (await page.locator('[data-next]').count()) === 1 && (await page.locator('.big-check').count()) === 0 && (await page.getByText(UI('err.title')).count()) === 0);
   // the learner's own name in place of the sample: the result of the speaking check as the screen shows it
   await page.evaluate(() => { const a = window.hamrah; a.store.update((s) => { s.at = {}; }); a.go('lesson.social-hello'); });
   await page.waitForSelector('.progress');
@@ -427,7 +436,7 @@ try {
     const result = scoreSpeech(sample.en, sample.en.replace(/[.!?]/g, '').replace(sample.own.join(' '), 'Hossein'), { own: sample.own });
     await page.evaluate(({ key, result }) => { const a = window.hamrah; a.ui[key] = { phase: 'result', result, clip: null, level: 0, pct: 0 }; a.render(); }, { key: `say${ownAt + 1}`, result });
     await shot('10f-own-name');
-    check('saying one\'s own name instead of the sample is a success that says so, with no word to "say again"', result.verdict === 'good' && (await page.locator('main .note.is-good').first().innerText()).includes('اطلاعات خودتان را گفتید') && (await page.locator('main .w.is-weak').count()) === 0 && (await page.locator('main .result-title').count()) === 1, `${sample.en} / verdict ${result.verdict}`);
+    check('saying one\'s own name instead of the sample is a success that says so, with no word to "say again"', result.verdict === 'good' && (await page.locator('main .note.is-good').first().innerText()).match(UIRE('say.own.heard')) && (await page.locator('main .w.is-weak').count()) === 0 && (await page.locator('main .result-title').count()) === 1, `${sample.en} / verdict ${result.verdict}`);
   }
   await page.evaluate(() => { const a = window.hamrah; a.store.update((s) => { s.at = {}; }); a.home(); });
   await page.waitForTimeout(TAP_GAP);
@@ -436,7 +445,7 @@ try {
   await page.evaluate(() => window.hamrah.go('settings'));
   await page.waitForSelector('.seg');
   const before = await page.evaluate(() => parseFloat(getComputedStyle(document.documentElement).fontSize));
-  await page.getByRole('button', { name: 'خیلی بزرگ' }).click();
+  await page.getByRole('button', { name: UI('set.size.4') }).click();
   const after = await page.evaluate(() => parseFloat(getComputedStyle(document.documentElement).fontSize));
   check('text size control enlarges everything by 50%', Math.abs(after / before - 1.5) < 0.02, `${before}px → ${after}px`);
   { const o = await overflow(); check('nothing sticks out at the largest text size (settings)', o.length === 0, o.join(' ; ')); }
@@ -461,8 +470,8 @@ try {
   await page.evaluate(() => window.hamrah.go('settings'));
   await page.waitForFunction(() => navigator.serviceWorker && navigator.serviceWorker.controller, null, { timeout: 15000 }).catch(() => {});
   await page.waitForTimeout(TAP_GAP);
-  await page.getByText('دانلود همهٔ درس‌ها').click();
-  await page.getByText('همهٔ درس‌ها و صداها روی این گوشی است').waitFor({ timeout: 120000 }).then(() => check('all lessons download for offline use', true)).catch(() => check('all lessons download for offline use', false));
+  await page.locator('main button', { hasText: UIP('off.get').split('(')[0].trim() }).click();      // (the button: the note above it names it too)
+  await page.getByText(UI('off.all')).waitFor({ timeout: 120000 }).then(() => check('all lessons download for offline use', true)).catch(() => check('all lessons download for offline use', false));
   // No connection for real: the browser is told it is offline AND the server is stopped. (setOffline alone does not
   // cut the service worker's own requests, so a file missing from the stored app would be fetched and go unnoticed.)
   // Nothing after this point may need the server.

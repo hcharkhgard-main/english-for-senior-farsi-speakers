@@ -12,8 +12,8 @@
     { "en": "Which bus goes to the hospital?", "fa": "کدام اتوبوس به بیمارستان می‌رود؟", "ph": "ویچ باس گُوز تو دِ هاسپیتِل؟", "note": "به‌جای the hospital می‌توانید مقصد خودتان را بگویید: downtown (مرکز شهر)، the library (کتابخانه).", "chunks": ["Which bus", "goes to", "the hospital?"] },
     { "en": "Where do I transfer?", "fa": "کجا باید اتوبوس عوض کنم؟", "ph": "وِر دو آی تْرَنسفِر؟", "note": "transfer یعنی عوض کردن اتوبوس یا قطار. در بعضی شهرها به بلیتی که با آن می‌شود اتوبوس عوض کرد هم transfer می‌گویند.", "chunks": ["Where do I", "transfer?"] },
     { "en": "When is the next bus?", "fa": "اتوبوس بعدی کی می‌آید؟", "ph": "وِن ایز دِ نِکست باس؟", "note": "جواب معمولاً این‌طور است: «In ten minutes.‎» (ده دقیقهٔ دیگر) یا «Every fifteen minutes.‎» (هر پانزده دقیقه).", "chunks": ["When is", "the next bus?"] },
-    { "en": "You need the number forty.", "fa": "باید اتوبوس شمارهٔ چهل را سوار شوید.", "ph": "یو نید دِ نامبِر فُرتی", "note": "این را راننده یا رهگذر می‌گوید. به عدد خوب گوش کنید: «forty» یعنی چهل و «fourteen» یعنی چهارده.", "voice": "a", "chunks": ["You need", "the number forty."] },
-    { "en": "It's across the street.", "fa": "آن طرف خیابان است.", "ph": "ایتس اَکْراس دِ سْتْریت", "note": "این را هم از دیگران می‌شنوید. یعنی باید از خیابان رد شوید. برعکسش: «on this side» (همین طرف).", "voice": "a", "chunks": ["It's across", "the street."] }
+    { "en": "You need the number forty.", "fa": "باید اتوبوس شمارهٔ چهل را سوار شوید.", "ph": "یو نید دِ نامبِر فُرتی", "note": "این را راننده یا رهگذر می‌گوید. به عدد خوب گوش کنید: «forty» یعنی چهل و «fourteen» یعنی چهارده.", "heard": true, "voice": "a", "chunks": ["You need", "the number forty."] },
+    { "en": "It's across the street.", "fa": "آن طرف خیابان است.", "ph": "ایتس اَکْراس دِ سْتْریت", "note": "این را هم از دیگران می‌شنوید. یعنی باید از خیابان رد شوید. برعکسش: «on this side» (همین طرف).", "heard": true, "voice": "a", "chunks": ["It's across", "the street."] }
   ],
   "dialogue": {
     "setting": "می‌خواهید به بیمارستان بروید. سوار اتوبوس شده‌اید و از راننده می‌پرسید.",
@@ -37,7 +37,8 @@
       ["The number forty. Thank you.", "شمارهٔ چهل. ممنون."],
       ["When is the next bus?", "اتوبوس بعدی کی می‌آید؟"]
     ],
-    "off": ["Which bus goes to the hospital?", "کدام اتوبوس به بیمارستان می‌رود؟", "راننده همین را جواب داد: اتوبوس شمارهٔ چهل، آن طرف خیابان. کافی است تشکر کنید یا سؤال بعدی‌تان را بپرسید."]
+    "off": ["Which bus goes to the hospital?", "کدام اتوبوس به بیمارستان می‌رود؟", "راننده همین را جواب داد: اتوبوس شمارهٔ چهل، آن طرف خیابان. کافی است تشکر کنید یا سؤال بعدی‌تان را بپرسید."],
+    "off2": 4
   },
   "task": [
     ["اتوبوس شما تا بیمارستان نمی‌رود و باید وسط راه سوار اتوبوس دیگری شوید. می‌خواهید بدانید کجا.", 2],
@@ -53,7 +54,8 @@
     ],
     "wrong": "Which bus go to the hospital?",
     "right": "Which bus goes to the hospital?",
-    "why": "بعد از «Which bus» فعل «s» می‌گیرد: «goes». در این سؤال «does» لازم نیست؛ ولی در سؤالی مثل «Does this bus go to Main Street?‎» چون «does» هست، «go» بدون «s» می‌آید."
+    "why": "بعد از «Which bus» فعل «s» می‌گیرد: «goes». در این سؤال «does» لازم نیست؛ ولی در سؤالی مثل «Does this bus go to Main Street?‎» چون «does» هست، «go» بدون «s» می‌آید.",
+    "fresh": { "en": "Which bus goes to the airport?", "wrong": "Which bus go to the airport?", "fa": "کدام اتوبوس به فرودگاه می‌رود؟" }
   },
   "variants": [
     { "en": "You want the forty.", "fa": "باید سوار اتوبوس چهل شوید.", "like": "You need the number forty." },

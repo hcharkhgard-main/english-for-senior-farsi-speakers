@@ -164,7 +164,8 @@
     ],
     "wrong": "You are Sarah?",
     "right": "Are you Sarah?",
-    "why": "در فارسی سؤال را با آهنگ صدا می‌سازیم، ولی در انگلیسی جای کلمه‌ها عوض می‌شود: «Are you …؟»"
+    "why": "در فارسی سؤال را با آهنگ صدا می‌سازیم، ولی در انگلیسی جای کلمه‌ها عوض می‌شود: «Are you …؟»",
+    "fresh": { "en": "Are you the driver?", "wrong": "You are the driver?", "fa": "شما راننده هستید؟" }
   },
   "review": {
     "status": "draft",

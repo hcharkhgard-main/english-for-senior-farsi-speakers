@@ -67,6 +67,7 @@
         "You look lost. Can I help you?",
         "Do you know this area?",
         "Do you want me to repeat the directions?",
+        "Can I help you with anything else?",
         "Good luck! Have a nice day."
       ]
     },
@@ -249,6 +250,7 @@
     }
   },
   "excluded": {
+    "rp-911-questions": "safety-critical",
     "rp-airport": "safety-critical",
     "rp-bank": "safety-critical",
     "rp-benefits": "safety-critical",
@@ -261,6 +263,8 @@
     "rp-coffee": "the learner answers with their own details",
     "rp-condolence": "scripted",
     "rp-dentist": "safety-critical",
+    "rp-doctor-explains": "safety-critical",
+    "rp-door": "safety-critical",
     "rp-emergency": "safety-critical",
     "rp-er": "safety-critical",
     "rp-home": "asks for personal details",

@@ -13,7 +13,10 @@ node tools/validate-content.mjs | tail -1
 npm test 2>&1 | grep -E '^# (pass|fail)'
 if npm test 2>&1 | grep -q '^# fail [1-9]'; then echo "tests failed: not publishing"; exit 1; fi
 node tools/build.mjs --check
-git add -A
+# only what belongs to the project: a file left in the working folder (notes, scratch scripts, caches) is never published
+paths=(.github .gitignore LICENSE README.md THIRD-PARTY.md package.json package-lock.json ai-proxy content docs review site src tests tools audio-src/requests.verify.json)
+existing=(); for p in "${paths[@]}"; do if [ -e "$p" ] || git ls-files --error-unmatch "$p" >/dev/null 2>&1; then existing+=("$p"); fi; done
+git add -A -- "${existing[@]}"
 if git diff --cached --quiet; then echo "nothing to publish"; exit 0; fi
 git -c user.name="Hamrah" -c user.email="noreply@example.com" commit -q -m "$msg" \
   -m "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" \

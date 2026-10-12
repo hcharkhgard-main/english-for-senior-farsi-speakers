@@ -58,7 +58,8 @@
     ],
     "wrong": "I have sixty-five years.",
     "right": "I am sixty-five years old.",
-    "why": "در فارسی می‌گوییم «شصت و پنج سال دارم»، ولی در انگلیسی سن را با «I am» می‌گویند، نه با «I have»."
+    "why": "در فارسی می‌گوییم «شصت و پنج سال دارم»، ولی در انگلیسی سن را با «I am» می‌گویند، نه با «I have».",
+    "fresh": { "en": "My husband is seventy years old.", "wrong": "My husband has seventy years.", "fa": "شوهرم هفتاد سال دارد." }
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }

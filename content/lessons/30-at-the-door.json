@@ -52,7 +52,8 @@
     ],
     "wrong": "I no order this.",
     "right": "I didn't order this.",
-    "why": "برای منفیِ گذشته «didn't» می‌گوییم."
+    "why": "برای منفیِ گذشته «didn't» می‌گوییم.",
+    "fresh": { "en": "I didn't buy this.", "wrong": "I no buy this.", "fa": "من این را نخریده‌ام." }
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }

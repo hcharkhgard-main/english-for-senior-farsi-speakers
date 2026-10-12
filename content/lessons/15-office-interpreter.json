@@ -55,7 +55,8 @@
     ],
     "wrong": "What documents I need?",
     "right": "What documents do I need?",
-    "why": "در این سؤال‌ها (با What، Where و When) قبل از فعل می‌گوییم «do I»، نه فقط «I»."
+    "why": "در این سؤال‌ها (با What، Where و When) قبل از فعل می‌گوییم «do I»، نه فقط «I».",
+    "fresh": { "en": "What do I need to bring?", "wrong": "What I need to bring?", "fa": "چه چیزی باید بیاورم؟" }
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }

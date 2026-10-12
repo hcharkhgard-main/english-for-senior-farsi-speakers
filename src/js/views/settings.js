@@ -4,10 +4,16 @@ import { clipEn, listenBtn, miniPlay, faListen } from '../components.js';
 import { ASR_MB } from '../speech.js';
 import { MONTHS, YEARS, parseBorn, formatBorn, daysIn, ownLines } from '../own.js';
 
-// the same name the service worker uses (src/sw.js): one audio store per copy of the site
-const audioCache = () => `hamrah|${new URL('./', document.baseURI).pathname}|audio`;
-// Is this sound file on the phone? It may be in the audio store or — the first sounds, emergency phrases included — in the app's own store.
-const stored = async (address) => !!address && !!(await caches.match(new URL(address, document.baseURI).href, { ignoreSearch: true }));
+// A name or address goes into an English sentence (the learner's own sentences, the emergency page) only when it is
+// written in English letters: «مریم احمدی» inside "My name is …" cannot be read by the person who is helping.
+// Persian or Arabic digits are read as ordinary digits; any other Persian letter makes the value unusable there.
+const toLatinDigits = (x) => String(x || '').replace(/[۰-۹]/g, (d) => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g, (d) => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+export const farsiLetters = (x) => /[\u0600-\u06FF\u0750-\u077F\uFB50-\uFDFF\uFE70-\uFEFF]/.test(toLatinDigits(x));
+// one line, no full stop of its own at the end (the sentence adds one): "25 Oak St." -> "25 Oak St"
+export const tidy = (x) => toLatinDigits(x).replace(/\s+/g, ' ').replace(/[\s.,;:]+$/, '').trim();
+
+import { isStored } from '../stored.js';
+import { aheadParts } from '../ahead.js';
 
 // A row of choices where exactly one is on. The chosen one carries a tick as well as its colour.
 function seg(labelId, options, value, onpick) {
@@ -42,23 +48,35 @@ export function settingsView(app) {
     const box = h('section', { class: 'card' }, h('h2', null, t('off.title')));
     if (!can) box.append(note(t('off.unsupported'), 'care'));
     else {
-      if (ui.off == null) { ui.off = { have: 0, all: 0, busy: false }; countCached(audio).then((r) => { Object.assign(ui.off, r); app.render(); }); }
-      const { have, all, busy } = ui.off;
-      if (all) box.append(h('p', null, have >= all ? t('off.all') : t('off.some', { have: fnum(have), all: fnum(all) })));      // nothing is claimed until the phone has been checked
+      if (ui.off == null) { ui.off = { have: 0, all: 0, busy: false, parts: null }; countCached(app).then((r) => { Object.assign(ui.off, r); app.render(); }); }
+      const { have, all, busy, parts } = ui.off;
+      // nothing is claimed until the phone has been checked; then each part says "ready" or "not yet" in words, not by colour alone
+      if (all && have >= all) box.append(h('p', null, t('off.all')));
+      else if (parts) {
+        const mark = (ready) => { const i = icon(ready ? 'check' : 'wifiOff'); Object.assign(i.style, { width: '1.5rem', height: '1.5rem', color: ready ? 'var(--good)' : 'var(--ink-2)' }); return i; };
+        const row = (label, ready) => h('li', { class: 'row', style: 'align-items:center;gap:.5rem' }, mark(ready), h('span', { class: 'grow' }, label), h('strong', null, ready ? t('off.yes') : t('off.no')));
+        box.append(h('ul', { class: 'stack', 'data-offline-parts': '', style: 'list-style:none;padding:0;margin:0' },
+          row(t('off.part.sos'), parts.sos),
+          row(t('off.part.lessons', { have: fnum(parts.lessons[0]), all: fnum(parts.lessons[1]) }), parts.lessons[0] > 0),
+          row(t('off.part.review'), parts.review),
+          parts.numbers == null ? null : row(t('off.part.numbers'), parts.numbers),
+          parts.papers == null ? null : row(t('off.part.papers'), parts.papers)));
+      }
       box.append(h('p', { class: 'small muted' }, t('off.hint')));
       if (busy) box.append(h('div', { class: 'level' }, h('i', { style: `width:${all ? Math.round((have / all) * 100) : 0}%` })));
       // no button until the list of sounds has been read: without it there is nothing to download and no size to state
       else if (audio.index && (!all || have < all)) box.append(btn(t('off.get', { mb: fnum(Math.max(1, Math.round(audio.index.packs.reduce((s, p) => s + p.bytes, 0) / 1048576))) }), { cls: 'btn-primary', icon: 'download', block: true,
         onclick: async () => {
           if (!app.online) { toast(t('audio.offline')); return; }
+          const here = app.screen;
           ui.off.busy = true; app.render();
-          try {
-            const c = await caches.open(audioCache());
-            let have = 0;
-            for (const p of audio.index.packs) { const url = audio.packUrl(p.id); if (!(await stored(url))) await c.add(url); have++; ui.off.have = Math.max(ui.off.have, Math.min(ui.off.all, have)); app.render(); }
-            Object.assign(ui.off, await countCached(audio));
-            toast(t('off.done'));
-          } catch { toast(t('off.failed')); }
+          // every pack is checked before it is kept (audio.js): a Wi-Fi login page or a cut-off download is not stored, and is reported
+          const r = await audio.keep(audio.index.packs.map((p) => p.id), {
+            isStored: (p) => isStored(audio.packUrl(p.id), p.bytes),
+            onEach: (n, total) => { ui.off.have = Math.max(ui.off.have, Math.min(ui.off.all || total, n)); if (app.screen === here) app.render(); },
+          }).catch(() => ({ failed: [1] }));
+          Object.assign(ui.off, await countCached(app));
+          toast(r.failed.length ? t('off.failed') : t('off.done'));
           ui.off.busy = false; app.render();
         } }));
       box.append(note(t('off.not'), 'info', 'wifiOff'));
@@ -109,13 +127,27 @@ export function settingsView(app) {
   return { main };
 }
 
-async function countCached(audio) {
+// What is on the phone: all packs (have/all) and, for the parts the learner meets, whether their sounds are all there.
+async function countCached(app) {
+  const { audio, store, content } = app;
   try {
     await audio.loadIndex();
-    let have = 0;
-    for (const p of audio.index.packs) if (await stored(audio.packUrl(p.id))) have++;
-    return { have, all: audio.index.packs.length };
-  } catch { return { have: 0, all: 0 }; }
+    const idx = audio.index, ok = new Set();
+    for (const p of idx.packs) if (await isStored(audio.packUrl(p.id), p.bytes)) ok.add(p.id);
+    const all = (ids) => ids.every((id) => ok.has(id));
+    const ahead = aheadParts(store.state, content, idx, app.today());
+    const lessons = app.order.filter((id) => idx.deps && idx.deps['l-' + id]);
+    return {
+      have: ok.size, all: idx.packs.length,
+      parts: {
+        sos: ok.has('core'),
+        lessons: [lessons.filter((id) => all(idx.deps['l-' + id])).length, lessons.length],
+        review: ahead.review.length > 0 && all(ahead.review),
+        numbers: (content.numbers || []).length && idx.packs.some((p) => p.id === 'n-numbers') ? ok.has('n-numbers') : null,
+        papers: ahead.papers.length ? all(ahead.papers) : null,
+      },
+    };
+  } catch { return { have: 0, all: 0, parts: null }; }
 }
 
 // «اطلاعات من»: the learner's own name, address, phone number and date of birth, and a family member's number.
@@ -126,13 +158,17 @@ export function meView(app) {
   const { t, store } = app;
   const me = store.state.me;
   const MAX = 120;
-  const field = (key, label, hint, attrs = {}) => {
-    const input = h('input', { id: 'me-' + key, type: 'text', value: me[key] || '', autocomplete: 'off', maxlength: MAX, 'aria-describedby': `me-${key}-hint`,
+  const field = (key, label, hint, attrs = {}, latin = false) => {
+    // name and address: a gentle line under the field as soon as Persian letters are typed (shown, not redrawn: the keyboard stays open)
+    const warn = latin ? note(t('me.latinOnly'), 'care') : null;
+    if (warn) { warn.id = `me-${key}-latin`; warn.hidden = !farsiLetters(me[key]); }
+    const input = h('input', { id: 'me-' + key, type: 'text', value: me[key] || '', autocomplete: 'off', maxlength: MAX, 'aria-describedby': `me-${key}-hint${latin ? ` me-${key}-latin` : ''}`,
       oninput: (e) => {
         store.update((s) => { s.me[key] = e.target.value.slice(0, MAX); });
         if (e.target.value.length >= MAX) toast(t('me.tooLong'));          // the field stops taking letters: say so instead of cutting silently
+        if (warn) { const bad = farsiLetters(e.target.value); if (bad && warn.hidden) announce(t('me.latinOnly')); warn.hidden = !bad; }
       }, ...attrs });
-    return h('div', { class: 'field' }, h('label', { for: 'me-' + key }, label), input, h('p', { class: 'small muted', id: `me-${key}-hint` }, hint));
+    return h('div', { class: 'field' }, h('label', { for: 'me-' + key }, label), input, h('p', { class: 'small muted', id: `me-${key}-hint` }, hint), warn);
   };
   // date of birth: three lists to choose from — no typing. Month names are shown in Farsi with the English beside
   // them; days and years in the digits that are on the learner's ID card.
@@ -165,8 +201,8 @@ export function meView(app) {
     { label: t('reset.no'), cls: 'btn-primary' }]);
   const main = h('main', { class: 'wrap' }, h('h1', { class: 'section-title' }, t('me.title')), h('p', null, t('me.what')), note(t('me.private'), 'good', 'lock'),
     h('section', { class: 'card' },
-      field('name', t('me.name'), t('me.name.hint'), { class: 'en', dir: 'ltr', lang: 'en', autocapitalize: 'words' }),
-      field('address', t('me.address'), t('me.address.hint'), { class: 'en', dir: 'ltr', lang: 'en', autocapitalize: 'words' }),
+      field('name', t('me.name'), t('me.name.hint'), { class: 'en', dir: 'ltr', lang: 'en', autocapitalize: 'words' }, true),
+      field('address', t('me.address'), t('me.address.hint'), { class: 'en', dir: 'ltr', lang: 'en', autocapitalize: 'words' }, true),
       field('phone', t('me.phone'), t('me.phone.hint'), { class: 'en', dir: 'ltr', lang: 'en', inputmode: 'tel' })),
     h('section', { class: 'card' }, h('h2', null, t('me.born')), h('p', { class: 'small muted', id: 'me-born-hint' }, t('me.born.hint')),
       month.box, day.box, year.box, noDay, said),
@@ -180,14 +216,21 @@ export function meView(app) {
 export function sosView(app) {
   const { t, content, store } = app;
   const E = content.emergency, me = store.state.me;
-  const main = h('main', { class: 'wrap' }, h('h1', { class: 'section-title' }, t('sos.title')), note(E.intro, 'danger', 'sos'));
+  const main = h('main', { class: 'wrap' }, h('h1', { class: 'section-title' }, t('sos.title')));
+  // a name or address in Persian letters is treated as not filled in (the «وارد کردن اطلاعات خودم» button shows instead)
+  const usable = (x) => (x && !farsiLetters(x) ? tidy(x) : '');
   const fill = (p) => {
-    if (p.slot === 'name') return me.name ? `My name is ${me.name}.` : null;
-    if (p.slot === 'address') return me.address ? `My address is ${me.address}.` : null;
-    if (p.slot === 'contact') return me.contact ? `Please call my family: ${me.contact}` : null;
+    if (p.slot === 'name') return usable(me.name) ? `My name is ${usable(me.name)}.` : null;
+    if (p.slot === 'address') return usable(me.address) ? `My address is ${usable(me.address)}.` : null;
+    if (p.slot === 'contact') return tidy(me.contact) ? `Please call my family: ${tidy(me.contact)}` : null;
     return null;
   };
-  main.append(h('div', { class: 'stack' }, E.phrases.map((p) => {
+  // The first screen shows phrases, not explanations: "I need help." first, then the learner's own name, address and
+  // family number when they are filled in, then the rest in their usual order; the note about this page comes after
+  // the first three phrases (or after the learner's own ones).
+  const own = ['name', 'address', 'contact'].map((slot) => E.phrases.find((p) => p.slot === slot && fill(p))).filter(Boolean);
+  const order = [...E.phrases.slice(0, 1), ...own, ...E.phrases.slice(1).filter((p) => !own.includes(p))];
+  const cards = order.map((p) => {
     const mine = p.slot ? fill(p) : null;
     return h('section', { class: 'card' },
       h('div', { class: 'opt-wrap' }, miniPlay(app, clipEn(p.say || p.en, 's', 'n')), h('div', { class: 'grow' }, en(mine || p.en, 'p', 'en-line'), h('p', { class: 'fa-line' }, p.fa))),
@@ -195,7 +238,9 @@ export function sosView(app) {
       p.slot && mine ? note(t('sos.show'), 'info', 'ear') : null,      // the recording cannot know the learner's own name or address
       h('div', { class: 'row' }, listenBtn(app, clipEn(p.say || p.en, 's', 's'), { label: t('audio.slow'), cls: 'btn-ghost', ic: 'slow', small: true }), p.slot ? null : faListen(app, p.fa, t('audio.fa'))),
       store.state.settings.ph ? h('p', { class: 'ph-line' }, h('b', null, t('phrase.phLabel') + ' '), p.ph) : null);
-  })));
+  });
+  cards.splice(Math.min(Math.max(3, 1 + own.length), cards.length), 0, note(E.intro, 'danger', 'sos'));
+  main.append(h('div', { class: 'stack' }, cards));
   main.append(h('section', { class: 'card' }, h('h2', null, t('sos.tips')), h('ul', { class: 'steps' }, E.tips.map((x) => h('li', null, x)))));
   main.append(note(t('sos.noCall'), 'care'));
   return { main };

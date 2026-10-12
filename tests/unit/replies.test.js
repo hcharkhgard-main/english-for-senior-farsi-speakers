@@ -64,7 +64,7 @@ test('a reply selects itself, however it is written', () => {
 const asksToo = (r) => !!repairKind(r.en);
 const REQUESTS = ['rp-myinfo 6.2', 'rp-incoming 4.2', 'rp-insurance 4.2', 'rp-landlord 4.2', 'rp-rideshare 4.2', 'rp-delivery 4.2', 'rp-delivery-call 3.2', 'rp-maintenance 3.3', 'rp-tailor 2.2', 'rp-bridal 3.2', 'rp-groom 2.3',
   'rp-unhappy-customer 1.3', 'rp-airport 3.3', 'rp-traffic 2.2', 'rp-traffic 3.2', 'rp-support 3.2', 'rp-taxi 4.1', 'rp-directions 3.1', 'rp-emergency 3.6', 'rp-office 1.1',
-  'rp-benefits 1.1', 'rp-benefits 1.3', 'rp-benefits 2.2'];   // 1.1 asks what a letter means; 1.3 "My English is not good."; 2.2 "What does that mean?"
+  'rp-benefits 1.1', 'rp-benefits 1.3', 'rp-benefits 1.4', 'rp-benefits 2.2', 'rp-911-questions 5.3'];   // 1.1 asks what a letter means; 1.3 "My English is not good."; 1.4 asks for an interpreter; 2.2 "What does that mean?"
 
 test('the replies that are themselves requests for help are the ones we know', () => {
   const found = turns.flatMap(({ R, t, n }) => t.replies.map((r, i) => (asksToo(r) ? `${R.id} ${n}.${i + 1}` : null)).filter(Boolean));

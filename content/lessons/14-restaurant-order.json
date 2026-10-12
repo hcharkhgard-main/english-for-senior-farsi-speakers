@@ -58,7 +58,8 @@
     ],
     "wrong": "Give me water.",
     "right": "Can I have some water, please?",
-    "why": "«Give me» به انگلیسی تند و دستوری به گوش می‌رسد. «Can I have … please» مؤدبانه است."
+    "why": "«Give me» به انگلیسی تند و دستوری به گوش می‌رسد. «Can I have … please» مؤدبانه است.",
+    "fresh": { "en": "Can I have a menu, please?", "wrong": "Give me a menu.", "fa": "می‌شود لطفاً یک منو به من بدهید؟" }
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }

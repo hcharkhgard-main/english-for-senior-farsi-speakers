@@ -51,7 +51,8 @@
     ],
     "wrong": "Would you like come?",
     "right": "Would you like to come?",
-    "why": "بعد از «Would you like» اگر فعل بیاید، قبلش «to» می‌گوییم."
+    "why": "بعد از «Would you like» اگر فعل بیاید، قبلش «to» می‌گوییم.",
+    "fresh": { "en": "Would you like to have dinner with us?", "wrong": "Would you like have dinner with us?", "fa": "دوست دارید شام را با ما بخورید؟" }
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }

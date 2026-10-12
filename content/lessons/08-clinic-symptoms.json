@@ -60,7 +60,8 @@
     ],
     "wrong": "It start three days before.",
     "right": "It started three days ago.",
-    "why": "برای گذشته «started» می‌گوییم و برای «پیش» کلمهٔ «ago» را آخر می‌آوریم."
+    "why": "برای گذشته «started» می‌گوییم و برای «پیش» کلمهٔ «ago» را آخر می‌آوریم.",
+    "fresh": { "en": "It started two weeks ago.", "wrong": "It start two weeks before.", "fa": "از دو هفته پیش شروع شده است." }
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }

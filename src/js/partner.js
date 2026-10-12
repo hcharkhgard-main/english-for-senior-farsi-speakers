@@ -18,6 +18,7 @@ export function safeProxyUrl(value) {
     const u = new URL(value.trim());
     const local = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(u.hostname);
     if (u.username || u.password) return '';
+    if (!local && !/^[a-z0-9.-]+$/i.test(u.hostname)) return '';      // a plain host name only (the same rule as tools/build.mjs for the page's policy)
     return u.protocol === 'https:' || (u.protocol === 'http:' && local) ? u.href : '';
   } catch { return ''; }
 }

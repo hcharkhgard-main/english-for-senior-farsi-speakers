@@ -19,7 +19,7 @@ export function blank() {
     // «اطلاعات من»: the learner's own details. They never leave this phone. phone: the learner's own number;
     // contact: a family member's number; born: date of birth as "1955-12-14" (a part not chosen yet is 0) — see own.js
     me: { name: '', address: '', contact: '', phone: '', born: '' },
-    at: {},                     // lessonId -> { pos, short, t, seed, warm } — where the learner stopped in each lesson they have started
+    at: {},                     // lessonId -> { pos, scr, short, t, seed, warm } — where the learner stopped in each lesson they have started
     done: {},                   // lessonId -> { t, n }
     hard: {},                   // "lessonId:p2" -> times it needed another try
     rp: {},                     // roleplayId -> times finished
@@ -38,6 +38,14 @@ export function blank() {
 }
 
 const isObj = (x) => !!x && typeof x === 'object' && !Array.isArray(x);
+// a saved screen of a lesson: { kind, i?, j?, g?, v?, k?, key? } — anything else (damaged storage) is dropped
+function screenOf(x) {
+  if (!isObj(x) || typeof x.kind !== 'string' || !/^[a-z]{1,12}$/.test(x.kind)) return null;
+  const o = { kind: x.kind };
+  for (const f of ['i', 'j', 'g', 'v', 'k']) if (x[f] != null) { const n = Number(x[f]); if (!Number.isInteger(n) || n < 0 || n > 99) return null; o[f] = n; }
+  if (x.key != null) { if (typeof x.key !== 'string' || x.key.length > 80) return null; o.key = x.key; }
+  return o;
+}
 
 // Brings whatever was saved by an earlier build (or damaged by hand) into today's shape. Exported for the tests.
 export function migrate(s) {
@@ -50,6 +58,12 @@ export function migrate(s) {
   // the learner's own details are short texts, whatever was stored
   for (const k of Object.keys(b.me)) if (typeof b.me[k] !== 'string') b.me[k] = ''; else b.me[k] = b.me[k].slice(0, 200);
   b.cp = { n: Math.max(0, Math.floor(Number(b.cp.n)) || 0), t: Number(b.cp.t) || 0 };
+  // settings are only ever one of the choices Settings offers: a damaged text size (1e9) would make every screen,
+  // Settings too, unusable. Anything else goes back to the usual value; the switches are true or false.
+  const d = blank().settings, st = b.settings;
+  if (![1, 1.15, 1.3, 1.5].includes(Number(st.scale))) st.scale = d.scale; else st.scale = Number(st.scale);
+  if (![1, 0.88, 0.78].includes(Number(st.rate))) st.rate = d.rate; else st.rate = Number(st.rate);
+  for (const k of ['ph', 'faVoice', 'auto', 'ai', 'micOk']) st[k] = typeof st[k] === 'boolean' ? st[k] : d[k];
   // Earlier builds remembered one lesson in progress: current = { id, pos, short }. Positions are now kept per lesson.
   const c = s.current;
   if (isObj(c) && typeof c.id === 'string' && !b.at[c.id]) b.at[c.id] = { pos: c.pos, short: c.short, t: Date.now() };
@@ -57,7 +71,9 @@ export function migrate(s) {
   for (const [id, a] of Object.entries(b.at)) {
     const pos = isObj(a) ? Math.floor(Number(a.pos)) : 0;
     // (warm: the review keys of the sentences of earlier lessons asked at the start of this attempt — views/lesson.js)
-    if (pos >= 1) b.at[id] = { pos, short: !!a.short, t: Number(a.t) || 0, ...(a.seed > 0 && a.seed < 1 ? { seed: a.seed } : {}), ...(Array.isArray(a.warm) ? { warm: a.warm.filter((k) => typeof k === 'string').slice(0, 3) } : {}) };
+    // (scr: which screen that place is — its kind and which sentence or question — so that a lesson that changed length
+    // in an update reopens on the same screen: views/lesson.js screenId)
+    if (pos >= 1) b.at[id] = { pos, short: !!a.short, t: Number(a.t) || 0, ...(a.seed > 0 && a.seed < 1 ? { seed: a.seed } : {}), ...(Array.isArray(a.warm) ? { warm: a.warm.filter((k) => typeof k === 'string').slice(0, 3) } : {}), ...(screenOf(a.scr) ? { scr: screenOf(a.scr) } : {}) };
     else delete b.at[id];
   }
   return b;

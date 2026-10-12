@@ -59,8 +59,10 @@ export function pathLesson(state, content) {
     if (mine.every(todo)) { const pick = mine.find((id) => stageOf(content, id) <= from && now(id)); if (pick) return pick; }
   }
   // 3. then the lessons in order, from their stage on. Lessons about safety (a scam call, a stranger at the door)
-  //    are never passed over because of an answer at the start: they come in their place whatever the stage.
-  return order.find((id) => now(id) && (stageOf(content, id) >= from || !!content.lessons[id].safetyCritical))
+  //    are never passed over because of an answer at the start: they come in their place whatever the stage. Nor are
+  //    the lessons later ones take for granted (curriculum.json "always": prices at the checkout, days and times).
+  const always = Array.isArray(content.always) ? content.always : [];
+  return order.find((id) => now(id) && (stageOf(content, id) >= from || !!content.lessons[id].safetyCritical || always.includes(id)))
     || order.find(now)                                             // 4. what was skipped at the start
     || order.find((id) => todo(id) && later[id] !== 2)             // 5. what the learner set aside, at the very end
     || null;
@@ -120,7 +122,9 @@ export function afterPath(state, content, now = Date.now()) {
     const rested = done.filter((id) => day - today(doneAt(state, id)) >= REPEAT_REST);
     const byAge = (a, b) => doneAt(state, a) - doneAt(state, b);
     const id = rested.length ? rested.slice().sort((a, b) => missesOf(state, b) - missesOf(state, a) || byAge(a, b))[0] : done.slice().sort(byAge)[0];
-    return { kind: 'repeat', id };
+    // a repeat left half-way is offered as what it is: «ادامهٔ درس»
+    const at = has(state.at, id) && state.at[id];
+    return at && at.pos >= 1 ? { kind: 'resume', id } : { kind: 'repeat', id };
   }
   const talks = (content.roleplays || []).slice().sort((a, b) => (a.stage || 1) - (b.stage || 1));
   if (!talks.length) return done.length ? { kind: 'repeat', id: done.slice().sort((a, b) => doneAt(state, a) - doneAt(state, b))[0] } : null;
@@ -159,12 +163,12 @@ export function checkpointPlan(state, content, seed = Math.random()) {
       options: shuffle([line, ...others], mix(seed, 41 + hear.length)).map((l) => ({ fa: l.fa, right: l === line })) });
   }
   // "how do you say …?" — sentences the learner has seen (a short lesson shows three of five), those that needed
-  // another try first; never one that holds the sample person's own details. Lessons whose sentences are things
-  // other people say (listenFirst) are used only when there is nothing else.
+  // another try first; never one that holds the sample person's own details, never a line other people say ("heard").
+  // Lessons whose sentences are all things other people say (listenFirst) are used only when there is nothing else.
   const say = [];
   const seen = (L) => { const list = L.phrases.filter((p) => has(state.srs, `p:${L.id}:${p.id}`)); return list.length >= 3 ? list : shortPhrases(L); };
   const hardOf = (L, p) => Number((state.hard || {})[`${L.id}:${p.id}`]) || 0;
-  const pools = shuffle(Ls, mix(seed, 17)).map((L) => ({ L, list: shuffle(seen(L).filter((p) => !p.own), mix(seed, 19)).sort((a, b) => hardOf(L, b) - hardOf(L, a)) }))
+  const pools = shuffle(Ls, mix(seed, 17)).map((L) => ({ L, list: shuffle(seen(L).filter((p) => !holdsOwn(p) && !p.heard), mix(seed, 19)).sort((a, b) => hardOf(L, b) - hardOf(L, a)) }))
     .sort((a, b) => (b.list[0] ? hardOf(b.L, b.list[0]) : 0) - (a.list[0] ? hardOf(a.L, a.list[0]) : 0));      // a lesson with a sentence that was hard has its turn first
   for (const group of [pools.filter((x) => !x.L.listenFirst), pools.filter((x) => x.L.listenFirst)]) {
     for (let round = 0; round < 5 && say.length < CHECK_SAY; round++) for (const { L, list } of group) {
@@ -228,9 +232,10 @@ export function laterChoice(state, content, id) {
 // ---- which new words come next ----------------------------------------------------------------------
 // The data is content/review-order.json (wordsFirst, wordsAfter in the bundle). Three rules:
 //  1. the most useful everyday words come first for everyone, in the order of that list;
-//  2. then the word groups take turns, three words each — first the groups whose lesson is finished
-//     (so the words of a lesson just done arrive straight away), then the others. Easier words come
-//     first: no level 2 word before a level 1 word;
+//  2. then the words met in the sentences and dialogues of finished lessons, the lesson finished last first ("refill"
+//     right after the pharmacy lesson — QA round 3, M6); then the word groups take turns, three words each — first
+//     the groups whose lesson is finished, the lesson finished last first, then the others. Outside the lessons' own
+//     words, easier words come first: no level 2 word before a level 1 word;
 //  3. a group marked "last" in vocabulary.json (the alphabet) comes after every other word: the learner
 //     spells their own name from their own card («اطلاعات من»), and 26 letter cards must not hold up
 //     "appointment" or "prescription".
@@ -240,6 +245,24 @@ export const TURN = 3;            // words a group gives before the next group h
 export function inTurns(lists, size = TURN) {
   const out = [];
   for (let i = 0; lists.some((l) => i < l.length); i += size) for (const l of lists) out.push(...l.slice(i, i + size));
+  return out;
+}
+
+// The vocabulary words met in a lesson's sentences and dialogue ("prescription", "refill" in pharmacy-problems), in
+// the order of vocabulary.json. Small words (two letters or fewer, and the group "little": "you", "this", "where") are
+// left out: they are in every lesson, and the first words bring them anyway.
+const lessonWordCache = new WeakMap();
+export function lessonWords(content, id) {
+  let byLesson = lessonWordCache.get(content);
+  if (!byLesson) lessonWordCache.set(content, (byLesson = new Map()));
+  if (byLesson.has(id)) return byLesson.get(id);
+  const L = content.lessons[id];
+  const text = L ? ' ' + [...L.phrases.map((p) => p.en), ...L.dialogue.lines.map((l) => l.en)].join(' ').toLowerCase().replace(/[^a-z0-9'-]+/g, ' ') + ' ' : '';
+  const out = !L ? [] : content.vocab.filter((w) => {
+    const e = String(w.en).toLowerCase().replace(/[^a-z0-9'-]+/g, ' ').trim();
+    return e.length > 2 && w.cat !== 'little' && text.includes(' ' + e + ' ');
+  }).map((w) => w.id);
+  byLesson.set(id, out);
   return out;
 }
 
@@ -261,13 +284,19 @@ export function reviewPool(state, content) {
   // 1. the first words
   const main = (content.wordsFirst || []).filter((id) => byId.has(id) && byId.get(id).level <= stage);
   const first = new Set(main);
-  // 2. the groups in turn: those of finished lessons (in lesson order), then the rest (in the order of vocabulary.json)
+  // 2. the groups in turn: those of finished lessons (the lesson finished last first), then the rest (in the order of
+  //    vocabulary.json)
+  const finished = order.filter((id) => state.done[id]).map((id, i) => ({ id, i, t: Number(state.done[id].t) || 0 })).sort((a, b) => b.t - a.t || b.i - a.i);
   const open = [];
-  for (const id of order) if (state.done[id]) for (const c of (content.wordsAfter || {})[id] || []) if (!open.includes(c)) open.push(c);
+  for (const { id } of finished) for (const c of (content.wordsAfter || {})[id] || []) if (!open.includes(c)) open.push(c);
   const last = content.vocabCats.filter((c) => c.last).map((c) => c.id);
   const lead = open.filter((c) => !last.includes(c));
   const rest = content.vocabCats.map((c) => c.id).filter((c) => !open.includes(c) && !last.includes(c));
-  const words = (c, level) => content.vocab.filter((w) => w.cat === c && w.level === level && !first.has(w.id)).map((w) => w.id);
+  // 2a. before the groups take turns: the words of the lessons the learner has finished, the newest lesson first —
+  //     a lesson about the pharmacy is followed by "prescription" and "refill" on the next days, not months later
+  const lastSet = new Set(last), mine = new Set();
+  for (const { id } of finished) for (const wid of lessonWords(content, id)) { const w = byId.get(wid); if (w.level <= stage && !first.has(wid) && !lastSet.has(w.cat) && !mine.has(wid)) { mine.add(wid); main.push(wid); } }
+  const words = (c, level) => content.vocab.filter((w) => w.cat === c && w.level === level && !first.has(w.id) && !mine.has(w.id)).map((w) => w.id);
   for (let level = 1; level <= stage; level++) main.push(...inTurns(lead.map((c) => words(c, level))), ...inTurns(rest.map((c) => words(c, level))));
   // 3. the groups that wait until everything else has been met
   for (let level = 1; level <= stage; level++) for (const c of last) main.push(...words(c, level));
@@ -286,16 +315,24 @@ export function todaysSet(state, content, day) {
 // as { key, lesson, phrase }; `except` is the lesson being opened. An answer counts as that sentence's review:
 //   store.update((s) => { s.srs[key] = grade(s.srs[key], knew, day); })        (grade from srs.js)
 // after which it is no longer due and does not come up again in that day's sets.
+// A sentence that holds the sample person's own details ("My name is Maryam.") is never one of them: asked with three
+// English choices it would drill Maryam's name, not the learner's (the learner's own come in review, see ownItem in
+// own.js). The five sentences of one lesson fall due on the same day, so the list takes one sentence from each lesson
+// before a second from any of them — three questions from one lesson could be answered by elimination.
 export function dueSentences(state, content, day, n = 3, except = null) {
   const due = [];
   for (const lesson of lessonOrder(content)) {
     if (lesson === except || !state.done[lesson]) continue;
     for (const phrase of content.lessons[lesson].phrases) {
       const key = `p:${lesson}:${phrase.id}`, e = state.srs[key];
-      if (e && e.d <= day) due.push({ key, lesson, phrase, e });
+      if (e && e.d <= day && !holdsOwn(phrase)) due.push({ key, lesson, phrase, e });
     }
   }
-  return due.sort((a, b) => a.e.d - b.e.d || a.e.b - b.e.b).slice(0, n).map(({ key, lesson, phrase }) => ({ key, lesson, phrase }));
+  due.sort((a, b) => a.e.d - b.e.d || a.e.b - b.e.b);
+  const seen = new Set();
+  const head = due.filter((x) => !seen.has(x.lesson) && seen.add(x.lesson));
+  const spread = [...head, ...due.filter((x) => !head.includes(x))];
+  return spread.slice(0, n).map(({ key, lesson, phrase }) => ({ key, lesson, phrase }));
 }
 
 // ---- the lesson -------------------------------------------------------------------------------------
@@ -307,6 +344,14 @@ export function shortPhrases(L) {
   const need = L.phrases.find((p) => p.id === L.task[0].answer);
   return need ? [...ph.slice(0, 2), need] : ph;
 }
+
+// A sentence the learner only has to understand: every sentence of a listen-first lesson, and in other lessons a line
+// that other people say ("heard": true — the pharmacist's "You have no refills left."). It gets no "now you say it",
+// is never asked from Farsi to English (in the lesson, at the start of later lessons, in review or in a look back)
+// and is not built from tiles.
+export const heardOnly = (L, p) => !!((L && L.listenFirst) || (p && p.heard));
+// A sentence with the sample person's own details in it ("My name is Maryam."): see `own` in the lesson files.
+export const holdsOwn = (p) => !!(p && Array.isArray(p.own) && p.own.length);
 
 // ---- "what did they say?" ------------------------------------------------------------------------
 // The other person's lines in a lesson dialogue, each with a different meaning.
@@ -326,6 +371,36 @@ export function gistTargets(L, seed) {
   const lines = shuffle(partnerLines(L), mix(seed, 71));
   const good = (l) => !taught.has(l.en) && l.en.trim().split(/\s+/).length >= 3;
   return [...lines.filter(good), ...lines.filter((l) => !good(l))];
+}
+// The longer turn of the last stage: people often say two things in one go ("You need the number forty. This bus goes
+// to Main Street." and then "Transfer at Main Street."). Two lines the other person says one after the other in the
+// dialogue are played as one turn, at natural speed. Only pairs that can really be said in one breath: the first of
+// the two is not a question (after a question the other person waits for the answer), and the second does not begin
+// as an answer to something the learner said in between ("Yes, …", "Okay. …"). Each wrong answer changes one
+// of the two halves for another line of the same person, so both halves must be caught.
+// Both lines have three words or more. longPairs(L): the pairs a lesson has, in dialogue order. longGist(L, seed, g):
+// { lines: [first, second], options: [{ fa, right }] } (in a fixed order: the view mixes them) for the longest pair,
+// or null when the lesson has no such pair (or fewer than three different lines of the other person).
+// (a line that begins as an answer — "Yes, …", "Okay. …", "Thank you." — answers something the learner said in between)
+const REPLY_START = /^(?:yes|no|yeah|okay|ok|sure|of course|thank|thanks|great|good|oh|here|hi|hello|that's|i'm sorry|sorry|alright|all right|perfect|you're welcome|let me)\b/i;
+export function longPairs(L) {
+  const all = partnerLines(L);
+  if (all.length < 3) return [];
+  const out = [];
+  const words = (l) => l.en.trim().split(/\s+/).length;
+  for (let i = 0; i + 1 < all.length; i++) if (!/\?\s*$/.test(all[i].en) && !REPLY_START.test(all[i + 1].en) && words(all[i]) >= 3 && words(all[i + 1]) >= 3) out.push([all[i], all[i + 1]]);
+  return out;
+}
+export function longGist(L, seed, g = 0) {
+  const pairs = longPairs(L);
+  if (!pairs.length) return null;
+  const all = partnerLines(L);
+  const size = (p) => p[0].en.length + p[1].en.length;
+  const [a, b] = pairs.slice().sort((p, q) => size(q) - size(p))[0];      // the longest: most often two facts
+  const others = shuffle(all.filter((l) => l !== a && l !== b), mix(seed, 73 + g));
+  const x = others[0], y = others[1] || others[0];
+  const join = (p, q) => `${p.fa.trim()} ${q.fa.trim()}`;
+  return { lines: [a, b], options: [{ fa: join(a, b), right: true }, { fa: join(a, x), right: false }, { fa: join(y, b), right: false }] };
 }
 
 // ---- hearing numbers -----------------------------------------------------------------------------

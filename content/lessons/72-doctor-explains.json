@@ -1,0 +1,69 @@
+{
+  "id": "doctor-explains",
+  "scenario": "clinic",
+  "stage": 2,
+  "minutes": 7,
+  "safetyCritical": true,
+  "listenFirst": true,
+  "title": { "fa": "آخر ویزیت: دکتر چه می‌گوید؟", "en": "What the doctor says at the end" },
+  "intro": "این درس بیشتر برای گوش دادن است. در آخر ویزیت، دکتر معمولاً می‌گوید مشکل چیست، دارو لازم است یا نه، کی دوباره بیایید و اگر حالتان بدتر شد چه کنید. لازم نیست این جمله‌ها را خودتان بگویید؛ کافی است وقتی شنیدید، بفهمید و هر چه را نفهمیدید، بپرسید.",
+  "note": "این درس برای یادگیری زبان است و توصیهٔ پزشکی نیست. حرف‌های دکتر در این درس فقط نمونه‌اند. هر چه را دکتر خودتان گفت و نفهمیدید، بخواهید دوباره و آهسته بگوید یا برایتان بنویسد؛ می‌توانید مترجم هم بخواهید. اگر حالتان ناگهان خیلی بد شد، به ۹۱۱ زنگ بزنید.",
+  "canDo": "حالا می‌توانید بفهمید دکتر در آخر ویزیت چه می‌گوید: مشکل چیست، نسخه، وقت بعدی و اینکه اگر حالتان بدتر شد چه کنید.",
+  "mission": "دفعهٔ بعد که پیش دکتر رفتید، در آخر ویزیت بپرسید: Could you write that down, please? تا مهم‌ترین حرف‌هایش را روی کاغذ داشته باشید.",
+  "them": { "role": "دکتر", "voice": "k" },
+  "phrases": [
+    { "en": "It's nothing serious.", "fa": "چیز جدی‌ای نیست.", "ph": "ایتس ناتینگ سیریِس", "note": "یعنی جای نگرانی نیست. اگر مطمئن نیستید درست فهمیده‌اید، بپرسید: «Is it serious?‎» (جدی است؟)", "voice": "k", "chunks": ["It's nothing", "serious."] },
+    { "en": "You have an infection.", "fa": "عفونت دارید.", "ph": "یو هَو اَن اینفِکشِن", "note": "infection یعنی عفونت. دکتر ممکن است جایش را هم بگوید، مثلاً «an ear infection» (عفونت گوش). اگر نفهمیدید، بپرسید: «What is it?‎» (چه مشکلی دارم؟)", "voice": "k", "chunks": ["You have", "an infection."] },
+    { "en": "I'm going to give you a prescription.", "fa": "برایتان نسخه می‌نویسم.", "ph": "آیْم گُوئینگ تو گیو یو اِ پْرِسکْریپشِن", "note": "prescription یعنی نسخه. در آمریکا دکتر معمولاً نسخه را خودش برای داروخانه می‌فرستد: «I'll send it to your pharmacy.‎» طرز مصرف دارو را داروساز هم می‌گوید و روی برچسب دارو نوشته است.", "voice": "k", "chunks": ["I'm going to give you", "a prescription."] },
+    { "en": "If it gets worse, come back or call us.", "fa": "اگر بدتر شد، دوباره بیایید یا به ما زنگ بزنید.", "ph": "ایف ایت گِتس وِرس، کام بَک اُر کال آس", "note": "gets worse یعنی بدتر می‌شود. برعکسش «gets better» (بهتر می‌شود) است.", "voice": "k", "chunks": ["If it gets worse,", "come back", "or call us."] },
+    { "en": "I want to see you again in two weeks.", "fa": "می‌خواهم دو هفتهٔ دیگر دوباره شما را ببینم.", "ph": "آی وانْت تو سی یو اِگِن این تو ویکس", "note": "یعنی دو هفتهٔ دیگر باید دوباره پیش دکتر بیایید. به این وقت «follow-up appointment» (وقتِ بعدی برای پیگیری) می‌گویند و معمولاً همان روز از پذیرش می‌گیرید.", "voice": "k", "chunks": ["I want to see you again", "in two weeks."] }
+  ],
+  "dialogue": {
+    "setting": "معاینه تمام شده و دکتر می‌گوید مشکلتان چیست و بعدش چه باید بکنید.",
+    "lines": [
+      ["them", "Okay, I've finished the exam. You have an infection.", "خب، معاینه تمام شد. عفونت دارید."],
+      ["you", "Is it serious?", "جدی است؟"],
+      ["them", "No, it's nothing serious. I'm going to give you a prescription.", "نه، چیز جدی‌ای نیست. برایتان نسخه می‌نویسم."],
+      ["you", "Where do I get the medicine?", "دارو را از کجا بگیرم؟"],
+      ["them", "I'll send it to your pharmacy. If it gets worse, come back or call us.", "نسخه را برای داروخانه‌تان می‌فرستم. اگر بدتر شد، دوباره بیایید یا به ما زنگ بزنید."],
+      ["you", "Okay. Do I need to come back?", "باشد. لازم است دوباره بیایم؟"],
+      ["them", "Yes. I want to see you again in two weeks. Please make a follow-up appointment at the front desk.", "بله. می‌خواهم دو هفتهٔ دیگر دوباره شما را ببینم. لطفاً از پذیرش برای دفعهٔ بعد وقت بگیرید."],
+      ["you", "Could you write that down, please?", "می‌شود لطفاً آن را بنویسید؟"],
+      ["them", "Of course. Do you have any questions?", "البته. سؤالی دارید؟"]
+    ]
+  },
+  "respond": {
+    "setting": "دکتر حرفش را تمام کرده و می‌پرسد سؤالی دارید.",
+    "them": ["Do you have any questions?", "سؤالی دارید؟"],
+    "ok": [
+      ["Yes. Is it serious?", "بله. جدی است؟"],
+      ["Could you write that down, please?", "می‌شود لطفاً آن را بنویسید؟"],
+      ["Yes. When do I need to come back?", "بله. کی باید دوباره بیایم؟"]
+    ],
+    "off": ["I want to see you again in two weeks.", "می‌خواهم دو هفتهٔ دیگر دوباره شما را ببینم.", "این را دکتر می‌گوید، نه شما. اگر سؤالی دارید، همین حالا بپرسید؛ مثلاً «Is it serious?‎» یا «Could you write that down, please?‎»"],
+    "off2": 2
+  },
+  "task": [
+    ["دکتر می‌خواهد بگوید جای نگرانی نیست.", 1],
+    ["دکتر می‌خواهد بگوید دو هفتهٔ دیگر برای معاینهٔ دوباره بیایید.", 5]
+  ],
+  "grammar": {
+    "title": "If …, …",
+    "explain": "برای گفتنِ «اگر … شد، …» جمله را با «If» شروع می‌کنند. بعد از If، حتی وقتی دربارهٔ آینده است، فعل را به شکل حال می‌گویند: «If it gets worse».",
+    "examples": [
+      ["If it gets worse, call us.", "اگر بدتر شد، به ما زنگ بزنید."],
+      ["If you have questions, call us.", "اگر سؤالی داشتید، به ما زنگ بزنید."],
+      ["If you can't come, please call.", "اگر نمی‌توانید بیایید، لطفاً زنگ بزنید."]
+    ],
+    "wrong": "If it will get worse, call us.",
+    "right": "If it gets worse, call us.",
+    "why": "بعد از If برای آینده «will» نمی‌آورند: «If it gets worse»، نه «If it will get worse».",
+    "fresh": { "en": "If it rains, I'll stay home.", "wrong": "If it will rain, I'll stay home.", "fa": "اگر باران بیاید، در خانه می‌مانم." }
+  },
+  "variants": [
+    { "en": "Let's schedule a follow-up in two weeks.", "fa": "برای دو هفتهٔ دیگر وقت بعدی بگذاریم.", "like": "I want to see you again in two weeks." },
+    { "en": "If your symptoms get worse, give us a call.", "fa": "اگر علائمتان بدتر شد، به ما زنگ بزنید.", "like": "If it gets worse, come back or call us." },
+    { "en": "Any questions for me?", "fa": "از من سؤالی دارید؟", "like": "Do you have any questions?" }
+  ],
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

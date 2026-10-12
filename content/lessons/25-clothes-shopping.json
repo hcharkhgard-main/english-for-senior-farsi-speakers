@@ -51,7 +51,8 @@
     ],
     "wrong": "It's very small for me.",
     "right": "It's too small.",
-    "why": "«very» یعنی خیلی، ولی «too» یعنی بیشتر از حدی که به درد بخورد."
+    "why": "«very» یعنی خیلی، ولی «too» یعنی بیشتر از حدی که به درد بخورد.",
+    "fresh": { "en": "It's too long.", "wrong": "It's very long for me.", "fa": "زیادی بلند است." }
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }

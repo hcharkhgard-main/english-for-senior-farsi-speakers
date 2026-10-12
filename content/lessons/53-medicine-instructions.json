@@ -57,7 +57,8 @@
     ],
     "wrong": "Three time a day.",
     "right": "Three times a day.",
-    "why": "در فارسی می‌گوییم «سه بار» و کلمهٔ «بار» عوض نمی‌شود، ولی در انگلیسی وقتی بیشتر از یک بار است، «times» با «s» می‌آید."
+    "why": "در فارسی می‌گوییم «سه بار» و کلمهٔ «بار» عوض نمی‌شود، ولی در انگلیسی وقتی بیشتر از یک بار است، «times» با «s» می‌آید.",
+    "fresh": { "en": "Four times a day.", "wrong": "Four time a day.", "fa": "روزی چهار بار." }
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }

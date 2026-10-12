@@ -164,7 +164,8 @@
     ],
     "wrong": "It look beautiful on you.",
     "right": "It looks beautiful on you.",
-    "why": "بعد از «it»، آخرِ فعل «s» می‌آید: «looks»، نه «look»."
+    "why": "بعد از «it»، آخرِ فعل «s» می‌آید: «looks»، نه «look».",
+    "fresh": { "en": "It looks very nice.", "wrong": "It look very nice.", "fa": "خیلی قشنگ به نظر می‌رسد." }
   },
   "review": {
     "status": "draft",

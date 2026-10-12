@@ -58,7 +58,8 @@
     ],
     "wrong": "I eat medicine for blood pressure.",
     "right": "I take medicine for blood pressure.",
-    "why": "در انگلیسی برای دارو «take» می‌گویند، نه «eat»."
+    "why": "در انگلیسی برای دارو «take» می‌گویند، نه «eat».",
+    "fresh": { "en": "I take two pills a day.", "wrong": "I eat two pills a day.", "fa": "روزی دو قرص می‌خورم." }
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }

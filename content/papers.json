@@ -44,7 +44,7 @@
       ]
     },
     {
-      "id": "text-reminder", "kind": "reminder", "stage": 2, "lesson": "appointment-change",
+      "id": "text-reminder", "kind": "reminder", "stage": 2, "lesson": "appointment-change", "safetyCritical": true,
       "title": "پیامک یادآوری وقت",
       "note": "این پیامک ساختگی است. پیامک واقعیِ مطب از شما پول، رمز یا شمارهٔ کارت نمی‌خواهد. اگر پیامکی ناآشنا بود، روی لینکش نزنید و خودتان به مطب زنگ بزنید.",
       "lines": [
@@ -166,7 +166,7 @@
       ]
     },
     {
-      "id": "delivery-slip", "kind": "form", "stage": 2, "lesson": "post-office",
+      "id": "delivery-slip", "kind": "form", "stage": 2, "lesson": "post-office", "safetyCritical": true,
       "title": "برگهٔ پست: «نبودید و بسته تحویل نشد»",
       "note": "این برگه ساختگی است. پیامک‌هایی که می‌گویند برای تحویل دوبارهٔ بسته باید پول بدهید معمولاً کلاهبرداری‌اند؛ روی لینکشان نزنید.",
       "lines": [
@@ -249,13 +249,13 @@
     {
       "id": "weather-alert", "kind": "sign", "stage": 3, "lesson": "power-weather", "safetyCritical": true,
       "title": "هشدار هوا روی صفحهٔ تلفن (نمونهٔ تمرینی)",
-      "note": "این هشدار ساختگی است و فقط برای تمرین خواندن است. در گرمای شدید یا توفان به هشدارهای واقعی شهر خودتان توجه کنید و اگر کسی در خطر است به ۹۱۱ زنگ بزنید.",
+      "note": "این هشدار ساختگی است و فقط برای تمرین خواندن است. در گرمای شدید یا توفان به هشدارهای واقعی شهر خودتان توجه کنید و اگر کسی در خطر است به ۹۱۱ زنگ بزنید. اگر خانه‌تان کولر ندارد، در گرمای شدید به یک مرکز خنک (cooling center) بروید؛ برای پیدا کردنش به ۲۱۱ زنگ بزنید.",
       "lines": [
         { "en": "EMERGENCY ALERT", "fa": "هشدار اضطراری", "strong": true },
         { "en": "Weather alert for your area", "fa": "هشدار هوا برای منطقهٔ شما" },
         { "en": "HEAT WARNING until 8:00 PM Friday", "fa": "هشدار گرمای شدید تا ساعت ۸ شبِ جمعه", "strong": true },
         { "en": "High today: 105 degrees", "fa": "بیشترین دمای امروز: ۱۰۵ درجهٔ فارنهایت" },
-        { "en": "Drink water. Stay indoors.", "fa": "آب بنوشید. در خانه بمانید." },
+        { "en": "Drink water. Stay in an air-conditioned room.", "fa": "آب بنوشید. در اتاقی بمانید که کولر دارد." },
         { "en": "Check on older neighbors.", "fa": "به همسایه‌های سالمند سر بزنید." },
         { "en": "Cooling centers are open. Call 211.", "fa": "مراکز خنک باز هستند. به ۲۱۱ زنگ بزنید." }
       ],

@@ -57,7 +57,8 @@
     ],
     "wrong": "Not sugar.",
     "right": "No sugar.",
-    "why": "قبل از اسم «no» می‌آید، نه «not»."
+    "why": "قبل از اسم «no» می‌آید، نه «not».",
+    "fresh": { "en": "No milk, please.", "wrong": "Not milk, please.", "fa": "بدون شیر، لطفاً." }
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }

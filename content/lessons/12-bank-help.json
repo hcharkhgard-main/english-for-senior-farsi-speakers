@@ -58,7 +58,8 @@
     ],
     "wrong": "I like check my balance.",
     "right": "I'd like to check my balance.",
-    "why": "«I like» یعنی «دوست دارم». برای «می‌خواهم» بگویید «I'd like to»."
+    "why": "«I like» یعنی «دوست دارم». برای «می‌خواهم» بگویید «I'd like to».",
+    "fresh": { "en": "I'd like to pay my bill.", "wrong": "I like pay my bill.", "fa": "می‌خواهم قبضم را بپردازم." }
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }

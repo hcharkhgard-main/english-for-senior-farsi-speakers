@@ -1,10 +1,11 @@
 // Conversation practice: a patient partner in a simulated everyday situation.
-import { h, icon, btn, en, note, fnum } from '../ui.js';
+import { h, icon, btn, en, note, fnum, sheet, announce } from '../ui.js';
 import { hasArabic } from '../bidi.js';
 import { clipEn, listenBtn, miniPlay, playNow, hearOnce, micStrip } from '../components.js';
 import { pickReply, correct, repairKind } from '../match.js';
 import { AI_MAX_TURNS } from '../ai-prompt.js';
-import { shuffle, mix, micOn, later } from '../learn.js';
+import { shuffle, mix, micOn, later, pathLesson } from '../learn.js';
+import { ownReplies } from '../own.js';
 import { quiz } from './lesson.js';
 
 // A question about what the partner has just said ("check" on a turn, "thenCheck" on a reply, in
@@ -23,9 +24,15 @@ export function talkView(app) {
   const main = h('main', { class: 'wrap' }, h('h1', { class: 'section-title' }, t('talk.list.title')), h('p', { class: 'muted' }, t('talk.list.sub')));
   main.append(h('button', { type: 'button', class: 'item', onclick: () => app.go('build') }, h('span', { class: 'pic', style: 'width:3.25rem;height:3.25rem' }, icon('pieces')),
     h('span', { class: 'body' }, h('span', { class: 't' }, t('build.title')), h('span', { class: 's' }, t('build.sub')))));
-  for (const stage of content.stages) {
+  // Only the conversations of the stage the learner is in are listed at first (about fifty in all would be a very long
+  // page); the other stages are one tap away. When the path is finished, every stage is shown.
+  const next = pathLesson(store.state, content);
+  const here = next ? app.lessonStage(next) : 0;
+  const stages = content.stages.filter((stage) => content.roleplays.some((r) => (r.stage || 1) === stage.id));
+  const all = !stages.some((x) => x.id === here) || app.ui.allStages;
+  for (const stage of stages) {
     const list = content.roleplays.filter((r) => (r.stage || 1) === stage.id);
-    if (!list.length) continue;
+    if (!all && stage.id !== here) continue;
     main.append(h('h2', { class: 'section-title' }, stage.title));
     for (const r of list) {
       const sc = app.scenario(r.scenario);
@@ -35,6 +42,7 @@ export function talkView(app) {
         store.state.rp[r.id] ? h('span', { class: 'badge' }, icon('check'), t('place.done')) : null));
     }
   }
+  if (!all) main.append(btn(t('talk.others'), { cls: 'btn-soft', icon: 'chat', block: true, 'data-others': '', onclick: () => { app.ui.allStages = true; app.render(); } }));
   return { main };
 }
 
@@ -60,7 +68,7 @@ export function roleplayView(app, id) {
   // the line the learner is being asked about now, if any («چه گفت؟»)
   const waiting = () => (S.mode === 'script' && !S.done && S.log.find((m) => m.who === 'them' && m.check && !m.asked)) || null;
   const speakThem = (lines, first, wait = 150) => {
-    const clips = [...(first ? [first] : []), ...lines.map((l) => clipEn(l.en, voice, 'n'))];
+    const clips = [...(first ? [].concat(first) : []), ...lines.map((l) => clipEn(l.en, voice, 'n'))];
     if (clips.length) later(app, wait, () => { if (app.ui.rp === S) playNow(app, clips, { quiet: true, gap: 500 }); });   // not if the learner has left or started again
   };
   // After something new has been said, the page moves so that the new part starts just under the top bar — or
@@ -129,6 +137,8 @@ export function roleplayView(app, id) {
     sayAgain(null, { repair: 'again', slow: n > 1 }, clipEn(ask.en, 's', 'n'));
   };
 
+  // the learner's answer as it is heard: the learner's own details from single recordings where they can say it
+  const replyClip = (r) => (r.pieces ? r.pieces.map((x) => clipEn(x, 's', 'n')) : clipEn(r.en, 's', 'n'));
   // scripted partner: the learner's choice (tapped or spoken) moves the scene on
   const choose = (reply, { heard = null, own = false } = {}) => {
     const turn = R.turns[S.turn];
@@ -141,7 +151,7 @@ export function roleplayView(app, id) {
     S.queue = [];
     if (reply && reply.then) S.queue.push(themLine(reply.then, reply.thenCheck));
     if (S.turn < R.turns.length) S.queue.push(themLine(R.turns[S.turn].them, R.turns[S.turn].check));
-    advance(heard ? null : clipEn(reply.en, 's', 'n'));
+    advance(heard ? null : replyClip(reply));
     return turn;
   };
 
@@ -227,7 +237,12 @@ export function roleplayView(app, id) {
   // ---- the conversation ----------------------------------------------------------------
   // Leaving in the middle would throw the conversation away, so the top bar's Back and Home ask first (see topbar in main.js).
   const exit = !S.done && (S.turn > 0 || S.ai.n > 0) ? { confirm: { title: t('rp.leave.title'), body: t('rp.leave.body'), yes: t('rp.leave.go'), no: t('rp.leave.stay') } } : null;
-  const restart = () => { app.ui.rp = null; audio.stop(); app.speech.cancel(); app.render(true); };
+  const restartNow = () => { app.ui.rp = null; audio.stop(); app.speech.cancel(); app.render(true); };
+  // like the top bar's Back and Home: once something has been said, starting again asks first (the safe answer first)
+  const restart = () => {
+    if (S.done || (S.turn === 0 && S.ai.n === 0)) { restartNow(); return; }
+    sheet(t('rp.restart.title'), h('p', null, t('rp.restart.body')), [{ label: t('rp.restart.yes'), cls: 'btn-danger', run: restartNow }, { label: t('rp.leave.stay'), cls: 'btn-primary' }]);
+  };
   // In a practice call that could be taken for the real thing (911, a caller who wants money or details, paying by
   // phone) the words "this is only practice, no real call is made" stay in the top bar from the first line to the
   // last (main.js puts `banner` there). A conversation can name its own line to keep in sight ("banner" in the
@@ -298,7 +313,7 @@ export function roleplayView(app, id) {
       app.ui.rpq = state;        // the question keeps its tries with its line, not with the screen
       const options = shuffle([{ id: 'r', right: true, text: c.right }, ...c.wrong.map((x, k) => ({ id: 'w' + k, right: false, text: x }))], mix(S.seed, 50 + S.log.indexOf(asked)))
         .map((o) => ({ ...o, label: h('span', null, answerText(o.text)) }));
-      main.append(h('section', { class: 'card', 'data-check': '' }, h('p', { class: 'eyebrow' }, t('rp.check.eyebrow')), h('h2', null, c.q || t('rp.check.q')), hear()));
+      main.append(h('section', { class: 'card', 'data-check': '' }, h('p', { class: 'eyebrow' }, t('rp.check.eyebrow')), h('h2', { tabindex: '-1', 'data-check-q': '' }, c.q || t('rp.check.q')), hear()));
       const choices = quiz(app, 'rpq', options, { missNote: t('listen.again'),
         onMiss: () => { if (Object.keys(state.tried).length >= Math.min(CHECK_TRIES, c.wrong.length)) { asked.reveal = true; S.lock = performance.now() + 600; } },
         onSolved: () => checked(asked, 'right') });
@@ -306,8 +321,18 @@ export function roleplayView(app, id) {
       choices.addEventListener('click', (e) => { if (performance.now() < S.lock) { e.stopPropagation(); e.preventDefault(); } }, true);
       main.append(choices);
     }
-    main.append(h('div', { class: 'row' }, btn(t('rp.restart'), { cls: 'btn-ghost grow', icon: 'repeat', small: true, onclick: restart })));
-    return { main, exit, banner };
+    // («شروع دوباره» is not offered here: under the three answers it looked like a fourth one. It is back with the replies.)
+    // A screen reader is taken to the question itself when it takes the place of the replies (or of the line before it),
+    // so that the question is heard before any answer; a redraw of the same question keeps focus where it was.
+    const after = () => {
+      if (S.focusQ === asked) return;
+      S.focusQ = asked;
+      const q = document.querySelector('#app [data-check-q]');
+      const a = document.activeElement;
+      if (q && (!a || a === document.body || q.closest('main').contains(a))) { try { q.focus({ preventScroll: true }); } catch { /* ignore */ } }
+      if (!q || document.activeElement !== q) announce(`${t('rp.check.eyebrow')} ${q ? q.textContent : ''}`);      // focus elsewhere (the top bar): say it instead
+    };
+    return { main, exit, banner, after };
   }
 
   if (S.micError) main.append(note(t('say.err.' + S.micError), 'care'));
@@ -333,10 +358,13 @@ export function roleplayView(app, id) {
 
   if (S.mode === 'script') {
     const turn = R.turns[S.turn];
-    if (turn.open) main.append(h('p', { class: 'muted small' }, t('rp.open')));
-    // the replies are offered in a different order every time, so the place on the screen is never the clue
-    main.append(h('div', { class: 'stack replies' }, shuffle(turn.replies, mix(S.seed, S.turn)).map((r) => h('div', { class: 'opt-wrap' }, miniPlay(app, clipEn(r.en, 's', 'n'), t('audio.listen')),
-      h('button', { type: 'button', class: 'opt', onclick: () => { if (performance.now() >= S.lock) choose(r); } }, h('span', { class: 'body' }, en(r.en), S.help ? h('span', { class: 'sub' }, r.fa) : null))))));
+    // the replies are offered in a different order every time, so the place on the screen is never the clue — except
+    // that, when «اطلاعات من» has the detail a turn asks for, the learner's own answer comes first (own.js ownReplies)
+    const replies = turn.open ? ownReplies(turn.replies, store.state.me, { month: (m) => t('month.' + m) }) : turn.replies;
+    const mixed = shuffle(replies, mix(S.seed, S.turn));
+    if (turn.open) main.append(h('p', { class: 'muted small' }, replies.some((r) => r.mine) ? t('rp.open.mine') : t('rp.open')));
+    main.append(h('div', { class: 'stack replies' }, [...mixed.filter((r) => r.mine), ...mixed.filter((r) => !r.mine)].map((r) => h('div', { class: 'opt-wrap' }, miniPlay(app, replyClip(r), t('audio.listen')),
+      h('button', { type: 'button', class: 'opt', 'data-mine': r.mine ? '' : null, onclick: () => { if (performance.now() >= S.lock) choose(r); } }, h('span', { class: 'body' }, r.mine ? h('span', { class: 'eyebrow' }, t('own.title')) : null, en(r.en), S.help || r.mine ? h('span', { class: 'sub' }, r.fa) : null))))));
     if (ask) main.append(againBtn(tapAgain));
     if (micOn(app)) main.append(h('div', { class: 'row' }, h('button', { type: 'button', class: 'mic-btn', onclick: speakScripted }, icon('mic'), t('rp.speak'))));
     main.append(h('div', { class: 'row' },

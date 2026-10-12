@@ -55,7 +55,8 @@
     ],
     "wrong": "This bus go to Main Street?",
     "right": "Does this bus go to Main Street?",
-    "why": "چون در این سؤال فعل (go) هست، سؤال با «Does» شروع می‌شود."
+    "why": "چون در این سؤال فعل (go) هست، سؤال با «Does» شروع می‌شود.",
+    "fresh": { "en": "Does this bus stop at the hospital?", "wrong": "This bus stop at the hospital?", "fa": "این اتوبوس جلوی بیمارستان می‌ایستد؟" }
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }

@@ -55,7 +55,8 @@
     ],
     "wrong": "I am lost my key.",
     "right": "I lost my key.",
-    "why": "بعد از «I» خودِ «lost» می‌آید و «am» لازم نیست. «I am lost» معنی دیگری دارد: یعنی «راه را گم کرده‌ام»."
+    "why": "بعد از «I» خودِ «lost» می‌آید و «am» لازم نیست. «I am lost» معنی دیگری دارد: یعنی «راه را گم کرده‌ام».",
+    "fresh": { "en": "I lost my glasses.", "wrong": "I am lost my glasses.", "fa": "عینکم را گم کرده‌ام." }
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }

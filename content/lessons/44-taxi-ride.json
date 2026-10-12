@@ -160,7 +160,8 @@
     ],
     "wrong": "How much it takes?",
     "right": "How long will it take?",
-    "why": "برای مدت‌زمان «How long» می‌گوییم، نه «How much»؛ و در سؤال «will» قبل از «it» می‌آید."
+    "why": "برای مدت‌زمان «How long» می‌گوییم، نه «How much»؛ و در سؤال «will» قبل از «it» می‌آید.",
+    "fresh": { "en": "How long will the ride take?", "wrong": "How much the ride takes?", "fa": "تا آنجا چقدر طول می‌کشد؟" }
   },
   "review": {
     "status": "draft",

@@ -12,6 +12,14 @@
      cache name (keepSound in main.js) — so "a lesson opened once works offline" holds then too.
    - Pronunciation-checker files: stored by the page when the learner downloads them.
 
+   Nothing is stored unchecked. On a hotel or clinic Wi-Fi that has not been "accepted" yet, every
+   request is answered with the network's login page (200, text/html); a weak connection can cut a
+   download short. Such an answer must never be kept as a part of the app or as a lesson's sound —
+   it would stay on the phone for good. So every file of the app is compared with its exact size
+   and SHA-256 (listed by tools/build.mjs), and every sound pack with the size in audio/index.json
+   and the content hash in its own name, before it is stored. A file that fails is not kept (the
+   app installs on a later visit; the sound is fetched again on the next tap).
+
    Cache names carry the path this copy is served from, so two copies on one origin
    (user.github.io/hamrah and user.github.io/hamrah-test) never touch each other's files. */
 const BUILD = '__BUILD__';
@@ -21,16 +29,61 @@ const SHELL = `${PREFIX}shell-${BUILD}`;
 const AUDIO = `${PREFIX}audio`;
 const ASR = `${PREFIX}asr-__ASR__`;
 const PRECACHE = __PRECACHE__;
+const INTEGRITY = __INTEGRITY__;                  // path -> [bytes, sha256 hex], made by tools/build.mjs
 // without these the app cannot start; the rest (fonts, pictures, first sounds) is fetched again on first use if it failed here
 const CORE = PRECACHE.filter((u) => !/^(fonts|icons)\/|\.mp3$/.test(u));
 const EXTRA = PRECACHE.filter((u) => !CORE.includes(u));
 const fresh = (u) => new Request(u, { cache: 'reload' });
 
+const hex = (buf) => Array.from(new Uint8Array(buf), (b) => b.toString(16).padStart(2, '0')).join('');
+async function digest(algo, buf) {
+  try { return self.crypto && self.crypto.subtle ? hex(await self.crypto.subtle.digest(algo, buf)) : null; } catch { return null; }
+}
+// Is this the file that was meant? [bytes, hash] as listed; without a hash function only the size can be compared.
+async function matches(buf, bytes, algo, hash) {
+  if (!buf || buf.byteLength !== bytes) return false;
+  const d = await digest(algo, buf);
+  return d === null || d.startsWith(hash);
+}
+const looksLikePage = (res) => /^text\/html/i.test(res.headers.get('Content-Type') || '');
+// A response that is stored: the checked bytes, with the type and the length they really have.
+const keepable = (buf, res, type) => new Response(buf, { status: 200, headers: { 'Content-Type': type || res.headers.get('Content-Type') || 'application/octet-stream', 'Content-Length': String(buf.byteLength) } });
+
+// Fetches a file of the app and returns what may be stored for it, or throws.
+async function fetchChecked(u) {
+  const res = await fetch(fresh(u));
+  if (!res.ok || res.status !== 200 || res.redirected) throw new Error(`${u}: ${res.status}`);
+  const buf = await res.arrayBuffer();
+  const want = INTEGRITY[u];
+  if (!want || !(await matches(buf, want[0], 'SHA-256', want[1]))) throw new Error(`${u}: not the file this version lists`);
+  return keepable(buf, res);
+}
+
+// The list of sound packs of this version, read from the stored app (it was checked when it was stored).
+let packList = null;
+async function packFor(path) {
+  if (!packList) {
+    try {
+      const r = await (await caches.open(SHELL)).match('audio/index.json');
+      packList = r ? new Map((await r.json()).packs.map((p) => ['audio/' + p.file, p])) : null;
+    } catch { packList = null; }
+  }
+  return packList ? packList.get(path) || null : null;
+}
+// The bytes of a sound pack, if they are that pack: its size from the list, its hash from its name.
+async function goodPack(path, buf) {
+  const p = await packFor(path);
+  const m = /\.([0-9a-f]{8})\.mp3$/.exec(path);
+  return !!(p && m && (await matches(buf, p.bytes, 'SHA-1', m[1])));
+}
+
 self.addEventListener('install', (e) => {
   e.waitUntil((async () => {
     const c = await caches.open(SHELL);
-    await c.addAll(CORE.map(fresh));
-    await Promise.all(EXTRA.map((u) => c.add(fresh(u)).catch(() => null)));
+    // all or nothing: if one file of the app is not right, this version is not installed now (the browser tries again later)
+    const core = await Promise.all(CORE.map(async (u) => [u, await fetchChecked(u)]));
+    for (const [u, res] of core) await c.put(u, res);
+    await Promise.all(EXTRA.map(async (u) => { try { await c.put(u, await fetchChecked(u)); } catch { /* fetched again on first use */ } }));
     // the very first install starts working at once; an update waits until the page asks for it
     if (!self.registration.active) await self.skipWaiting();
   })());
@@ -67,7 +120,12 @@ self.addEventListener('activate', (e) => {
       const idx = await (await (await caches.open(SHELL)).match('audio/index.json')).json();
       const keep = new Set(idx.packs.map((p) => new URL('audio/' + p.file, self.registration.scope).href));
       const c = await caches.open(AUDIO);
-      for (const req of await c.keys()) if (!keep.has(req.url)) await c.delete(req);
+      for (const req of await c.keys()) {
+        if (!keep.has(req.url)) { await c.delete(req); continue; }
+        // a login page stored by an earlier version of this worker (before stored sounds were checked)
+        const res = await c.match(req);
+        if (!res || !/^audio\//i.test(res.headers.get('Content-Type') || '')) await c.delete(req);
+      }
     } catch (err) { /* nothing cached yet */ }
     await self.clients.claim();
   })());
@@ -96,8 +154,11 @@ self.addEventListener('fetch', (e) => {
       const hit = (await (await caches.open(AUDIO)).match(req, { ignoreSearch: true })) || (await (await caches.open(SHELL)).match(req, { ignoreSearch: true }));
       if (hit) return hit;
       const res = await fetch(req);
-      if (res.ok && res.status === 200) { const c = await caches.open(AUDIO); c.put(req, res.clone()); }
-      return res;
+      if (!res.ok || res.status !== 200 || res.redirected || looksLikePage(res)) return res;
+      // stored only if these are the pack's own bytes; either way the page gets what came (src/js/audio.js checks it too)
+      const buf = await res.arrayBuffer();
+      if (await goodPack(path, buf)) { try { await (await caches.open(AUDIO)).put(req, keepable(buf, res, 'audio/mpeg')); } catch { /* storage full */ } }
+      return new Response(buf, { status: res.status, headers: res.headers });
     })());
     return;
   }
@@ -117,10 +178,9 @@ self.addEventListener('fetch', (e) => {
     const cache = await caches.open(SHELL);
     const hit = await cache.match(req, { ignoreSearch: true });
     if (hit) return hit;
-    try {
-      const res = await fetch(req);
-      if (res.ok && res.status === 200 && EXTRA.includes(path)) cache.put(path, res.clone());   // a font or picture that could not be stored at install
-      return res;
-    } catch (err) { return offline(); }
+    if (EXTRA.includes(path)) {                     // a font or picture that could not be stored at install: stored now if it is the right file
+      try { const good = await fetchChecked(path); cache.put(path, good.clone()); return good; } catch { /* not the right file now: let the network answer as it is */ }
+    }
+    try { return await fetch(req); } catch (err) { return offline(); }
   })());
 });

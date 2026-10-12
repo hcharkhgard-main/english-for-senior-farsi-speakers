@@ -160,7 +160,8 @@
     ],
     "wrong": "Let me to fix it.",
     "right": "Let me fix it.",
-    "why": "بعد از «Let me» فعل بدون «to» می‌آید."
+    "why": "بعد از «Let me» فعل بدون «to» می‌آید.",
+    "fresh": { "en": "Let me show you.", "wrong": "Let me to show you.", "fa": "بگذارید نشانتان بدهم." }
   },
   "review": {
     "status": "draft",

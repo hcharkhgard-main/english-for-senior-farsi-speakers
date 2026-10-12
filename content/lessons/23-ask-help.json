@@ -50,7 +50,8 @@
     ],
     "wrong": "You help me?",
     "right": "Can you help me?",
-    "why": "سؤال با «Can» شروع می‌شود."
+    "why": "سؤال با «Can» شروع می‌شود.",
+    "fresh": { "en": "Can you open the door?", "wrong": "You open the door?", "fa": "می‌شود در را باز کنید؟" }
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }

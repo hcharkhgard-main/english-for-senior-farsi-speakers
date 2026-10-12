@@ -58,7 +58,8 @@
     ],
     "wrong": "My family is Ahmadi.",
     "right": "My last name is Ahmadi.",
-    "why": "در فارسی می‌گوییم «فامیلی‌ام احمدی است»، ولی در انگلیسی «family» یعنی خانواده، نه نام خانوادگی. برای نام خانوادگی بگویید «last name»."
+    "why": "در فارسی می‌گوییم «فامیلی‌ام احمدی است»، ولی در انگلیسی «family» یعنی خانواده، نه نام خانوادگی. برای نام خانوادگی بگویید «last name».",
+    "fresh": { "en": "My last name is Karimi.", "wrong": "My family is Karimi.", "fa": "نام خانوادگی من کریمی است." }
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }

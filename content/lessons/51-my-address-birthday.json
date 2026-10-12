@@ -61,7 +61,8 @@
     ],
     "wrong": "I born in Iran.",
     "right": "I was born in Iran.",
-    "why": "در فارسی می‌گوییم «به دنیا آمدم» و فعل دیگری لازم نیست، ولی در انگلیسی قبل از «born» باید «was» بیاید: «I was born»."
+    "why": "در فارسی می‌گوییم «به دنیا آمدم» و فعل دیگری لازم نیست، ولی در انگلیسی قبل از «born» باید «was» بیاید: «I was born».",
+    "fresh": { "en": "I was born in Shiraz.", "wrong": "I born in Shiraz.", "fa": "من در شیراز به دنیا آمده‌ام." }
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }

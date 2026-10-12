@@ -168,7 +168,8 @@
     ],
     "wrong": "Thank you your help.",
     "right": "Thank you for your help.",
-    "why": "کلمهٔ «for» نباید جا بیفتد."
+    "why": "کلمهٔ «for» نباید جا بیفتد.",
+    "fresh": { "en": "Thank you for the flowers.", "wrong": "Thank you the flowers.", "fa": "بابت گل‌ها ممنونم." }
   },
   "review": {
     "status": "draft",

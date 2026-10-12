@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { audioKey, wordsOf, wordsOfHeadword } from '../src/js/audiokey.js';
-import { ownPieces, CARRIERS } from '../src/js/own.js';
+import { ownPieces, CARRIERS, CARRIERS_MORE } from '../src/js/own.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const C = (...p) => path.join(ROOT, 'content', ...p);
@@ -54,6 +54,10 @@ export function loadContent() {
   const first = curriculum.stages.length ? curriculum.stages[0].lessons : [];
   const sos = first.find((id) => lessons[id] && lessons[id].scenario === 'emergency');
   const essentials = Array.isArray(curriculum.essentials) ? curriculum.essentials : first.filter((id, i) => i < 2 || id === sos);
+  // "always": lessons that a learner who starts in a later stage still gets in their place, because later lessons take
+  // them for granted (prices at the checkout, days and times) — see pathLesson in src/js/learn.js
+  const always = Array.isArray(curriculum.always) ? curriculum.always.filter((id) => typeof id === 'string') : [];
+  if (curriculum.always != null && !Array.isArray(curriculum.always)) problems.push('curriculum always: must be a list of lesson ids');
   const vfile = maybe(C('vocabulary.json'), { words: [], categories: [] });
   const vocab = vfile.words.map(normaliseWord);
   const vocabCats = vfile.categories || [];
@@ -85,7 +89,7 @@ export function loadContent() {
   const numbersAfter = Array.isArray(curriculum.numbersAfter) ? curriculum.numbersAfter.filter((id) => typeof id === 'string') : [];
   const mine = {};
   for (const [lid, kinds] of Object.entries(curriculum.mine || {})) { if (Array.isArray(kinds)) mine[lid] = kinds.map(String); else problems.push(`curriculum mine: "${lid}" must list kinds of sentence`); }
-  const content = { version: curriculum.version, stages: curriculum.stages, essentials, practice, practiceAll, numbersAfter, mine, scenarios, lessons, roleplays, vocab, vocabCats, wordsAfter, wordsFirst, wordsSpread, numbers, papers, emergency, corrections: cfile.rules, soundTips: cfile.soundTips || [], patterns, ui };
+  const content = { version: curriculum.version, stages: curriculum.stages, essentials, always, practice, practiceAll, numbersAfter, mine, scenarios, lessons, roleplays, vocab, vocabCats, wordsAfter, wordsFirst, wordsSpread, numbers, papers, emergency, corrections: cfile.rules, soundTips: cfile.soundTips || [], patterns, ui };
   Object.defineProperty(content, 'notes', { value: notes });   // for the validator only; not written into the bundle
   Object.defineProperty(content, 'problems', { value: problems });
   return content;
@@ -95,6 +99,8 @@ export function loadContent() {
 // What the app receives, after this file has brought them into one shape. A field that is absent or empty in the
 // content file is ABSENT here too (never an empty list), so `if (L.variants)` and `(L.variants || [])` both work.
 //   lesson.phrases[i].own   ['Maryam', …]      the words of that phrase's `en` that stand for the learner's own details
+//   lesson.phrases[i].heard true               a line other people say (pass 4): understood, never asked to be said;
+//                                                absent when false
 //   lesson.mission          'یک جملهٔ فارسی'      a small thing to try in real life today
 //   lesson.variants         [{ en, fa, like, voice }]   other wordings of something the lesson teaches; `voice` is always
 //                                                filled in (the variant's own, else the lesson's them.voice)
@@ -123,11 +129,16 @@ export function normaliseLesson(L, problems = []) {
   const W = `lesson ${L.id}`;
   out.phrases = L.phrases.map((p, i) => {
     const q = { id: `p${i + 1}`, voice: 's', ...p };
-    delete q.own;
+    delete q.own; delete q.heard; delete q.hear;
     if (p.own != null) {
       if (!Array.isArray(p.own) || !p.own.every(isText)) problems.push(`${W} phrase ${i + 1}: "own" must be a list of words`);
       else if (p.own.length) q.own = p.own.map((x) => x.trim());
     }
+    // "heard": true — a line other people say to the learner (the pharmacist, the driver): it is to be understood, not
+    // said. Absent (or false) means a sentence for the learner to say. ("hear" is a likely slip of the pen.)
+    if (p.heard != null && typeof p.heard !== 'boolean') problems.push(`${W} phrase ${i + 1}: "heard" must be true or false`);
+    else if (p.heard) q.heard = true;
+    if (p.hear != null) problems.push(`${W} phrase ${i + 1}: "hear" is not a field — write "heard": true for a line other people say`);
     return q;
   });
   delete out.mission; delete out.variants; delete out.grid;
@@ -277,7 +288,7 @@ export function audioRequests(content) {
   // vocabulary headwords and exist already; the rest are recorded for the pack "me". The beginnings of the
   // sentences ("My phone number is") are recorded at both speeds.
   for (const text of ownPieces()) add('me', 'en', 's', 'n', text);
-  for (const text of Object.values(CARRIERS)) en('me', 's', text, true);
+  for (const text of [...Object.values(CARRIERS), ...Object.values(CARRIERS_MORE)]) en('me', 's', text, true);      // (CARRIERS_MORE: the clinic's "My date of birth is …", for the learner's own answer in a conversation)
   return [...reqs.values()].map((r) => ({ ...r, users: [...r.users] }));
 }
 

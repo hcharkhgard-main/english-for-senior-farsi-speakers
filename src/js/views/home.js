@@ -31,23 +31,30 @@ export function homeView(app) {
   const lessonSub = !offer ? t('home.lesson.none')
     : offer.kind === 'checkpoint' ? t('home.lesson.check', { min: fnum(checkpointMinutes) })
       : R ? (offer.hear ? t('home.lesson.talkHear', { title: R.title }) : t('home.lesson.talk', { title: R.title }))
-        : offer.kind === 'resume' ? t('home.lesson.resume', { title: L.title.fa })
+        // (an earlier lesson offered again and left half-way is "continue" too: it reopens where the learner stopped)
+        : offer.kind === 'resume' || (offer.kind === 'repeat' && s.at[offer.id]) ? t('home.lesson.resume', { title: L.title.fa })
           : offer.kind === 'repeat' ? t('home.lesson.repeat', { title: L.title.fa })
             : t('home.lesson.next', { title: L.title.fa, min: minutesText(t, L, false, Object.keys(s.done).length ? undefined : 0) });      // (the very first lesson has no questions on earlier lessons)
   // before anything has been learned there is nothing to "review": say that new words are waiting instead
   // the card names the next set and how long it takes — never how much is waiting behind it; after the second set the day is done
   const min = fnum(minutes(q.queue.length));
-  const wordsSub = !q.queue.length || q.set > SETS_PER_DAY ? t('home.words.none') : q.set > 1 ? t('home.words.second', { min }) : q.nDue ? t('home.words.sub', { min }) : t('home.words.new', { n: fnum(q.queue.length) });
+  // (cards already answered today but fewer than a whole set — a set was finished early, then a lesson added sentences:
+  // «مرور اول» would contradict «مرور امروز تمام شد», so the card says plainly that a few more are ready)
+  const answeredToday = s.newDay && s.newDay.d === app.today() ? Number(s.newDay.c) || 0 : 0;
+  const wordsSub = !q.queue.length || q.set > SETS_PER_DAY ? t('home.words.none') : q.set > 1 ? t('home.words.second', { min })
+    : q.nDue ? (answeredToday > 0 ? t('home.words.more', { min }) : t('home.words.sub', { min })) : t('home.words.new', { n: fnum(q.queue.length) });
 
   const main = h('main', { class: 'wrap' },
     h('section', { class: 'hello' },
       h('div', { class: 'txt' }, h('h1', null, t('home.hello')), h('p', null, t('home.ask'))),
       h('button', { type: 'button', class: 'round-play', 'aria-label': t('home.hear'), onclick: () => playNow(app, clipFa(welcome)) }, h('span', null, icon('play'), h('small', null, t('home.hearShort'))))),
-    missionAsk(app),      // asked once, at a later visit: «توانستید امتحانش کنید؟» about the last lesson's small task
     choice('book', t('home.lesson'), lessonSub, openOffer, true),
     choice('chat', t('home.talk'), t('home.talk.sub'), () => app.go('talk')),
     choice('cards', t('home.words'), wordsSub, () => app.go('words')),
     choice('places', t('home.places'), t('home.places.sub'), () => app.go('places')),
+    // asked once, at a later visit: «توانستید امتحانش کنید؟» about the last lesson's small task — under the four
+    // choices, so that «درس امروز» keeps its place at the top whatever the text size
+    missionAsk(app),
     h('div', { class: 'quiet-row' }, btn(t('home.sos'), { cls: 'btn-danger', icon: 'sos', onclick: () => app.go('sos') })),
     store.persistent ? null : note(t('home.noSave'), 'care'));
   return { main };
@@ -84,7 +91,7 @@ export function onboardView(app) {
     const list = all ? content.scenarios : content.scenarios.slice(0, ONB_FIRST);
     main.append(count(3), h('h1', { class: 'section-title' }, t('onb.q3')),
       h('div', { class: 'tiles' }, list.map((sc) => h('button', { type: 'button', class: 'tile' + (sc.id === 'emergency' ? ' is-danger' : ''), onclick: () => pick('scenario', sc.id) }, h('span', { class: 'pic' }, icon(sc.icon)), sc.title))),
-      all ? null : btn(t('onb.more'), { cls: 'btn-soft', icon: 'places', block: true, onclick: () => { app.ui.allPlaces = true; app.render(); } }));
+      all ? '' : btn(t('onb.more'), { cls: 'btn-soft', icon: 'places', block: true, onclick: () => { app.ui.allPlaces = true; app.render(); } }));
   } else {
     // where we start, and why the chosen situation may not be the very first lesson
     const sc = app.scenario(ob.scenario);

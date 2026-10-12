@@ -56,7 +56,8 @@
     ],
     "wrong": "In Tuesday.",
     "right": "On Tuesday.",
-    "why": "با اسم روزها «on» می‌آید، نه «in»."
+    "why": "با اسم روزها «on» می‌آید، نه «in».",
+    "fresh": { "en": "On Friday.", "wrong": "In Friday.", "fa": "روز جمعه." }
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }
