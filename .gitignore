@@ -9,3 +9,6 @@ audio-src/verify-report.json
 audio-src/clips/
 __pycache__/
 *.pyc
+audio-src/regen*.sh
+audio-src/verify-keys.txt
+audio-src/verify-report*.json
