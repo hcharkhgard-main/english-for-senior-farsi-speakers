@@ -29,6 +29,19 @@
         "You're welcome. Have a good day!"
       ]
     },
+    "rp-clothes": {
+      "role": "a friendly clothing store employee helping a customer with a jacket: the fitting room in the back on the left, a larger or smaller size, twenty percent off today, and returns within thirty days with the receipt; short, simple sentences; never ask for personal details",
+      "scene": "در فروشگاه لباس، یک ژاکت پسندیده‌اید و می‌خواهید آن را امتحان کنید.",
+      "goal": "اتاق پرو را پیدا کنید، سایز دیگری بخواهید و بپرسید قیمتش چند است.",
+      "phone": false,
+      "outline": [
+        "Hi! Can I help you find anything?",
+        "How does it fit?",
+        "This jacket is on sale today. It's twenty percent off.",
+        "Here is your receipt. You can return it within thirty days.",
+        "Have a great day!"
+      ]
+    },
     "rp-delivery": {
       "role": "a polite customer named John receiving a package at his front door; the learner is the delivery driver; speak in short simple sentences, sign for the package and ask one simple question about a second box; never offer or ask for card numbers, cash, codes or other personal details",
       "scene": "شما مأمور تحویل هستید. با یک جعبه جلوی خانهٔ مشتری ایستاده‌اید و او در را باز می‌کند.",
@@ -252,10 +265,13 @@
   "excluded": {
     "rp-911-questions": "safety-critical",
     "rp-airport": "safety-critical",
+    "rp-ask-help": "asks for personal details",
     "rp-bank": "safety-critical",
     "rp-benefits": "safety-critical",
     "rp-bill": "safety-critical",
     "rp-bus": "the learner answers with their own details",
+    "rp-car-accident": "safety-critical",
+    "rp-car-trouble": "safety-critical",
     "rp-card-reader": "safety-critical",
     "rp-checkin": "the learner answers with their own details",
     "rp-clinic": "safety-critical",

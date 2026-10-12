@@ -23,11 +23,16 @@ GitHub's current size limits for repositories and Pages sites if you add much mo
 
 **Use an address of its own.** Every repository of one GitHub account is served from the same origin
 (`USERNAME.github.io`). Any other Pages project of that account could read what this app stores on the
-phone — the learning progress and settings — and could use the optional AI service. The learner's personal
-details («اطلاعات من»: name, address, phone numbers, date of birth) are no longer stored at all: they are kept
-in memory only while the app is open (`src/js/me.js`), and a version that finds them saved by an earlier build
-erases them on its first start. Publish Hamrah from an account or organisation that hosts nothing else, or give it
-a custom domain.
+phone — the learning progress and settings — and can replace the stored copy of the app, which then runs as
+Hamrah; it could also use the optional AI service. The learner's personal details («اطلاعات من»: name, address,
+phone numbers, date of birth) are not stored at all: they are kept in memory only while the app is open
+(`src/js/me.js`), and a version that finds them saved by an earlier build erases them on its first start — but
+replaced app code could see them while they are typed. As a backstop, the service worker (`src/sw.js`) compares
+every stored file with the size and SHA-256 listed in the worker each time it serves it (the worker itself is
+always fetched from the network, so that list cannot be changed on the phone): a replaced page, script, lesson
+file, sound pack or pronunciation-checker file is deleted and downloaded again, and without a connection it is
+not served at all. It cannot stop another project from deleting the stored app and the worker, or from changing
+the progress. Publish Hamrah from an account or organisation that hosts nothing else, or give it a custom domain.
 
 ## 2. On each parent's iPhone (not yet tried on a real device)
 
@@ -190,7 +195,9 @@ proxy again. `npm test` fails while `ai-proxy/personas.json` is missing or out o
   address); a question for the learner's own details in the usual wordings ("What's your name?", "Where do
   you live?", "When were you born?", "How old are you?"); a texted or on-screen code; remote access
   (AnyDesk, "download this app"); gift-card codes, wire transfers, crypto, "send me money", a grandchild in
-  jail who needs money, "don't tell your family", "just sign it". Exactly which lines are refused and which
+  jail who needs money, "don't tell your family", "just sign it". The Farsi fields of a reply are checked too, in any
+  spelling (Arabic ي/ك, with or without half-spaces): «رمزتان را بگویید.», «به کسی نگویید.», «داروتان را قطع کنید.»,
+  «لازم نیست به ۹۱۱ زنگ بزنید.» and the like. Exactly which lines are refused and which
   must pass is pinned by the lists in `tests/unit/proxy.test.js`. This is a filter of patterns (`unsafeText` in `src/js/ai-prompt.js`, with its test lists in
   `tests/unit/proxy.test.js`), not of meaning: it stops the usual shapes of a harmful line, not every
   harmful sentence a model could write, and it has never been tried against a real model.
@@ -201,7 +208,11 @@ proxy again. `npm test` fails while `ai-proxy/personas.json` is missing or out o
   public (it is in `config.json`).
 - **The built-in limits slow abuse down; they do not stop it.** 30 answered turns per visitor address per
   10 minutes, 80 per visitor address per day (an IPv6 visitor is counted by its /64 network, since it can
-  take a new address in it for every request) and 600 per day for everybody together — but the counters are kept in memory, start again
+  take a new address in it for every request), 160 per day for the wider network a visitor is in (its IPv6 /48
+  or IPv4 /24, so that one home connection taking a new /64 or a new IPv4 address for every request cannot use up
+  the day's allowance for everybody) and 600 per day for everybody together. Callers from four or more different
+  networks together can still use up the 600, and then free conversation stops for everybody until the next day
+  (UTC). The counters are kept in memory, start again
   whenever the process or Worker restarts, and on Cloudflare each location counts on its own. Invalid
   requests are refused before they are counted and never reach the model.
 - **Therefore the provider's monthly spend limit is the cost control.** With it set, the worst case is

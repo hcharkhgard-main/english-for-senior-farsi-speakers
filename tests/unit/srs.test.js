@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { grade, buildQueue, answered, minutes, cardMode, counts, INTERVALS, LESSON_BOX, KNOWN_BOX, NEW_PER_DAY, SESSION_MAX, SETS_PER_DAY, NEW_RESERVED, OLDEST_KEPT } from '../../src/js/srs.js';
+import { grade, buildQueue, answered, minutes, cardMode, counts, INTERVALS, LESSON_BOX, KNOWN_BOX, NEW_PER_DAY, SESSION_MAX, SETS_PER_DAY, NEW_RESERVED, OLDEST_KEPT, LESSON_RESERVED } from '../../src/js/srs.js';
+import { todaysSet, lessonWords } from '../../src/js/learn.js';
 import { createStore, blank, migrate, today } from '../../src/js/store.js';
 import { loadContent } from '../../tools/content.mjs';
 import { simulate, fourAWeek, everyDay, sundayOff } from '../../tools/simulate-review.mjs';
@@ -132,6 +133,49 @@ test('set: the first words have three places a day whatever is waiting; other ne
   assert.deepEqual(buildQueue(few, [...Object.keys(few), ...words], 100).nNew, 4);
   // caught up: six new words, in the order of the pool
   assert.deepEqual(buildQueue({}, words, 100).queue, words.slice(0, NEW_PER_DAY));
+});
+
+test('set (QA round 4, M3): the words of a lesson finished today have kept places — while the day\'s two sets can carry what is due', () => {
+  const words = ids('w', 30);
+  const lessonW = ['w20', 'w25', 'w27'];
+  // the sets are full: 25 reviews due, the first list finished — no free place for a new word…
+  const due = ids('p', 25), srs = Object.fromEntries(due.map((id) => [id, { b: 3, d: 90, n: 3 }]));
+  const pool = [...due, ...words];
+  assert.equal(buildQueue(srs, pool, 100, { d: 0, n: 0 }, { core: 0 }).nNew, 0);
+  // …but the words of today's lesson have places kept: LESSON_RESERVED of them, ahead of the other new words
+  const q = buildQueue(srs, pool, 100, { d: 0, n: 0 }, { core: 0, lead: lessonW.slice(0, LESSON_RESERVED) });
+  assert.deepEqual(q.queue.slice(-LESSON_RESERVED), lessonW.slice(0, LESSON_RESERVED));
+  assert.equal(q.nNew, LESSON_RESERVED);
+  // with the first words still coming: their places first, the lesson's words straight after
+  const both = buildQueue(srs, pool, 100, { d: 0, n: 0 }, { core: 10, lead: ['w20', 'w25'] });
+  assert.deepEqual(both.queue.slice(-(NEW_RESERVED + 2)), [...words.slice(0, NEW_RESERVED), 'w20', 'w25']);
+  // a learner far behind (more due than the day's two sets hold) gets no extra words: the pace follows the learner
+  const many = Object.fromEntries(ids('p', 40).map((id) => [id, { b: 3, d: 90, n: 3 }]));
+  assert.equal(buildQueue(many, [...Object.keys(many), ...words], 100, { d: 0, n: 0 }, { core: 0, lead: ['w20'] }).nNew, 0);
+  // a word met already is not reserved again
+  assert.equal(buildQueue({ ...srs, w20: { b: 1, d: 101, n: 1, l: 100 } }, pool, 100, { d: 0, n: 0 }, { core: 0, lead: ['w20'] }).nNew, 0);
+});
+
+test('todaysSet (QA round 4, M3): the safety words of the 911 lesson come with the first words; a lesson\'s own words on the day it is finished', () => {
+  const s = blank(); s.onboard.done = true;
+  const pos = (en) => content.wordsFirst.indexOf((content.vocab.find((w) => w.en === en) || {}).id);
+  for (const w of ['awake', 'breathing']) { assert.ok(pos(w) >= 0 && pos(w) < 24, `${w} is among the first words (${pos(w)})`); assert.equal(content.vocab.find((x) => x.en === w).level, 1); }
+  // every first word met, a pharmacy lesson finished today, and a full set of reviews due
+  const day = 200, noon = day * 86400000 + 43200000 + new Date(day * 86400000).getTimezoneOffset() * 60000;
+  for (const id of content.wordsFirst) s.srs[id] = { b: 4, d: 400, n: 4, l: 150 };
+  const order = content.stages.flatMap((st) => st.lessons).filter((id) => content.lessons[id]);
+  const ph = order.find((id) => /pharmacy/.test(id));
+  for (const id of order.slice(0, order.indexOf(ph))) s.done[id] = { t: noon - 30 * 86400000, n: 1 };
+  s.done[ph] = { t: noon, n: 1 };
+  let k = 0;      // twenty of the sentences due today (more than one set, less than the day's two), the rest later
+  for (const id of Object.keys(s.done)) for (const p of content.lessons[id].phrases) s.srs[`p:${id}:${p.id}`] = { b: 3, d: k++ < 20 ? day - 1 : day + 20, n: 2, l: day - 13 };
+  const q = todaysSet(s, content, day);
+  const mine = lessonWords(content, ph).filter((id) => !s.srs[id]);
+  assert.ok(mine.length >= 1, 'the pharmacy lesson has words of its own');
+  assert.ok(q.queue.some((id) => mine.includes(id)), 'a word of today\'s lesson is in the set');
+  // the day after: no places kept
+  const q2 = todaysSet(s, content, day + 1);
+  assert.ok(!q2.queue.some((id) => mine.includes(id)) || q2.nNew > 0);
 });
 
 test('set: when too much is due, the most recently learned come first — and four places go to what has waited longest', () => {

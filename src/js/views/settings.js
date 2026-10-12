@@ -44,7 +44,7 @@ export function settingsView(app) {
   main.append(h('button', { type: 'button', class: 'item', onclick: () => app.go('me') }, h('span', { class: 'pic', style: 'width:3rem;height:3rem' }, icon('people')),
     h('span', { class: 'body' }, h('span', { class: 't' }, t('me.title')), h('span', { class: 's' }, t('me.sub'))), h('span', { class: 'go' }, icon('next'))));
   // «هیچ‌وقت نپرس»: no invitation to enter personal details, anywhere; «اطلاعات من» stays here, one tap above
-  main.append(h('section', { class: 'card' }, toggle(t('set.neverAsk'), st.neverAsk, (v) => set('neverAsk', v)), h('p', { class: 'small muted' }, t('set.neverAsk.hint'))));
+  main.append(h('section', { class: 'card' }, toggle(t('set.neverAsk'), st.neverAsk, (v) => set('neverAsk', v), null, 'set-neverask-hint'), h('p', { class: 'small muted', id: 'set-neverask-hint' }, t('set.neverAsk.hint'))));
 
   // ---- offline -----------------------------------------------------------------------------
   if (app.target === 'pwa') {
@@ -58,13 +58,18 @@ export function settingsView(app) {
       if (all && have >= all) box.append(h('p', null, t('off.all')));
       else if (parts) {
         const mark = (ready) => { const i = icon(ready ? 'check' : 'wifiOff'); Object.assign(i.style, { width: '1.5rem', height: '1.5rem', color: ready ? 'var(--good)' : 'var(--ink-2)' }); return i; };
-        const row = (label, ready) => h('li', { class: 'row', style: 'align-items:center;gap:.5rem' }, mark(ready), h('span', { class: 'grow' }, label), h('strong', null, ready ? t('off.yes') : t('off.no')));
+        // ready: true (a tick and «آماده است»), false («هنوز نه») or 'some' (no tick: «بعضی آماده است») — a part is
+        // "ready" only when all of it is (QA round 4, accessibility M2: «درس‌ها: ۱۱ از ۷۲ ✓ آماده است» read as "all lessons")
+        const row = (label, ready) => h('li', { class: 'row', style: 'align-items:center;gap:.5rem', 'data-ready': String(ready) }, mark(ready === true), h('span', { class: 'grow' }, label),
+          h('strong', null, ready === true ? t('off.yes') : ready === 'some' ? t('off.some') : t('off.no')));
+        const [lHave, lAll] = parts.lessons;
         box.append(h('ul', { class: 'stack', 'data-offline-parts': '', style: 'list-style:none;padding:0;margin:0' },
           row(t('off.part.sos'), parts.sos),
-          row(t('off.part.lessons', { have: fnum(parts.lessons[0]), all: fnum(parts.lessons[1]) }), parts.lessons[0] > 0),
+          row(t('off.part.lessons', { have: fnum(lHave), all: fnum(lAll) }), lAll > 0 && lHave >= lAll ? true : lHave > 0 ? 'some' : false),
           row(t('off.part.review'), parts.review),
           parts.numbers == null ? null : row(t('off.part.numbers'), parts.numbers),
-          parts.papers == null ? null : row(t('off.part.papers'), parts.papers)));
+          parts.papers == null ? null : row(t('off.part.papers'), parts.papers),
+          parts.talks == null ? null : row(t('off.part.talks'), parts.talks)));
       }
       box.append(h('p', { class: 'small muted' }, t('off.hint')));
       if (busy) box.append(h('div', { class: 'level' }, h('i', { style: `width:${all ? Math.round((have / all) * 100) : 0}%` })));
@@ -101,11 +106,18 @@ export function settingsView(app) {
         } }));
       say.append(h('p', { class: 'small muted' }, t('mic.privacy')));
     }
-    main.append(say);
-
     const standalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
-    if (!standalone) main.append(h('section', { class: 'card' }, h('h2', null, t('inst.title')), h('p', null, t('inst.why')),
-      h('ol', { class: 'steps' }, h('li', null, t('inst.1')), h('li', null, t('inst.2')), h('li', null, t('inst.3'))), h('p', { class: 'small muted' }, t('inst.other'))));
+    // «بررسی تلفظ» and «گذاشتن برنامه روی صفحهٔ اصلی» are behind «بیشتر»: Settings was 17 screens long at 320 px and large
+    // text (QA round 4, accessibility L8). Open while a download is running, so its progress stays in sight.
+    const moreOpen = !!ui.more || !!(ui.asr && ui.asr.busy);
+    main.append(h('button', { type: 'button', class: 'item', 'aria-expanded': String(moreOpen), 'data-set-more': '', onclick: () => { ui.more = !moreOpen; app.render(); } },
+      h('span', { class: 'pic', style: 'width:3rem;height:3rem' }, icon(moreOpen ? 'close' : 'download')),
+      h('span', { class: 'body' }, h('span', { class: 't' }, t('set.more')), h('span', { class: 's' }, standalone ? t('set.more.sub1') : t('set.more.sub')))));
+    if (moreOpen) {
+      main.append(say);
+      if (!standalone) main.append(h('section', { class: 'card' }, h('h2', null, t('inst.title')), h('p', null, t('inst.why')),
+        h('ol', { class: 'steps' }, h('li', null, t('inst.1')), h('li', null, t('inst.2')), h('li', null, t('inst.3'))), h('p', { class: 'small muted' }, t('inst.other'))));
+    }
   } else {
     main.append(note(t('preview.note'), 'info'));
   }
@@ -149,6 +161,7 @@ async function countCached(app) {
         review: ahead.review.length > 0 && all(ahead.review),
         numbers: (content.numbers || []).length && idx.packs.some((p) => p.id === 'n-numbers') ? ok.has('n-numbers') : null,
         papers: ahead.papers.length ? all(ahead.papers) : null,
+        talks: ahead.talks.length ? all(ahead.talks) : null,
       },
     };
   } catch { return { have: 0, all: 0, parts: null }; }
@@ -239,7 +252,8 @@ export function sosView(app) {
   const cards = order.map((p) => {
     const mine = p.slot ? fill(p) : null;
     return h('section', { class: 'card' },
-      h('div', { class: 'opt-wrap' }, miniPlay(app, clipEn(p.say || p.en, 's', 'n')), h('div', { class: 'grow' }, en(mine || p.en, 'p', 'en-line'), h('p', { class: 'fa-line' }, p.fa))),
+      // the main play button of each phrase says what it does in words, not only with ▶ (QA round 4, accessibility L5)
+      h('div', { class: 'opt-wrap' }, miniPlay(app, clipEn(p.say || p.en, 's', 'n'), null, t('audio.listen')), h('div', { class: 'grow' }, en(mine || p.en, 'p', 'en-line'), h('p', { class: 'fa-line' }, p.fa))),
       p.slot === 'address' && !mine ? note(t('sos.paper'), 'info', 'paper') : null,      // without «اطلاعات من»: the address from a paper by the phone
       p.slot && mine ? note(t('sos.show'), 'info', 'ear') : null,      // the recording cannot know the learner's own name or address
       h('div', { class: 'row' }, listenBtn(app, clipEn(p.say || p.en, 's', 's'), { label: t('audio.slow'), cls: 'btn-ghost', ic: 'slow', small: true }), p.slot ? null : faListen(app, p.fa, t('audio.fa'))),

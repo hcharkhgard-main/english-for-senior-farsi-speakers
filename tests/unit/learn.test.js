@@ -5,7 +5,7 @@ import { blank } from '../../src/js/store.js';
 import { grade, INTERVALS, LESSON_BOX, NEW_RESERVED, SESSION_MAX } from '../../src/js/srs.js';
 import { createStore, migrate, today, DAY } from '../../src/js/store.js';
 import { todayOffer, afterPath, checkpointDue, checkpointMark, checkpointLessons, checkpointPlan, missionDue, canDoList, laterChoice, doneLessons, missesOf, CHECK_EVERY, CHECK_HEAR, CHECK_SAY, REPEAT_REST, MISSION_WAIT, MISSION_KEEP } from '../../src/js/learn.js';
-import { numberWord, ordinalWord, ordinalDigits, yearWords, parseBorn, formatBorn, bornComplete, daysIn, ageOn, nameParts, spellOut, phoneParts, ownLines, ownMissing, ownPieces, MONTHS, YEARS, CARRIERS, OWN_KINDS, ownVersion, ownItem, ownReplies, CARRIERS_MORE } from '../../src/js/own.js';
+import { numberWord, ordinalWord, ordinalDigits, yearWords, parseBorn, formatBorn, bornComplete, daysIn, ageOn, nameParts, spellOut, phoneParts, ownLines, ownMissing, ownPieces, MONTHS, YEARS, CARRIERS, OWN_KINDS, ownVersion, ownItem, ownReplies, CARRIERS_MORE, addressParts, latinDigits, sampleIdentity } from '../../src/js/own.js';
 import { audioRequests } from '../../tools/content.mjs';
 import { enNumber, enOrdinal, enYear } from '../../tools/spoken.mjs';
 import { lessonOrder, resumeId, pathLesson, nextLesson, scenarioStart, reviewPool, lessonWords, todaysSet, dueSentences, inTurns, TURN, shortPhrases, partnerLines, gistCount, gistTargets, numberRound, shuffle, mix } from '../../src/js/learn.js';
@@ -964,12 +964,41 @@ test('own version: nothing when a detail is missing, when a sample detail would 
   assert.equal(own('Hello, this is Maryam Ahmadi.', 'سلام، مریم احمدی هستم.', { ...ME, name: 'Hossein' }), null, 'a first name only: no full name to say');
   assert.equal(own('25 Oak Street, apartment 12. My zip code is 90024.', 'خیابان اوک، پلاک ۲۵، آپارتمان ۱۲. کد پستی من ۹۰۰۲۴ است.'), null);
   assert.equal(own('His name is Arman Ahmadi.', 'اسمش آرمان احمدی است.'), null);
-  assert.equal(own('I live in apartment 12.', 'من در آپارتمان شمارهٔ ۱۲ زندگی می‌کنم.'), null);
+  assert.equal(own('I live in apartment 12.', 'من در آپارتمان شمارهٔ ۱۲ زندگی می‌کنم.', { ...ME, address: '1450 Pine Ave' }), null, 'no apartment in the address');
+  assert.equal(own('My zip code is 90024.', 'کد پستی من ۹۰۰۲۴ است.'), null, 'no zip code in the address');
   assert.equal(own('Can you call my son, please?', 'می‌شود به پسرم زنگ بزنید؟'), null, 'nothing of the sample person: nothing to change');
   assert.equal(own('My date of birth is March 5th, 1958.', 'تاریخ تولد من ۵ مارس ۱۹۵۸ است.', { ...ME, born: '0-12-14' }), null);
   // the learner may live on an Oak Street too: their own address is not taken for the sample's
   assert.equal(own('I live at 25 Oak Street.', 'من در خیابان اوک، پلاک ۲۵ زندگی می‌کنم.', { ...ME, address: '7 Oak Street' }).en, 'I live at 7 Oak Street.');
   assert.equal(ownVersion(null, 'x', ME), null);
+});
+
+test('own version (QA round 4, M2): the apartment number and the zip code are read from the address; Persian digits count', () => {
+  assert.deepEqual(addressParts('1450 Pine Ave, Apt 3, Los Angeles, CA 90024'), { apt: '3', zip: '90024' });
+  assert.deepEqual(addressParts('12345 Main St #4B'), { apt: '4B', zip: '' }, 'a five-digit house number is not a zip code');
+  assert.deepEqual(addressParts('25 Oak Street, apartment 12, LA 90024-1234'), { apt: '12', zip: '90024' });
+  assert.deepEqual(addressParts('۲۵ Oak Street, Unit ۷'), { apt: '7', zip: '' });
+  const me = { ...ME, address: '1450 Pine Ave, Apt 3, Los Angeles, CA 90026' };
+  assert.equal(own('My apartment number is 12.', 'شمارهٔ آپارتمان من ۱۲ است.', me).en, 'My apartment number is 3.');
+  assert.equal(own('My apartment number is 12.', 'شمارهٔ آپارتمان من ۱۲ است.', me).fa, 'شمارهٔ آپارتمان من ۳ است.');
+  assert.equal(own('I live in apartment 12.', 'من در آپارتمان شمارهٔ ۱۲ زندگی می‌کنم.', me).en, 'I live in apartment 3.');
+  assert.deepEqual(own('My zip code is 90024.', 'کد پستی من ۹۰۰۲۴ است.', me), { en: 'My zip code is 90026.', fa: 'کد پستی من ۹۰۰۲۶ است.', say: null, words: null, own: ['90026'] });
+  // features L2: a number typed with a Persian keyboard is the same number
+  assert.deepEqual(phoneParts('۲۱۲۵۵۵۰۱۴۲'), { digits: '2125550142'.split(''), show: '212-555-0142' });
+  assert.deepEqual(phoneParts('٣١٠-٥٥٥-٠١٩٩').show, '310-555-0199');
+  assert.equal(ownLines({ phone: '۳۱۰۵۵۵۰۱۹۹' }, ['phone'])[0].en, 'My phone number is 310-555-0199.');
+  assert.equal(own('My phone number is 212-555-0142.', 'شمارهٔ تلفن من ‎۲۱۲-۵۵۵-۰۱۴۲ است.', { ...ME, phone: '۳۱۰۵۵۵۰۱۹۹' }).en, 'My phone number is 310-555-0199.');
+  assert.equal(latinDigits('۱۲۳ و ٤٥٦'), '123 و 456');
+  // an address in Persian letters is not put into an English sentence
+  assert.deepEqual(ownLines({ address: 'خیابان اوک ۲۵' }, ['address']), []);
+  assert.equal(ownLines({ address: '۲۵ Oak St' }, ['address'])[0].en, 'I live at 25 Oak St.');
+});
+
+test('sample identity (QA round 4, M2): the sentences that hold the sample person\'s details, not those with an example word to change', () => {
+  const yes = ['My first name is Maryam.', "It's spelled A-H-M-A-D-I.", 'My zip code is 90024.', 'My apartment number is 12.', 'I live in apartment 12.', 'I am sixty-five years old.', 'My phone number is 212-555-0142.', 'I was born on March 5th, 1958.', 'His name is Arman Ahmadi.'];
+  const no = ["I'm visiting my son.", "I have an appointment at ten o'clock.", 'Do you take Medicare?', 'Hello!'];
+  for (const x of yes) assert.ok(sampleIdentity(x), x);
+  for (const x of no) assert.ok(!sampleIdentity(x), x);
 });
 
 test('review cards: a sentence about the sample person is shown as the learner\'s own; other cards are unchanged', () => {
@@ -991,7 +1020,7 @@ test('review cards: a sentence about the sample person is shown as the learner\'
   }
 });
 
-const SAMPLE = /Maryam|Ahmadi|A-H-M-A-D-I|1958|0142|Oak Street|مریم|احمدی|اِیچ|۱۹۵۸|۰۱۴۲/;
+const SAMPLE = /Maryam|Ahmadi|A-H-M-A-D-I|1958|0142|Oak Street|apartment 12|apartment number is 12|90024|مریم|احمدی|اِیچ|۱۹۵۸|۰۱۴۲|آپارتمان ۱۲|آپارتمان من ۱۲|آپارتمان شمارهٔ ۱۲|۹۰۰۲۴/;
 test('conversations (M2): the answer to tap for a personal question is the learner\'s own once «اطلاعات من» has it', () => {
   let turns = 0;
   for (const R of content.roleplays) for (const turn of R.turns.filter((x) => x.open)) {

@@ -50,6 +50,21 @@ the record at the top level of the file in the same form (the app ignores it).
 - Automatic grammar corrections (`content/corrections.json`) are pattern rules; they cover common Farsi-speaker errors, not everything.
 - Notes that state facts about American life (tipping, 911 interpreters, gift receipts, pay-first gas pumps, urgent care) are general knowledge and vary by place.
 - The instructions given to the optional AI partner (`src/js/ai-prompt.js`) are part of the teaching content and have never been tried with a real model.
+- Stage 3 promises «گفت‌وگوهای بلندتر», but its lesson dialogues are hardly longer than stage 2's (QA round 4,
+  coverage L3: partner lines average 6.7 / 7.5 / 7.0 words in stages 1–3). Each stage-3 dialogue should have one
+  partner line of 10–16 words that carries two facts, in the style of "Thank you. We know about the outage in your
+  area. A crew is working on it." (`power-weather`). A greeting or a menu does not count. A new line needs new
+  recordings, so write it during review, not in passing. State on 2026-10-12 (longest partner line in brackets):
+  - **Have one:** `customer-service` (the phone menu, 13), `insurance-coverage` (copay + blood test, 11),
+    `power-weather` (16), `driving-police` (too fast + the limit, 11), `immigration-office` (14),
+    `work-first-day` (10), `work-delivery` (11).
+  - **Need one:** `appointment-change` (7), `pay-bill-phone` (only a greeting, 11; for example "Thank you. You owe
+    eighty-two dollars, and it's due on Friday."), `landlord-rent` (10, one fact), `sale-shopping` (9),
+    `community-library` (greeting, 9), `senior-center` (greeting, 10), `driving-car` (8), `car-accident` (9),
+    `airport-checkin` (9), `on-the-plane` (9), `airport-officer` (7), `job-search` (8), `work-rideshare` (5),
+    `work-maintenance` (6), `work-tailor` (6), `work-bridal` (7), `work-customers` (9), `wedding-congrats` (6),
+    `condolences` (9).
+  - The conversations `rp-car-accident` and `rp-car-trouble` (added in pass 5) already end with such a line.
 
 ## Adding content safely
 

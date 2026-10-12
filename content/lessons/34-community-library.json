@@ -52,7 +52,7 @@
     "wrong": "Is English class here?",
     "right": "Are there English classes here?",
     "why": "برای پرسیدن از بودنِ چیزی «there» لازم است: برای چند چیز «Are there …\u200e؟» و برای یک چیز «Is there a …\u200e؟».",
-    "fresh": { "en": "Are there restrooms here?", "wrong": "Is restroom here?", "fa": "اینجا دستشویی هست؟" }
+    "fresh": { "en": "Is there a restroom here?", "wrong": "Is restroom here?", "fa": "اینجا دستشویی هست؟" }
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
 }

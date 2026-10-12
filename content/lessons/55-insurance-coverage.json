@@ -59,7 +59,7 @@
     ],
     "wrong": "Does this covered by my insurance?",
     "right": "Is this covered by my insurance?",
-    "why": "با «covered» فعلِ «is» می‌آید، نه «does». جملهٔ خبری «This is covered» است و در سؤال، همان «is» اول می‌آید.",
+    "why": "با «covered» یا «included» فعلِ «is» می‌آید، نه «does». جملهٔ خبری «This is covered» است و در سؤال، همان «is» اول می‌آید.",
     "fresh": { "en": "Is this included?", "wrong": "Does this included?", "fa": "این هم جزوش حساب می‌شود؟" }
   },
   "review": { "status": "draft", "language": null, "teaching": null, "safety": null }

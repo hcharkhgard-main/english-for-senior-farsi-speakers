@@ -54,6 +54,13 @@ Latest review scores (0–10, from the reviewers' own reports):
 7. **Address of its own.** The live site is on `hcharkhgard-main.github.io`, an address shared with every other
    GitHub Pages project of that account: any of them could read what Hamrah keeps on the phone — which is now only
    the learning progress and settings. Personal details («اطلاعات من») are no longer stored at all (kept in memory
-   while the app is open, erased from phones that had them saved by an earlier version), so they are not exposed
-   (see `docs/DEPLOYMENT.md`, "Use an address of its own"). Move it to an account or organisation that hosts nothing
-   else, or to a custom domain, before the learners rely on it — progress does not move with the address.
+   while the app is open, erased from phones that had them saved by an earlier version), but any of those projects
+   can replace the stored app, which would then run as Hamrah and could see the details while they are typed (QA
+   round 4, security M1). Since then the service worker checks every stored file against this version's list
+   (size and SHA-256) each time it serves it, and deletes and re-downloads a copy that is not the listed file, so a
+   replaced page, script, lesson file, sound or recogniser file is no longer served. That is a backstop, not a cure:
+   such a project can still delete Hamrah's stored files and its service worker (the app then needs a connection
+   again, and a site-wide service worker of `hcharkhgard-main.github.io` could take its place), read and change
+   the progress, and use the optional AI service. Move it to an account or organisation that hosts nothing else,
+   or to a custom domain, before the learners rely on it — progress does not move with the address
+   (see `docs/DEPLOYMENT.md`, "Use an address of its own").

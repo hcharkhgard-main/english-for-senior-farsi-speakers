@@ -3,9 +3,9 @@ import { h, icon, btn, en, note, progress, fnum } from '../ui.js';
 import { clipEn, listenBtn, miniPlay, favBtn, wordsLine, sayPanel, playNow, faListen } from '../components.js';
 import { grade, counts, answered, minutes, cardMode, SETS_PER_DAY } from '../srs.js';
 import { shuffle, mix, numberRound, micOn, later, todaysSet, heardOnly } from '../learn.js';
-import { quiz } from './lesson.js';
+import { quiz, digitsOf } from './lesson.js';
 import { papersLink } from './papers.js';
-import { ownItem } from '../own.js';
+import { ownItem, sampleIdentity } from '../own.js';
 import { me } from '../me.js';
 
 export function wordsView(app) {
@@ -18,10 +18,13 @@ export function wordsView(app) {
   const favs = Object.keys(s.fav).length;
   const n = fnum(q.queue.length), min = fnum(minutes(q.queue.length));
   const planDone = q.set > SETS_PER_DAY;            // both sets of today are done; more is there only for someone who asks
+  // (cards already answered today but fewer than a set — a set ended early, then a lesson added sentences: these are
+  // "a few more", as the home screen says, not «مرور اول» after «مرور امروز تمام شد» — QA round 4, features L1)
+  const answeredToday = s.newDay && s.newDay.d === app.today() ? Number(s.newDay.c) || 0 : 0;
   const main = h('main', { class: 'wrap' }, h('h1', { class: 'section-title' }, t('words.title')),
     h('section', { class: 'card' }, h('h2', null, t('words.today')),
       h('p', { class: 'lead' }, planDone ? t('words.today.done') : !q.queue.length ? t('words.today.none')
-        : q.set > 1 ? t('words.today.second', { n, min }) : q.nDue ? t('words.today.first', { n, min }) : t('words.today.new', { n })),
+        : q.set > 1 ? t('words.today.second', { n, min }) : q.nDue ? (answeredToday > 0 ? t('words.today.more', { n, min }) : t('words.today.first', { n, min })) : t('words.today.new', { n })),
       q.queue.length && !planDone ? btn(t('words.start'), { cls: 'btn-primary', icon: 'cards', block: true, onclick: () => app.go('review') }) : null,
       h('p', { class: 'muted' }, t('words.plan')),
       c.known && c.learning ? h('p', { class: 'muted' }, t('words.known', { known: fnum(c.known), learning: fnum(c.learning) }))
@@ -53,12 +56,33 @@ function wordRow(app, it) {
     h('div', { class: 'row' }, listenBtn(app, clipAt('s'), { label: app.t('audio.slow'), cls: 'btn-ghost', ic: 'slow', small: true }), favBtn(app, it.id)));
 }
 
+// The numbers are 62 words — 25 screens of buttons in one list (QA round 4, accessibility L8). They are shown in three
+// parts, one at a time: 0 to 20, the tens with a hundred and a thousand, and the ordinals ("first", "twenty-first").
+const ORDINAL = /(?:first|second|third|th)$/;
+export function numberPart(en) {
+  const w = String(en).toLowerCase();
+  if (ORDINAL.test(w)) return 'ord';
+  const n = Number(digitsOf(w));
+  return digitsOf(w) !== '' && n <= 20 ? 'small' : 'big';
+}
+export const NUMBER_PARTS = ['small', 'big', 'ord'];
+
 export function catView(app, catId) {
   const { t, content } = app;
   const cat = content.vocabCats.find((c) => c.id === catId) || content.vocabCats[0];
-  const words = content.vocab.filter((w) => w.cat === cat.id);
+  let words = content.vocab.filter((w) => w.cat === cat.id);
   if (!app.ui.warmed) { app.ui.warmed = true; app.audio.loadIndex().then(() => app.audio.warm(['v-' + cat.id])).catch(() => {}); }
-  return { main: h('main', { class: 'wrap' }, h('h1', { class: 'section-title' }, cat.title), h('p', { class: 'muted' }, t('words.cat.hint')), words.map((w) => wordRow(app, app.item(w.id)))) };
+  const main = h('main', { class: 'wrap' }, h('h1', { class: 'section-title' }, cat.title), h('p', { class: 'muted' }, t('words.cat.hint')));
+  if (cat.id === 'numbers' && words.length > 24) {
+    const part = NUMBER_PARTS.includes(app.ui.part) ? app.ui.part : 'small';
+    main.append(h('div', { class: 'seg', role: 'group', 'aria-label': t('words.num.parts') }, NUMBER_PARTS.map((x) =>
+      h('button', { type: 'button', 'aria-pressed': String(x === part), onclick: () => { app.ui.part = x; app.render(); } }, x === part ? icon('check') : null, h('span', null, t('words.num.' + x))))));
+    words = words.filter((w) => numberPart(w.en) === part);
+    const value = (en) => (digitsOf(en) !== '' ? Number(digitsOf(en)) : { half: 0.5, 'one thousand': 1000 }[en] ?? 1e6);
+    if (part !== 'ord') words.sort((a, b) => value(a.en) - value(b.en));      // in counting order: 0, 1, 2 … (the file has them in the order they were added)
+  }
+  main.append(...words.map((w) => wordRow(app, app.item(w.id))));
+  return { main };
 }
 
 export function savedView(app) {
@@ -152,10 +176,25 @@ export function reviewView(app) {
   const listen = () => h('div', { class: 'row' }, listenBtn(app, clip, { label: t('audio.listen') }), listenBtn(app, clipAt('s'), { label: t('audio.slow'), cls: 'btn-ghost', ic: 'slow' }));
   const mine = it.mine ? h('p', { class: 'eyebrow' }, t('own.title')) : null;
   const reveal = (label, sound) => btn(label, { cls: 'btn-primary', icon: 'eye', block: true, onclick: () => { S.shown = true; app.render(); if (sound) playNow(app, clip); } });
+  // A sentence with the sample person's details in it ("My first name is Maryam.", "My zip code is 90024.") while
+  // «اطلاعات من» is empty — which, kept in memory only, it is on most days: never asked from Farsi (recalling Maryam's date
+  // of birth teaches nothing). It is a "listen and say your own" card instead: the sentence, its sound, which words to
+  // change, and «توانستید با اطلاعات خودتان بگویید؟» (QA round 4, M2).
+  const sample = !word && !it.mine && Array.isArray(it.own) && it.own.length > 0 && sampleIdentity(it.en);
+  const ownHint = () => (!word && !it.mine && Array.isArray(it.own) && it.own.length ? h('p', { class: 'when', 'data-own': '' }, t('phrase.own', { words: it.own.join(' ') })) : null);
+  const answerRow = (ask) => [h('p', { class: 'section-title center' }, ask),
+    h('div', { class: 'row' }, btn(t('rev.knew'), { cls: 'btn-primary grow', icon: 'check', onclick: () => answer(true) }), btn(t('rev.notYet'), { cls: 'btn-ghost grow', icon: 'repeat', onclick: () => answer(false) }))];
 
-  if (!S.shown && mode === 'say') {
+  if (sample) {
+    add(h('p', { class: 'eyebrow' }, t('rev.ownSay')), english(), listen(), ownHint(),
+      h('p', { class: 'fa-line', 'data-rev': 'own' }, it.fa, ' ', h('span', { class: 'muted' }, t('rev.ownSample'))),
+      h('div', { class: 'row' }, favBtn(app, id), micOn(app) ? btn(t('rev.say'), { cls: 'btn-ghost', icon: 'mic', small: true, onclick: () => { S.say = !S.say; if (!S.say) app.speech.cancel(); app.render(); } }) : null));
+    main.append(card);
+    if (S.say) main.append(sayPanel(app, { key: 'say-rev', target: it.en, say: it.say, voice: it.voice, own: it.own }));
+    main.append(...answerRow(t('rev.ownAsk')));
+  } else if (!S.shown && mode === 'say') {
     // Farsi first: the direction a speaker needs. The answer is shown — and heard — when the learner asks for it.
-    add(mine, h('p', { class: 'eyebrow' }, t('rev.sayIt')), picture(), h('p', { class: 'fa-line', 'data-rev': 'say' }, it.fa), h('p', { class: 'muted' }, t('rev.sayIt.hint')));
+    add(mine, h('p', { class: 'eyebrow' }, t('rev.sayIt')), picture(), h('p', { class: 'fa-line', 'data-rev': 'say' }, it.fa), ownHint(), h('p', { class: 'muted' }, t('rev.sayIt.hint')));
     main.append(card, reveal(t('rev.showEn'), true));
   } else if (!S.shown) {
     if (group) card.append(h('p', { class: 'eyebrow' }, group.title));
@@ -176,13 +215,13 @@ export function reviewView(app) {
     card.append(h('div', { class: 'row' }, favBtn(app, id), micOn(app) && !heardLine ? btn(t('rev.say'), { cls: 'btn-ghost', icon: 'mic', small: true, onclick: () => { S.say = !S.say; if (!S.say) app.speech.cancel(); app.render(); } }) : null));
     main.append(card);
     if (S.say) main.append(sayPanel(app, { key: 'say-rev', target: it.en, say: it.say, voice: it.voice, headword: word, own: it.own }));      // own: "My name is Maryam." said with the learner's own name is right
-    main.append(h('p', { class: 'section-title center' }, t('rev.ask')),
-      h('div', { class: 'row' }, btn(t('rev.knew'), { cls: 'btn-primary grow', icon: 'check', onclick: () => answer(true) }), btn(t('rev.notYet'), { cls: 'btn-ghost grow', icon: 'repeat', onclick: () => answer(false) })));
+    main.append(...answerRow(t('rev.ask')));
   }
   const at = S.i, pass = S.pass;
   // the sentence plays by itself when its card opens — except where the English is the answer
   const after = (navigated) => {
-    if (navigated && store.state.settings.auto && !S.shown && mode !== 'say') later(app, 250, () => { if (app.ui.rev === S && S.i === at && S.pass === pass && !S.shown) playNow(app, clip, { quiet: true }); });
+    // (after 1.2 s, as in a lesson: a screen reader has read the new heading first — QA round 4, accessibility L7)
+    if (navigated && store.state.settings.auto && !S.shown && (mode !== 'say' || sample)) later(app, 1200, () => { if (app.ui.rev === S && S.i === at && S.pass === pass && !S.shown) playNow(app, clip, { quiet: true }); });
   };
   return { main, after };
 }
@@ -221,20 +260,27 @@ export function numbersView(app) {
     S.i > 0 ? btn(t('nav.prev'), { cls: 'btn-ghost', icon: 'back', onclick: () => step(-1) }) : null,
     btn(t('nav.next'), { cls: 'btn-primary', 'data-next': '', onclick: () => step(1) })));
   const at = S.i;
-  const after = (navigated) => { if (navigated && store.state.settings.auto) later(app, 250, () => { if (app.ui.num === S && S.i === at) playNow(app, clip, { quiet: true }); }); };
+  const after = (navigated) => { if (navigated && store.state.settings.auto) later(app, 1200, () => { if (app.ui.num === S && S.i === at) playNow(app, clip, { quiet: true }); }); };
   return { main, bar, after };
 }
 
-// Every small grammar pattern met so far, in one place to look back at.
+// Every small grammar pattern met so far, in one place to look back at. Only the titles are listed; a pattern opens
+// under its title when tapped, one at a time (all of them open made a page of 9 screens — QA round 4, accessibility L8).
 export function grammarView(app) {
   const { t, content, store } = app;
   const main = h('main', { class: 'wrap' }, h('h1', { class: 'section-title' }, t('gram.title')), h('p', { class: 'muted' }, t('gram.sub')));
   const seen = app.order.filter((id) => store.state.done[id] && content.lessons[id].grammar);
   const rest = app.order.filter((id) => !store.state.done[id] && content.lessons[id].grammar);
+  const open = seen.includes(app.ui.gram) ? app.ui.gram : null;
+  const head = (id) => {
+    const L = content.lessons[id], on = id === open;
+    return h('button', { type: 'button', class: 'item', 'aria-expanded': String(on), 'aria-controls': on ? 'gram-open' : null, 'data-gram': id, onclick: () => { app.ui.gram = on ? null : id; app.render(); } },
+      h('span', { class: 'body' }, h('span', { class: 't' }, L.grammar.title), h('span', { class: 's' }, on ? t('gram.close') : L.title.fa)), h('span', { class: 'go' }, icon(on ? 'close' : 'next')));
+  };
   const card = (id) => {
     const L = content.lessons[id], G = L.grammar, listen = G.compare === 'listen';
-    return h('section', { class: 'card' },
-      h('h2', null, G.title), h('p', null, G.explain),
+    return h('section', { class: 'card', id: 'gram-open' },
+      h('p', null, G.explain),
       G.examples.map((e) => h('div', { class: 'opt-wrap' }, miniPlay(app, clipEn(e.en, 's', 'n')), h('div', { class: 'grow' }, en(e.en, 'p', 'en-line'), h('p', { class: 'muted' }, e.fa)))),
       listen ? null : h('p', null, h('b', null, t('grammar.dont') + ' '), h('s', { class: 'en', lang: 'en', dir: 'ltr' }, G.wrong)),
       listen ? null : h('p', null, h('b', null, t('grammar.do') + ' '), en(G.right)),
@@ -242,10 +288,13 @@ export function grammarView(app) {
       btn(t('gram.from', { title: L.title.fa }), { cls: 'btn-ghost', small: true, icon: 'book', onclick: () => app.go('lesson.' + id) }));
   };
   if (!seen.length) main.append(note(t('gram.none'), 'info', 'bulb'));
-  seen.forEach((id) => main.append(card(id)));
+  seen.forEach((id) => { main.append(head(id)); if (id === open) main.append(card(id)); });
   if (rest.length) {
+    // the patterns of the lessons still to come: a list of titles, behind one button once some have been met
+    const later = !seen.length || !!app.ui.gramLater;
     main.append(h('h2', { class: 'section-title' }, t('gram.later')));
-    rest.forEach((id) => { const L = content.lessons[id]; main.append(h('button', { type: 'button', class: 'item', onclick: () => app.go('lesson.' + id) },
+    if (seen.length) main.append(btn(later ? t('gram.later.hide') : t('gram.later.show', { n: fnum(rest.length) }), { cls: 'btn-ghost', icon: later ? 'close' : 'bulb', block: true, 'aria-expanded': String(later), 'data-gram-later': '', onclick: () => { app.ui.gramLater = !later; app.render(); } }));
+    if (later) rest.forEach((id) => { const L = content.lessons[id]; main.append(h('button', { type: 'button', class: 'item', onclick: () => app.go('lesson.' + id) },
       h('span', { class: 'body' }, h('span', { class: 't' }, L.grammar.title), h('span', { class: 's' }, L.title.fa)), h('span', { class: 'go' }, icon('next')))); });
   }
   return { main };

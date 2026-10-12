@@ -64,3 +64,36 @@ test('no voice for the language: an English sentence is not read by another lang
   assert.equal(await createAudio({ fetchFn }).play(clip), 'missing');
   assert.equal(spoken.length, 0);
 });
+
+// A second play while the first is still sounding (the review screen plays a card by itself, the learner taps the same
+// card; a double tap on a play button): the first play is told 'stopped' — before, its promise never resolved — and a
+// 'pause' left over from stopping it does not cut the second one short.
+test('a sound replaced by another one resolves as "stopped", and the new one plays to its end', async () => {
+  class FakeAudio {
+    constructor() { this.paused = true; this.ended = false; this.timer = null; }
+    setAttribute() {}
+    play() { this.paused = false; this.ended = false; clearTimeout(this.timer); this.timer = setTimeout(() => { this.ended = true; this.paused = true; this.onended && this.onended(); }, 40); return Promise.resolve(); }
+    pause() { if (this.paused) return; this.paused = true; clearTimeout(this.timer); setTimeout(() => this.onpause && this.onpause(), 0); }      // like a browser: the event comes a moment later
+  }
+  const saved = globalThis.Audio; globalThis.Audio = FakeAudio;
+  try {
+    const bytes = new Uint8Array(100);
+    const idx = { packs: [{ id: 'core', file: 'core.mp3', bytes: 100 }], clips: {} };
+    const { audioKey } = await import('../../src/js/audiokey.js');
+    const c = { lang: 'en', voice: 's', speed: 'n', text: 'I need help.', tts: false };
+    idx.clips[audioKey('en', 's', 'n', c.text)] = [0, 0, 100];
+    const fetchFn = async (u) => ({ ok: true, status: 200, json: async () => idx, arrayBuffer: async () => bytes.buffer.slice(0) });
+    const a = createAudio({ fetchFn });
+    const first = a.play(c);
+    await new Promise((z) => setTimeout(z, 10));
+    const second = a.play(c);
+    const timeout = new Promise((z) => setTimeout(() => z('never'), 1000));
+    assert.equal(await Promise.race([first, timeout]), 'stopped');
+    assert.equal(await Promise.race([second, timeout]), 'ended');
+    // stopping outright tells the one waiting at once, too
+    const third = a.play(c);
+    await new Promise((z) => setTimeout(z, 10));
+    a.stop();
+    assert.equal(await Promise.race([third, timeout]), 'stopped');
+  } finally { globalThis.Audio = saved; }
+});

@@ -25,32 +25,26 @@ def _frames(x, sr, ms=10):
 
 def cut_word(x, sr):
     """x = audio of 'Now say: WORD.'  Returns the audio of WORD alone, or None if the pause could not be found.
-    The carrier is 'Now' (voiced) + 's' (noise) + 'ay' (voiced), then a pause, then the word."""
+    The carrier 'Now say' has no stop consonant and so no silence inside it ('Now' voiced, 's' noise, 'ay' voiced;
+    in a male voice the 'ay' often ends creaky, broken into short voiced pieces). The first stretch of >= 30 ms of
+    quiet after it is the pause before the word. What follows must hold some voiced speech, or the cut failed."""
     x = np.asarray(x, np.float32)
     e, per, n = _frames(x, sr)
-    mx = e.max()
-    loud = e > 0.06 * mx
-    voiced = loud & (per > 0.5)
-    # runs of voiced frames, tolerating one-frame dropouts
-    runs = []; i = 0; k = len(e)
-    while i < k:
-        if voiced[i]:
-            j = i
-            while j + 1 < k and (voiced[j + 1] or (j + 2 < k and voiced[j + 2])): j += 1
-            if j - i >= 5: runs.append((i, j))
-            i = j + 1
-        else: i += 1
-    if len(runs) < 2: return None
-    end_ay = runs[1][1]                      # last voiced frame of 'say'
-    # the pause: first stretch of >= 3 quiet frames (30 ms) starting within 150 ms after 'ay'
+    k = len(e); mx = e.max()
+    loud = np.where(e > 0.06 * mx)[0]
+    if loud.size == 0: return None
+    onset = loud[0]
     quiet = e < 0.035 * mx
-    i = end_ay + 1; start = None
-    while i < min(k - 3, end_ay + 16):
+    voiced = (e > 0.06 * mx) & (per > 0.5)
+    # 'Now say' lasts at least ~250 ms; the pause must come within 1.6 s of the onset
+    i = onset + 25; start = None
+    while i < min(k - 3, onset + 160):
         if quiet[i] and quiet[i + 1] and quiet[i + 2]: start = i; break
         i += 1
     if start is None: return None
+    if voiced[onset:start].sum() < 12: return None          # the carrier itself was not found before the pause
     j = start
     while j < k and quiet[j]: j += 1
-    if j >= k - 3: return None               # nothing after the pause
+    if j >= k - 3 or voiced[j:].sum() < 4: return None      # nothing (voiced) after the pause
     cut = max(start + 1, j - 3)              # keep up to 30 ms of quiet before the word
     return x[cut * n:]

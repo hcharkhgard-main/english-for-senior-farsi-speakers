@@ -177,7 +177,7 @@
           "check": { "q": "چطور باید بخورید؟", "right": "روزی دو بار، هر بار یک قرص", "wrong": ["روزی یک بار، هر بار دو قرص", "روزی سه بار، هر بار یک قرص"] },
           "replies": [
             { "en": "One tablet, twice a day. Okay.", "fa": "یک قرص، روزی دو بار. باشد.", "keys": ["okay"] },
-            { "en": "One tablet, twice a day. Is that right?", "fa": "یک قرص، روزی دو بار. درست است؟", "keys": ["is that right", "right"], "then": ["Take one tablet twice a day.", "روزی دو بار، هر بار یک قرص بخورید."] }
+            { "en": "One tablet, twice a day. Is that right?", "fa": "یک قرص، روزی دو بار. درست است؟", "keys": ["is that right", "right"], "then": ["Yes, that's right. One tablet, twice a day.", "بله، درست است. روزی دو بار، هر بار یک قرص."] }
           ] },
         { "them": ["Take it with food.", "آن را همراه غذا بخورید."],
           "check": { "q": "چطور باید بخورید؟", "right": "همراه غذا", "wrong": ["با معدهٔ خالی", "قبل از غذا"] },

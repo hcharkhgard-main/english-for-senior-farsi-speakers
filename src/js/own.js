@@ -79,13 +79,28 @@ export function nameParts(full) {
 // the letters of a name, as they are said when it is spelled: "Karimi" -> ['K','A','R','I','M','I']
 export const spellOut = (name) => String(name || '').toUpperCase().replace(/[^A-Z]/g, '').split('');
 
+// Persian (۰–۹) and Arabic (٠–٩) digits as the digits of English text: a computer's or an iPad's Persian keyboard types
+// them, and "۲۱۲۵۵۵۰۱۴۲" is the same phone number as "2125550142" (QA round 4, features L2).
+export const latinDigits = (x) => String(x ?? '').replace(/[۰-۹]/g, (d) => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g, (d) => '٠١٢٣٤٥٦٧٨٩'.indexOf(d));
+
 // A US phone number as it is written ("310-555-0199") and its digits. Other lengths are left as typed.
 export function phoneParts(text) {
-  let d = String(text || '').replace(/\D/g, '');
+  text = latinDigits(text);
+  let d = text.replace(/\D/g, '');
   if (d.length === 11 && d[0] === '1') d = d.slice(1);
   if (d.length < 7 || d.length > 15) return null;
   const show = d.length === 10 ? `${d.slice(0, 3)}-${d.slice(3, 6)}-${d.slice(6)}` : d.length === 7 ? `${d.slice(0, 3)}-${d.slice(3)}` : String(text).trim().replace(/\s+/g, ' ');
   return { digits: d.split(''), show };
+}
+
+// The apartment number and the zip code inside an address as people type it ("1450 Pine Ave, Apt 3, Los Angeles, CA 90024"):
+// for "My apartment number is 12." and "My zip code is 90024." ('' when the address does not have it)
+export function addressParts(text) {
+  const a = latinDigits(text).trim();
+  const apt = /(?:\bapt\.?|\bapartment|\bunit|\bsuite|\bste\.?|#)\s*(?:no\.?\s*)?([A-Za-z]?\d+[A-Za-z]?)\b/i.exec(a);
+  const words = a.split(/[\s,]+/).filter(Boolean);
+  const zipAt = words.map((w, i) => (i > 0 && /^\d{5}(?:-\d{4})?$/.test(w) ? i : -1)).filter((i) => i > 0).pop();
+  return { apt: apt ? apt[1] : '', zip: zipAt ? words[zipAt].slice(0, 5) : '' };
 }
 
 // The beginnings and ends of the sentences (recorded once, like every other piece).
@@ -121,8 +136,8 @@ export function ownLines(me, kinds, now = Date.now()) {
       const letters = spellOut(last || first);
       if (letters.length) out.push({ kind: 'spelled', en: `It's spelled ${letters.join('-')}.`, words: null, say: [CARRIERS.spelled, ...letters] });
     } else if (kind === 'address') {
-      const a = String(me.address || '').trim().replace(/\s+/g, ' ').replace(/[.,;]+$/, '');
-      if (a) out.push({ kind, en: `I live at ${a}.`, words: null, say: null });
+      const a = latinDigits(me.address || '').trim().replace(/\s+/g, ' ').replace(/[.,;]+$/, '');
+      if (a && !/[؀-ۿ]/.test(a)) out.push({ kind, en: `I live at ${a}.`, words: null, say: null });
     } else if (kind === 'born') {
       if (bornComplete(born)) {
         const y = yearWords(born.y);
@@ -162,7 +177,11 @@ export function ownPieces() {
 // digits. `opts.month(m)` gives the Farsi name of month m (ui.fa.json "month.1" …); `opts.now` the date for the age.
 const FA_DIGITS = '۰۱۲۳۴۵۶۷۸۹';
 const faDigits = (x) => String(x).replace(/\d/g, (d) => FA_DIGITS[+d]);
-const SAMPLE_LEFT = /Maryam|Ahmadi|A-H-M-A-D-I|1958|0142|Oak Street|apartment 12|90024|sixty-five|مریم|احمدی|اِیچ|۱۹۵۸|۰۱۴۲|اوک|۹۰۰۲۴|شصت و پنج/;
+const SAMPLE_LEFT = /Maryam|Ahmadi|A-H-M-A-D-I|1958|0142|Oak Street|apartment 12|apartment number is 12|90024|sixty-five|مریم|احمدی|اِیچ|۱۹۵۸|۰۱۴۲|اوک|۹۰۰۲۴|شصت و پنج|آپارتمان من ۱۲|آپارتمان شمارهٔ ۱۲|آپارتمان ۱۲/;
+// A sentence with the sample person's identity in it — her name, spelling, address, apartment, zip code, phone number,
+// date of birth or age ("My zip code is 90024.") — as against one whose own words are only an example to change ("I'm
+// visiting my son."). Recalling Maryam's details from Farsi teaches nothing the learner needs (QA round 4, M2).
+export const sampleIdentity = (en) => typeof en === 'string' && SAMPLE_LEFT.test(en);
 const SOMEONE_ELSE = /\b(?:his|her|he|she|they|their|Arman)\b/i;
 // a carrier besides those of «جملهٔ خودِ شما»: the clinic's way of asking for the date of birth
 export const CARRIERS_MORE = { born2: 'My date of birth is' };
@@ -175,8 +194,9 @@ export function ownVersion(en, fa, me, opts = {}) {
   const { first, last } = nameParts(me.name);
   const born = parseBorn(me.born), age = ageOn(born, now);
   const phone = phoneParts(me.phone);
-  const address = String(me.address || '').trim().replace(/\s+/g, ' ').replace(/[.,;]+$/, '');
+  const address = latinDigits(me.address || '').trim().replace(/\s+/g, ' ').replace(/[.,;]+$/, '');
   const latinAddress = address && !/[؀-ۿ]/.test(address) ? address : '';
+  const { apt, zip } = latinAddress ? addressParts(latinAddress) : { apt: '', zip: '' };
   const spelled = spellOut(last || first).join('-');
   // [English sample, Farsi sample, English replacement, Farsi replacement, the learner's words (not scored by the speaking check)]
   const swaps = [
@@ -188,6 +208,9 @@ export function ownVersion(en, fa, me, opts = {}) {
     ['212-555-0142', '۲۱۲-۵۵۵-۰۱۴۲', phone ? phone.show : '', phone ? faDigits(phone.show) : '', phone ? [phone.show] : []],
     ['25 Oak Street, apartment 12', 'خیابان اوک، پلاک ۲۵، آپارتمان ۱۲', latinAddress, latinAddress, latinAddress.split(' ')],
     ['25 Oak Street', 'خیابان اوک، پلاک ۲۵', latinAddress, latinAddress, latinAddress.split(' ')],
+    ['apartment number is 12', 'آپارتمان من ۱۲', apt ? `apartment number is ${apt}` : '', apt ? `آپارتمان من ${faDigits(apt)}` : '', [apt]],
+    ['apartment 12', ['آپارتمان شمارهٔ ۱۲', 'آپارتمان ۱۲'], apt ? `apartment ${apt}` : '', apt ? `آپارتمان شمارهٔ ${faDigits(apt)}` : '', [apt]],
+    ['90024', '۹۰۰۲۴', zip, faDigits(zip), [zip]],
     ['sixty-five', 'شصت و پنج', age != null && age >= 1 && age <= 99 ? numberWord(age) : '', age != null ? faDigits(age) : '', age != null ? [numberWord(age)] : []],
   ];
   // each sample detail is first replaced by a mark, so that what is left can be checked for the sample person
@@ -200,7 +223,8 @@ export function ownVersion(en, fa, me, opts = {}) {
     const mark = `\u0001${fill.length}\u0001`;
     fill.push([mark, re, rf]);
     e = e.split(se).join(mark);
-    if (sf && f.includes(sf)) f = f.split(sf).join(mark + 'f');      // (a meaning may leave a detail out: «احمدی. (حرف‌به‌حرف)»)
+    const sfa = (Array.isArray(sf) ? sf : [sf]).find((x) => x && f.includes(x));      // (the meaning may say it in more than one way)
+    if (sfa) f = f.split(sfa).join(mark + 'f');      // (a meaning may leave a detail out: «احمدی. (حرف‌به‌حرف)»)
     own.push(...words.map((w) => String(w).replace(/[.,;]+$/, '')).filter(Boolean));
   }
   if (!fill.length || SAMPLE_LEFT.test(e) || SAMPLE_LEFT.test(f)) return null;

@@ -166,10 +166,22 @@ const MORE = [
   /\b(?:dot|d o t)\s+(?:com|org|net|gov)\b|\bat\s+(?:gmail|yahoo|hotmail|outlook)\b|\bslash\b|\bw\s*w\s*w\b/i,
   /\byour\s+(?:bank|passport|medicare|a-number|green card|id card|wallet|purse|keys)\b[^.?!]*\??|\bgive me your (?:card|wallet|purse|keys|money|phone)\b|\b(?:apple|google play|itunes|steam|amazon|target|walmart) (?:gift )?cards?\b[^.?!]*\b(?:numbers?|code)\b|\b(?:last|first) (?:four|4) digits\b|\bdon'?t tell (?:your family|anyone|your (?:son|daughter|children))\b|\b(?:irs|tax office)\b[^?!]*\b(?:owe|pay|arrest|police)\b|\bdon'?t need to read\b|\bjust sign\b|\balcohol\b/i,
   /کد[^.؟!]*بخوان|قرص[^.؟!]*بخورید|شماره[ٔ‌]?\s*ی?\s*(?:کارت|حساب)|آدرس\s*خانه/,
+  // Round 4 of the security review (L1): the same harms in other wordings, and in Farsi — the Farsi fields of a reply
+  // are shown too, so «رمزتان را بگویید.» under an innocent "Okay." must be refused like its English.
+  /\b(?:may|can|could) i (?:have|get|ask)\b[^.?!]*\b(?:your )?(?:name|number|address|e-?mail|birthday)\b|\bwho am i (?:speaking|talking) (?:with|to)\b|\band your name is\b|\bwhat do i call you\b|\bwhere you live\b|\bwhat (?:street|year)\b[^.?!]*\byou(?:r)?\b|\bnumber to reach you\b|\bwhat'?s your zip\b|\be-?mail address\b/i,
+  /\b(?:i sent you|we sent you)\b[^.?!]*\bcode\b|\bcode on your (?:phone|screen)\b|\b(?:read|say|tell)\b[^.?!]*\b(?:six|four|five) digits\b|\bconnect to your (?:computer|phone)\b|\bsee your screen\b/i,
+  /\b(?:venmo|cash ?app|paypal|zelle)\b|\bwire it\b|\bgoogle play cards?\b|\b(?:cash|money)\b[^.?!]*\b(?:envelope|courier|to the door|pick it up)\b|\bdon'?t tell (?:mom|dad|anyone|your)\b|\bkeep (?:this|it) (?:a )?secret\b|\bpay the fee\b|\byou (?:won|have won)\b/i,
+  /\b(?:don'?t|do not) (?:have|need) to go to the (?:hospital|doctor|er)\b|\bno need to call (?:an ambulance|911|the doctor)\b|\bwait until tomorrow to see a doctor\b|\bextra (?:pill|dose|tablet)\b|\bskip it\b|\bwith (?:wine|beer)\b|\bchest pain is\b[^.?!]*\bnothing\b|\bsign the (?:lease|contract|form) today\b|\bdon'?t worry about the letter\b|\bdon'?t need an interpreter\b|\blook it up on google\b|\bdot co\b/i,
+  // (Farsi is matched after normalize(): Persian ی/ک, no half-spaces or vowel marks)
+  /(?:اسم|نام)\s*(?:شما|تان)?\s*(?:چیست|چیه|چه\s*است)|کجا\s*زندگی\s*می\s*کنید|شماره\s*ی?\s*(?:تلفن|موبایل)\S*(?:\s*(?:تان|شما))?\s*را|رمز\S*\s*را\s*(?:بگو|بنویس|بخوان)|کد\S*\s*را\s*(?:بگو|بنویس)|پول\s*را?\s*(?:برای|به)\s*(?:من|ما)\s*(?:بفرست|واریز)|به\s*کسی\s*(?:نگو|چیزی\s*نگو)|دارو\S*(?:\s*(?:تان|شما|هایتان))?\s*را\s*(?:قطع|کم|زیاد|نخور)|لازم\s*نیست\s*(?:به\s*)?(?:۹۱۱|911|دکتر|پزشک|بیمارستان)|(?:به\s*)?(?:۹۱۱|911)\s*زنگ\s*نزن|امضا\S*\s*کنید[^.؟!]*(?:همین\s*الان|امروز|فوری)/,
 ];
+// One spelling for the Farsi patterns: Arabic ي/ك as Persian ی/ک, half-spaces and vowel marks and tatweel removed.
+const normalize = (s) => s.replace(/[يى]/g, 'ی').replace(/ك/g, 'ک').replace(/[\u200c\u200d\u0640\u064b-\u0652]/g, '');
 export function unsafeText(text) {
   const s = spokenDigits(latinDigits(String(text || '')));
   if (hasLink(s) || DOSE.test(s) || TOLLFREE.test(s) || SECRET.test(s) || ASK.test(s) || PAY.test(s) || MORE.some((r) => r.test(s))) return true;
+  const n = normalize(s);
+  if (n !== s && (DOSE.test(n) || SECRET.test(n) || PAY.test(n) || MORE.some((r) => r.test(n)))) return true;
   return (s.match(/\d(?:[\s().,-]*\d){6,}/g) || []).some((run) => !/55501\d\d$/.test(run.replace(/\D/g, '')));
 }
 

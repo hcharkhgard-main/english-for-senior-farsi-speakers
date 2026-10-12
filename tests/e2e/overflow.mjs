@@ -176,6 +176,15 @@ for (const [W, H, scale] of [[390, 844, 1], [390, 844, 1.5], [320, 568, 1], [320
       if (route === 'talk' && await tap('[data-others]')) await look(`talk (every stage shown)${full ? ' (with progress)' : ''}`);
     }
   }
+  // ---- what opens in place (QA round 4, L8): Settings «بیشتر», a grammar pattern and the later ones, each part of the numbers ----
+  await fresh('home'); await done();
+  await page.evaluate(() => window.hamrah.go('settings'));
+  if (await tap('[data-set-more]')) await look('settings («بیشتر» open)');
+  await page.evaluate(() => window.hamrah.go('grammar'));
+  if (await tap('[data-gram]')) await look('grammar (a pattern open)');
+  if (await tap('[data-gram-later]')) await look('grammar (later patterns listed)');
+  await page.evaluate(() => window.hamrah.go('cat.numbers'));
+  for (const n of [1, 2]) if (await tap('#app main .seg button', n)) await look(`cat.numbers (part ${n + 1})`);
   // ---- the learner's own sentences, the small-task question, «کارهایی که حالا می‌توانم بکنم», the look back,
   // ---- a lesson set aside, and «درس امروز» when no new lesson is left (views/progress.js) -------------------------
   {

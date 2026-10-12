@@ -231,6 +231,42 @@ try {
   await learner(`a.order.forEach((id, i) => { s.done[id] = { t: Date.now() - (100 - i) * 86400000, n: 1 }; }); s.cp = { n: 999, t: 1 }; s.tried = Object.fromEntries(a.order.map((id) => [id, 1])); s.done[a.order[17]].t = Date.now(); for (const r of a.content.roleplays) s.rp[r.id] = 5;`);
   check('…the home screen never says that nothing is left', ((await sub()).startsWith(P('home.lesson.talk')) || (await sub()).startsWith(P('home.lesson.talkHear'))) && !(await page.locator('main').innerText()).includes(T('home.lesson.none')), await sub());
 
+  // ---- QA round 4 ----
+  // M1 (accessibility): the emergency phrases are in the home screen's top bar, as on every other screen
+  await learner(`a.order.slice(0, 3).forEach((id, i) => { s.done[id] = { t: Date.now() - 86400000 + i, n: 1 }; });`);
+  const topSos = await page.locator('.topbar .tb-sos').boundingBox();
+  check('home: «اضطراری» is in the top bar, in the first view, with the mission card shown', !!topSos && topSos.y + topSos.height < 844 && (await page.locator('[data-mission]').count()) === 1);
+  await page.locator('.topbar .tb-sos').click(); await wait();
+  check('…and opens the emergency phrases', (await route()) === '#sos', await route());
+  // M2 (pedagogy): without «اطلاعات من», a sentence about the sample person is a "listen and say your own" card, never asked from Farsi
+  await learner(`const d = a.today(); s.done['my-name'] = { t: Date.now() - 9 * 86400000, n: 1 }; s.srs['p:my-name:p1'] = { b: 3, d: d - 1, n: 1, l: d - 13 };`);
+  await go('review');
+  const ownCard = await page.locator('main').innerText();
+  check('review, no details in memory: «My first name is Maryam.» is a "listen and say your own" card, not «… چطور می‌گویید؟» from Farsi', (await page.locator('[data-rev="own"]').count()) === 1 && (await page.locator('[data-rev="say"]').count()) === 0 && ownCard.includes(T('rev.ownSay')) && ownCard.includes('Maryam'), ownCard.replace(/\s+/g, ' ').slice(0, 140));
+  // …and the in-lesson review never asks one from Farsi to English
+  let farsiAsks = [];
+  await page.evaluate(() => { window.hamrah.tapHold = 0; });
+  for (const id of ['my-name', 'my-address-birthday', 'my-numbers']) {
+    await learner('');
+    await go('lesson.' + id);
+    for (let i = 0; i < 30 && !(await page.locator('.big-check').count()); i++) {
+      if ((await page.locator('main .progress .lbl').innerText().catch(() => '')).includes(T('step.review')) && (await page.getByText(T('review.how')).count())) farsiAsks.push(id + ': ' + (await page.locator('main .fa-line').first().innerText()));
+      await page.evaluate(() => document.querySelector('[data-next]').click()); await page.waitForTimeout(120);
+    }
+  }
+  await page.evaluate(() => { window.hamrah.tapHold = 350; });
+  check('in-lesson review: the sample person\'s details are never asked from Farsi to English', farsiAsks.length >= 2 && farsiAsks.every((x) => !/مریم|احمدی|۱۹۵۸|۰۱۴۲|اوک|۹۰۰۲۴|آپارتمان من ۱۲|شصت و پنج|اِی، اِیچ/.test(x)), farsiAsks.join(' | '));
+  // L1 (features): after the day's set was finished, a few more cards are "a few more" on the words screen too
+  await learner(`const d = a.today(); s.done['social-hello'] = { t: Date.now(), n: 1 }; s.srs['p:social-hello:p1'] = { b: 0, d, n: 0 }; s.newDay = { d, n: 3, c: 7 };`);
+  await go('words');
+  check('words screen: after «مرور امروز تمام شد», a few more cards are not «مرور اول امروز»', (await page.locator('main .card .lead').first().innerText()).startsWith(P('words.today.more')), await page.locator('main .card .lead').first().innerText());
+  // L2 (features): a phone number typed with Persian digits is the learner's own sentence
+  await learner('');
+  await page.evaluate(() => { window.hamrah.me.phone = '۲۱۲۵۵۵۰۱۹۹'; });
+  await finishLesson('my-numbers');
+  check('own sentence: a phone number typed in Persian digits gives «My phone number is 212-555-0199.»', (await page.locator('main').innerText()).includes('My phone number is 212-555-0199.'));
+  await page.evaluate(() => { window.hamrah.me.phone = ''; });
+
   // ---- damaged saved state does not break these screens ----
   await learner(`s.done.constructor = { t: 5, n: 1 }; s.at.constructor = { pos: 3, t: 9 }; s.later = { constructor: 1 }; s.tried = { nope: 1 }; s.me = { born: 'x' }; a.me.born = 'x'; s.cp = { n: 'a' };`);
   for (const r of ['home', 'cando', 'me', 'checkpoint', 'places']) { await go(r); if ((await page.locator('#app h1').count()) !== 1 || (await page.locator('main').innerText()).includes(T('err.title'))) check(`damaged state: ${r} still opens`, false); }

@@ -49,7 +49,12 @@ export function invite(app, title, text) {
   return h('section', { class: 'card', 'data-invite': '' }, h('h2', null, title), h('p', null, text),
     h('div', { class: 'stack' },
       btn(t('own.invite.go'), { cls: 'btn-soft', icon: 'people', block: true, onclick: () => app.go('me') }),
-      btn(t('own.invite.no'), { cls: 'btn-ghost', block: true, 'data-invite-no': '', onclick: () => { decline(); toast(t('own.invite.later')); app.render(); } })));
+      // (the card goes away: focus goes to the screen's heading, not to the control that has moved into its place —
+      // on the lesson's last screen that was «درس بعدی», which a second tap would have pressed — QA round 4, accessibility L2)
+      btn(t('own.invite.no'), { cls: 'btn-ghost', block: true, 'data-invite-no': '', onclick: () => {
+        decline(); toast(t('own.invite.later')); if (app.hold) app.hold(); app.render();
+        const h1 = document.querySelector('#app main h1'); if (h1) { try { h1.focus({ preventScroll: true }); } catch { /* ignore */ } }
+      } })));
 }
 
 // ---- the last screen of a lesson ------------------------------------------------------------------
@@ -226,7 +231,7 @@ export function checkpointView(app) {
   const after = (navigated) => {
     if (!auto || !navigated || !store.state.settings.auto || S['auto' + at]) return;
     S['auto' + at] = true;
-    later(app, 250, () => { if (app.ui.cp === S && S.pos === at) playNow(app, auto, { quiet: true }); });
+    later(app, 1200, () => { if (app.ui.cp === S && S.pos === at) playNow(app, auto, { quiet: true }); });
   };
   return { main, bar, after };
 }

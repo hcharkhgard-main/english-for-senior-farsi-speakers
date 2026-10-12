@@ -160,6 +160,18 @@ try {
   check('the lesson asked what the other person said, without showing the text', sawGist >= 2 && sawGist <= 4, `"what did they say?" screens: ${sawGist}`);
   check('the end of the lesson offers the conversation that practises it', await page.evaluate(() => { const c = window.hamrah.content, id = Object.keys(window.hamrah.store.state.done)[0], rp = c.roleplays.find((r) => r.id === c.practice[id]); return !!rp && [...document.querySelectorAll('.bottombar .btn-primary')].some((b) => b.textContent.includes(rp.title)); }));
 
+  // a slow second tap on the last «بعدی» lands where the done bar's main button now is: it must not replace the finished
+  // screen with the conversation (QA round 4, features L3; the app's usual hold after a screen change is 350 ms)
+  await page.evaluate(() => { const a = window.hamrah, id = Object.keys(a.store.state.done)[0]; a.store.update((s) => { s.at[id] = { pos: 999, short: false, t: Date.now() }; }); a.go('lesson.' + id); });
+  await page.waitForTimeout(TAP_GAP);
+  if (await page.locator('main .opt').count()) await solve();
+  {
+    const nb = await page.locator('[data-next]').boundingBox();
+    await page.mouse.click(nb.x + nb.width / 2, nb.y + nb.height / 2); await page.waitForTimeout(450);
+    await page.mouse.click(nb.x + nb.width / 2, nb.y + nb.height / 2); await page.waitForTimeout(TAP_GAP);
+    check('a slow second tap on the last «بعدی» does not leave the finished screen', (await page.locator('.big-check').count()) === 1 && /^#lesson\./.test(await page.evaluate(() => location.hash)), await page.evaluate(() => location.hash));
+  }
+
   // ---- conversation practice ---------------------------------------------------------------------
   await page.locator('.tb-btn', { hasText: UI('nav.home') }).click(); await page.waitForTimeout(TAP_GAP);
   await page.locator('.choice').nth(1).click();
@@ -379,7 +391,13 @@ try {
   await page.waitForTimeout(TAP_GAP);
   await page.evaluate(() => window.hamrah.go('grammar'));
   await page.waitForSelector('h1');
-  check('grammar page lists the pattern from the finished lesson', (await page.locator('.card').count()) >= 1 && (await page.locator('.item').count()) >= 30);
+  // (titles only; a pattern opens under its title, and the patterns still to come are behind one button — QA round 4, L8)
+  const gramClosed = await page.locator('main .card').count();
+  await page.locator('[data-gram]').first().click();
+  check('grammar page lists the pattern from the finished lesson, which opens under its title', gramClosed === 0 && (await page.locator('[data-gram][aria-expanded="true"]').count()) === 1 && (await page.locator('main .card').count()) === 1);
+  await page.waitForTimeout(TAP_GAP);
+  await page.locator('[data-gram-later]').click();
+  check('…and the patterns of later lessons are listed when asked for', (await page.locator('main .item').count()) >= 30);
 
   // ---- a later lesson: questions on earlier lessons, a page of words, other wordings ----------------------
   await page.waitForTimeout(TAP_GAP);
@@ -445,16 +463,22 @@ try {
   await page.evaluate(() => window.hamrah.go('settings'));
   await page.waitForSelector('.seg');
   const before = await page.evaluate(() => parseFloat(getComputedStyle(document.documentElement).fontSize));
-  await page.getByRole('button', { name: UI('set.size.4') }).click();
+  // (a lost tap here was a real defect: Settings redraws itself when its slow checks finish, and a redraw between the
+  // finger going down and coming up swallowed the tap — main.js now holds such redraws until the finger is lifted.
+  // The click is pressed for 100 ms like a finger, and the checks below only count when the size really changed.)
+  await page.waitForTimeout(TAP_GAP);
+  await page.getByRole('button', { name: UI('set.size.4') }).click({ delay: 100 });
+  await page.waitForFunction((b) => parseFloat(getComputedStyle(document.documentElement).fontSize) > b * 1.4, before, { timeout: 3000 }).catch(() => {});
   const after = await page.evaluate(() => parseFloat(getComputedStyle(document.documentElement).fontSize));
+  const large = after / before > 1.4;
   check('text size control enlarges everything by 50%', Math.abs(after / before - 1.5) < 0.02, `${before}px → ${after}px`);
-  { const o = await overflow(); check('nothing sticks out at the largest text size (settings)', o.length === 0, o.join(' ; ')); }
+  { const o = await overflow(); check('nothing sticks out at the largest text size (settings)', large && o.length === 0, large ? o.join(' ; ') : 'the size did not change'); }
   await shot('11-settings-large');
   await page.evaluate(() => window.hamrah.go('lesson.store-where'));
   await page.waitForSelector('.progress'); await toPhrase();
-  { const o = await overflow(); check('nothing sticks out at the largest text size (phrase)', o.length === 0, o.join(' ; ')); }
+  { const o = await overflow(); check('nothing sticks out at the largest text size (phrase)', large && o.length === 0, large ? o.join(' ; ') : 'the size did not change'); }
   await page.setViewportSize({ width: 320, height: 568 });
-  { const o = await overflow(); check('nothing sticks out on a small 320px phone at the largest text size', o.length === 0, o.join(' ; ')); }
+  { const o = await overflow(); check('nothing sticks out on a small 320px phone at the largest text size', large && o.length === 0, large ? o.join(' ; ') : 'the size did not change'); }
   await page.setViewportSize({ width: 390, height: 844 });
   await shot('12-phrase-large');
   await page.evaluate(() => { window.hamrah.store.update((s) => { s.settings.scale = 1; }); window.hamrah.applyScale(); });

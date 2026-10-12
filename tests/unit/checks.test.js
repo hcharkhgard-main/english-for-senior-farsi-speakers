@@ -8,6 +8,7 @@ import { loadContent, audioRequests } from '../../tools/content.mjs';
 import { checkOf, CHECK_TRIES } from '../../src/js/views/talk.js';
 import { tokens } from '../../src/js/match.js';
 import { liveBlock } from '../../src/js/ai-prompt.js';
+import { safetyFlagProblems } from '../../tools/safety-flags.mjs';
 
 const C = loadContent();
 const byId = (id) => C.roleplays.find((R) => R.id === id);
@@ -83,13 +84,15 @@ test('every conversation asks at least twice, and a first greeting is never aske
 test('the medicine listening round uses only sentences of its lesson and is closed to the live partner', () => {
   const R = byId('rp-medicine'), L = C.lessons['medicine-instructions'];
   assert.ok(R && L);
-  const own = new Set([...L.phrases.map((p) => p.en), ...L.dialogue.lines.map((l) => l.en), L.respond.them.en, ...L.respond.ok.map((o) => o.en)]);
+  // besides the lesson's sentences, the one answer to "Is that right?" (QA round 4, language L7): the pharmacist says yes
+  const CONFIRM = ["Yes, that's right. One tablet, twice a day.", 'بله، درست است. روزی دو بار، هر بار یک قرص.'];
+  const own = new Set([...L.phrases.map((p) => p.en), ...L.dialogue.lines.map((l) => l.en), L.respond.them.en, ...L.respond.ok.map((o) => o.en), CONFIRM[0]]);
   for (const t of R.turns) for (const line of [t.them.en, ...t.replies.flatMap((r) => [r.en, ...(r.then ? [r.then.en] : [])])]) assert.ok(own.has(line), `"${line}" is not a sentence of lesson medicine-instructions`);
   // the five sample instructions, each said once by the pharmacist and each asked about
   assert.deepEqual(L.phrases.map((p) => R.turns.filter((t) => t.them.en.includes(p.en)).length), [1, 1, 1, 1, 1]);
   assert.ok(R.turns.every((t) => t.check), 'every instruction is asked about');
   // Persian of a line is the lesson's own translation of it
-  const faOf = new Map([...L.phrases.map((p) => [p.en, p.fa]), ...L.dialogue.lines.map((l) => [l.en, l.fa]), ...L.respond.ok.map((o) => [o.en, o.fa])]);
+  const faOf = new Map([...L.phrases.map((p) => [p.en, p.fa]), ...L.dialogue.lines.map((l) => [l.en, l.fa]), ...L.respond.ok.map((o) => [o.en, o.fa]), CONFIRM]);
   for (const t of R.turns) for (const x of [t.them, ...t.replies, ...t.replies.map((r) => r.then).filter(Boolean)]) assert.equal(x.fa, faOf.get(x.en), `the Persian of "${x.en}" differs from the lesson`);
   assert.equal(R.safetyCritical, true); assert.equal(R.scripted, true);
   assert.ok(liveBlock({ ...R, turns: R.turns.map((t) => ({ ...t, them: [t.them.en, t.them.fa] })) }), 'never offered to the live partner');
@@ -111,4 +114,18 @@ test('"Could you repeat that, please?" is a sentence of lesson 2 and its recordi
 
 test('conversations that practise a call from a stranger or a lock-out are marked safety-critical (QA round 2, security M6)', () => {
   for (const id of ['rp-incoming', 'rp-landlord', 'rp-medicine', 'rp-emergency', 'rp-scam', 'rp-bill']) assert.equal(byId(id).safetyCritical, true, id);
+});
+
+// QA round 4, security L3: the flag follows from what an item is about, not from a list of ids kept by hand
+test('every lesson, conversation and paper about a clinic, a bank, an emergency, scams or passwords carries the safety flag', () => {
+  assert.deepEqual(safetyFlagProblems(C), []);
+  const L = (o) => ({ lessons: { x: { id: 'x', scenario: 'social', ...o } }, roleplays: [], papers: [] });
+  assert.equal(safetyFlagProblems(L({ scenario: 'clinic' })).length, 1, 'a clinic lesson');
+  assert.equal(safetyFlagProblems(L({ note: 'اگر کسی رمز کارتتان را خواست، ندهید.' })).length, 1, 'a note about a PIN');
+  assert.equal(safetyFlagProblems(L({ intro: 'در این درس تماس با ۹۱۱ را تمرین می‌کنیم.' })).length, 1, 'an intro about 911');
+  assert.equal(safetyFlagProblems(L({ note: 'این یک کلاه‌برداری رایج است.' })).length, 1, 'a scam');
+  assert.equal(safetyFlagProblems(L({ note: 'رمزِ در این تمرین ساختگی است.' })).length, 0, 'a door code is not a password');
+  assert.equal(safetyFlagProblems(L({ scenario: 'bank', safetyCritical: true })).length, 0, 'flagged');
+  assert.equal(safetyFlagProblems(L({ note: 'PIN', safetyCritical: false })).length, 0, 'decided: not safety-critical');
+  assert.equal(safetyFlagProblems({ lessons: {}, roleplays: [], papers: [{ id: 'p', note: 'کارت هدیه نخرید.', safetyCritical: false }] }).length, 1, 'papers have no opt-out');
 });

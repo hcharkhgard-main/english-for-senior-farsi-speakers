@@ -140,9 +140,10 @@ export function progress(label, right, frac) {
     h('div', { class: 'bar', role: 'progressbar', 'aria-label': label, 'aria-valuemin': 0, 'aria-valuemax': 100, 'aria-valuenow': pct, 'aria-valuetext': right || `${fnum(pct)}٪` }, h('i', { style: `width:${pct}%` })));
 }
 
-export function toggle(label, on, onchange, states) {
+// describedBy: the id of the hint under the switch, read with its name (QA round 4, accessibility L4)
+export function toggle(label, on, onchange, states, describedBy) {
   const [yes, no] = states || [t('switch.on'), t('switch.off')];
-  return h('button', { type: 'button', class: 'switch', role: 'switch', 'aria-checked': String(!!on), onclick: () => onchange(!on) },
+  return h('button', { type: 'button', class: 'switch', role: 'switch', 'aria-checked': String(!!on), 'aria-describedby': describedBy || null, onclick: () => onchange(!on) },
     h('span', { class: 'box' }), h('span', { class: 'lbl' }, label), h('span', { class: 'state' }, on ? yes : no));
 }
 

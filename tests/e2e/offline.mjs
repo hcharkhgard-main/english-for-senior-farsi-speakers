@@ -10,7 +10,9 @@
 // a Wi-Fi login page ("captive portal", 200 text/html) is never stored as a sound pack or as a file of the
 // app, and the lesson plays again once the connection is normal — also with the server stopped afterwards;
 // after an ordinary first day (one lesson, then home) the next review set, number listening and the papers
-// near that lesson play with the server stopped the next day, and Settings says which parts are ready.
+// near that lesson and its conversation play with the server stopped the next day, and Settings says which parts are
+// ready (and calls the lessons "some" while only some are stored); a page, script or lesson file replaced in storage by
+// another site on the same address is not served (fetched again online, refused offline).
 //
 // "No connection" here means that the browser is told it is offline AND the test's server stops
 // answering. Playwright's setOffline alone does not cut the service worker's own requests: a file
@@ -224,10 +226,52 @@ try {
     const paperClips = await page.evaluate((first) => { const a = window.hamrah; return (a.content.papers || []).filter((P) => P.stage === 1 || P.lesson === first).flatMap((P) => P.lines.map((l) => ({ lang: 'en', voice: 's', speed: 'n', text: l.en, tts: false }))).filter((c) => a.audio.has(c)); }, first);
     const papHeard = paperClips.length ? await playAll(page, paperClips) : { plays: 0 };
     check('…the recorded lines of the papers near that lesson play', papHeard.plays === paperClips.length, { recorded: paperClips.length, ...papHeard });
+    // the conversations of that lesson — the done screen's main next step (QA round 4, features M1)
+    const talkClips = await page.evaluate((first) => { const a = window.hamrah, c = a.content; return ((c.practiceAll || {})[first] || []).flatMap((rid) => { const R = c.roleplays.find((r) => r.id === rid); return R ? R.turns.map((t) => ({ lang: 'en', voice: R.them.voice, speed: 'n', text: t.them.say || t.them.en, tts: false })) : []; }).filter((c) => a.audio.has(c)); }, first);
+    const talkHeard = talkClips.length ? await playAll(page, talkClips) : { plays: 0 };
+    check('…every recorded line of the other person in that lesson\'s conversation plays', talkClips.length > 0 && talkHeard.plays === talkClips.length, { recorded: talkClips.length, ...talkHeard });
     await page.evaluate(() => window.hamrah.go('settings')); await page.waitForTimeout(2500);
     const parts = await page.evaluate(() => { const l = document.querySelector('[data-offline-parts]'); return l ? [...l.children].map((li) => li.textContent.trim()) : []; });
     const ready2 = (label) => parts.some((x) => x.includes(label) && x.includes(T['off.yes']));
-    check('…and Settings says, in words, that review, number listening and the emergency phrases are ready', ready2(T['off.part.review']) && ready2(T['off.part.numbers']) && ready2(T['off.part.sos']), parts);
+    check('…and Settings says, in words, that review, number listening, the conversations and the emergency phrases are ready', ready2(T['off.part.review']) && ready2(T['off.part.numbers']) && ready2(T['off.part.talks']) && ready2(T['off.part.sos']), parts);
+    // a part is "ready" only when all of it is: two lessons of seventy-odd are «بعضی», with no tick (QA round 4, accessibility M2)
+    const lessonsRow = await page.evaluate(() => { const li = [...document.querySelectorAll('[data-offline-parts] li')][1]; return li ? { state: li.querySelector('strong').textContent.trim(), ready: li.dataset.ready, tick: !!li.querySelector('svg') && li.querySelector('svg').style.color.includes('good') } : null; });
+    check('…and the lessons are not called ready while only some are stored', !!lessonsRow && lessonsRow.ready === 'some' && lessonsRow.state === T['off.some'] && !lessonsRow.tick, lessonsRow);
+    await plug(ctx); await ctx.close();
+  }
+  // ---- another site on the same address replaces stored files (QA round 4, security M1) ----------
+  // Every repository of one GitHub account shares the origin USERNAME.github.io, so another project's page can open
+  // this app's caches. The worker checks each stored file against its list every time it serves it.
+  {
+    const ctx = await b.newContext(phone);
+    const page = await ctx.newPage();
+    await page.goto(ORIGIN + '/one/'); await ready(page); await controlled(page); await page.waitForTimeout(800);
+    await page.close();
+    const replace = async () => {
+      const other = await ctx.newPage(); await other.goto(ORIGIN + '/elsewhere/');
+      await other.evaluate(async () => {
+        const c = await caches.open((await caches.keys()).find((k) => k.startsWith('hamrah|/one/|shell-'))), base = location.origin + '/one/';
+        const html = await (await c.match(base + 'index.html')).text();
+        await c.put(base + 'index.html', new Response(html.replace('</body>', '<script>window.__replaced=1</script></body>'), { headers: { 'Content-Type': 'text/html' } }));
+        const js = await (await c.match(base + 'app.js')).text();
+        await c.put(base + 'app.js', new Response(js + '\n;window.__replacedJs=1;', { headers: { 'Content-Type': 'text/javascript' } }));
+        const cj = await (await c.match(base + 'content.json')).json(); cj.emergency.phrases[0].fa = 'REPLACED';
+        await c.put(base + 'content.json', new Response(JSON.stringify(cj), { headers: { 'Content-Type': 'application/json' } }));
+      });
+      await other.close();
+    };
+    await replace();
+    const p2 = await ctx.newPage(); await p2.goto(ORIGIN + '/one/'); await ready(p2);
+    const got = await p2.evaluate(() => ({ page: !!window.__replaced, script: !!window.__replacedJs, lessons: window.hamrah.content.emergency.phrases[0].fa === 'REPLACED' }));
+    check('a page, script or lesson file replaced in storage by another site on the same address is not served', !got.page && !got.script && !got.lessons, got);
+    const fixed = await p2.evaluate(async () => { const c = await caches.open((await caches.keys()).find((k) => k.startsWith('hamrah|/one/|shell-'))); return !(await (await c.match('index.html')).text()).includes('__replaced') && !(await (await c.match('app.js')).text()).includes('__replacedJs'); });
+    check('…the right files are stored again', fixed);
+    await p2.close();
+    await replace();
+    await unplug(ctx);
+    const p3 = await ctx.newPage(); await p3.goto(ORIGIN + '/one/').catch(() => {}); await p3.waitForTimeout(1500);
+    const off = await p3.evaluate(() => ({ replaced: !!window.__replaced, app: !!window.hamrah })).catch(() => ({ replaced: false, app: false }));
+    check('…and without a connection a replaced page is not run at all', !off.replaced && !off.app, off);
     await plug(ctx); await ctx.close();
   }
   // ---- update while in a lesson: nothing happens until home ------------------------------------

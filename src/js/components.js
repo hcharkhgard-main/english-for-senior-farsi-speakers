@@ -37,10 +37,12 @@ export function listenBtn(app, clips, { label, cls = 'btn-sound', ic = 'play', s
   return b;
 }
 
-export function miniPlay(app, clips, label) {
+// word: a word shown under the ▶ («گوش کنید»), where the button must say what it does without an icon to learn
+// (the emergency page — QA round 4, accessibility L5); the button's name is then that word.
+export function miniPlay(app, clips, label, word) {
   const id = playId();
-  return h('button', { type: 'button', class: 'mini-play', 'data-play': id, 'aria-label': label || app.t('audio.listen'),
-    onclick: (e) => { e.stopPropagation(); if (app.audio.current && app.audio.current.id === id) app.audio.stop(); else playNow(app, clips, { id }); } }, icon('play'));
+  return h('button', { type: 'button', class: 'mini-play' + (word ? ' has-word' : ''), 'data-play': id, 'aria-label': word ? null : label || app.t('audio.listen'),
+    onclick: (e) => { e.stopPropagation(); if (app.audio.current && app.audio.current.id === id) app.audio.stop(); else playNow(app, clips, { id }); } }, icon('play'), word ? h('span', null, word) : null);
 }
 
 // A Farsi "hear this" control; shown only when the Farsi voice is on and the clip exists.

@@ -17,6 +17,7 @@ export const SESSION_MAX = 15;     // cards in one set — about five minutes
 export const SETS_PER_DAY = 2;     // the daily plan: a morning set and an evening set; more is never asked for
 export const NEW_PER_DAY = 6;      // new words a day at most (lesson sentences are not counted: the learner has already practised them)
 export const NEW_RESERVED = 3;     // places a day kept for the first, most useful words, however many reviews are waiting
+export const LESSON_RESERVED = 2;  // places kept on the day a lesson is finished for its own words ("prescription" after the pharmacy)
 export const OLDEST_KEPT = 4;      // places in a set kept for whatever has waited longest, so nothing is put off for ever
 export const CARD_SECONDS = 20;    // an unhurried card: listen, think, look, answer
 
@@ -54,7 +55,9 @@ export function grade(entry, knew, day) {
 //    OLDEST_KEPT review places go to whatever has waited longest, whichever box it is in.
 //  - New words fill the places the reviews leave free, up to NEW_PER_DAY a day: the pace follows the learner.
 //    Only the first words (opts.core = how many of them are still unmet at the head of the pool) do not wait for a
-//    free place: NEW_RESERVED of them come every day.
+//    free place: NEW_RESERVED of them come every day. Nor do the words of a lesson finished today (opts.lead: those
+//    still unmet, at most LESSON_RESERVED a day — learn.js todaysSet): at a lesson a day the sentence reviews fill
+//    both sets, and without these places no word beyond the first ones would ever arrive (QA round 4, M3).
 //  - A set that was left half-way is finished first: the next set has only the places that were left.
 //   queue  ids for this set               set    1 = the first set of the day, 2 = the second, 3+ = beyond the daily plan
 //   nDue / nNew  reviews and new words in it     more   reviews that are due but not in this set (never shown as a number)
@@ -65,8 +68,14 @@ export function buildQueue(srs, pool, day, newDay = { d: 0, n: 0 }, opts = {}) {
   const room = max - (cards % max);
   const inPool = new Set(pool);
   const due = Object.entries(srs).filter(([id, e]) => inPool.has(id) && e.d <= day).sort((a, b) => a[1].b - b[1].b || a[1].d - b[1].d);
-  const fresh = pool.filter((id) => !srs[id]).slice(0, Math.max(0, (opts.newPerDay ?? NEW_PER_DAY) - usedNew));
-  const keep = Math.max(0, Math.min((opts.reserved ?? NEW_RESERVED) - usedNew, opts.core ?? 0, fresh.length, room));
+  const unmet = pool.filter((id) => !srs[id]);
+  const coreKeep = Math.max(0, Math.min((opts.reserved ?? NEW_RESERVED) - usedNew, opts.core ?? 0, room));
+  // the first words keep their places at the head; the words of today's lesson come straight after them
+  // (only while the day's two sets can still carry what is due: a learner who has fallen behind gets no extra words)
+  const behind = due.length > Math.max(0, SETS_PER_DAY * max - cards);
+  const lead = behind ? [] : (opts.lead || []).filter((id) => inPool.has(id) && !srs[id] && !unmet.slice(0, coreKeep).includes(id));
+  const fresh = [...unmet.slice(0, coreKeep), ...lead, ...unmet.slice(coreKeep).filter((id) => !lead.includes(id))].slice(0, Math.max(0, (opts.newPerDay ?? NEW_PER_DAY) - usedNew));
+  const keep = Math.max(0, Math.min(coreKeep + lead.length, fresh.length, room));
   const places = room - keep;
   let picked = due;
   if (due.length > places) {

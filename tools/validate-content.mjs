@@ -6,6 +6,7 @@ import { loadContent, audioRequests, VOICES, ROOT } from './content.mjs';
 import { wordsOf } from '../src/js/audiokey.js';
 import { partnerLines, shortPhrases } from '../src/js/learn.js';
 import { OWN_KINDS } from '../src/js/own.js';
+import { safetyFlagProblems } from './safety-flags.mjs';
 
 const content = loadContent();
 const errors = [], warnings = [];
@@ -280,6 +281,10 @@ for (const k of used) if (!k.endsWith('.') && strings[k] == null) err('interface
 for (const k of ['say.good.title', 'say.good.almost', 'say.close.title']) if (strings[k] == null) err('interface text', `missing "${k}"`);
 for (const p of prefixes) if (!Object.keys(strings).some((k) => k.startsWith(p))) err('interface text', `nothing under "${p}"`);
 for (const k of Object.keys(strings)) { isFa(`interface text ${k}`, strings[k], { allowLatin: true }); if (!used.has(k) && !prefixes.some((p) => k.startsWith(p)) && !['say.good.title', 'say.good.almost', 'say.close.title'].includes(k)) warn('interface text', `"${k}" is never used`); }
+
+// safety flags: a lesson, conversation or paper about a clinic, a bank, an emergency, scams, passwords… must be flagged
+// for the extra review (tools/safety-flags.mjs; QA round 4, security L3)
+for (const { where, why } of safetyFlagProblems(content)) err(where, `needs "safetyCritical": true (${why}), or "safetyCritical": false if it was decided that it is not`);
 
 const reqs = audioRequests(content);
 if (process.argv.includes('--audio')) {

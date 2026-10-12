@@ -1,7 +1,7 @@
 // What the learner meets next: which lesson, which words in review, which lines to test.
 // Plain functions over the saved state and the content bundle, so they can be unit-tested.
 import { today } from './store.js';
-import { buildQueue } from './srs.js';
+import { buildQueue, LESSON_RESERVED } from './srs.js';
 
 // saved state can name things that do not exist (an old build, damaged storage): "constructor" is not a lesson
 const has = (obj, key) => !!obj && Object.prototype.hasOwnProperty.call(obj, key);
@@ -305,9 +305,18 @@ export function reviewPool(state, content) {
 
 // The next review set of the day for this learner (buildQueue in srs.js): the first words — the list in
 // review-order.json — have their places kept every day until all of them have been met.
+// Once the first words have all been met, their kept places pass to the words of a lesson finished that day:
+// LESSON_RESERVED of them (srs.js), fewer by those already answered today — but only while the day's two sets can
+// still carry what is due (buildQueue). (QA round 4, M3. The simulator shows the limit: a beginner doing a lesson
+// every day is behind on most days, and keeping places for words anyway made 300 reviews wait three weeks instead of
+// a few dozen for a few days — so for that learner the words of the lessons still come only with their sentences.)
 export function todaysSet(state, content, day) {
   const core = (content.wordsFirst || []).filter((id) => !state.srs[id]).length;
-  return buildQueue(state.srs, reviewPool(state, content), day, state.newDay, { core });
+  const pool = reviewPool(state, content), inPool = new Set(pool);
+  const words = core ? [] : [...new Set(doneLessons(state, content).filter((id) => today(doneAt(state, id)) === day).flatMap((id) => lessonWords(content, id)))].filter((id) => inPool.has(id));
+  const metToday = words.filter((id) => state.srs[id] && state.srs[id].l === day).length;
+  const lead = words.filter((id) => !state.srs[id]).slice(0, Math.max(0, LESSON_RESERVED - metToday));
+  return buildQueue(state.srs, pool, day, state.newDay, { core, lead });
 }
 
 // Sentences of earlier lessons whose review is due: for the «این را به انگلیسی چطور می‌گویید؟» questions that
@@ -372,36 +381,67 @@ export function gistTargets(L, seed) {
   const good = (l) => !taught.has(l.en) && l.en.trim().split(/\s+/).length >= 3;
   return [...lines.filter(good), ...lines.filter((l) => !good(l))];
 }
-// The longer turn of the last stage: people often say two things in one go ("You need the number forty. This bus goes
-// to Main Street." and then "Transfer at Main Street."). Two lines the other person says one after the other in the
-// dialogue are played as one turn, at natural speed. Only pairs that can really be said in one breath: the first of
-// the two is not a question (after a question the other person waits for the answer), and the second does not begin
-// as an answer to something the learner said in between ("Yes, …", "Okay. …"). Each wrong answer changes one
-// of the two halves for another line of the same person, so both halves must be caught.
-// Both lines have three words or more. longPairs(L): the pairs a lesson has, in dialogue order. longGist(L, seed, g):
-// { lines: [first, second], options: [{ fa, right }] } (in a fixed order: the view mixes them) for the longest pair,
-// or null when the lesson has no such pair (or fewer than three different lines of the other person).
-// (a line that begins as an answer — "Yes, …", "Okay. …", "Thank you." — answers something the learner said in between)
+// The longer turn of the last stage: people often say two things in one go ("We know about the outage in your area.
+// A crew is working on it."). Only what the other person really says in one turn is played as one (QA round 4, M1 —
+// two lines with the learner's own turn between them were once joined):
+//  · two lines of the other person that stand next to each other in the dialogue, with nothing of the learner's in
+//    between, the first not a question (after a question the other person waits for the answer) and the second not
+//    beginning as an answer ("Yes, …", "Okay. …"), both three words or longer; or
+//  · one line of the other person that carries two things or more: two sentences of three words or more besides the
+//    small words of a reply ("Thank you.", "Yes.") and the opening offer of help ("How can I help you?"), ten words
+//    or more in all, with as many sentences in its Farsi meaning as in its English (so each half has its meaning).
+// longTurns(L): those turns, in dialogue order, each as { lines: [line] or [first, second], parts: [{ en, fa }] }.
+// longGist(L, seed, g): { lines, options: [{ fa, right }] } for the longest turn (the options in a fixed order: the view
+// mixes them), or null when the lesson has none (or fewer than three different lines of the other person). Each wrong
+// answer changes one of the two halves for another thing the same person says, so both halves must be caught.
+// (a sentence that begins as an answer — "Yes, …", "Okay. …", "Thank you." — answers something the learner said)
 const REPLY_START = /^(?:yes|no|yeah|okay|ok|sure|of course|thank|thanks|great|good|oh|here|hi|hello|that's|i'm sorry|sorry|alright|all right|perfect|you're welcome|let me)\b/i;
-export function longPairs(L) {
-  const all = partnerLines(L);
-  if (all.length < 3) return [];
-  const out = [];
-  const words = (l) => l.en.trim().split(/\s+/).length;
-  for (let i = 0; i + 1 < all.length; i++) if (!/\?\s*$/.test(all[i].en) && !REPLY_START.test(all[i + 1].en) && words(all[i]) >= 3 && words(all[i + 1]) >= 3) out.push([all[i], all[i + 1]]);
+const OFFER = /\b(?:how (?:can|may) i help|what can i do for you|can i help you)\b/i;
+const wordCount = (s) => String(s).trim().split(/\s+/).filter(Boolean).length;
+// "Thank you. We know about the outage." -> ['Thank you.', 'We know about the outage.'] (English and Farsi alike)
+export const sentencesOf = (s) => String(s || '').trim().split(/(?<=[.!?؟])\s+/).map((x) => x.trim()).filter(Boolean);
+// the two (or more) things one line says, with their meanings; null when it says only one, or its halves have no meanings of their own
+export function lineParts(line) {
+  const en = sentencesOf(line.en), fa = sentencesOf(line.fa);
+  if (en.length < 2 || en.length !== fa.length || wordCount(line.en) < 10) return null;
+  const parts = en.map((e, i) => ({ en: e, fa: fa[i] })).filter((p) => wordCount(p.en) >= 3 && !REPLY_START.test(p.en) && !OFFER.test(p.en));
+  return parts.length >= 2 ? parts : null;
+}
+export function longTurns(L) {
+  if (partnerLines(L).length < 3) return [];
+  const lines = L.dialogue.lines, out = [];
+  for (let i = 0; i < lines.length; i++) {
+    const a = lines[i], b = lines[i + 1];
+    if (a.who !== 'them') continue;
+    if (b && b.who === 'them' && !/\?\s*$/.test(a.en) && !REPLY_START.test(b.en) && wordCount(a.en) >= 3 && wordCount(b.en) >= 3) {
+      out.push({ lines: [a, b], parts: [{ en: a.en, fa: a.fa }, { en: b.en, fa: b.fa }] });
+      continue;
+    }
+    const parts = lineParts(a);
+    if (parts) out.push({ lines: [a], parts });
+  }
   return out;
 }
 export function longGist(L, seed, g = 0) {
-  const pairs = longPairs(L);
-  if (!pairs.length) return null;
-  const all = partnerLines(L);
-  const size = (p) => p[0].en.length + p[1].en.length;
-  const [a, b] = pairs.slice().sort((p, q) => size(q) - size(p))[0];      // the longest: most often two facts
-  const others = shuffle(all.filter((l) => l !== a && l !== b), mix(seed, 73 + g));
+  const turns = longTurns(L);
+  if (!turns.length) return null;
+  const size = (x) => x.lines.reduce((n, l) => n + l.en.length, 0);
+  const T = turns.slice().sort((p, q) => size(q) - size(p))[0];      // the longest: most often two facts
+  const [first, last] = [T.parts[0], T.parts[T.parts.length - 1]];
+  // a stand-in for one half: something else this person says, of different meaning
+  const others = shuffle(partnerLines(L).filter((l) => !T.lines.includes(l) && l.fa.trim() !== first.fa.trim() && l.fa.trim() !== last.fa.trim()), mix(seed, 73 + g));
+  if (!others.length) return null;
   const x = others[0], y = others[1] || others[0];
-  const join = (p, q) => `${p.fa.trim()} ${q.fa.trim()}`;
-  return { lines: [a, b], options: [{ fa: join(a, b), right: true }, { fa: join(a, x), right: false }, { fa: join(y, b), right: false }] };
+  // the whole meaning: for one line its own Farsi (the halves in it are the sentences the line has); for two lines, both
+  const whole = T.lines.map((l) => l.fa.trim()).join(' ');
+  // (without the small words of a reply that start it: «باشد.»، «البته.» would give the stand-in away)
+  const gist = (l) => { const e = sentencesOf(l.en), f = sentencesOf(l.fa); const keep = f.filter((_, i) => e.length === f.length && !(REPLY_START.test(e[i]) && wordCount(e[i]) <= 3)); return (keep.length ? keep : f).join(' '); };
+  const swap = (part, by) => (T.lines.length === 2 ? T.lines.map((l) => (l.fa === part.fa ? gist(by) : l.fa.trim())).join(' ')
+    : sentencesOf(T.lines[0].fa).map((s) => (s === part.fa ? gist(by) : s)).join(' '));
+  return { lines: T.lines, options: [{ fa: whole, right: true }, { fa: swap(last, x), right: false }, { fa: swap(first, y), right: false }] };
 }
+// (kept for the callers that ask only whether a lesson has a longer turn)
+export const longPairs = (L) => longTurns(L).map((x) => x.lines);
 
 // ---- hearing numbers -----------------------------------------------------------------------------
 // One short round of n items. Items heard least come first, so every item gets its turn before any is repeated

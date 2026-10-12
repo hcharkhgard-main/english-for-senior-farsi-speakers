@@ -28,6 +28,8 @@ export const everyDay = () => true;
 export const fourAWeek = (day) => [1, 2, 4, 6].includes(((day - 1) % 7) + 1);
 export const noRest = () => false;
 export const sundayOff = (day) => day % 7 === 0;          // one day a week without review (and without a lesson)
+const DAY = 86400000;
+const noonOf = (day) => day * DAY + DAY / 2 + new Date(day * DAY).getTimezoneOffset() * 60000;
 const rng = (seed) => { let s = seed; return () => ((s = (s * 48271) % 2147483647) / 2147483647); };
 
 // lessonDays(day): is a lesson done that day?   sittings: review sets done a day (the plan is two)
@@ -51,7 +53,7 @@ export function simulate(content, { lessonDays = fourAWeek, sittings = 1, recall
           // its day changes nothing; a miss brings it back tomorrow
           for (const k of warmIds(s, content, day, id, warm)) s.srs[k] = grade(s.srs[k], rnd() < chance(s.srs[k], R.pReview), day);
         }
-        lesson = id; s.done[id] = { t: day, n: 1 };
+        lesson = id; s.done[id] = { t: noonOf(day), n: 1 };      // (a time on that day, as the app stores it)
         // what views/lesson.js does when a lesson is finished
         for (const p of content.lessons[id].phrases) { const k = `p:${id}:${p.id}`; if (!s.srs[k]) s.srs[k] = rnd() < R.pHard ? { b: 0, d: day, n: 0 } : { b: LESSON_BOX, d: day + INTERVALS[LESSON_BOX], n: 0 }; }
       }

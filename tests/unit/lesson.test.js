@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import { loadContent } from '../../tools/content.mjs';
 import { blank, migrate } from '../../src/js/store.js';
 import { grade, INTERVALS, LESSON_BOX } from '../../src/js/srs.js';
-import { lessonOrder, shortPhrases, gistCount, heardOnly, holdsOwn, longGist, longPairs, partnerLines } from '../../src/js/learn.js';
+import { lessonOrder, shortPhrases, gistCount, heardOnly, holdsOwn, longGist, longTurns, lineParts, partnerLines } from '../../src/js/learn.js';
 import { scoreSpeech, markWords } from '../../src/js/match.js';
 import { wordsOf } from '../../src/js/audiokey.js';
 import { plan, STEPS, WARM_FULL, WARM_SHORT, lessonMinutes, warmIds, variantWrong, lessonVariants, faAlike, enAlike, digitsOf, screenId, sameScreen } from '../../src/js/views/lesson.js';
@@ -331,43 +331,78 @@ test('warm-up questions never ask a sentence that holds the sample person\'s det
   }
 });
 
-test('listening grows (M7): in the last stage one "what did they say?" is a longer turn of two lines; never in stages 1 and 2', () => {
+test('warm-ups (QA round 4, M2): with nothing due, the sentences that fill up the places never hold the sample person\'s details', () => {
+  let asked = 0;
+  for (let k = 0; k < 40; k++) {
+    const s = blank(); s.onboard.done = true;
+    const ids = order.slice(0, 6 + (k % 6));
+    ids.forEach((id, i) => { s.done[id] = { t: i + 1, n: 1 }; for (const p of content.lessons[id].phrases) s.srs[`p:${id}:${p.id}`] = { b: 3, d: 500, n: 2, l: 100 + ((i * 7 + k) % 13) }; });
+    for (const key of warmIds(s, content, 200, order[ids.length])) {
+      const [, lid, pid] = key.split(':'); asked++;
+      assert.ok(!holdsOwn(content.lessons[lid].phrases.find((p) => p.id === pid)), key);
+    }
+  }
+  assert.ok(asked >= 100, `${asked} questions`);
+});
+
+test('listening grows (M7): in the last stage one "what did they say?" is a longer turn; never in stages 1 and 2', () => {
   let n3 = 0;
   for (const L of lessons) for (const short of [false, true]) {
     const gists = plan(L, short, []).screens.filter((x) => x.kind === 'gist');
     const long = gists.filter((x) => x.long);
-    if (L.stage < 3 || !gists.length || !longPairs(L).length) { assert.equal(long.length, 0, L.id); continue; }
+    if (L.stage < 3 || !gists.length || !longGist(L, 0.5)) { assert.equal(long.length, 0, L.id); continue; }
     n3++;
     assert.equal(long.length, 1, `${L.id}: one longer turn`);
     assert.equal(long[0], gists[gists.length - 1], `${L.id}: the last one`);
   }
-  assert.ok(n3 >= 16, `stage 3 lessons with a longer turn (full and short): ${n3 / 2}`);
+  // (QA round 4, M1: only turns the other person really says in one go — today six stage-3 lessons have one)
+  assert.ok(n3 >= 8, `stage 3 lessons with a longer turn (full and short): ${n3 / 2}`);
 });
 
-test('the longer turn: two of the other person\'s lines one after the other; each wrong answer changes one half', () => {
+test('the longer turn (QA round 4, M1): only what the other person says in one turn, never two lines with the learner between', () => {
   let checked = 0;
+  const lineAt = (L, l) => L.dialogue.lines.indexOf(l);
   for (const L of lessons.filter((x) => partnerLines(x).length >= 3)) for (const seed of [0.11, 0.52, 0.93]) for (const g of [0, 1]) {
     const G = longGist(L, seed, g);
-    if (!longPairs(L).length) { assert.equal(G, null, L.id); continue; }
-    const all = partnerLines(L);
-    assert.equal(G.lines.length, 2);
-    assert.equal(all.indexOf(G.lines[1]), all.indexOf(G.lines[0]) + 1, `${L.id}: two lines that follow each other`);
-    // said in one breath: not a question first, not an answer to the learner second, three words or more each
-    assert.ok(!/\?\s*$/.test(G.lines[0].en) && !/^(yes|no|okay|sure|thank|of course)\b/i.test(G.lines[1].en), `${L.id}: ${G.lines.map((l) => l.en).join(' + ')}`);
-    for (const l of G.lines) assert.ok(l.en.split(/\s+/).length >= 3);
+    if (!longTurns(L).length) { assert.equal(G, null, L.id); continue; }
+    if (!G) continue;
+    assert.ok(G.lines.length === 1 || G.lines.length === 2);
+    for (const l of G.lines) assert.equal(l.who, 'them', L.id);
+    if (G.lines.length === 2) {
+      // next to each other in the dialogue: nothing the learner says in between
+      assert.equal(lineAt(L, G.lines[1]), lineAt(L, G.lines[0]) + 1, `${L.id}: ${G.lines.map((l) => l.en).join(' + ')}`);
+      assert.ok(!/\?\s*$/.test(G.lines[0].en) && !/^(yes|no|okay|sure|thank|of course)\b/i.test(G.lines[1].en), L.id);
+    } else {
+      const parts = lineParts(G.lines[0]);
+      assert.ok(parts && parts.length >= 2, `${L.id}: one line that says two things: ${G.lines[0].en}`);
+      assert.ok(G.lines[0].en.split(/\s+/).length >= 10);
+    }
     assert.equal(G.options.length, 3);
     assert.equal(G.options.filter((o) => o.right).length, 1);
-    const [a, b] = G.lines.map((l) => l.fa.trim());
-    assert.equal(G.options.find((o) => o.right).fa, `${a} ${b}`);
-    for (const o of G.options.filter((x) => !x.right)) {
-      assert.ok(o.fa.startsWith(a + ' ') !== o.fa.endsWith(' ' + b), `${L.id}: a wrong answer keeps exactly one half: ${o.fa}`);
-      assert.notEqual(o.fa, `${a} ${b}`);
-    }
+    const whole = G.lines.map((l) => l.fa.trim()).join(' ');
+    assert.equal(G.options.find((o) => o.right).fa, whole);
+    for (const o of G.options.filter((x) => !x.right)) assert.notEqual(o.fa, whole);
     assert.equal(new Set(G.options.map((o) => o.fa)).size, 3, L.id);
     checked++;
   }
-  assert.ok(checked > 100);
-  assert.equal(longGist({ dialogue: { lines: [{ who: 'them', en: 'A b c.', fa: 'الف' }, { who: 'you', en: 'D.', fa: 'د' }] }, phrases: [] }, 0.5), null);
+  assert.ok(checked >= 30, `checked ${checked}`);
+  // the round-4 joins are gone: "Take your time." + "You owe eighty-two dollars…" had the learner's question between them
+  for (const L of lessons) for (const T of longTurns(L)) if (T.lines.length === 2) assert.equal(lineAt(L, T.lines[1]), lineAt(L, T.lines[0]) + 1);
+  const pay = content.lessons['pay-bill-phone'];
+  if (pay) assert.ok(!longTurns(pay).some((T) => T.lines.some((l) => /Take your time/.test(l.en))));
+  // a made-up dialogue: two lines with the learner between are never one turn; two side by side are
+  const D = (lines) => ({ dialogue: { lines }, phrases: [] });
+  const them = (en, fa) => ({ who: 'them', en, fa }), you = (en) => ({ who: 'you', en, fa: 'ـ' });
+  assert.equal(longGist(D([them('Take your time today.', 'الف'), you('How much?'), them('You owe ten dollars.', 'ب'), you('Okay.'), them('It is due on Friday.', 'ج')]), 0.5), null);
+  const G2 = longGist(D([them('We know about the outage.', 'از قطعی خبر داریم.'), them('A crew is working on it.', 'گروهی دارد درستش می‌کند.'), you('Thanks.'), them('Call us again later.', 'بعداً زنگ بزنید.'), them('Have a good day now.', 'روز خوبی داشته باشید.')]), 0.5);
+  assert.ok(G2 && G2.lines.length === 2);
+  // one line with two sentences: the wrong answers each change one of its sentences
+  const one = them('Thank you. We know about the outage in your area. A crew is working on it.', 'ممنون. از قطعی برق در منطقهٔ شما خبر داریم. یک گروه دارد رویش کار می‌کند.');
+  assert.deepEqual(lineParts(one).map((p) => p.en), ['We know about the outage in your area.', 'A crew is working on it.']);
+  assert.equal(lineParts(them('Thank you for calling City Power. How can I help you?', 'ممنون که زنگ زدید. چطور کمکتان کنم؟')), null);
+  const G1 = longGist(D([one, you('When?'), them('Maybe in two hours.', 'شاید دو ساعت دیگر.'), you('Okay.'), them('Please stay away from power lines.', 'از سیم‌های برق دور بمانید.')]), 0.3);
+  assert.equal(G1.lines.length, 1);
+  for (const o of G1.options.filter((x) => !x.right)) assert.ok(o.fa.includes('از قطعی برق') !== o.fa.includes('یک گروه دارد'), o.fa);
 });
 
 test('a saved place is the screen itself (L3): a lesson that changed length in an update reopens on the same question', () => {

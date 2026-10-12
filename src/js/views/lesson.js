@@ -3,7 +3,7 @@ import { h, icon, btn, en, note, progress, fnum, toggle } from '../ui.js';
 import { clipEn, listenBtn, miniPlay, faListen, phraseCard, sayPanel, playNow, wordsLine } from '../components.js';
 import { tileBuilder, tilesFor } from './build.js';
 import { INTERVALS, LESSON_BOX, grade } from '../srs.js';
-import { shuffle, mix, shortPhrases, partnerLines, gistCount, gistTargets, longGist, longPairs, heardOnly, holdsOwn, dueSentences, pathLesson, micOn, later } from '../learn.js';
+import { shuffle, mix, shortPhrases, partnerLines, gistCount, gistTargets, longGist, heardOnly, holdsOwn, dueSentences, pathLesson, micOn, later } from '../learn.js';
 import { doneExtras, laterControl } from './progress.js';
 import { numberWords } from '../match.js';
 
@@ -13,6 +13,7 @@ export const STEPS = ['intro', 'warm', 'phrases', 'listen', 'talk', 'respond', '
 export const WARM_FULL = 3, WARM_SHORT = 2;     // questions on earlier lessons that open a lesson
 const HEAR_FULL = 3, HEAR_SHORT = 2;            // "listen: what does it mean?" questions on the new sentences
 const VARIANTS_FULL = 3, VARIANTS_SHORT = 1;    // "the same thing in other words" questions
+const DONE_HOLD = 700;                          // ms: the done bar's buttons ignore taps this long after the screen first appears (a slow double tap on «بعدی»)
 
 // ---- "the same thing in other words" ------------------------------------------------------------------
 // A variant is another way people say something the lesson teaches ("When were you born?" for "What is your
@@ -97,7 +98,7 @@ export function plan(L, short, warm = []) {
   for (let g = cold; g < gists; g++) screens.push({ step: 'talk', kind: 'gist', g });
   // In the last stage one of them — the last — is a longer turn: two things the other person says one after the
   // other, as people really answer (see longGist in learn.js).
-  if (gists && (L.stage || 1) >= 3 && longPairs(L).length) screens.filter((x) => x.kind === 'gist').pop().long = true;
+  if (gists && (L.stage || 1) >= 3 && longGist(L, 0.5)) screens.filter((x) => x.kind === 'gist').pop().long = true;
   variants.forEach((_, v) => screens.push({ step: 'talk', kind: 'variant', v }));
   if (!short && L.grammar) screens.push({ step: 'talk', kind: 'grammar' });
   screens.push({ step: 'respond', kind: 'respond' });
@@ -139,7 +140,8 @@ export function warmIds(state, content, day, lessonId, n = WARM_FULL) {
   for (const [key, e] of Object.entries(state.srs || {})) {
     const [kind, lid, pid] = key.split(':');
     const S = kind === 'p' && lid !== lessonId && state.done[lid] ? content.lessons[lid] : null;
-    if (!S || !e || out.includes(key) || !S.phrases.some((p) => p.id === pid) || S.phrases.length < 3) continue;
+    // (never a sentence that holds the sample person's details, here either — QA round 4, M2: "My name is Maryam." from Farsi)
+    if (!S || !e || out.includes(key) || !S.phrases.some((p) => p.id === pid) || S.phrases.length < 3 || holdsOwn(S.phrases.find((p) => p.id === pid))) continue;
     rest.push({ key, last: e.l ?? e.d - (INTERVALS[e.b] || 0), hard: (state.hard || {})[`${lid}:${pid}`] || 0 });
   }
   rest.sort((a, b) => a.last - b.last || b.hard - a.hard || (a.key < b.key ? -1 : 1));
@@ -380,7 +382,9 @@ export function lessonView(app, id) {
     // In the last stage the last of them is a longer turn: two of the other person's lines, one after the other.
     const lines = partnerLines(L), key = `q${pos}`;
     const G = scr.long ? longGist(L, seed, scr.g) : null;
-    const said = G ? G.lines : [gistTargets(L, seed)[scr.g]];
+    // (when the lesson has a longer turn, the other "what did they say?" question asks something else)
+    const inLong = new Set(screens.some((x) => x.long) ? (longGist(L, seed) || { lines: [] }).lines : []);
+    const said = G ? G.lines : [gistTargets(L, seed).filter((l) => !inLong.has(l))[scr.g]];
     const line = said[0];
     const options = G ? shuffle(G.options.map((o, i) => ({ id: 'o' + i, right: o.right, label: h('span', null, o.fa) })), mix(seed, pos + 0.5))
       : shuffle([line, ...shuffle(lines.filter((l) => l !== line), mix(seed, pos)).slice(0, 2)], mix(seed, pos + 0.5)).map((l) => ({ id: l.en, right: l === line, label: h('span', null, l.fa) }));
@@ -478,9 +482,19 @@ export function lessonView(app, id) {
     const key = `q${pos}`;
     const ranked = phrases.map((p, i) => ({ p, i, hard: store.state.hard[hardKey(p)] || 0 }));
     const order = (app.ui.revOrder ||= ranked.slice().sort((a, b) => b.hard - a.hard || a.i - b.i).map((x) => x.p.id));
-    const p = phrases.find((x) => x.id === order[scr.k % order.length]);
+    // A sentence that holds the sample person's details ("My last name is Ahmadi.") is never asked from Farsi to English:
+    // it is heard instead, or another sentence takes its turn (QA round 4, M2). picks[k]: { p, hear } of question k.
+    const byId = (pid) => phrases.find((x) => x.id === pid);
+    const picks = [];
+    for (let j = 0; j <= scr.k; j++) {
+      const free = order.map(byId).filter((x) => !picks.some((q) => q.p === x));
+      const pool = free.length ? free : order.map(byId);
+      const wantSay = j % 2 === 0;
+      const sayIt = wantSay ? pool.find((x) => !heardOnly(L, x) && !holdsOwn(x)) : null;
+      picks.push(sayIt ? { p: sayIt, hear: false } : { p: pool[0], hear: true });
+    }
+    const { p, hear: hearIt } = picks[scr.k];
     const others = shuffle(phrases.filter((x) => x.id !== p.id), mix(seed, pos)).slice(0, 2);
-    const hearIt = heardOnly(L, p) || scr.k % 2 === 1;
     const opts = shuffle([p, ...others], mix(seed, pos + 0.5));
     main.append(h('section', { class: 'card' }, h('p', { class: 'eyebrow' }, t('review.eyebrow')),
       hearIt ? [h('h1', { style: 'font-size:1.35rem' }, t('listen.title')), listenRow(p.say || p.en, p.voice)]
@@ -504,7 +518,12 @@ export function lessonView(app, id) {
     // the next new lesson of the learner's own path (W2b): the essentials first, never a lesson they have set aside
     const nextId = pathLesson(store.state, content);
     const hard = phrases.filter((p) => store.state.hard[hardKey(p)]);
-    main.append(h('section', { class: 'card center' }, h('span', { class: 'big-check' }, icon('check')), h('h1', { style: 'font-size:1.6rem' }, t('done.title')), h('p', { class: 'lead' }, L.canDo), faListen(app, L.canDo, t('audio.listenFa'))));
+    // On a narrow phone the bar's main button says only «تمرین مکالمه» / «درس بعدی» (a three-line label made the two bars
+    // a third of the screen at 320 px and large text — QA round 4, accessibility L1); what exactly comes next is said here.
+    const narrow = window.innerWidth < 360;
+    const nextWhat = rp ? t('done.practice', { title: rp.title }) : nextId ? t('done.next', { title: content.lessons[nextId].title.fa }) : '';
+    main.append(h('section', { class: 'card center' }, h('span', { class: 'big-check' }, icon('check')), h('h1', { style: 'font-size:1.6rem' }, t('done.title')), h('p', { class: 'lead' }, L.canDo), faListen(app, L.canDo, t('audio.listenFa')),
+      narrow && nextWhat ? h('p', { class: 'muted', 'data-done-then': '' }, t('done.then', { what: nextWhat })) : null));
     if (hard.length) main.append(h('section', { class: 'card' }, h('h2', null, t('done.hard')), h('p', { class: 'muted' }, t('done.hard.sub')),
       hard.map((p) => h('div', { class: 'opt-wrap' }, miniPlay(app, clipEn(p.say || p.en, p.voice, 'n')), h('div', { class: 'grow' }, en(p.en, 'p', 'en-line'), h('p', { class: 'muted' }, p.fa))))));
     // ---- W2b: the lesson's small real-life task (L.mission), «جملهٔ خودِ شما», the link to «شنیدن عددها», the paper
@@ -518,9 +537,14 @@ export function lessonView(app, id) {
     // The one main next step — the conversation of this lesson, or else the next lesson — and «خانه» are in the fixed bar
     // at the bottom, where «بعدی» was on every other screen: in sight however long this page is. The other choices stay here.
     const toNext = nextId ? () => app.go('lesson.' + nextId, { replace: true }) : null;
-    const lead = rp ? btn(t('done.practice', { title: rp.title }), { cls: 'btn-primary', icon: 'chat', 'data-done-next': '', onclick: () => app.go('rp.' + rp.id, { replace: true }) })
-      : toNext ? btn(t('done.next', { title: content.lessons[nextId].title.fa }), { cls: 'btn-primary', icon: 'book', 'data-done-next': '', onclick: toNext }) : null;
-    doneBar = h('div', { class: 'bottombar' }, h('div', { class: 'inner' }, btn(t('nav.home'), { cls: 'btn-ghost is-fit', icon: 'home', onclick: app.home }), lead));
+    // The bar's buttons sit exactly where «بعدی» was: a slow second tap on the last «بعدی» (after the app's usual
+    // 350 ms hold) would press them and replace this summary for good. So they wait a little longer after the screen
+    // first appears, like the confirmation sheets (QA round 4, features L3). Kept per screen, not per drawing.
+    const shownAt = (app.ui['doneAt' + pos] ||= performance.now());
+    const settled = (fn) => () => { if (app.tapHold && performance.now() - shownAt < DONE_HOLD) return; fn(); };
+    const lead = rp ? btn(narrow ? t('done.practice.short') : t('done.practice', { title: rp.title }), { cls: 'btn-primary', icon: 'chat', 'data-done-next': '', onclick: settled(() => app.go('rp.' + rp.id, { replace: true })) })
+      : toNext ? btn(narrow ? t('done.next.short') : t('done.next', { title: content.lessons[nextId].title.fa }), { cls: 'btn-primary', icon: 'book', 'data-done-next': '', onclick: settled(toNext) }) : null;
+    doneBar = h('div', { class: 'bottombar' }, h('div', { class: 'inner' }, btn(t('nav.home'), { cls: 'btn-ghost is-fit', icon: 'home', onclick: settled(() => app.home()) }), lead));
     const rest = [
       pattern ? btn(t('build.lesson'), { cls: 'btn-soft', icon: 'pieces', block: true, onclick: () => app.go('build.' + pattern.id, { replace: true }) }) : null,
       rp && toNext ? btn(t('done.next', { title: content.lessons[nextId].title.fa }), { cls: 'btn-ghost', icon: 'book', block: true, onclick: toNext }) : null].filter(Boolean);

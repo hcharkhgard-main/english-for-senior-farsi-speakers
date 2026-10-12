@@ -724,8 +724,8 @@
     ["next to", "کنارِ", "نِکست تو", "It's next to the bank.", "کنار بانک است.", "", "places", 1],
     ["turn", "پیچیدن (به چپ یا راست)", "تِرن", "Turn right at the light.", "سرِ چراغ راهنمایی به راست بپیچید.", "", "places", 1],
     ["traffic light", "چراغ راهنمایی", "تْرَفیک لایت", "Turn left at the traffic light.", "سرِ چراغ راهنمایی به چپ بپیچید.", "🚦", "places", 2],
-    ["awake", "به‌هوش، بیدار", "اِوِیک", "Is he awake?", "به‌هوش است؟", "", "safety", 2],
-    ["breathing", "نفس کشیدن", "بْریدینگ", "Is he breathing?", "نفس می‌کشد؟", "", "safety", 2],
+    ["awake", "به‌هوش، بیدار", "اِوِیک", "Is he awake?", "به‌هوش است؟", "", "safety", 1],
+    ["breathing", "نفس کشیدن", "بْریدینگ", "Is he breathing?", "نفس می‌کشد؟", "", "safety", 1],
     ["oxygen machine", "دستگاه اکسیژن", "آکْسیجِن مَشین", "My husband uses an oxygen machine.", "شوهرم از دستگاه اکسیژن استفاده می‌کند.", "", "health", 3],
     ["interested", "علاقه‌مند", "اینتِرِستِد", "I'm not interested, thank you.", "علاقه‌ای ندارم، ممنون.", "", "describe", 2]
   ]

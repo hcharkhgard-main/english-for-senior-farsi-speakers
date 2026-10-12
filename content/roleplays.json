@@ -214,8 +214,9 @@
           ] },
         { "them": ["Can I help you with anything else?", "کمک دیگری هم لازم دارید؟"],
           "replies": [
-            { "en": "Where is the post office?", "fa": "اداره پست کجاست؟", "keys": ["post office", "post"], "then": ["It's across the street, on the corner.", "آن طرف خیابان است، سرِ نبش."], "thenCheck": { "q": "اداره پست کجاست؟", "right": "آن طرف خیابان، سرِ نبش", "wrong": ["همین طرف خیابان، سرِ نبش", "آن طرف خیابان، کنار بانک"] } },
+            { "en": "Where is the post office?", "fa": "ادارهٔ پست کجاست؟", "keys": ["post office", "post"], "then": ["It's across the street, on the corner.", "آن طرف خیابان است، سرِ نبش."], "thenCheck": { "q": "ادارهٔ پست کجاست؟", "right": "آن طرف خیابان، سرِ نبش", "wrong": ["همین طرف خیابان، سرِ نبش", "آن طرف خیابان، کنار بانک"] } },
             { "en": "Is there a bank near here?", "fa": "این نزدیکی بانک هست؟", "keys": ["bank"], "then": ["Yes. Go two blocks and turn right. It's next to the supermarket.", "بله. دو چهارراه جلو بروید و به راست بپیچید. کنار سوپرمارکت است."], "thenCheck": { "q": "بانک کجاست؟", "right": "دو چهارراه جلو بروید و به راست بپیچید؛ کنار سوپرمارکت است.", "wrong": ["دو چهارراه جلو بروید و به چپ بپیچید؛ کنار سوپرمارکت است.", "دو چهارراه جلو بروید و به راست بپیچید؛ روبه‌روی سوپرمارکت است."] } },
+            { "en": "Is there a pharmacy near here?", "fa": "این نزدیکی داروخانه هست؟", "keys": ["pharmacy"], "then": ["Yes. It's on Main Street. Go straight, then turn left.", "بله. در خیابان مِین است. مستقیم بروید، بعد به چپ بپیچید."], "thenCheck": { "q": "داروخانه کجاست؟", "right": "در خیابان مِین؛ مستقیم بروید، بعد به چپ بپیچید.", "wrong": ["در خیابان مِین؛ مستقیم بروید، بعد به راست بپیچید.", "آن طرف خیابان، کنار بانک"] } },
             { "en": "No, thank you. That's all.", "fa": "نه، ممنون. همین بود.", "keys": ["no", "that's all"] }
           ] },
         { "them": ["Good luck! Have a nice day.", "موفق باشید! روز خوبی داشته باشید."],
@@ -366,8 +367,9 @@
           "check": { "q": "چه خواست؟", "right": "بگویید دقیقاً چه اتفاقی افتاده.", "wrong": ["بگویید دقیقاً کجا هستید.", "بگویید شوهرتان چند سال دارد."] },
           "replies": [
             { "en": "My husband fell. He is hurt.", "fa": "شوهرم زمین خورده. آسیب دیده.", "keys": ["hurt"] },
-            { "en": "My husband fell. He can't get up.", "fa": "شوهرم زمین خورده. نمی‌تواند بلند شود.", "keys": ["can't get up", "cannot get up"] }
-          ] },
+            { "en": "My husband fell. He can't get up.", "fa": "شوهرم زمین خورده. نمی‌تواند بلند شود.", "keys": ["can't get up", "cannot get up"] },
+            { "en": "My husband fell.", "fa": "شوهرم زمین خورده.", "keys": ["husband fell"] }
+          ], "open": true },
         { "them": ["Is he awake?", "به‌هوش است؟"],
           "check": { "q": "چه پرسید؟", "right": "به‌هوش است؟", "wrong": ["آسیب دیده است؟", "چند سال دارد؟"] },
           "replies": [
@@ -379,7 +381,8 @@
           "check": { "q": "چه پرسید؟", "right": "نفس می‌کشد؟", "wrong": ["حرف می‌زند؟", "درد دارد؟"] },
           "replies": [
             { "en": "Yes, he is breathing.", "fa": "بله، نفس می‌کشد.", "keys": ["yes"] },
-            { "en": "No, he is not breathing.", "fa": "نه، نفس نمی‌کشد.", "keys": ["no", "not breathing"], "then": ["Okay. Stay on the line. I will help you.", "باشد. تماس را قطع نکنید. کمکتان می‌کنم."], "thenCheck": { "right": "تماس را قطع نکنید. کمکتان می‌کند.", "wrong": ["قطع کنید. خودشان دوباره زنگ می‌زنند.", "تلفن را به کس دیگری بدهید."] } },
+            { "en": "No, he is not breathing.", "fa": "نه، نفس نمی‌کشد.", "keys": ["no", "not breathing"], "then": ["Okay. Stay on the line. I will help you.", "باشد. تماس را قطع نکنید. کمکتان می‌کنم."], "thenCheck": { "right": "تماس را قطع نکنید. کمکتان می‌کنم.", "wrong": ["قطع کنید. خودشان دوباره زنگ می‌زنند.", "تلفن را به کس دیگری بدهید."] } },
+            { "en": "I don't know.", "fa": "نمی‌دانم.", "keys": ["don't know", "do not know"] },
             { "en": "I don't know. I need an interpreter.", "fa": "نمی‌دانم. مترجم لازم دارم.", "keys": ["interpreter"], "then": ["Okay. Stay on the line. I am getting an interpreter.", "باشد. تماس را قطع نکنید. دارم مترجم می‌آورم."], "thenCheck": { "right": "تماس را قطع نکنید. دارم مترجم می‌آورم.", "wrong": ["قطع کنید. مترجم خودش به شما زنگ می‌زند.", "مترجم نداریم."] } }
           ] },
         { "them": ["Help is on the way. Stay on the line.", "کمک در راه است. تماس را قطع نکنید."],

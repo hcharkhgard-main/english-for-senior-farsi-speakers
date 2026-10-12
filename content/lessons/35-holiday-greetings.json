@@ -163,7 +163,12 @@
     ],
     "wrong": "Congratulations Christmas!",
     "right": "Merry Christmas!",
-    "why": "«Congratulations» برای موفقیت و عروسی است، نه برای جشن‌های سالانه."
+    "why": "«Congratulations» برای موفقیت و عروسی است، نه برای جشن‌های سالانه.",
+    "fresh": {
+      "en": "Merry Christmas!",
+      "wrong": "Congratulations Christmas!",
+      "fa": "کریسمس مبارک!"
+    }
   },
   "review": {
     "status": "draft",

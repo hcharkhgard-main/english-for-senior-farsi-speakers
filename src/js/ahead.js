@@ -1,13 +1,14 @@
 // Which sound packs to keep on the phone ahead of time, so that what the learner will do next also works
-// without a connection: the next lesson, the next review sets, number listening and the papers that go
-// with the lessons done so far. Without this, a learner who did one lesson online found the review words,
+// without a connection: the next lesson, the next review sets, number listening, the papers that go
+// with the lessons done so far, and the conversations of those lessons (the done screen's main next step,
+// and what «تمرین مکالمه» lists; QA round 4, features M1). Without this, a learner who did one lesson online found the review words,
 // the numbers and the papers silent the next day on the bus (QA round 3, features M1).
 //
 // Pure functions of the saved state, the curriculum and audio/index.json; main.js fetches the packs
 // (audio.keep) while the app is open with a connection, and Settings shows the same parts as "ready" or
 // "not yet" (views/settings.js).
 import { audioKey } from './audiokey.js';
-import { nextLesson, todaysSet, reviewPool } from './learn.js';
+import { nextLesson, todaysSet, reviewPool, todayOffer } from './learn.js';
 
 const NEW_AHEAD = 40;        // words and sentences not yet met, from the head of the review pool (about two days of new items)
 const DAYS_AHEAD = 3;        // reviews that fall due within this many days
@@ -42,7 +43,7 @@ function itemPacks(index, content, id, ex = true) {
 
 const doneIds = (state) => Object.keys((state && state.done) || {});
 
-// The packs of each part, as { lesson, review, numbers, papers } (arrays of pack ids, no repeats).
+// The packs of each part, as { lesson, review, numbers, papers, talks } (arrays of pack ids, no repeats).
 export function aheadParts(state, content, index, day) {
   const uniq = (a) => [...new Set(a.filter(Boolean))];
   const deps = (id) => (index.deps && index.deps[id]) || (index.packs.some((p) => p.id === id) ? [id] : []);
@@ -61,11 +62,20 @@ export function aheadParts(state, content, index, day) {
   const papers = uniq((Array.isArray(content.papers) ? content.papers : [])
     .filter((P) => P.stage === 1 || (P.lesson && near.has(P.lesson)))
     .flatMap((P) => (P.lines || []).map((l) => packOf(index, 'en', 's', 'n', l.en))));
-  return { lesson: uniq(lesson), review, numbers: uniq(numbers), papers };
+  // conversations: every one that practises a lesson done or next (each lesson's conversations, main one first),
+  // and the one «درس امروز» offers once the path is finished. A conversation's lines may be recorded in its
+  // lessons' packs too, so all the packs it plays from are kept (index.deps).
+  const all = content.practiceAll || {};
+  const talkIds = new Set([...near].flatMap((id) => (own(all, id) && Array.isArray(all[id]) ? all[id] : [])));
+  let offer = null;
+  try { offer = todayOffer(state, content); } catch { offer = null; }
+  if (offer && offer.kind === 'talk' && offer.id) talkIds.add(offer.id);
+  const talks = uniq([...talkIds].filter((rid) => (content.roleplays || []).some((r) => r.id === rid)).flatMap((rid) => deps('r-' + rid)));
+  return { lesson: uniq(lesson), review, numbers: uniq(numbers), papers, talks };
 }
 
 // All of them, in the order they are fetched: the most likely next use first.
 export function aheadPacks(state, content, index, day) {
   const p = aheadParts(state, content, index, day);
-  return [...new Set([...p.lesson, ...p.review, ...p.numbers, ...p.papers])];
+  return [...new Set([...p.lesson, ...p.talks, ...p.review, ...p.numbers, ...p.papers])];
 }

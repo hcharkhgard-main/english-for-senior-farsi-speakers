@@ -1,5 +1,5 @@
 {
-  "_comment": "How the voice generator should read text. Numbers, dates, phone numbers and spelled names are handled by tools/spoken.mjs; this file holds the exceptions. 'exact' replaces a whole English sentence; 'replace' swaps a fragment in English text; 'replaceFa' swaps a fragment in Farsi text. The letters of the alphabet are in 'exact' with a full stop after them (\"A.\"), so that each is read as the name of the letter standing alone: the letter A must not sound like the article \"a\".",
+  "_comment": "How the voice generator should read text. Numbers, dates, phone numbers and spelled names are handled by tools/spoken.mjs; this file holds the exceptions. 'exact' replaces a whole English sentence; 'replace' swaps a fragment in English text; 'replaceFa' swaps a fragment in Farsi text. The letters of the alphabet are in 'exact' with a full stop after them (\"A.\"), so that each is read as the name of the letter standing alone: the letter A must not sound like the article \"a\". Some single words are respelled so the voice reads the verb, not the noun or adjective (live = \"liv\", close = \"cloze\", use = \"yooz\"), and so a word said on its own gets its full form (am = \"amm\", an = \"Ann\", not the letters M and N). One tap-a-word clip serves every sentence, so \"close\" in \"Is it close?\" is also heard as the verb. 'carry' lists whole lines recorded like single words, after \"Now say:\" (cut out afterwards): one voice drops the \"Do\" of a question that starts a recording. A few lines are read with a comma instead of a full stop (\"I'm sorry, do you have insurance?\", \"Great, when can you work?\", \"Yes, I need a tow truck.\"): after a full stop the voice drops a following \"Do\", adds a vowel to \"Great\"/\"Hi\", or ends \"Yes\" in a breath that sounds like \"Yes, sir\".",
   "exact": {
     "A": "A.",
     "B": "B.",
@@ -27,7 +27,45 @@
     "X": "X.",
     "Y": "Y.",
     "Z": "Z.",
-    "A as in apple.": "A, as in apple."
+    "A as in apple.": "A, as in apple.",
+    "live": "liv",
+    "close": "cloze",
+    "use": "yooz",
+    "Please close the window.": "Please cloze the window.",
+    "am": "amm",
+    "an": "Ann",
+    "All done. Do you have any questions?": "All done, do you have any questions?",
+    "Excuse me. It's too small. Do you have this in a larger size?": "Excuse me. It's too small, do you have this in a larger size?",
+    "I'm sorry. Please fill out this form. Do you have insurance?": "I'm sorry. Please fill out this form, do you have insurance?",
+    "Yes. Do you take my insurance?": "Yes, do you take my insurance?",
+    "I'm sorry. Do you have insurance?": "I'm sorry, do you have insurance?",
+    "Yes. Do you have a Farsi interpreter?": "Yes, do you have a Farsi interpreter?",
+    "Hi. Do you do alterations?": "Hi, do you do alterations?",
+    "Great. When can you work?": "Great, when can you work?",
+    "Great. When will everything be ready?": "Great, when will everything be ready?",
+    "Hi. Which pump?": "Hi, which pump?",
+    "So forty-five dollars. Okay.": "So forty-five dollars, okay.",
+    "Yes. I need a tow truck.": "Yes, I need a tow truck.",
+    "Yes. I have two children.": "Yes, I have two children.",
+    "Yes. I have an appointment at ten o'clock.": "Yes, I have an appointment at ten o'clock.",
+    "Yes. My last name is Ahmadi.": "Yes, My last name is Ahmadi.",
+    "Yes. I'd like the chicken, please.": "Yes, I'd like the chicken, please.",
+    "Yes. I have an appointment today. Here is my letter.": "Yes, I have an appointment today. Here is my letter.",
+    "Yes. Let's call the police. I need to call my son.": "Yes, Let's call the police. I need to call my son.",
+    "Yes. Can I get a gift receipt?": "Yes, Can I get a gift receipt?",
+    "Yes. Can you help me with my bags?": "Yes, Can you help me with my bags?",
+    "Yes. I have two children. I live with my daughter.": "Yes, I have two children. I live with my daughter.",
+    "Yes. I live with my daughter.": "Yes, I live with my daughter.",
+    "Yes. When is the rent due?": "Yes, When is the rent due?",
+    "Yes. I'd like to pay my rent. When is it due?": "Yes, I'd like to pay my rent. When is it due?",
+    "Yes. It will be ready on Wednesday.": "Yes, It will be ready on Wednesday.",
+    "Yes. It will be ready in one hour.": "Yes, It will be ready in one hour.",
+    "Yes. Do I need a blood test?": "Yes, Do I need a blood test?",
+    "Yes. I want to report a power outage.": "Yes, I want to report a power outage.",
+    "It's": "it's",
+    "It's too small. Do you have this in a larger size?": "It's too small, do you have this in a larger size?",
+    "It's too big. Do you have a smaller size?": "It's too big, do you have a smaller size?",
+    "That sounds wonderful. Do you celebrate Christmas?": "That sounds wonderful... Do you celebrate Christmas?"
   },
   "replace": [
     [
@@ -57,12 +95,46 @@
     [
       "Nowruz",
       "Norooz"
+    ],
+    [
+      "lives",
+      "livs"
+    ],
+    [
+      "211",
+      "two one one"
+    ],
+    [
+      "nowruz",
+      "Norooz"
     ]
   ],
   "replaceFa": [
     [
       "‎",
       ""
+    ],
+    [
+      "ببخشید.",
+      "بِبَخشید."
+    ],
+    [
+      "همین، ممنون",
+      "هَمین، مَمنون"
     ]
+  ],
+  "carry": [
+    "Do you have any allergies?",
+    "Do you have any questions for the pharmacist?",
+    "Do you have this in a larger size?",
+    "Do you have plans for the holidays?",
+    "Do you have insurance?",
+    "Do you have your insurance card with you?",
+    "Do you need a receipt?",
+    "Do you have this in blue?",
+    "Do you take Medicaid?",
+    "Do you have vegetarian food?",
+    "Are there computers here?",
+    "pick up"
   ]
 }

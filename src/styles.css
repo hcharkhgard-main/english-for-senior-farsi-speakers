@@ -97,6 +97,8 @@ bdi.en { font-family: var(--en); text-align: inherit; letter-spacing: 0; }
 .tb-brand { display: flex; align-items: center; gap: .6rem; font-weight: 800; font-size: clamp(18px, 1.25rem, 24px); min-width: 0; }
 .tb-brand svg { width: clamp(36px, 2.25rem, 44px); height: clamp(36px, 2.25rem, 44px); color: var(--primary); }
 .tb-spacer { flex: 1; }
+/* a phone narrower than 360 px: the home screen's bar shows the mark without the name, so that «اضطراری» fits beside «تنظیمات» */
+@media (max-width: 359px) { .tb-brand .tb-name { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } }
 
 /* ---- buttons ---------------------------------------------------------- */
 .btn {
@@ -251,6 +253,8 @@ bdi.en { font-family: var(--en); text-align: inherit; letter-spacing: 0; }
 .mini-play { width: clamp(56px, var(--tap), 68px); min-height: var(--tap); border-radius: var(--r); border: 2px solid var(--sound-edge); background: var(--sound); color: var(--sound-ink); display: grid; place-items: center; flex: none; padding: 0; }
 .mini-play svg { width: clamp(26px, 1.7rem, 32px); height: clamp(26px, 1.7rem, 32px); }
 .mini-play.is-playing { outline: 3px solid var(--ink); outline-offset: 2px; }
+.mini-play.has-word { width: auto; min-width: clamp(64px, var(--tap), 76px); padding: 4px 6px; align-content: center; gap: 0; font-weight: 700; font-size: clamp(14px, .9rem, 17px); line-height: 1.25; }
+.mini-play.has-word svg { width: clamp(22px, 1.4rem, 28px); height: clamp(22px, 1.4rem, 28px); }
 
 /* ---- conversation ----------------------------------------------------------- */
 .chat { display: flex; flex-direction: column; gap: .7rem; }
@@ -320,6 +324,9 @@ bdi.en { font-family: var(--en); text-align: inherit; letter-spacing: 0; }
 .pl .txt { flex: 1; min-width: 0; overflow-wrap: anywhere; }
 .pl.is-strong { font-size: 1.5rem; font-weight: 700; }
 .nb { display: inline-block; max-width: 100%; }      /* a number with its hyphens or slashes: one piece, cut only when wider than the screen */
+/* in the large sentence lines a phone number never breaks at its hyphen ("212-555-" / "0142."): at very large text it
+   is set a little smaller instead, so that it fits the width of a phone (QA round 4, accessibility L9) */
+.en-line .nb { white-space: nowrap; font-size: min(1em, 7.4vw); }
 .pl .ring { width: 1.7rem; height: 1.7rem; flex: none; border: 2px solid var(--edge); border-radius: 50%; display: grid; place-items: center; background: var(--surface); }
 .pl .ring svg { width: 1.2rem; height: 1.2rem; stroke-width: 3; }
 .pl:focus-visible { outline-offset: -3px; }

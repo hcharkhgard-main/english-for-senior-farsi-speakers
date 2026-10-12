@@ -124,7 +124,11 @@ if (target === 'pwa') {
   // the worker checks every file it stores as "the app" against its exact size and SHA-256: an answer from a Wi-Fi
   // login page or a cut-off download is never kept as a part of the app (src/sw.js)
   const integrity = Object.fromEntries(precache.map((f) => { const b = fs.readFileSync(path.join(out, f)); return [f, [b.length, sha256(b)]]; }));
-  fs.writeFileSync(path.join(out, 'sw.js'), swSrc.replaceAll('__BUILD__', build_id).replaceAll('__ASR__', asrVer).replace('__PRECACHE__', JSON.stringify(precache)).replace('__INTEGRITY__', JSON.stringify(integrity)));
+  // ... and every stored file is checked again each time it is served (another site on the same address can change
+  // what is stored): the sound packs and the pronunciation-checker files are listed for that too
+  const packSums = Object.fromEntries(idx.packs.filter((p) => fs.existsSync(path.join(out, 'audio', p.file))).map((p) => { const b = fs.readFileSync(path.join(out, 'audio', p.file)); return ['audio/' + p.file, [b.length, sha256(b)]]; }));
+  fs.writeFileSync(path.join(out, 'sw.js'), swSrc.replaceAll('__BUILD__', build_id).replaceAll('__ASR__', asrVer).replace('__PRECACHE__', JSON.stringify(precache)).replace('__INTEGRITY__', JSON.stringify(integrity))
+    .replace('__PACK_SUMS__', JSON.stringify(packSums)).replace('__ASR_FILES__', JSON.stringify(target === 'pwa' ? asrFiles : {})));
   if (checking) {
     // site/ is what gets published. It must be exactly what this source builds: same page, script, styles, lessons, worker, fonts and pictures.
     const files = ['index.html', 'app.js', 'app.css', 'content.json', 'sw.js', 'manifest.webmanifest', 'config.json', '.nojekyll',

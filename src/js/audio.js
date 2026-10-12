@@ -140,8 +140,14 @@ export function createAudio({ base = 'audio/', getRate = () => 1, fetchFn = (u) 
     return null;
   }
 
+  // The finish function of the sound now in the media element (playBytes). A new sound replaces it there: whoever
+  // waits for the old one is told 'stopped' at once. Before, the new sound's handlers simply took the old one's place
+  // and the old promise never resolved — a play() interrupted by another (the review screen's own playing, then a
+  // tap) hung for ever.
+  let finishing = null;
   function stop() {
     token++;
+    if (finishing) finishing('stopped');
     if (el) { try { el.pause(); } catch { /* ignore */ } }
     if (ctxSource) { try { ctxSource.stop(); } catch { /* ignore */ } ctxSource = null; }
     if (typeof speechSynthesis !== 'undefined') { try { speechSynthesis.cancel(); } catch { /* ignore */ } }
@@ -152,19 +158,24 @@ export function createAudio({ base = 'audio/', getRate = () => 1, fetchFn = (u) 
   function playBytes(bytes, rate, my) {
     return new Promise((resolve) => {
       if (!el) return resolve('blocked');
+      if (finishing) finishing('stopped');
       if (lastUrl) { URL.revokeObjectURL(lastUrl); lastUrl = null; }
       const url = URL.createObjectURL(bytes instanceof Blob ? bytes : new Blob([bytes], { type: 'audio/mpeg' }));
       lastUrl = url;
       let done = false;
       const finish = (why) => {
         if (done) return;
-        done = true; el.onended = el.onerror = el.onpause = null;
+        done = true;
+        if (finishing === finish) { finishing = null; el.onended = el.onerror = el.onpause = null; }      // never the handlers of a newer sound
         if (lastUrl === url) { URL.revokeObjectURL(url); lastUrl = null; }      // nothing is kept once the sound is over
         resolve(why);
       };
+      finishing = finish;
       el.onended = () => finish('ended');
       el.onerror = () => { webAudio(bytes, rate, my).then(finish); };
-      el.onpause = () => { if (!el.ended) finish(my === token ? 'interrupted' : 'stopped'); };  // a phone call or the lock screen paused us
+      // a phone call or the lock screen paused us; a 'pause' left over from stopping the previous sound arrives while
+      // this one is already playing (el.paused is false then) and is not ours
+      el.onpause = () => { if (el.paused && !el.ended) finish(my === token ? 'interrupted' : 'stopped'); };
       el.src = url;
       try { el.playbackRate = rate; el.preservesPitch = true; } catch { /* ignore */ }
       const p = el.play();

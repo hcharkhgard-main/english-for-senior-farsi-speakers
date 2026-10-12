@@ -49,3 +49,19 @@ fs.writeFileSync(path.join(out, 'index.json'), JSON.stringify(index));
 const total = packs.reduce((s, p) => s + p.bytes, 0);
 console.log(`packs: ${packs.length}, clips: ${Object.keys(clips).length}/${reqs.length}, ${(total / 1048576).toFixed(1)} MB, largest ${(Math.max(...packs.map((p) => p.bytes)) / 1048576).toFixed(2)} MB`);
 if (missing.length) console.log(`MISSING ${missing.length} clips, e.g.:`, missing.slice(0, 5).map((m) => m.text));
+// listen-back coverage (tools/verify_audio.py keeps audio-src/listened.json): a clip counts as listened back only
+// with the spoken text and the file it was checked in. A warning, not an error: run tools/verify_audio.py --stale.
+{
+  let led = {};
+  try { led = JSON.parse(fs.readFileSync(path.join(ROOT, 'audio-src', 'listened.json'), 'utf8')); } catch { /* no ledger yet */ }
+  const h12 = (b) => crypto.createHash('sha1').update(b).digest('hex').slice(0, 12);
+  let never = 0, flagged = 0;
+  for (const r of reqs) {
+    if (!clips[r.key]) continue;
+    const e = led[r.key];
+    if (!e || e.say !== h12(Buffer.from(r.say, 'utf8')) || e.clip !== h12(fs.readFileSync(path.join(clipsDir, r.key + '.mp3')))) never++;
+    else if (!e.ok && !e.accepted) flagged++;
+  }
+  if (never || flagged) console.log(`LISTEN-BACK: ${never} packed clips were never listened back in their current form, ${flagged} are flagged and not accepted (python3 tools/verify_audio.py --coverage)`);
+  else console.log('listen-back: every packed clip was heard as its text, or accepted after review');
+}

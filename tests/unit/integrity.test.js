@@ -13,6 +13,7 @@ import { asrFileOk } from '../../src/js/speech.js';
 import { aheadParts, aheadPacks } from '../../src/js/ahead.js';
 import { audioKey } from '../../src/js/audiokey.js';
 import { loadContent } from '../../tools/content.mjs';
+import { todayOffer } from '../../src/js/learn.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const sha1 = (b) => crypto.createHash('sha1').update(b).digest('hex');
@@ -133,4 +134,36 @@ test('papers near the lessons done are kept ahead (those whose lines have record
 test('damaged saved state does not break the plan', () => {
   const st = fresh(); st.srs = { 'p:constructor:p1': { b: 1, d: 0, n: 0 }, 'w-nope': { b: 1, d: 0, n: 0 } };
   assert.doesNotThrow(() => aheadPacks(st, content, realIndex, DAY));
+});
+
+// QA round 4, features M1: the conversations of the lessons done and of the next lesson are kept too
+test('the conversations of the lessons done and of the next lesson are kept ahead, with every pack they play from', () => {
+  const st = fresh();
+  const first = order[0];
+  st.done[first] = { t: 1, n: 1 };
+  const parts = aheadParts(st, content, realIndex, DAY);
+  const rids = [...new Set([first, order[1]].flatMap((id) => content.practiceAll[id] || []))];
+  assert.ok(rids.length > 0, 'the first lessons have a conversation');
+  for (const rid of rids) for (const p of realIndex.deps['r-' + rid] || []) assert.ok(parts.talks.includes(p), `${rid}: ${p}`);
+  // every partner line of the done screen's conversation has its recording in a kept pack
+  const R = content.roleplays.find((r) => r.id === content.practice[first]);
+  const kept = new Set(aheadPacks(st, content, realIndex, DAY));
+  for (const turn of R.turns) {
+    const hit = realIndex.clips[audioKey('en', R.them.voice || 'm', 'n', turn.them.say || turn.them.en)];
+    if (hit) assert.ok(kept.has(realIndex.packs[hit[0]].id), turn.them.en);
+  }
+  // a conversation of a lesson far ahead is not fetched yet
+  const far = order.slice(10).flatMap((id) => content.practiceAll[id] || []).find((rid) => !rids.includes(rid) && !Object.keys(st.done).some((d) => (content.practiceAll[d] || []).includes(rid)));
+  if (far) assert.ok(!(realIndex.deps['r-' + far] || []).filter((p) => p.startsWith('r-' + far)).some((p) => parts.talks.includes(p)), far);
+});
+
+test('once the path is finished, the conversation «درس امروز» offers is kept ahead', () => {
+  const st = fresh();
+  const now = Date.now();
+  for (const id of order) st.done[id] = { t: now, n: 1 };      // all done, one today -> a conversation is offered
+  st.cp = { n: 1000, t: now };                                  // the look back already had its turn
+  const offer = todayOffer(st, content, now);
+  assert.equal(offer && offer.kind, 'talk');
+  const parts = aheadParts(st, content, realIndex, DAY);
+  for (const p of realIndex.deps['r-' + offer.id] || []) assert.ok(parts.talks.includes(p), `${offer.id}: ${p}`);
 });

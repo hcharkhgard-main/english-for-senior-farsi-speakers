@@ -262,9 +262,10 @@ async function boot() {
     const bar = h('div', { class: 'wrap' });
     const sos = () => h('button', { type: 'button', class: 'tb-btn tb-sos', onclick: () => go('sos') }, icon('sos'), h('span', null, t('nav.sos')));
     if (name === 'home' || name === 'onboard') {
-      bar.append(h('div', { class: 'tb-brand' }, mark(), h('span', null, t('app.name'))));
+      // (on a phone narrower than 360 px only the mark is shown, so that the three controls fit: see .tb-name in styles.css)
+      bar.append(h('div', { class: 'tb-brand' }, mark(), h('span', { class: 'tb-name' }, t('app.name'))));
+      bar.append(sos());                                                    // help is one tap away from every screen: home too (QA round 4, M1), and before the first question is answered
       if (name === 'home') bar.append(h('button', { type: 'button', class: 'tb-btn', onclick: () => go('settings') }, icon('gear'), h('span', null, t('nav.settings'))));
-      else bar.append(sos());                                               // help is one tap away even before the first question is answered
     } else {
       // a screen may rename this control (inside a lesson it says "leave the lesson") and may ask to confirm before its work is thrown away
       const asking = (then) => () => {
@@ -303,7 +304,21 @@ async function boot() {
     return out.filter(Boolean);
   }
 
+  // ---- a redraw must not swallow a tap ---------------------------------------------------------
+  // Some screens redraw themselves when a slow check finishes (Settings: what is stored offline, the recogniser,
+  // the live partner — up to a few seconds on a busy phone). A redraw while a finger is on the glass replaces the
+  // button under it: the finger comes up on a new button and no click happens (QA round 4, features L4: the text
+  // size tap was lost). So a redraw that does not change the screen waits until the finger is lifted and its
+  // click has run — never longer than PRESS_MAX, in case the lift is never reported.
+  const PRESS_MAX = 1500;
+  let pressedAt = 0, deferred = false, flushTimer = 0;
+  const flush = (ms) => { clearTimeout(flushTimer); flushTimer = setTimeout(() => { if (deferred && (!pressedAt || performance.now() - pressedAt >= PRESS_MAX)) { deferred = false; render(); } }, ms); };
+  window.addEventListener('pointerdown', () => { pressedAt = performance.now(); }, { capture: true });
+  for (const ev of ['pointerup', 'pointercancel']) window.addEventListener(ev, () => { pressedAt = 0; if (deferred) flush(400); }, { capture: true });
+  window.addEventListener('click', () => { if (deferred) flush(0); }, { capture: true });
   function render(navigated = false) {
+    if (!navigated && pressedAt && performance.now() - pressedAt < PRESS_MAX) { deferred = true; flush(PRESS_MAX); return; }
+    deferred = false;
     const route = top().route;
     const [name, param] = parse(route);
     const ok = own(VIEWS, name) && (!own(PARAMS, name) || PARAMS[name](param));      // own(): "#constructor" or "#__proto__" must not find something on a plain object
@@ -389,7 +404,7 @@ async function boot() {
   audio.loadIndex().then(() => audio.warm(['core'])).catch(() => {});
   // ---- what comes next works without a connection too (ahead.js) ----------------------------------
   // While the app is open with a connection, the sounds of the next lesson, the next review sets, number
-  // listening and the nearby papers are stored, one pack after another, a few seconds after the home
+  // listening, the nearby papers and the conversations of those lessons are stored, one pack after another, a few seconds after the home
   // screen is shown (at start and after each lesson). Not when the phone asks to save data.
   let aheadAt = 0, aheadBusy = false, aheadAgain = false;
   app.keepAhead = (force = false) => {

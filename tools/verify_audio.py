@@ -3,22 +3,19 @@
 match their text. English: a fast first pass (Moonshine), then a careful second pass
 (Whisper) on anything the first pass doubted. Farsi: Whisper.
 
-  python3 tools/verify_audio.py [--models DIR] [--lang en|fa] [--limit N]
-Writes audio-src/verify-report.json.
+  python3 tools/verify_audio.py [--models DIR] [--lang en|fa] [--limit N] [--only KEYFILE] [--threads N]
+  python3 tools/verify_audio.py --coverage      # which clips were never listened back in their current form
+
+Writes audio-src/verify-report.json (this run) and updates audio-src/listened.json, the listen-back ledger:
+one entry per clip key with a hash of the spoken text and of the clip file, so a clip counts as listened
+back only in the exact form it was checked in. tools/gen_audio.py --takes uses the same judge.
 """
-import argparse, json, os, re, subprocess, sys, time, base64, difflib
+import argparse, json, os, re, subprocess, sys, time, base64, difflib, hashlib
 import numpy as np
-import onnxruntime as ort
-import sherpa_onnx
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ap = argparse.ArgumentParser()
-ap.add_argument('--models', default=os.environ.get('HAMRAH_MODELS', os.path.join(ROOT, '..', 'models')))
-ap.add_argument('--lang', default='')
-ap.add_argument('--limit', type=int, default=0)
-ap.add_argument('--only', default='', help='file with one clip key per line: check only these')
-args = ap.parse_args()
-M = os.path.abspath(args.models)
+LEDGER = f'{ROOT}/audio-src/listened.json'
+DEFAULT_MODELS = os.environ.get('HAMRAH_MODELS', os.path.join(ROOT, '..', 'models'))
 
 def load(path):
     raw = subprocess.run(['ffmpeg', '-v', 'error', '-i', path, '-ar', '16000', '-ac', '1', '-f', 'f32le', 'pipe:1'], capture_output=True).stdout
@@ -34,7 +31,7 @@ CONTR = {"i'm": 'i am', "i'd": 'i would', "i'll": 'i will', "it's": 'it is', "th
 SAME = {'ok': 'okay', 'id': 'i d', 'mariam': 'maryam', 'miriam': 'maryam', 'merriam': 'maryam', 'amadi': 'ahmadi', 'armin': 'arman', 'sarah': 'sara', 'ollie': 'ali', 'olly': 'ali',
         'seatbelt': 'seat belt', 'fair': 'fare', 'weight': 'wait', 'too': 'two', 'male': 'mail', 'sail': 'sale', 'waste': 'waist', 'weak': 'week', 'copay': 'co pay',
         'noruz': 'norooz', 'nowruz': 'norooz', 'hallal': 'halal', 'goodbye': 'good bye', 'today': 'to day', 'pm': 'p m', 'dollars': 'dollar', 'cents': 'cent',
-        'tv': 't v', 'atm': 'a t m', 'thanks': 'thank you', 'alright': 'all right', 'checkout': 'check out', 'pickup': 'pick up', 'dropoff': 'drop off', 'cannot': 'can not'}
+        'tv': 't v', 'atm': 'a t m', 'thanks': 'thank you', 'alright': 'all right', 'checkout': 'check out', 'pickup': 'pick up', 'dropoff': 'drop off', 'cannot': 'can not', 'high': 'hi', 'am': 'a m'}
 # What a recogniser writes when it hears one letter name or one short word on its own.
 ALONE = {'a': 'a ay eh hey', 'b': 'b be bee', 'c': 'c see sea', 'd': 'd dee', 'e': 'e he', 'f': 'f ef eff', 'g': 'g gee', 'h': 'h aitch age', 'i': 'i eye', 'j': 'j jay', 'k': 'k kay okay', 'l': 'l el elle',
          'm': 'm em', 'n': 'n en an', 'o': 'o oh owe', 'p': 'p pee pea', 'q': 'q cue queue', 'r': 'r are', 's': 's es yes', 't': 't tea tee', 'u': 'u you', 'v': 'v vee we', 'w': 'w', 'x': 'x ex', 'y': 'y why', 'z': 'z zee',
@@ -47,6 +44,8 @@ def en_tokens(t):
     t = t.lower().replace('’', "'")
     t = re.sub(r'\$(\d+)\.(\d\d)', r'\1 dollars and \2 cents', t)
     t = re.sub(r'\$(\d+)', r'\1 dollars', t)
+    t = t.replace('%', ' percent')
+    t = re.sub(r'\b([ap])\.\s?m\b\.?', r'\1m', t)                 # "9 a.m." = "nine AM"
     t = re.sub(r'(\d+)(st|nd|rd|th)\b', r'\1', t)
     t = re.sub(r'(?<=\d)(?=[a-z])|(?<=[a-z])(?=\d)', ' ', t)      # "24c" = "24 C"
     t = re.sub(r'(\d)\.(\d)', r'\1 \2', t)
@@ -56,7 +55,7 @@ def en_tokens(t):
         if not w: continue
         m = re.fullmatch(r'(\d+)(st|nd|rd|th)', w)
         if m: w = m.group(1)
-        if w in CONTR: words += CONTR[w].split(); continue
+        if w in CONTR: words += [x for c in CONTR[w].split() for x in SAME.get(c, c).split()]; continue
         w = w.replace("'", '')
         words += SAME.get(w, w).split()
     # numbers: every run of number words or digits becomes one string of digits, however it was written
@@ -95,15 +94,16 @@ def sim_en(a, b):
     if len(ta) == 1 and len(tb) == 1 and ta[0].isdigit() and tb[0].isdigit() and int(ta[0]) == int(tb[0]): return 1.0
     return difflib.SequenceMatcher(None, ta, tb).ratio()
 def fa_norm(t):
-    t = t.replace('‌', ' ').replace('ي', 'ی').replace('ك', 'ک').replace('ۀ', 'ه').replace('ة', 'ه').replace('أ', 'ا').replace('إ', 'ا').replace('آ', 'ا').replace('ؤ', 'و').replace('ئ', 'ی')
+    t = t.translate(str.maketrans('۰۱۲۳۴۵۶۷۸۹', '0123456789')).replace('‌', ' ').replace('ي', 'ی').replace('ك', 'ک').replace('ۀ', 'ه').replace('ة', 'ه').replace('أ', 'ا').replace('إ', 'ا').replace('آ', 'ا').replace('ؤ', 'و').replace('ئ', 'ی')
     t = re.sub(r'[ً-ْٰٔ]', '', t)
     return re.sub(r'\s+', '', re.sub(r'[^؀-ۿ0-9a-zA-Z ]', ' ', t))
 def sim_fa(a, b):
     return difflib.SequenceMatcher(None, fa_norm(a), fa_norm(b)).ratio()
 
 class Moon:
-    def __init__(self):
-        d = f'{M}/sherpa-onnx-moonshine-tiny-en-quantized-2026-02-27'
+    def __init__(self, models=DEFAULT_MODELS):
+        import onnxruntime as ort
+        d = f'{os.path.abspath(models)}/sherpa-onnx-moonshine-tiny-en-quantized-2026-02-27'
         so = ort.SessionOptions(); so.intra_op_num_threads = 1
         self.enc = ort.InferenceSession(d + '/encoder_model.ort', so, providers=['CPUExecutionProvider'])
         self.dec = ort.InferenceSession(d + '/decoder_model_merged.ort', so, providers=['CPUExecutionProvider'])
@@ -131,49 +131,143 @@ class Moon:
         bs = b''.join(base64.b64decode(self.toks.get(i, '')) for i in out)
         return bs.decode('utf8', 'replace').replace('▁', ' ').strip()
 
-def whisper(lang):
-    w = f'{M}/sherpa-onnx-whisper-turbo'
-    rec = sherpa_onnx.OfflineRecognizer.from_whisper(encoder=w + '/turbo-encoder.int8.onnx', decoder=w + '/turbo-decoder.int8.onnx', tokens=w + '/turbo-tokens.txt', language=lang, task='transcribe', num_threads=2)
+def whisper(lang, models=DEFAULT_MODELS, threads=2):
+    import sherpa_onnx
+    w = f'{os.path.abspath(models)}/sherpa-onnx-whisper-turbo'
+    rec = sherpa_onnx.OfflineRecognizer.from_whisper(encoder=w + '/turbo-encoder.int8.onnx', decoder=w + '/turbo-decoder.int8.onnx', tokens=w + '/turbo-tokens.txt', language=lang, task='transcribe', num_threads=threads)
     def run(x):
         st = rec.create_stream(); st.accept_waveform(16000, np.concatenate([np.zeros(6000, np.float32), x, np.zeros(14000, np.float32)])); rec.decode_stream(st); return st.result.text.strip()
     return run
 
-reqs = json.load(open(f'{ROOT}/audio-src/requests.json'))
-if args.only:
-    keep = set(open(args.only).read().split()); reqs = [r for r in reqs if r['key'] in keep]
-clips = f'{ROOT}/audio-src/clips'
-report = {'checked': 0, 'missing': [], 'flagged': [], 'by': {}}
-t0 = time.time()
-if args.lang in ('', 'en'):
-    en = [r for r in reqs if r['lang'] == 'en']
-    if args.limit: en = en[:args.limit]
-    moon = Moon(); doubt = []
-    for n, r in enumerate(en):
-        f = f"{clips}/{r['key']}.mp3"
-        if not os.path.exists(f): report['missing'].append(r['text']); continue
-        x = load(f); dur = len(x) / 16000
-        heard = moon(x); s = sim_en(r['say'], heard)
-        report['checked'] += 1
-        if s < 0.99 or dur < 0.25 or dur > 14: doubt.append((r, x, heard, s, dur))
-        if n % 300 == 0: print(f'en pass 1: {n}/{len(en)} doubts={len(doubt)} {time.time()-t0:.0f}s', flush=True)
-    print(f'en pass 1 done: {len(doubt)} of {len(en)} need a second listen', flush=True)
-    wh = whisper('en')
-    for n, (r, x, heard, s, dur) in enumerate(doubt):
-        h2 = wh(x); s2 = sim_en(r['say'], h2)
-        ok = max(s, s2) >= 0.99        # two different recognisers: one hearing exactly the text is enough
-        if not ok: report['flagged'].append({'key': r['key'], 'lang': 'en', 'voice': r['voice'], 'speed': r['speed'], 'text': r['text'], 'say': r['say'], 'heard_fast': heard, 'heard_careful': h2, 'score': round(max(s, s2), 2), 'seconds': round(dur, 2), 'pack': r['pack']})
-        if n % 50 == 0: print(f'en pass 2: {n}/{len(doubt)} flagged={len(report["flagged"])} {time.time()-t0:.0f}s', flush=True)
-    report['by']['en'] = {'clips': len(en), 'second_listen': len(doubt), 'flagged': len([f for f in report['flagged'] if f['lang'] == 'en'])}
-if args.lang in ('', 'fa'):
-    fa = [r for r in reqs if r['lang'] == 'fa']
-    if args.limit: fa = fa[:args.limit]
-    wh = whisper('fa'); scores = []
-    for n, r in enumerate(fa):
-        f = f"{clips}/{r['key']}.mp3"
-        if not os.path.exists(f): report['missing'].append(r['text']); continue
-        x = load(f); h = wh(x); s = sim_fa(r['say'], h); scores.append(s); report['checked'] += 1
-        if s < 0.85: report['flagged'].append({'key': r['key'], 'lang': 'fa', 'text': r['text'], 'heard_careful': h, 'score': round(s, 2), 'pack': r['pack']})
-        if n % 50 == 0: print(f'fa: {n}/{len(fa)} {time.time()-t0:.0f}s', flush=True)
-    report['by']['fa'] = {'clips': len(fa), 'mean_similarity': round(float(np.mean(scores)), 3) if scores else None, 'flagged': len([f for f in report['flagged'] if f['lang'] == 'fa'])}
-json.dump(report, open(f'{ROOT}/audio-src/verify-report.json', 'w'), ensure_ascii=False, indent=1)
-print(json.dumps(report['by'], ensure_ascii=False), 'missing', len(report['missing']), 'flagged', len(report['flagged']), f'{time.time()-t0:.0f}s')
+# "Do you …?" / "Does …?": one voice swallows the sentence-initial "Do", so the line is heard as a statement
+# ("You have insurance."). The similarity score forgives one missing word, and the fast recogniser sometimes
+# hears the "do" that is not really there, so for these lines the careful recogniser must hear every do/does.
+def needs_do(text):
+    return len(re.findall(r"\b(?:do|does)\b(?!n?['’]t)", text.lower()))
+def has_do(text, heard):
+    n = needs_do(text)
+    return n == 0 or sum(1 for w in en_tokens(heard) if w in ('do', 'does')) >= n
+
+def targets(r):
+    """What the clip may be compared with: the spoken text (without the carrier) and the displayed text.
+    A respelling ("liv", "cloze", "Norooz") is written back as the word by a recogniser, so the displayed
+    text is the fairer reference for those; digits and number words are the same to en_tokens."""
+    t = [r['say']]
+    if r['text'] != r['say']: t.append(r['text'])
+    return t
+
+class Judge:
+    """Listens to one clip and decides whether it says its text. Used by this script and by gen_audio.py --takes."""
+    def __init__(self, models=DEFAULT_MODELS, threads=2, langs=('en', 'fa')):
+        # recognisers are loaded when first needed (Whisper is large: one language at a time keeps memory down)
+        self.models, self.threads, self._moon, self._wh = models, threads, None, {}
+    @property
+    def moon(self):
+        if self._moon is None: self._moon = Moon(self.models)
+        return self._moon
+    @property
+    def wh(self):
+        return self
+    def __getitem__(self, lang):
+        if lang not in self._wh:
+            self._wh.clear()
+            import gc; gc.collect()
+            self._wh[lang] = whisper(lang, self.models, self.threads)
+        return self._wh[lang]
+    def en(self, r, x):
+        dur = len(x) / 16000
+        heard = self.moon(x); s = max(sim_en(t, heard) for t in targets(r)); h2 = ''
+        must_do = needs_do(r['text']) > 0
+        if s < 0.99 or dur < 0.25 or dur > 14 or must_do:
+            h2 = self.wh['en'](x); s2 = max(sim_en(t, h2) for t in targets(r))
+        else: s2 = 0.0
+        score = max(s, s2)
+        ok = score >= 0.99 and 0.25 <= dur <= 14          # two different recognisers: one hearing exactly the text is enough
+        if must_do and not has_do(r['text'], h2): ok = False; score = min(score, 0.9)
+        return {'ok': ok, 'score': round(score, 3), 'heard_fast': heard, 'heard_careful': h2, 'seconds': round(dur, 2)}
+    def fa(self, r, x):
+        h = self.wh['fa'](x); s = max(sim_fa(t, h) for t in targets(r))
+        return {'ok': s >= 0.85, 'score': round(s, 3), 'heard_careful': h, 'seconds': round(len(x) / 16000, 2)}
+    def __call__(self, r, x): return self.en(r, x) if r['lang'] == 'en' else self.fa(r, x)
+
+def h12(b): return hashlib.sha1(b if isinstance(b, bytes) else b.encode('utf8')).hexdigest()[:12]
+def clip_hash(path): return h12(open(path, 'rb').read())
+def load_ledger():
+    try: return json.load(open(LEDGER, encoding='utf8'))
+    except FileNotFoundError: return {}
+def save_ledger(led):
+    tmp = LEDGER + '.tmp'
+    json.dump(led, open(tmp, 'w', encoding='utf8'), ensure_ascii=False, indent=0, sort_keys=True); os.replace(tmp, LEDGER)
+def ledger_entry(r, path, res):
+    return {'say': h12(r['say']), 'clip': clip_hash(path), 'ok': bool(res['ok']), 'score': res['score'], 'heard': res.get('heard_careful') or res.get('heard_fast', '')}
+def made_from(path, say):
+    """True if the clip at path was generated from this spoken text (its .txt beside it)."""
+    try: return open(path[:-4] + '.txt', encoding='utf8').read() == say
+    except FileNotFoundError: return False
+def current(led, r, path):
+    e = led.get(r['key'])
+    return bool(e) and e['say'] == h12(r['say']) and os.path.exists(path) and made_from(path, r['say']) and e['clip'] == clip_hash(path)
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument('--models', default=DEFAULT_MODELS)
+    ap.add_argument('--lang', default='')
+    ap.add_argument('--limit', type=int, default=0)
+    ap.add_argument('--threads', type=int, default=2)
+    ap.add_argument('--only', default='', help='file with one clip key per line: check only these')
+    ap.add_argument('--stale', action='store_true', help='check only clips that have no current entry in the ledger')
+    ap.add_argument('--coverage', action='store_true', help='report how many clips have a current passing listen-back; no listening')
+    ap.add_argument('--accept', default='', help='with --only: record that these flagged clips were reviewed and are acceptable, with this reason (no listening)')
+    args = ap.parse_args()
+    reqs = json.load(open(f'{ROOT}/audio-src/requests.json'))
+    clips = f'{ROOT}/audio-src/clips'
+    led = load_ledger()
+    if args.accept:
+        keep = set(open(args.only).read().split()) if args.only else set()
+        n = 0
+        for r in reqs:
+            if r['key'] in keep and current(led, r, f"{clips}/{r['key']}.mp3"): led[r['key']]['accepted'] = args.accept; n += 1
+        save_ledger(led); print(f'accepted {n} of {len(keep)}'); return
+    if args.coverage:
+        never, failed = [], []
+        for r in reqs:
+            f = f"{clips}/{r['key']}.mp3"
+            if not current(led, r, f): never.append(r)
+            elif not led[r['key']]['ok'] and not led[r['key']].get('accepted'): failed.append(r)
+        print(json.dumps({'clips': len(reqs), 'listened': len(reqs) - len(never), 'not_listened': len(never), 'flagged_not_accepted': len(failed)}))
+        for r in never[:20]: print('  not listened:', r['key'], r['lang'], r['voice'], r['speed'], r['text'][:70])
+        for r in failed[:40]: print('  flagged:', r['key'], r['lang'], r['voice'], r['speed'], r['text'][:60], '| heard:', led[r['key']]['heard'][:60])
+        sys.exit(1 if never or failed else 0)
+    if args.only:
+        keep = set(open(args.only).read().split()); reqs = [r for r in reqs if r['key'] in keep]
+    if args.stale: reqs = [r for r in reqs if not current(led, r, f"{clips}/{r['key']}.mp3")]
+    if args.lang: reqs = [r for r in reqs if r['lang'] == args.lang]
+    langs = tuple(l for l in ('en', 'fa') if any(r['lang'] == l for r in reqs))
+    report = {'checked': 0, 'missing': [], 'flagged': [], 'by': {}}
+    if not reqs: print('nothing to check'); return
+    judge = Judge(args.models, args.threads, langs)
+    t0 = time.time()
+    for lang in langs:
+        rs = [r for r in reqs if r['lang'] == lang]
+        if args.limit: rs = rs[:args.limit]
+        scores = []
+        for n, r in enumerate(rs):
+            f = f"{clips}/{r['key']}.mp3"
+            if not os.path.exists(f) or not made_from(f, r['say']): report['missing'].append(r['text']); continue    # missing or stale: generate first
+            res = judge(r, load(f)); report['checked'] += 1; scores.append(res['score'])
+            prev = led.get(r['key'])
+            e = ledger_entry(r, f, res)
+            if prev and prev.get('accepted') and prev['say'] == e['say'] and prev['clip'] == e['clip']: e['accepted'] = prev['accepted']
+            led[r['key']] = e
+            if not res['ok']:
+                row = {'key': r['key'], 'lang': lang, 'voice': r['voice'], 'speed': r['speed'], 'text': r['text'], 'say': r['say'], **res, 'pack': r['pack']}
+                report['flagged'].append(row)
+            if n % 100 == 0:
+                print(f'{lang}: {n}/{len(rs)} flagged={len(report["flagged"])} {time.time()-t0:.0f}s', flush=True); save_ledger(led)
+        report['by'][lang] = {'clips': len(rs), 'mean_similarity': round(float(np.mean(scores)), 3) if scores else None, 'flagged': len([f for f in report['flagged'] if f['lang'] == lang])}
+    save_ledger(led)
+    json.dump(report, open(f'{ROOT}/audio-src/verify-report.json', 'w'), ensure_ascii=False, indent=1)
+    print(json.dumps(report['by'], ensure_ascii=False), 'missing', len(report['missing']), 'flagged', len(report['flagged']), f'{time.time()-t0:.0f}s')
+
+if __name__ == '__main__':
+    main()
