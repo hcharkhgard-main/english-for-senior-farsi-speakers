@@ -18,7 +18,7 @@ paths=(.github .gitignore LICENSE README.md THIRD-PARTY.md package.json package-
 existing=(); for p in "${paths[@]}"; do if [ -e "$p" ] || git ls-files --error-unmatch "$p" >/dev/null 2>&1; then existing+=("$p"); fi; done
 git add -A -- "${existing[@]}"
 if git diff --cached --quiet; then echo "nothing to publish"; exit 0; fi
-git -c user.name="Hamrah" -c user.email="noreply@example.com" commit -q -m "$msg" \
+git commit -q -m "$msg" \
   -m "Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>" \
   -m "Claude-Session: https://claude.ai/code/session_015HQUSzC1XqvKaN8XFhNMNn"
 git push -q origin main
