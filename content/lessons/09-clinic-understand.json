@@ -1,0 +1,67 @@
+{
+  "id": "clinic-understand",
+  "scenario": "clinic",
+  "stage": 2,
+  "order": 9,
+  "minutes": 7,
+  "safetyCritical": true,
+  "title": { "fa": "فهمیدن حرف‌های دکتر و پرستار", "en": "Understanding the nurse and doctor" },
+  "intro": "این درس بیشتر برای گوش دادن است. این جمله‌ها را در مطب زیاد می‌شنوید. لازم نیست خودتان بگویید؛ کافی است وقتی شنیدید، بفهمید.",
+  "note": "این درس برای یادگیری زبان است و توصیهٔ پزشکی نیست.",
+  "canDo": "حالا می‌توانید جمله‌های ساده‌ای را که در مطب به شما می‌گویند بفهمید.",
+  "mission": "در مطب یا درمانگاه خوب گوش کنید و ببینید کدام جمله‌های این درس را می‌شنوید؛ مثلاً: Please have a seat.",
+  "listenFirst": true,
+  "them": { "role": "پرستار", "voice": "b" },
+  "phrases": [
+    { "en": "Please have a seat.", "fa": "لطفاً بنشینید.", "ph": "پْلیز هَو اِ سیت", "note": "این را منشی یا پرستار می‌گوید.", "voice": "b", "chunks": ["Please", "have a seat."] },
+    { "en": "Please roll up your sleeve.", "fa": "لطفاً آستینتان را بالا بزنید.", "ph": "پْلیز رُول آپ یور سْلیو", "note": "برای گرفتن فشار خون یا آزمایش خون.", "voice": "b", "chunks": ["Please roll up", "your sleeve."] },
+    { "en": "Take a deep breath.", "fa": "نفس عمیق بکشید.", "ph": "تِیک اِ دیپ بْرِت", "note": "وقتی دکتر به صدای قلب و ریه گوش می‌دهد.", "voice": "b", "chunks": ["Take", "a deep breath."] },
+    { "en": "Does it hurt here?", "fa": "اینجا درد می‌کند؟", "ph": "داز ایت هِرت هی‌یِر؟", "note": "جواب کوتاه: Yes (بله) یا No (نه).", "voice": "b", "chunks": ["Does it hurt", "here?"] },
+    { "en": "Do you have any questions?", "fa": "سؤالی دارید؟", "ph": "دو یو هَو اِنی کوئِسچِنز؟", "note": "اگر چیزی را نفهمیدید، همین‌جا بپرسید یا بخواهید دوباره توضیح بدهند.", "voice": "b", "chunks": ["Do you have", "any questions?"] }
+  ],
+  "dialogue": {
+    "setting": "پرستار دارد فشار خونتان را می‌گیرد.",
+    "lines": [
+      ["them", "Please have a seat. I'm going to check your blood pressure.", "لطفاً بنشینید. می‌خواهم فشار خونتان را بگیرم."],
+      ["you", "Okay.", "باشد."],
+      ["them", "Please roll up your sleeve.", "لطفاً آستینتان را بالا بزنید."],
+      ["you", "Like this?", "این‌طوری؟"],
+      ["them", "Yes, perfect. Now I'm going to listen to your lungs. Take a deep breath.", "بله، عالی. حالا می‌خواهم به صدای ریه‌تان گوش بدهم. نفس عمیق بکشید."],
+      ["them", "All done. Do you have any questions?", "تمام شد. سؤالی دارید؟"],
+      ["you", "No, thank you.", "نه، ممنون."]
+    ]
+  },
+  "respond": {
+    "setting": "دکتر توضیحی داده که کامل نفهمیده‌اید.",
+    "them": ["Do you have any questions?", "سؤالی دارید؟"],
+    "ok": [
+      ["Yes. Could you repeat that, please?", "بله. می‌شود لطفاً دوباره بگویید؟"],
+      ["Yes. Please speak slowly.", "بله. لطفاً آهسته صحبت کنید."],
+      ["Could you write that down, please?", "می‌شود لطفاً آن را بنویسید؟"]
+    ],
+    "off": ["Take a deep breath.", "نفس عمیق بکشید.", "این را دکتر به شما می‌گوید. اگر متوجه نشده‌اید، بخواهید دوباره یا آهسته‌تر بگویند."],
+    "off2": 1
+  },
+  "variants": [
+    { "en": "Take a seat.", "fa": "بفرمایید بنشینید.", "like": "Please have a seat." },
+    { "en": "Can you roll up your sleeve for me?", "fa": "می‌شود آستینتان را بالا بزنید؟", "like": "Please roll up your sleeve.", "voice": "m" },
+    { "en": "Any questions?", "fa": "سؤالی هست؟", "like": "Do you have any questions?" }
+  ],
+  "task": [
+    ["پرستار دستگاه فشار خون را آورده و به بازوی شما اشاره می‌کند.", 2],
+    ["دکتر شکمتان را فشار می‌دهد و چیزی می‌پرسد.", 4]
+  ],
+  "grammar": {
+    "title": "جواب کوتاه: Yes / No",
+    "explain": "وقتی سؤال با Do یا Does شروع می‌شود، جواب کوتاه کافی است: «Yes» یا «No». می‌توانید کامل‌تر هم بگویید.",
+    "examples": [
+      ["Yes, it does.", "بله، درد می‌کند."],
+      ["No, it doesn't.", "نه، درد نمی‌کند."],
+      ["A little.", "کمی."]
+    ],
+    "wrong": "Yes, it hurt.",
+    "right": "Yes, it does.",
+    "why": "می‌توانید بگویید «Yes, it does.\u200e» یا «Yes, it hurts.\u200e» (با s در آخر). فقط گفتن «Yes» هم کاملاً درست است."
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

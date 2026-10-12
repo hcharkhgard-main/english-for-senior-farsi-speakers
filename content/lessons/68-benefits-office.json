@@ -1,0 +1,66 @@
+{
+  "id": "benefits-office",
+  "scenario": "office",
+  "stage": 2,
+  "minutes": 9,
+  "safetyCritical": true,
+  "title": { "fa": "نامهٔ اداره: یعنی چه و چه کار باید بکنم؟", "en": "A letter from a benefits office" },
+  "intro": "اداره‌هایی که بیمه یا کمک‌هزینه می‌دهند گاهی نامه می‌فرستند و چیزی می‌خواهند. در این درس یاد می‌گیرید نامه را به کارمند نشان بدهید و بپرسید یعنی چه، چه کار باید بکنید و تا چه تاریخی وقت دارید.",
+  "note": "این درس فقط برای یادگیری زبان است و راهنمایی حقوقی یا راهنمایی دربارهٔ کمک‌های دولتی نیست. نامه، مدرک و تاریخ‌های این درس ساختگی‌اند. دربارهٔ نامهٔ خودتان از همان اداره یا از فردی مورد اعتماد بپرسید و چیزی را که نمی‌فهمید امضا نکنید.",
+  "canDo": "حالا می‌توانید دربارهٔ نامه‌ای که از اداره آمده بپرسید یعنی چه، چه کار باید بکنید و مهلتش تا کی است.",
+  "mission": "یکی از نامه‌های اداری‌ای را که در خانه دارید بردارید و تاریخ و مهلتش را پیدا کنید. اگر چیزی را نفهمیدید، این جمله را تمرین کنید: What does it mean?",
+  "them": { "role": "کارمند اداره", "voice": "k" },
+  "phrases": [
+    { "en": "I got this letter. What does it mean?", "fa": "این نامه برایم آمده است. یعنی چه؟", "ph": "آی گات دیس لِتِر. وات داز ایت مین؟", "note": "نامه را همراهتان ببرید و موقع گفتنِ این جمله نشانش بدهید.", "chunks": ["I got this letter.", "What does it mean?"] },
+    { "en": "What do I need to do?", "fa": "چه کار باید بکنم؟", "ph": "وات دو آی نید تو دو؟", "note": "می‌توانید بخواهید جواب را برایتان بنویسند: «Could you write that down, please?‎»", "chunks": ["What do I", "need to do?"] },
+    { "en": "Is there a deadline?", "fa": "مهلت دارد؟", "ph": "ایز دِر اِ دِدلاین؟", "note": "deadline یعنی آخرین مهلت. جواب معمولاً یک تاریخ است؛ همان‌جا آن را روی نامه بنویسید.", "chunks": ["Is there", "a deadline?"] },
+    { "en": "I need to report a change of address.", "fa": "باید تغییر آدرسم را خبر بدهم.", "ph": "آی نید تو ریپُرت اِ چِینج آو اَدْرِس", "note": "وقتی خانه‌تان عوض می‌شود، با این جمله آدرس تازه را به اداره خبر می‌دهید تا نامه‌ها به دستتان برسد.", "chunks": ["I need to report", "a change of address."] },
+    { "en": "Can I get this in Farsi?", "fa": "می‌شود این را به فارسی بگیرم؟", "ph": "کَن آی گِت دیس این فارسی؟", "note": "بعضی اداره‌ها نامه و فرم را به زبان‌های دیگر هم دارند. اگر به فارسی نداشتند، مترجم بخواهید: «I need an interpreter, please.‎»", "chunks": ["Can I get this", "in Farsi?"] }
+  ],
+  "dialogue": {
+    "setting": "نامه‌ای از اداره برایتان آمده و آن را پیش کارمند برده‌اید.",
+    "lines": [
+      ["you", "Hello. I got this letter. What does it mean?", "سلام. این نامه برایم آمده است. یعنی چه؟"],
+      ["them", "Let me see. We need proof of your address.", "بگذارید ببینم. مدرکی لازم داریم که آدرستان را نشان بدهد."],
+      ["you", "What do I need to do?", "چه کار باید بکنم؟"],
+      ["them", "Please bring a bill with your name and address on it.", "لطفاً یک قبض بیاورید که اسم و آدرستان رویش باشد."],
+      ["you", "Is there a deadline?", "مهلت دارد؟"],
+      ["them", "Yes. We need it by March fifteenth.", "بله. تا پانزدهم مارس لازمش داریم."],
+      ["you", "Okay. Can I get this in Farsi?", "باشد. می‌شود این را به فارسی بگیرم؟"],
+      ["them", "I'm sorry, we don't have it in Farsi. But I can call an interpreter.", "متأسفم، به فارسی نداریمش. ولی می‌توانم مترجم خبر کنم."],
+      ["you", "Yes, please. Thank you.", "بله، لطفاً. ممنون."]
+    ]
+  },
+  "respond": {
+    "setting": "این بار نامه‌ای ندارید. خانه‌تان را عوض کرده‌اید و آمده‌اید آدرس تازه را به اداره بدهید.",
+    "them": ["Good morning. What can I do for you?", "صبح به‌خیر. چه کاری برایتان انجام بدهم؟"],
+    "ok": [
+      ["I need to report a change of address.", "باید تغییر آدرسم را خبر بدهم."],
+      ["Hello. I moved. I need to report a change of address.", "سلام. خانه‌ام را عوض کرده‌ام. باید تغییر آدرسم را خبر بدهم."]
+    ],
+    "off": ["I got this letter. What does it mean?", "این نامه برایم آمده است. یعنی چه؟", "این بار نامه‌ای ندارید. آمده‌اید بگویید آدرستان عوض شده است."],
+    "off2": 3
+  },
+  "task": [
+    ["نامه‌ای به انگلیسی به دستتان داده‌اند و می‌خواهید بدانید همین نامه را به فارسی هم دارند یا نه.", 5],
+    ["کارمند گفته چه مدرکی بیاورید. می‌خواهید بدانید تا چه تاریخی وقت دارید.", 3]
+  ],
+  "grammar": {
+    "title": "What does … mean?",
+    "explain": "برای پرسیدنِ معنیِ یک کلمه یا نوشته بگویید «What does»، بعد آن کلمه، و در آخر «mean».",
+    "examples": [
+      ["What does it mean?", "یعنی چه؟"],
+      ["What does this word mean?", "این کلمه یعنی چه؟"],
+      ["What does this letter mean?", "این نامه یعنی چه؟"]
+    ],
+    "wrong": "What means this word?",
+    "right": "What does this word mean?",
+    "why": "در این سؤال «does» لازم است و «mean» آخر جمله می‌آید: «What does this word mean?‎»"
+  },
+  "variants": [
+    { "en": "It's due by March fifteenth.", "fa": "مهلتش تا پانزدهم مارس است.", "like": "Yes. We need it by March fifteenth." },
+    { "en": "You have to send us proof of address.", "fa": "باید مدرکی برای ما بفرستید که آدرستان را نشان بدهد.", "like": "Let me see. We need proof of your address." },
+    { "en": "We can get an interpreter on the phone.", "fa": "می‌توانیم تلفنی مترجم بیاوریم.", "like": "I'm sorry, we don't have it in Farsi. But I can call an interpreter." }
+  ],
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

@@ -1,0 +1,63 @@
+{
+  "id": "coffee-order",
+  "scenario": "restaurant",
+  "stage": 1,
+  "minutes": 7,
+  "title": { "fa": "سفارش در کافه و فست‌فود", "en": "Ordering at a café" },
+  "intro": "در کافه‌ها و فست‌فودها باید پای پیشخوان سفارش بدهید. در این درس جمله‌های کوتاهِ سفارش را یاد می‌گیرید.",
+  "canDo": "حالا می‌توانید در کافه یک نوشیدنی یا خوراکی سفارش بدهید.",
+  "mission": "این هفته در یک کافه یا فست‌فود، خودتان سفارش بدهید: Can I get a small coffee, please?",
+  "them": { "role": "فروشندهٔ کافه", "voice": "b" },
+  "phrases": [
+    { "en": "Can I get a small coffee, please?", "fa": "می‌شود لطفاً یک قهوهٔ کوچک بدهید؟", "ph": "کَن آی گِت اِ سْمال کافی، پْلیز؟", "note": "اندازه‌ها: small کوچک، medium متوسط، large بزرگ. tea یعنی چای.", "chunks": ["Can I get", "a small coffee,", "please?"] },
+    { "en": "With milk, no sugar.", "fa": "با شیر، بدون شکر.", "ph": "ویت میلک، نُو شُگِر", "note": "with یعنی «با». در سفارش دادن، no قبل از اسم یعنی «بدون».", "chunks": ["With milk,", "no sugar."] },
+    { "en": "For here, please.", "fa": "همین‌جا می‌خورم، لطفاً.", "ph": "فُر هی‌یِر، پْلیز", "note": "اگر می‌برید: «To go, please.\u200e»", "chunks": ["For here,", "please."] },
+    { "en": "What is this?", "fa": "این چیست؟", "ph": "وات ایز دیس؟", "note": "به شیرینی یا غذای پشت شیشه اشاره کنید و بپرسید.", "chunks": ["What is", "this?"] },
+    { "en": "That's all, thank you.", "fa": "همین، ممنون.", "ph": "دَتس آل، تَنک یو", "note": "وقتی می‌پرسند «Anything else?\u200e» (یعنی «چیز دیگری هم می‌خواهید؟») این را بگویید.", "chunks": ["That's all,", "thank you."] }
+  ],
+  "dialogue": {
+    "setting": "در کافه، نوبت شما پای پیشخوان رسیده است.",
+    "lines": [
+      ["them", "Hi! What can I get for you?", "سلام! چه میل دارید؟"],
+      ["you", "Can I get a small coffee, please?", "می‌شود لطفاً یک قهوهٔ کوچک بدهید؟"],
+      ["them", "Sure. Do you want milk or sugar?", "حتماً. شیر یا شکر می‌خواهید؟"],
+      ["you", "With milk, no sugar.", "با شیر، بدون شکر."],
+      ["them", "For here or to go?", "همین‌جا می‌خورید یا می‌برید؟"],
+      ["you", "For here, please.", "همین‌جا می‌خورم، لطفاً."],
+      ["them", "Anything else?", "چیز دیگری هم می‌خواهید؟"],
+      ["you", "That's all, thank you.", "همین، ممنون."]
+    ]
+  },
+  "respond": {
+    "setting": "سفارش داده‌اید و فروشنده می‌پرسد.",
+    "them": ["For here or to go?", "همین‌جا می‌خورید یا می‌برید؟"],
+    "ok": [
+      ["For here, please.", "همین‌جا می‌خورم، لطفاً."],
+      ["To go, please.", "می‌برم، لطفاً."]
+    ],
+    "off": ["With milk, no sugar.", "با شیر، بدون شکر.", "او پرسید همین‌جا می‌خورید یا با خودتان می‌برید."],
+    "off2": 5
+  },
+  "variants": [
+    { "en": "Will that be all?", "fa": "همین بود؟", "like": "Anything else?" },
+    { "en": "What can I get started for you?", "fa": "چه چیزی برایتان آماده کنم؟", "like": "Hi! What can I get for you?" },
+    { "en": "Would you like cream or sugar?", "fa": "خامه یا شکر می‌خواهید؟", "like": "Sure. Do you want milk or sugar?", "voice": "m" }
+  ],
+  "task": [
+    ["شیرینی‌ای پشت شیشه می‌بینید و نمی‌دانید چیست.", 4],
+    ["سفارشتان تمام شده و فروشنده می‌پرسد چیز دیگری می‌خواهید یا نه.", 5]
+  ],
+  "grammar": {
+    "title": "with / no",
+    "explain": "برای «با» بگویید «with» و برای «بدون» در سفارش‌ها ساده بگویید «no».",
+    "examples": [
+      ["With milk.", "با شیر."],
+      ["No sugar.", "بدون شکر."],
+      ["No ice, please.", "بدون یخ، لطفاً."]
+    ],
+    "wrong": "Not sugar.",
+    "right": "No sugar.",
+    "why": "قبل از اسم «no» می‌آید، نه «not»."
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

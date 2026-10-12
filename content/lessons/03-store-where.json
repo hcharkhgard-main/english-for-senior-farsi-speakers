@@ -1,0 +1,61 @@
+{
+  "id": "store-where",
+  "scenario": "store",
+  "stage": 1,
+  "order": 3,
+  "minutes": 7,
+  "title": { "fa": "پیدا کردن جنس در فروشگاه", "en": "Finding things in a store" },
+  "intro": "در این درس یاد می‌گیرید در فروشگاه بپرسید یک جنس کجاست و قیمتش چقدر است.",
+  "canDo": "حالا می‌توانید در فروشگاه بپرسید یک کالا کجاست و قیمتش چقدر است.",
+  "mission": "در خرید بعدی، جای یک جنس را به انگلیسی از کارمند فروشگاه بپرسید؛ مثلاً: Excuse me. Where is the milk?",
+  "them": { "role": "کارمند فروشگاه", "voice": "m" },
+  "phrases": [
+    { "en": "Excuse me.", "fa": "ببخشید.", "ph": "اِکسکیوز می", "note": "برای اینکه مؤدبانه توجه کسی را جلب کنید.", "chunks": ["Excuse me."] },
+    { "en": "Where is the milk?", "fa": "شیر کجاست؟", "ph": "وِر ایز دِ میلک؟", "note": "به‌جای milk اسم هر چیزی را که می‌خواهید بگویید. برای چند تا: «Where are the eggs?\u200e»", "chunks": ["Where is", "the milk?"] },
+    { "en": "I'm looking for bread.", "fa": "دنبال نان می‌گردم.", "ph": "آیْم لُکینگ فُر بْرِد", "note": "راه دیگری برای گفتن اینکه چه می‌خواهید.", "chunks": ["I'm looking for", "bread."] },
+    { "en": "How much is this?", "fa": "قیمت این چقدر است؟", "ph": "هاو ماچ ایز دیس؟", "note": "وقتی جنس در دستتان است یا به آن اشاره می‌کنید.", "chunks": ["How much", "is this?"] },
+    { "en": "Thank you for your help.", "fa": "ممنون از کمکتان.", "ph": "تَنک یو فُر یور هِلپ", "note": "بعد از اینکه کسی کمکتان کرد.", "chunks": ["Thank you", "for your help."] }
+  ],
+  "dialogue": {
+    "setting": "در فروشگاه مواد غذایی دنبال شیر می‌گردید.",
+    "lines": [
+      ["you", "Excuse me. Where is the milk?", "ببخشید. شیر کجاست؟"],
+      ["them", "The milk is in aisle five, next to the eggs.", "شیر در راهروی پنج است، کنار تخم‌مرغ‌ها."],
+      ["you", "Aisle five. Thank you.", "راهروی پنج. ممنون."],
+      ["them", "You're welcome. Anything else?", "خواهش می‌کنم. چیز دیگری هم می‌خواهید؟"],
+      ["you", "Yes. How much is this?", "بله. قیمت این چقدر است؟"],
+      ["them", "That's three ninety-nine.", "سه دلار و نود و نُه سنت."]
+    ]
+  },
+  "respond": {
+    "setting": "کارمند فروشگاه به طرف شما می‌آید.",
+    "them": ["Hi! Can I help you find something?", "سلام! می‌توانم کمکتان کنم چیزی پیدا کنید؟"],
+    "ok": [
+      ["Yes, please. Where is the milk?", "بله، لطفاً. شیر کجاست؟"],
+      ["I'm looking for bread.", "دنبال نان می‌گردم."]
+    ],
+    "off": ["I'm fine, thank you. And you?", "خوبم، ممنون. شما چطورید؟", "مؤدبانه است، ولی او پرسید دنبال چه می‌گردید. بگویید چه چیزی می‌خواهید."],
+    "off2": 5
+  },
+  "variants": [
+    { "en": "Are you finding everything okay?", "fa": "همه‌چیز را راحت پیدا می‌کنید؟", "like": "Hi! Can I help you find something?", "voice": "b" },
+    { "en": "Do you need anything else?", "fa": "چیز دیگری لازم دارید؟", "like": "You're welcome. Anything else?" }
+  ],
+  "task": [
+    ["برنج را پیدا نمی‌کنید. کارمندی دارد قفسه‌ها را می‌چیند و می‌خواهید توجهش را جلب کنید.", 1],
+    ["روی بسته‌ای که برداشته‌اید قیمت ننوشته‌اند.", 4]
+  ],
+  "grammar": {
+    "title": "Where is the … ?",
+    "explain": "برای پرسیدن جای هر چیزی بگویید «Where is the» و بعد اسم آن چیز. کلمهٔ «the» را فراموش نکنید.",
+    "examples": [
+      ["Where is the milk?", "شیر کجاست؟"],
+      ["Where is the rice?", "برنج کجاست؟"],
+      ["Where is the restroom?", "دستشویی کجاست؟"]
+    ],
+    "wrong": "Where is milk?",
+    "right": "Where is the milk?",
+    "why": "در فارسی «the» نداریم. در انگلیسی وقتی جای یک چیز مشخص را می‌پرسید، قبل از اسمش «the» می‌گویند."
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

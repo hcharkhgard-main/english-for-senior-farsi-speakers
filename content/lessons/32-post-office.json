@@ -1,0 +1,56 @@
+{
+  "id": "post-office",
+  "scenario": "office",
+  "stage": 2,
+  "minutes": 8,
+  "title": { "fa": "در ادارهٔ پست", "en": "At the post office" },
+  "intro": "در این درس یاد می‌گیرید در ادارهٔ پست بسته یا نامه بفرستید، تمبر بخرید و بسته‌تان را تحویل بگیرید.",
+  "canDo": "حالا می‌توانید در ادارهٔ پست بسته بفرستید و بسته‌تان را بگیرید.",
+  "mission": "هر وقت بسته‌ای برای فرستادن داشتید، خودتان آن را به ادارهٔ پست ببرید و بگویید: I'd like to mail this package.",
+  "them": { "role": "کارمند پست", "voice": "m" },
+  "phrases": [
+    { "en": "I'd like to mail this package.", "fa": "می‌خواهم این بسته را پست کنم.", "ph": "آیْد لایک تو مِیل دیس پَکِج", "note": "برای نامه: «this letter».", "chunks": ["I'd like", "to mail", "this package."] },
+    { "en": "How much does it cost?", "fa": "هزینه‌اش چقدر می‌شود؟", "ph": "هاو ماچ داز ایت کاست؟", "note": "برای پرسیدن هزینهٔ هر خدمتی.", "chunks": ["How much", "does it cost?"] },
+    { "en": "How long will it take?", "fa": "چقدر طول می‌کشد؟", "ph": "هاو لانگ ویل ایت تِیک؟", "note": "برای اینکه بدانید بسته کی می‌رسد.", "chunks": ["How long", "will it take?"] },
+    { "en": "I need ten stamps, please.", "fa": "ده تا تمبر می‌خواهم، لطفاً.", "ph": "آی نید تِن سْتَمپس، پْلیز", "note": "stamp یعنی تمبر.", "chunks": ["I need", "ten stamps,", "please."] },
+    { "en": "I'm here to pick up a package.", "fa": "آمده‌ام بسته‌ام را بگیرم.", "ph": "آیْم هی‌یِر تو پیک آپ اِ پَکِج", "note": "برگه‌ای را که پست دمِ در گذاشته و کارت شناسایی‌تان را بدهید.", "chunks": ["I'm here", "to pick up", "a package."] }
+  ],
+  "dialogue": {
+    "setting": "در ادارهٔ پست، نوبت شماست.",
+    "lines": [
+      ["them", "Next! How can I help you?", "نفر بعد! چه کمکی از من برمی‌آید؟"],
+      ["you", "Hello. I'd like to mail this package.", "سلام. می‌خواهم این بسته را پست کنم."],
+      ["them", "Where is it going?", "به کجا می‌رود؟"],
+      ["you", "To California. How long will it take?", "به کالیفرنیا. چقدر طول می‌کشد؟"],
+      ["them", "About three days.", "حدود سه روز."],
+      ["you", "Okay. How much does it cost?", "باشد. هزینه‌اش چقدر می‌شود؟"],
+      ["them", "That's nine dollars and fifty cents.", "نُه دلار و پنجاه سنت."]
+    ]
+  },
+  "respond": {
+    "setting": "کارمند پست بسته را وزن کرده است.",
+    "them": ["Would you like anything else today?", "امروز چیز دیگری هم می‌خواهید؟"],
+    "ok": [
+      ["I need ten stamps, please.", "ده تا تمبر می‌خواهم، لطفاً."],
+      ["No, thank you. That's all.", "نه، ممنون. همین بود."]
+    ],
+    "off": ["I'd like to mail this package.", "می‌خواهم این بسته را پست کنم.", "بسته را قبلاً داده‌اید. کارمند پرسید چیز دیگری هم می‌خواهید یا نه."]
+  },
+  "task": [
+    ["برگه‌ای روی در خانه‌تان گذاشته‌اند که بسته‌تان در ادارهٔ پست است.", 5],
+    ["می‌خواهید بدانید نامه‌تان کی می‌رسد.", 3]
+  ],
+  "grammar": {
+    "title": "one stamp / ten stamps",
+    "explain": "وقتی چیزی بیشتر از یکی است، آخرِ اسمش «s» می‌آید.",
+    "examples": [
+      ["One stamp.", "یک تمبر."],
+      ["Ten stamps.", "ده تمبر."],
+      ["Two packages.", "دو بسته."]
+    ],
+    "wrong": "I need ten stamp.",
+    "right": "I need ten stamps.",
+    "why": "در فارسی می‌گوییم «ده تا تمبر» و اسم عوض نمی‌شود، ولی در انگلیسی برای بیشتر از یکی، آخرِ اسم «s» می‌آید."
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

@@ -1,0 +1,56 @@
+{
+  "id": "ask-help",
+  "scenario": "social",
+  "stage": 1,
+  "minutes": 7,
+  "title": { "fa": "کمک خواستن از دیگران", "en": "Asking someone for help" },
+  "intro": "در این درس یاد می‌گیرید در خیابان، فروشگاه یا هر جای دیگر از مردم کمک بخواهید: دستشویی کجاست، گم شده‌اید، یا می‌خواهید به فرزندتان زنگ بزنند.",
+  "canDo": "حالا می‌توانید از یک غریبه مؤدبانه کمک بخواهید.",
+  "mission": "در خرید بعدی، وقتی چیزی را پیدا نکردید یا دستتان به قفسهٔ بالا نرسید، از کسی کمک بخواهید: Can you help me, please?",
+  "them": { "role": "کارمند", "voice": "b" },
+  "phrases": [
+    { "en": "Can you help me, please?", "fa": "می‌شود لطفاً کمکم کنید؟", "ph": "کَن یو هِلپ می، پْلیز؟", "note": "با این جمله شروع کنید؛ بیشتر مردم با خوشرویی کمک می‌کنند.", "chunks": ["Can you help me,", "please?"] },
+    { "en": "Where is the restroom?", "fa": "دستشویی کجاست؟", "ph": "وِر ایز دِ رِست‌روم؟", "note": "در آمریکا به دستشویی عمومی restroom می‌گویند. bathroom هم درست است.", "chunks": ["Where is", "the restroom?"] },
+    { "en": "I'm lost.", "fa": "گم شده‌ام.", "ph": "آیْم لاست", "note": "بعدش آدرس یا اسم جایی را که می‌خواهید بروید نشان بدهید.", "chunks": ["I'm lost."] },
+    { "en": "Can you call my son, please?", "fa": "می‌شود لطفاً به پسرم زنگ بزنید؟", "ph": "کَن یو کال مای سان، پْلیز؟", "note": "my daughter یعنی دخترم. شماره‌اش را روی کاغذ در کیفتان داشته باشید.", "chunks": ["Can you call", "my son,", "please?"], "own": ["son"] },
+    { "en": "I need to sit down.", "fa": "باید بنشینم.", "ph": "آی نید تو سیت داون", "note": "وقتی خسته‌اید یا حالتان خوب نیست.", "chunks": ["I need", "to sit down."] }
+  ],
+  "dialogue": {
+    "setting": "در یک مرکز خرید بزرگ راه را گم کرده‌اید.",
+    "lines": [
+      ["you", "Excuse me. Can you help me, please?", "ببخشید. می‌شود لطفاً کمکم کنید؟"],
+      ["them", "Of course. What do you need?", "البته. چه کمکی لازم دارید؟"],
+      ["you", "I'm lost. Where is the restroom?", "گم شده‌ام. دستشویی کجاست؟"],
+      ["them", "The restroom is over there, next to the elevator.", "دستشویی آنجاست، کنار آسانسور."],
+      ["you", "Thank you. Can you call my son, please?", "ممنون. می‌شود لطفاً به پسرم زنگ بزنید؟"],
+      ["them", "Sure. What is his phone number?", "حتماً. شمارهٔ تلفنش چند است؟"]
+    ]
+  },
+  "respond": {
+    "setting": "کارمندی می‌بیند که نگران به نظر می‌رسید.",
+    "them": ["Are you okay? Do you need help?", "حالتان خوب است؟ کمک لازم دارید؟"],
+    "ok": [
+      ["Yes, please. I'm lost.", "بله، لطفاً. گم شده‌ام."],
+      ["I need to sit down.", "باید بنشینم."],
+      ["Can you call my son, please?", "می‌شود لطفاً به پسرم زنگ بزنید؟"]
+    ],
+    "off": ["Have a nice day!", "روز خوبی داشته باشید!", "این جمله برای خداحافظی است. بگویید چه کمکی لازم دارید."]
+  },
+  "task": [
+    ["در فروشگاه می‌خواهید از کارمند بپرسید دستشویی کجاست.", 2],
+    ["سرتان گیج می‌رود و می‌خواهید روی صندلی بنشینید.", 5]
+  ],
+  "grammar": {
+    "title": "Can you … ?",
+    "explain": "برای خواستن کاری از کسی بگویید «Can you» و بعد آن کار. آخرش «please» بگویید.",
+    "examples": [
+      ["Can you help me?", "می‌شود کمکم کنید؟"],
+      ["Can you call my son?", "می‌شود به پسرم زنگ بزنید؟"],
+      ["Can you show me?", "می‌شود نشانم بدهید؟"]
+    ],
+    "wrong": "You help me?",
+    "right": "Can you help me?",
+    "why": "سؤال با «Can» شروع می‌شود."
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

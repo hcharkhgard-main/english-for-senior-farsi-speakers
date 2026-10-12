@@ -1,0 +1,67 @@
+{
+  "id": "card-reader",
+  "scenario": "store",
+  "stage": 2,
+  "minutes": 7,
+  "safetyCritical": true,
+  "listenFirst": true,
+  "title": { "fa": "پرداخت با کارت: سؤال‌های صندوق‌دار", "en": "Paying by card: the questions you hear" },
+  "intro": "این درس بیشتر برای گوش دادن است. وقتی با کارت پرداخت می‌کنید، صندوق‌دار چند سؤال کوتاه و تند می‌پرسد و دستگاه کارت‌خوان هم همان‌ها را نشان می‌دهد. کافی است وقتی شنیدید، بفهمید و با یک یا دو کلمه جواب بدهید.",
+  "note": "رمز کارت (PIN) را فقط خودتان روی دستگاه وارد کنید و به هیچ‌کس، حتی صندوق‌دار، نگویید. این درس فقط تمرین زبان است و مبلغ‌هایش ساختگی‌اند.",
+  "canDo": "حالا می‌توانید سؤال‌های صندوق‌دار را موقع پرداخت با کارت بفهمید و کوتاه جواب بدهید.",
+  "mission": "دفعهٔ بعد که با کارت خرید می‌کنید، به سؤال‌های صندوق‌دار گوش کنید و خودتان جواب بدهید؛ مثلاً: Debit. یا No, thank you.",
+  "them": { "role": "صندوق‌دار", "voice": "b" },
+  "phrases": [
+    { "en": "Credit or debit?", "fa": "کارت اعتباری یا کارت بانکی؟", "ph": "کْرِدیت اُر دِبیت؟", "note": "credit یعنی کارت اعتباری. debit یعنی کارتی که پول را همان لحظه از حساب بانکی‌تان کم می‌کند. جواب یک کلمه است: «Credit.‎» یا «Debit.‎»", "voice": "b", "chunks": ["Credit or debit?"] },
+    { "en": "Do you want cash back?", "fa": "می‌خواهید پول نقد هم از حسابتان بگیرید؟", "ph": "دو یو وانْت کَش بَک؟", "note": "با کارت debit می‌شود پای صندوق، همراه خرید، پول نقد هم از حساب گرفت. اگر نمی‌خواهید، بگویید: «No, thank you.‎» و روی دستگاه «No» را بزنید.", "voice": "b", "chunks": ["Do you want", "cash back?"] },
+    { "en": "Enter your PIN.", "fa": "رمز کارتتان را وارد کنید.", "ph": "اِنتِر یور پین", "note": "PIN رمز کارت است (معمولاً چهار رقم). آن را خودتان روی دکمه‌های دستگاه بزنید و بلند نگویید.", "voice": "b", "chunks": ["Enter", "your PIN."] },
+    { "en": "Do you have a rewards number?", "fa": "شمارهٔ عضویت فروشگاه را دارید؟", "ph": "دو یو هَو اِ ریوُردز نامبِر؟", "note": "بعضی فروشگاه‌ها عضویت رایگان دارند و به عضوها تخفیف می‌دهند؛ شمارهٔ عضویت معمولاً همان شمارهٔ تلفن است. اگر عضو نیستید، بگویید: «No, I don't.‎»", "voice": "b", "chunks": ["Do you have", "a rewards number?"] },
+    { "en": "Would you like your receipt?", "fa": "رسیدتان را می‌خواهید؟", "ph": "وُد یو لایک یور ریسیت؟", "note": "جواب: «Yes, please.‎» یا «No, thank you.‎» اگر ممکن است جنس را پس بدهید، رسید را بگیرید.", "voice": "b", "chunks": ["Would you like", "your receipt?"] }
+  ],
+  "dialogue": {
+    "setting": "پای صندوق فروشگاه هستید و می‌خواهید با کارت پرداخت کنید.",
+    "lines": [
+      ["them", "Hi! Do you have a rewards number?", "سلام! شمارهٔ عضویت فروشگاه را دارید؟"],
+      ["you", "No, I don't.", "نه، ندارم."],
+      ["them", "That's okay. Your total is twenty-three forty. Credit or debit?", "اشکالی ندارد. جمع خرید شما بیست و سه دلار و چهل سنت است. کارت اعتباری یا کارت بانکی؟"],
+      ["you", "Debit.", "کارت بانکی."],
+      ["them", "You can insert your card now. Enter your PIN.", "حالا می‌توانید کارتتان را در دستگاه بگذارید. رمز کارتتان را وارد کنید."],
+      ["them", "Do you want cash back?", "می‌خواهید پول نقد هم از حسابتان بگیرید؟"],
+      ["you", "No cash back, thank you.", "نه، پول نقد نمی‌خواهم، ممنون."],
+      ["them", "You're all set. Would you like your receipt?", "تمام شد. رسیدتان را می‌خواهید؟"],
+      ["you", "Yes, please.", "بله، لطفاً."]
+    ]
+  },
+  "respond": {
+    "setting": "کارتتان را در دستگاه گذاشته‌اید و رمز را زده‌اید. صندوق‌دار سؤالی می‌پرسد.",
+    "them": ["Do you want cash back?", "می‌خواهید پول نقد هم از حسابتان بگیرید؟"],
+    "ok": [
+      ["No cash back, thank you.", "نه، پول نقد نمی‌خواهم، ممنون."],
+      ["No, thank you.", "نه، ممنون."],
+      ["Yes. Twenty dollars, please.", "بله. بیست دلار، لطفاً."]
+    ],
+    "off": ["Debit.", "کارت بانکی.", "این جوابِ «Credit or debit?‎» است. اینجا پرسید پول نقد هم می‌خواهید یا نه؛ بگویید «Yes» یا «No, thank you.‎»"],
+    "off2": 3
+  },
+  "task": [
+    ["صندوق‌دار می‌خواهد بداند عضو فروشگاه هستید یا نه.", 4],
+    ["صندوق‌دار می‌خواهد رمز کارتتان را روی دستگاه بزنید.", 3]
+  ],
+  "grammar": {
+    "title": "Yes, please. / No, thank you.",
+    "explain": "وقتی با «Do you want» یا «Would you like» می‌پرسند چیزی می‌خواهید یا نه، جواب کوتاه و مؤدبانه این است: «Yes, please.‎» یا «No, thank you.‎»",
+    "examples": [
+      ["Yes, please.", "بله، لطفاً."],
+      ["No, thank you.", "نه، ممنون."]
+    ],
+    "wrong": "Yes, I like.",
+    "right": "Yes, please.",
+    "why": "در جواب سؤالی که با «Would you like» شروع می‌شود نمی‌گویند «Yes, I like.‎»؛ این جمله ناقص است. کوتاه و مؤدبانه بگویید «Yes, please.‎»"
+  },
+  "variants": [
+    { "en": "Any cash back today?", "fa": "امروز پول نقد هم می‌خواهید؟", "like": "Do you want cash back?" },
+    { "en": "Do you have a membership card?", "fa": "کارت عضویت دارید؟", "like": "Do you have a rewards number?" },
+    { "en": "Do you need a receipt?", "fa": "رسید لازم دارید؟", "like": "Would you like your receipt?" }
+  ],
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

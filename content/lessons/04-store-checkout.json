@@ -1,0 +1,65 @@
+{
+  "id": "store-checkout",
+  "scenario": "store",
+  "stage": 1,
+  "order": 4,
+  "minutes": 8,
+  "title": { "fa": "پرداخت پای صندوق", "en": "Paying at checkout" },
+  "intro": "در این درس یاد می‌گیرید پای صندوق چه می‌پرسند، چطور بگویید نقد می‌دهید یا با کارت، و چطور رسید بخواهید.",
+  "canDo": "حالا می‌توانید پای صندوق پرداخت کنید، رسید بخواهید و جنسی را پس بدهید.",
+  "mission": "دفعهٔ بعد پای صندوق بگویید: Can I have a receipt, please?",
+  "them": { "role": "صندوق‌دار", "voice": "b" },
+  "phrases": [
+    { "en": "I'd like to pay by card.", "fa": "می‌خواهم با کارت پرداخت کنم.", "ph": "آیْد لایک تو پِی بای کارد", "note": "کوتاه‌ترش: «Card, please.\u200e»", "chunks": ["I'd like", "to pay", "by card."] },
+    { "en": "Can I pay with cash?", "fa": "می‌توانم نقد پرداخت کنم؟", "ph": "کَن آی پِی ویت کَش؟", "note": "بعضی جاها فقط کارت قبول می‌کنند؛ با این جمله بپرسید.", "chunks": ["Can I pay", "with cash?"] },
+    { "en": "Can I have a receipt, please?", "fa": "می‌شود لطفاً رسید بدهید؟", "ph": "کَن آی هَو اِ ریسیت، پْلیز؟", "note": "حرف p در کلمهٔ receipt خوانده نمی‌شود. رسید را برای پس دادن جنس نگه دارید.", "chunks": ["Can I have", "a receipt,", "please?"] },
+    { "en": "I don't need a bag.", "fa": "کیسه لازم ندارم.", "ph": "آی دُنت نید اِ بَگ", "note": "در بعضی شهرها برای کیسه پول می‌گیرند.", "chunks": ["I don't need", "a bag."] },
+    { "en": "I'd like to return this.", "fa": "می‌خواهم این را پس بدهم.", "ph": "آیْد لایک تو ریتِرن دیس", "note": "رسید خرید را همراهتان ببرید.", "chunks": ["I'd like", "to return this."] }
+  ],
+  "dialogue": {
+    "setting": "پای صندوق، نوبت شماست.",
+    "lines": [
+      ["them", "Hi! Did you find everything okay?", "سلام! همه‌چیز را پیدا کردید؟"],
+      ["you", "Yes, thank you.", "بله، ممنون."],
+      ["them", "Your total is twelve dollars and fifty cents. Cash or card?", "جمع خرید شما دوازده دلار و پنجاه سنت است. نقد یا کارت؟"],
+      ["you", "Card, please.", "کارت، لطفاً."],
+      ["them", "Do you need a bag?", "کیسه لازم دارید؟"],
+      ["you", "No, thank you. Can I have a receipt, please?", "نه، ممنون. می‌شود لطفاً رسید بدهید؟"],
+      ["them", "Sure. Here you go. Have a great day!", "حتماً. بفرمایید. روز خوبی داشته باشید!"]
+    ]
+  },
+  "respond": {
+    "setting": "صندوق‌دار جمع خرید را گفته است.",
+    "them": ["Cash or card?", "نقد یا کارت؟"],
+    "ok": [
+      ["Card, please.", "کارت، لطفاً."],
+      ["Cash, please.", "نقد، لطفاً."],
+      ["I'd like to pay by card.", "می‌خواهم با کارت پرداخت کنم."]
+    ],
+    "off": ["No, thank you.", "نه، ممنون.", "او پرسید چطور پرداخت می‌کنید. یکی را انتخاب کنید: نقد (cash) یا کارت (card)."],
+    "off2": 4
+  },
+  "variants": [
+    { "en": "How would you like to pay?", "fa": "چطور می‌خواهید پرداخت کنید؟", "like": "Cash or card?" },
+    { "en": "Credit or debit?", "fa": "کارت اعتباری یا دبیت (برداشت از حساب خودتان)؟", "like": "Cash or card?", "voice": "m" },
+    { "en": "Would you like a bag?", "fa": "کیسه می‌خواهید؟", "like": "Do you need a bag?" }
+  ],
+  "task": [
+    ["می‌خواهید رسید خریدتان را داشته باشید.", 3],
+    ["پیراهنی خریده‌اید که اندازه‌تان نیست و به فروشگاه برگشته‌اید.", 5]
+  ],
+  "grammar": {
+    "title": "قیمت‌ها را چطور می‌گویند",
+    "explain": "در آمریکا قیمت را معمولاً کوتاه می‌گویند: اول دلار، بعد سنت. کلمه‌های dollar و cent را اغلب نمی‌گویند.",
+    "examples": [
+      ["Three ninety-nine.", "۳ دلار و ۹۹ سنت (\u200e$3.99)"],
+      ["Twelve fifty.", "۱۲ دلار و ۵۰ سنت (\u200e$12.50)"],
+      ["Twenty dollars.", "۲۰ دلار (\u200e$20)"]
+    ],
+    "wrong": "Fifteen.",
+    "right": "Fifty.",
+    "why": "این دو شبیه هم‌اند: fifteen یعنی ۱۵ و fifty یعنی ۵۰. اگر شک دارید، بخواهید قیمت را نشانتان بدهند یا بنویسند.",
+    "compare": "listen"
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

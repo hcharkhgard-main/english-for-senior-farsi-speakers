@@ -1,0 +1,57 @@
+{
+  "id": "community-library",
+  "scenario": "office",
+  "stage": 3,
+  "minutes": 8,
+  "title": { "fa": "کتابخانه و مرکز محله", "en": "Library and community center" },
+  "intro": "کتابخانه‌ها و مراکز محله در آمریکا کلاس و برنامهٔ رایگان زیاد دارند. در این درس یاد می‌گیرید کارت کتابخانه بگیرید و دربارهٔ کلاس‌ها بپرسید.",
+  "canDo": "حالا می‌توانید کارت کتابخانه بگیرید و دربارهٔ کلاس‌ها و ساعت کار بپرسید.",
+  "mission": "این هفته سری به کتابخانهٔ محله‌تان بزنید و بپرسید: Are there English classes here?",
+  "them": { "role": "کتابدار", "voice": "k" },
+  "phrases": [
+    { "en": "I'd like to get a library card.", "fa": "می‌خواهم کارت کتابخانه بگیرم.", "ph": "آیْد لایک تو گِت اِ لایبْرِری کارد", "note": "کارت کتابخانه برای ساکنان همان شهر معمولاً رایگان است. کارت شناسایی و مدرکی برای آدرستان ببرید.", "chunks": ["I'd like", "to get", "a library card."] },
+    { "en": "Do you have books in Farsi?", "fa": "کتاب فارسی دارید؟", "ph": "دو یو هَو بُکس این فارسی؟", "note": "بعضی کتابخانه‌ها بخش کتاب‌های فارسی دارند. گاهی به آن Persian هم می‌گویند.", "chunks": ["Do you have books", "in Farsi?"] },
+    { "en": "Are there English classes here?", "fa": "اینجا کلاس انگلیسی هست؟", "ph": "آر دِر اینگْلیش کْلَسِز هی‌یِر؟", "note": "خیلی از کتابخانه‌ها کلاس گفت‌وگوی انگلیسیِ رایگان دارند.", "chunks": ["Are there", "English classes", "here?"] },
+    { "en": "Is it free?", "fa": "رایگان است؟", "ph": "ایز ایت فْری؟", "note": "free یعنی رایگان.", "chunks": ["Is it free?"] },
+    { "en": "What time do you close?", "fa": "چه ساعتی تعطیل می‌کنید؟", "ph": "وات تایم دو یو کْلُز؟", "note": "برای باز شدن: «What time do you open?\u200e»", "chunks": ["What time", "do you close?"] }
+  ],
+  "dialogue": {
+    "setting": "برای اولین بار به کتابخانهٔ محله رفته‌اید.",
+    "lines": [
+      ["them", "Welcome to the library. How can I help you?", "به کتابخانه خوش آمدید. چه کمکی از من برمی‌آید؟"],
+      ["you", "Hello. I'd like to get a library card.", "سلام. می‌خواهم کارت کتابخانه بگیرم."],
+      ["them", "Great! I need your ID and proof of address.", "عالی! کارت شناسایی و مدرک آدرستان را لازم دارم."],
+      ["you", "Here you go. Is it free?", "بفرمایید. رایگان است؟"],
+      ["them", "Yes, it's free.", "بله، رایگان است."],
+      ["you", "Are there English classes here?", "اینجا کلاس انگلیسی هست؟"],
+      ["them", "Yes. Every Wednesday at ten in the morning.", "بله. هر چهارشنبه ساعت ده صبح."]
+    ]
+  },
+  "respond": {
+    "setting": "کتابدار کارت شما را آماده کرده است.",
+    "them": ["Here is your card. Is there anything else?", "این هم کارت شما. کار دیگری هم دارید؟"],
+    "ok": [
+      ["Do you have books in Farsi?", "کتاب فارسی دارید؟"],
+      ["Are there English classes here?", "اینجا کلاس انگلیسی هست؟"],
+      ["What time do you close?", "چه ساعتی تعطیل می‌کنید؟"]
+    ],
+    "off": ["I'd like to get a library card.", "می‌خواهم کارت کتابخانه بگیرم.", "کارت را گرفته‌اید. حالا می‌توانید دربارهٔ کتاب‌ها یا کلاس‌ها بپرسید."]
+  },
+  "task": [
+    ["می‌خواهید بدانید برای کلاس باید پول بدهید یا نه.", 4],
+    ["عصر است و می‌خواهید بدانید تا کی می‌توانید بمانید.", 5]
+  ],
+  "grammar": {
+    "title": "Are there … ? / Do you have … ?",
+    "explain": "برای پرسیدن اینکه چیزی وجود دارد یا نه، بگویید «Are there» یا «Do you have».",
+    "examples": [
+      ["Are there English classes here?", "اینجا کلاس انگلیسی هست؟"],
+      ["Do you have books in Farsi?", "کتاب فارسی دارید؟"],
+      ["Are there computers here?", "اینجا کامپیوتر هست؟"]
+    ],
+    "wrong": "Is English class here?",
+    "right": "Are there English classes here?",
+    "why": "برای پرسیدن از بودنِ چیزی «there» لازم است: برای چند چیز «Are there …\u200e؟» و برای یک چیز «Is there a …\u200e؟»."
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

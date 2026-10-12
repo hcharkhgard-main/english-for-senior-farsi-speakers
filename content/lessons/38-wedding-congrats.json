@@ -1,0 +1,168 @@
+{
+  "id": "wedding-congrats",
+  "scenario": "occasions",
+  "stage": 3,
+  "minutes": 8,
+  "title": {
+    "fa": "عروسی و تبریک گفتن",
+    "en": "At a wedding"
+  },
+  "intro": "در این درس یاد می‌گیرید در عروسی تبریک بگویید، از عروس تعریف کنید و با مهمان‌های دیگر چند جمله حرف بزنید.",
+  "canDo": "حالا می‌توانید در عروسی تبریک بگویید و با مهمان‌های دیگر گپ کوتاهی بزنید.",
+  "mission": "وقتی خبر خوشی شنیدید، مثل عروسی، تولدِ نوه یا کارِ تازه، به انگلیسی بگویید: Congratulations!",
+  "them": {
+    "role": "یکی از مهمان‌ها",
+    "voice": "k"
+  },
+  "phrases": [
+    {
+      "en": "Congratulations!",
+      "fa": "تبریک می‌گویم!",
+      "ph": "کانگْرَچولِیشِنز",
+      "note": "برای عروسی، تولد بچه، کار جدید و هر خبر خوش.",
+      "chunks": [
+        "Congratulations!"
+      ]
+    },
+    {
+      "en": "I wish you a happy life together.",
+      "fa": "برایتان زندگی شادی در کنار هم آرزو می‌کنم.",
+      "ph": "آی ویش یو اِ هَپی لایف توگِدِر",
+      "note": "این را به عروس و داماد می‌گویند.",
+      "chunks": [
+        "I wish you",
+        "a happy life",
+        "together."
+      ]
+    },
+    {
+      "en": "The bride looks beautiful.",
+      "fa": "عروس خیلی زیبا شده است.",
+      "ph": "دِ بْراید لُکس بیوتیفول",
+      "note": "bride یعنی عروس و groom یعنی داماد.",
+      "chunks": [
+        "The bride",
+        "looks beautiful."
+      ]
+    },
+    {
+      "en": "I'm a friend of the family.",
+      "fa": "من دوست خانوادگی‌شان هستم.",
+      "ph": "آیْم اِ فْرِند آو دِ فَمیلی",
+      "note": "وقتی می‌پرسند عروس و داماد را از کجا می‌شناسید.",
+      "chunks": [
+        "I'm a friend",
+        "of the family."
+      ]
+    },
+    {
+      "en": "It was a lovely wedding.",
+      "fa": "عروسی قشنگی بود.",
+      "ph": "ایت واز اِ لاولی وِدینگ",
+      "note": "موقع خداحافظی به خانوادهٔ عروس و داماد.",
+      "chunks": [
+        "It was",
+        "a lovely wedding."
+      ]
+    }
+  ],
+  "dialogue": {
+    "setting": "در جشن عروسی، مهمانی کنار شما نشسته است.",
+    "lines": [
+      [
+        "them",
+        "Hi! Isn't this a beautiful wedding?",
+        "سلام! عروسی قشنگی است، نه؟"
+      ],
+      [
+        "you",
+        "Yes, it is. The bride looks beautiful.",
+        "بله، همین‌طور است. عروس خیلی زیبا شده است."
+      ],
+      [
+        "them",
+        "How do you know the couple?",
+        "عروس و داماد را از کجا می‌شناسید؟"
+      ],
+      [
+        "you",
+        "I'm a friend of the family.",
+        "من دوست خانوادگی‌شان هستم."
+      ],
+      [
+        "them",
+        "Oh, nice! I'm the bride's cousin.",
+        "چه خوب! من دخترخالهٔ عروس هستم."
+      ],
+      [
+        "you",
+        "Nice to meet you. Congratulations!",
+        "از آشنایی‌تان خوشوقتم. تبریک می‌گویم!"
+      ]
+    ]
+  },
+  "respond": {
+    "setting": "عروس پیش شما می‌آید.",
+    "them": [
+      "Thank you so much for coming!",
+      "خیلی ممنون که آمدید!"
+    ],
+    "ok": [
+      [
+        "Congratulations!",
+        "تبریک می‌گویم!"
+      ],
+      [
+        "I wish you a happy life together.",
+        "برایتان زندگی شادی در کنار هم آرزو می‌کنم."
+      ],
+      [
+        "It was a lovely wedding.",
+        "عروسی قشنگی بود."
+      ]
+    ],
+    "off": [
+      "Happy New Year!",
+      "سال نو مبارک!",
+      "این جمله برای سال نو است. در عروسی «Congratulations» می‌گویند."
+    ],
+    "off2": 4
+  },
+  "task": [
+    [
+      "مهمان دیگری می‌پرسد عروس و داماد را از کجا می‌شناسید.",
+      4
+    ],
+    [
+      "آخر شب است و می‌خواهید به مادر عروس بگویید جشن قشنگی بود.",
+      5
+    ]
+  ],
+  "grammar": {
+    "title": "Congratulations on …",
+    "explain": "برای اینکه بگویید برای چه چیزی تبریک می‌گویید، بعد از «Congratulations» بگویید «on».",
+    "examples": [
+      [
+        "Congratulations on your wedding!",
+        "عروسی‌تان مبارک!"
+      ],
+      [
+        "Congratulations on your new baby!",
+        "قدم نورسیده مبارک!"
+      ],
+      [
+        "Congratulations on your new job!",
+        "کار جدیدتان مبارک!"
+      ]
+    ],
+    "wrong": "Congratulation for wedding.",
+    "right": "Congratulations on your wedding!",
+    "why": "«Congratulations» آخرش «s» دارد، بعدش «on» می‌آید و قبل از wedding هم «your»."
+  },
+  "review": {
+    "status": "draft",
+    "language": null,
+    "teaching": null,
+    "safety": null
+  }
+}

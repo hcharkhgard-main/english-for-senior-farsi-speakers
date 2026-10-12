@@ -1,0 +1,66 @@
+{
+  "id": "clinic-symptoms",
+  "scenario": "clinic",
+  "stage": 2,
+  "order": 8,
+  "minutes": 9,
+  "safetyCritical": true,
+  "title": { "fa": "گفتن مشکل به دکتر", "en": "Telling the doctor what's wrong" },
+  "intro": "در این درس یاد می‌گیرید به دکتر یا پرستار بگویید کجایتان درد می‌کند، از کی شروع شده و به چه دارویی حساسیت دارید.",
+  "note": "این درس برای یادگیری زبان است و توصیهٔ پزشکی نیست. دربارهٔ بیماری و دارو فقط به حرف دکتر خودتان عمل کنید.",
+  "canDo": "حالا می‌توانید به دکتر بگویید چه مشکلی دارید و از کی شروع شده است.",
+  "mission": "قبل از اینکه دوباره پیش دکتر بروید، مشکلتان را در یک جملهٔ انگلیسی روی کاغذ بنویسید و همراهتان ببرید؛ مثلاً: My back hurts.",
+  "them": { "role": "پرستار", "voice": "b" },
+  "phrases": [
+    { "en": "My back hurts.", "fa": "کمرم درد می‌کند.", "ph": "مای بَک هِرتس", "note": "به‌جای back بگویید: head (سر)، stomach (شکم)، knee (زانو)، chest (قفسهٔ سینه).", "chunks": ["My back", "hurts."] },
+    { "en": "It started three days ago.", "fa": "از سه روز پیش شروع شده است.", "ph": "ایت سْتارتِد تْری دِیز اِگُو", "note": "yesterday یعنی دیروز و a week ago یعنی یک هفته پیش.", "chunks": ["It started", "three days ago."] },
+    { "en": "I have a fever and a cough.", "fa": "تب دارم و سرفه می‌کنم.", "ph": "آی هَو اِ فیوِر اَند اِ کاف", "note": "fever یعنی تب و cough یعنی سرفه.", "chunks": ["I have a fever", "and a cough."] },
+    { "en": "I feel dizzy.", "fa": "سرم گیج می‌رود.", "ph": "آی فیل دیزی", "note": "I feel tired یعنی خسته‌ام؛ I feel sick یعنی حالم بد است.", "chunks": ["I feel", "dizzy."] },
+    { "en": "I'm allergic to penicillin.", "fa": "به پنی‌سیلین حساسیت دارم.", "ph": "آیْم اَلِرجیک تو پِنی‌سیلین", "note": "اگر به دارویی حساسیت دارید، اسمش را به انگلیسی روی کاغذ بنویسید و همیشه همراهتان باشد.", "chunks": ["I'm allergic", "to penicillin."] }
+  ],
+  "dialogue": {
+    "setting": "پرستار شما را به اتاق معاینه برده است.",
+    "lines": [
+      ["them", "What brings you in today?", "امروز برای چه مشکلی آمده‌اید؟"],
+      ["you", "My back hurts.", "کمرم درد می‌کند."],
+      ["them", "I'm sorry to hear that. When did it start?", "متأسفم. از کی شروع شده؟"],
+      ["you", "It started three days ago.", "از سه روز پیش شروع شده است."],
+      ["them", "Are you allergic to any medicine?", "به دارویی حساسیت دارید؟"],
+      ["you", "Yes. I'm allergic to penicillin.", "بله. به پنی‌سیلین حساسیت دارم."],
+      ["them", "Thank you. The doctor will be with you soon.", "ممنون. دکتر به‌زودی می‌آید."]
+    ]
+  },
+  "respond": {
+    "setting": "در اتاق معاینه هستید.",
+    "them": ["So, what brings you in today?", "خب، امروز برای چه مشکلی آمده‌اید؟"],
+    "ok": [
+      ["My back hurts.", "کمرم درد می‌کند."],
+      ["I have a fever and a cough.", "تب دارم و سرفه می‌کنم."],
+      ["I feel dizzy.", "سرم گیج می‌رود."]
+    ],
+    "off": ["I have an appointment at ten o'clock.", "ساعت ده وقت دارم.", "این را به منشی می‌گویند. پرستار پرسید مشکلتان چیست."],
+    "off2": 2
+  },
+  "variants": [
+    { "en": "How long have you had this?", "fa": "چند وقت است این مشکل را دارید؟", "like": "I'm sorry to hear that. When did it start?" },
+    { "en": "Do you have any allergies?", "fa": "به چیزی حساسیت دارید؟", "like": "Are you allergic to any medicine?" },
+    { "en": "What seems to be the problem?", "fa": "مشکلتان چیست؟", "like": "What brings you in today?", "voice": "m" }
+  ],
+  "task": [
+    ["پرستار می‌پرسد دردتان از کی شروع شده است.", 2],
+    ["دکتر می‌خواهد دارو بنویسد و شما به پنی‌سیلین حساسیت دارید.", 5]
+  ],
+  "grammar": {
+    "title": "… ago (… پیش)",
+    "explain": "برای گفتن «… پیش»، اول زمان را بگویید و بعد «ago». فعل هم شکل گذشته می‌گیرد: start می‌شود started.",
+    "examples": [
+      ["It started three days ago.", "از سه روز پیش شروع شده است."],
+      ["It started a week ago.", "از یک هفته پیش شروع شده است."],
+      ["It started yesterday.", "از دیروز شروع شده است."]
+    ],
+    "wrong": "It start three days before.",
+    "right": "It started three days ago.",
+    "why": "برای گذشته «started» می‌گوییم و برای «پیش» کلمهٔ «ago» را آخر می‌آوریم."
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

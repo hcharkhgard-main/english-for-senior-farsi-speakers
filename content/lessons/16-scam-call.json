@@ -1,0 +1,59 @@
+{
+  "id": "scam-call",
+  "scenario": "emergency",
+  "stage": 1,
+  "order": 16,
+  "minutes": 9,
+  "safetyCritical": true,
+  "title": { "fa": "جواب دادن به تماس مشکوک", "en": "Handling a suspicious call" },
+  "intro": "کلاه‌بردارها گاهی تلفنی خودشان را کارمند بانک یا اداره معرفی می‌کنند و با عجله و ترساندن، پول یا اطلاعات می‌خواهند. در این درس یاد می‌گیرید با آرامش «نه» بگویید و تلفن را قطع کنید.",
+  "note": "نشانه‌های کلاه‌برداری: عجله و تهدید، خواستن رمز کارت یا کد تأیید، و خواستن پول با کارت هدیه یا حواله. هر وقت شک کردید، تلفن را قطع کنید و با فرد مورد اعتمادتان مشورت کنید. گاهی هم می‌گویند فرزند یا نوه‌تان گرفتار شده و همین الان پول لازم دارد. قطع کنید و خودتان به او یا خانواده‌تان زنگ بزنید.",
+  "canDo": "حالا می‌توانید به تماس مشکوک «نه» بگویید، اطلاعات ندهید و تلفن را قطع کنید.",
+  "mission": "این جمله را سه بار با صدای بلند بگویید تا اگر روزی تماس مشکوکی داشتید، سرِ زبانتان باشد: I'm hanging up now. Goodbye.",
+  "them": { "role": "تماس‌گیرندهٔ مشکوک (تمرینی)", "voice": "m" },
+  "phrases": [
+    { "en": "I don't give personal information over the phone.", "fa": "من پشت تلفن اطلاعات شخصی نمی‌دهم.", "ph": "آی دُنت گیو پِرسِنِل اینفِرمِیشِن اُوِر دِ فُن", "note": "برای رمز کارت، کد تأیید، شمارهٔ حساب و شمارهٔ سوشال سکیوریتی.", "chunks": ["I don't give", "personal information", "over the phone."] },
+    { "en": "I will call my bank myself.", "fa": "خودم به بانکم زنگ می‌زنم.", "ph": "آی ویل کال مای بَنک مای‌سِلف", "note": "تلفن را قطع کنید و خودتان به شماره‌ای که پشت کارت بانکی‌تان نوشته زنگ بزنید.", "chunks": ["I will call", "my bank", "myself."] },
+    { "en": "I need to talk to my family first.", "fa": "اول باید با خانواده‌ام صحبت کنم.", "ph": "آی نید تو تاک تو مای فَمیلی فِرست", "note": "هیچ کار درستی آن‌قدر عجله ندارد که نتوانید با خانواده مشورت کنید.", "chunks": ["I need to talk", "to my family", "first."] },
+    { "en": "Please don't call me again.", "fa": "لطفاً دیگر به من زنگ نزنید.", "ph": "پْلیز دُنت کال می اِگِن", "note": "برای تماس‌های تبلیغاتی و مزاحم.", "chunks": ["Please", "don't call me again."] },
+    { "en": "I'm hanging up now. Goodbye.", "fa": "الان تلفن را قطع می‌کنم. خداحافظ.", "ph": "آیْم هَنگینگ آپ ناو. گُدبای", "note": "قطع کردن تلفن بی‌ادبی نیست. لازم نیست منتظر جواب بمانید.", "chunks": ["I'm hanging up", "now.", "Goodbye."] }
+  ],
+  "dialogue": {
+    "setting": "تمرین: کسی زنگ می‌زند و می‌گوید از بانک است.",
+    "lines": [
+      ["them", "This is the security department of your bank. There is a problem with your account.", "از بخش امنیت بانک شما تماس می‌گیرم. حسابتان مشکلی دارد."],
+      ["you", "What is the problem?", "مشکل چیست؟"],
+      ["them", "We need your card number and your PIN right now.", "همین الان شمارهٔ کارت و رمزتان را لازم داریم."],
+      ["you", "I don't give personal information over the phone.", "من پشت تلفن اطلاعات شخصی نمی‌دهم."],
+      ["them", "If you don't act now, your account will be closed!", "اگر همین الان اقدام نکنید، حسابتان بسته می‌شود!"],
+      ["you", "I will call my bank myself. I'm hanging up now. Goodbye.", "خودم به بانکم زنگ می‌زنم. الان تلفن را قطع می‌کنم. خداحافظ."]
+    ]
+  },
+  "respond": {
+    "setting": "تمرین: تماس‌گیرنده تهدید می‌کند.",
+    "them": ["You must pay today with gift cards, or you will be arrested.", "باید همین امروز با کارت هدیه پول بدهید، وگرنه بازداشت می‌شوید."],
+    "ok": [
+      ["I'm hanging up now. Goodbye.", "الان تلفن را قطع می‌کنم. خداحافظ."],
+      ["I need to talk to my family first.", "اول باید با خانواده‌ام صحبت کنم."],
+      ["Please don't call me again.", "لطفاً دیگر به من زنگ نزنید."]
+    ],
+    "off": ["I'd like to pay by card.", "می‌خواهم با کارت پرداخت کنم.", "مراقب باشید. هیچ اداره یا بانک واقعی تلفنی تهدید نمی‌کند و با کارت هدیه پول نمی‌گیرد. بهترین کار قطع کردن تلفن است."]
+  },
+  "task": [
+    ["کسی تلفنی کدی را می‌خواهد که همین الان با پیامک برایتان آمده است. می‌خواهید بگویید چنین اطلاعاتی را تلفنی به کسی نمی‌دهید.", 1],
+    ["تماس‌گیرنده می‌گوید از بانک است و عجله دارد. می‌خواهید خودتان با شمارهٔ پشت کارتتان تماس بگیرید.", 2]
+  ],
+  "grammar": {
+    "title": "I will …",
+    "explain": "برای کاری که تصمیم دارید انجام بدهید، بگویید «I will» و بعد آن کار.",
+    "examples": [
+      ["I will call my bank.", "به بانکم زنگ می‌زنم."],
+      ["I will ask my daughter.", "از دخترم می‌پرسم."],
+      ["I will call you back.", "بعداً به شما زنگ می‌زنم."]
+    ],
+    "wrong": "I call my bank tomorrow.",
+    "right": "I will call my bank tomorrow.",
+    "why": "برای آینده، قبل از فعل «will» می‌آید."
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

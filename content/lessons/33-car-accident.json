@@ -1,0 +1,59 @@
+{
+  "id": "car-accident",
+  "scenario": "driving",
+  "stage": 3,
+  "minutes": 9,
+  "safetyCritical": true,
+  "title": { "fa": "تصادف کوچک با ماشین", "en": "A small car accident" },
+  "intro": "اگر تصادف کوچکی کردید، اول مطمئن شوید همه سالم‌اند. در این درس یاد می‌گیرید حال طرف مقابل را بپرسید، پیشنهاد کنید به پلیس زنگ بزنید و اطلاعات بیمه را رد و بدل کنید.",
+  "note": "این درس برای یادگیری زبان است و مشاورهٔ حقوقی نیست. اگر کسی آسیب دیده، با ۹۱۱ تماس بگیرید. چیزی را که نمی‌فهمید امضا نکنید.",
+  "canDo": "حالا می‌توانید بعد از یک تصادف کوچک حال طرف را بپرسید و اطلاعات بیمه را بدهید و بگیرید.",
+  "mission": "کارت بیمهٔ ماشینتان را پیدا کنید و جایی در ماشین بگذارید که زود به دستتان برسد؛ بعد یک بار بلند بگویید: Here is my insurance card.",
+  "them": { "role": "رانندهٔ دیگر", "voice": "m" },
+  "phrases": [
+    { "en": "Are you okay?", "fa": "حالتان خوب است؟", "ph": "آر یو اُکِی؟", "note": "اولین جمله بعد از هر تصادف.", "chunks": ["Are you okay?"] },
+    { "en": "Let's call the police.", "fa": "بیایید به پلیس زنگ بزنیم.", "ph": "لِتس کال دِ پُلیس", "note": "برای ثبت گزارش تصادف.", "chunks": ["Let's call", "the police."] },
+    { "en": "Here is my insurance card.", "fa": "این کارت بیمهٔ من است.", "ph": "هی‌یِر ایز مای اینشورِنس کارد", "note": "کارت بیمهٔ ماشین را همیشه در ماشین داشته باشید.", "chunks": ["Here is", "my insurance card."] },
+    { "en": "Can I see your insurance, please?", "fa": "می‌شود بیمه‌تان را ببینم؟", "ph": "کَن آی سی یور اینشورِنس، پْلیز؟", "note": "با گوشی از کارت بیمه و پلاک ماشینِ طرف عکس بگیرید.", "chunks": ["Can I see", "your insurance,", "please?"] },
+    { "en": "I need to call my son.", "fa": "باید به پسرم زنگ بزنم.", "ph": "آی نید تو کال مای سان", "note": "می‌توانید قبل از هر تصمیمی با خانواده‌تان صحبت کنید.", "chunks": ["I need to call", "my son."] }
+  ],
+  "dialogue": {
+    "setting": "تمرین: در پارکینگ، ماشینی آرام به ماشین شما خورده است.",
+    "lines": [
+      ["them", "Oh no. I'm so sorry! Are you okay?", "ای وای. خیلی متأسفم! حالتان خوب است؟"],
+      ["you", "Yes, I'm okay. Are you okay?", "بله، خوبم. شما خوبید؟"],
+      ["them", "I'm fine. Let me give you my insurance information.", "من خوبم. بگذارید اطلاعات بیمه‌ام را به شما بدهم."],
+      ["you", "Thank you. Here is my insurance card.", "ممنون. این کارت بیمهٔ من است."],
+      ["them", "Do you want to call the police?", "می‌خواهید به پلیس زنگ بزنیم؟"],
+      ["you", "Yes. Let's call the police. I need to call my son.", "بله. بیایید به پلیس زنگ بزنیم. باید به پسرم زنگ بزنم."]
+    ]
+  },
+  "respond": {
+    "setting": "تمرین: رانندهٔ دیگر از ماشینش پیاده شده است.",
+    "them": ["I'm so sorry. Is everyone okay?", "خیلی متأسفم. همه سالم‌اند؟"],
+    "ok": [
+      ["Yes, I'm okay. Are you okay?", "بله، خوبم. شما خوبید؟"],
+      ["Let's call the police.", "بیایید به پلیس زنگ بزنیم."],
+      ["I'm not sure.", "مطمئن نیستم."]
+    ],
+    "off": ["Have a nice day!", "روز خوبی داشته باشید!", "هنوز کار تمام نشده است. اول بگویید حالتان چطور است و اطلاعات بیمه را بگیرید."],
+    "off2": 3
+  },
+  "task": [
+    ["می‌خواهید اطلاعات بیمهٔ رانندهٔ دیگر را ببینید.", 4],
+    ["نمی‌دانید چه کار کنید و می‌خواهید از پسرتان بپرسید.", 5]
+  ],
+  "grammar": {
+    "title": "Let's …",
+    "explain": "برای پیشنهاد دادنِ کاری که با هم انجام می‌دهید بگویید «Let's» و بعد فعل.",
+    "examples": [
+      ["Let's call the police.", "بیایید به پلیس زنگ بزنیم."],
+      ["Let's go.", "برویم."],
+      ["Let's wait here.", "بیایید همین‌جا منتظر بمانیم."]
+    ],
+    "wrong": "We call police.",
+    "right": "Let's call the police.",
+    "why": "برای پیشنهاد «Let's» می‌گوییم و قبل از police کلمهٔ «the» می‌آید."
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

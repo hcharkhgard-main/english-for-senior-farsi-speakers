@@ -1,0 +1,179 @@
+{
+  "id": "dinner-guest",
+  "scenario": "occasions",
+  "stage": 2,
+  "minutes": 8,
+  "title": {
+    "fa": "مهمانی در خانهٔ دیگران",
+    "en": "Being a dinner guest"
+  },
+  "intro": "در این درس یاد می‌گیرید وقتی به خانهٔ کسی دعوت می‌شوید چه بگویید: تشکر، دادن هدیه، تعریف از غذا و مؤدبانه «نه» گفتن.",
+  "note": "در آمریکا تعارف مثل ایران نیست. اگر بگویید «No, thank you»، معمولاً دوباره تعارف نمی‌کنند. اگر چیزی می‌خواهید، همان بار اول بگویید «Yes, please».",
+  "canDo": "حالا می‌توانید در مهمانی تشکر کنید، هدیه بدهید و از غذا تعریف کنید.",
+  "mission": "دفعهٔ بعد که مهمانِ کسی بودید یا کسی برایتان غذا آورد، از غذا تعریف کنید: Everything is delicious.",
+  "them": {
+    "role": "میزبان",
+    "voice": "b"
+  },
+  "phrases": [
+    {
+      "en": "Thank you for having us.",
+      "fa": "ممنون که دعوتمان کردید.",
+      "ph": "تَنک یو فُر هَوینگ آس",
+      "note": "وقتی می‌رسید و وقتی خداحافظی می‌کنید. اگر تنها رفته‌اید: «Thank you for having me.\u200e»",
+      "chunks": [
+        "Thank you",
+        "for having us."
+      ]
+    },
+    {
+      "en": "This is for you.",
+      "fa": "این برای شماست.",
+      "ph": "دیس ایز فُر یو",
+      "note": "وقتی هدیه یا شیرینی می‌دهید. بردن یک هدیهٔ کوچک، مثل گل یا شیرینی، رسم خوبی است.",
+      "chunks": [
+        "This is",
+        "for you."
+      ]
+    },
+    {
+      "en": "Can I help with anything?",
+      "fa": "کمکی از من برمی‌آید؟",
+      "ph": "کَن آی هِلپ ویت اِنی‌تینگ؟",
+      "note": "پیشنهاد کمک به میزبان.",
+      "chunks": [
+        "Can I help",
+        "with anything?"
+      ]
+    },
+    {
+      "en": "Everything is delicious.",
+      "fa": "همه‌چیز خوشمزه است.",
+      "ph": "اِوری‌تینگ ایز دِلیشِس",
+      "note": "تعریف از غذا میزبان را خوشحال می‌کند.",
+      "chunks": [
+        "Everything",
+        "is delicious."
+      ]
+    },
+    {
+      "en": "No, thank you. I'm full.",
+      "fa": "نه، ممنون. سیر شدم.",
+      "ph": "نُو، تَنک یو. آیْم فُل",
+      "note": "اگر باز هم می‌خواهید: «Yes, please.\u200e» یا «Just a little, please.\u200e» یعنی فقط کمی.",
+      "chunks": [
+        "No, thank you.",
+        "I'm full."
+      ]
+    }
+  ],
+  "dialogue": {
+    "setting": "برای شام روز شکرگزاری به خانهٔ همسایه دعوت شده‌اید.",
+    "lines": [
+      [
+        "them",
+        "Welcome! Come in. I'm so glad you came.",
+        "خوش آمدید! بفرمایید داخل. خیلی خوشحالم که آمدید."
+      ],
+      [
+        "you",
+        "Thank you for having us. This is for you.",
+        "ممنون که دعوتمان کردید. این برای شماست."
+      ],
+      [
+        "them",
+        "Oh, thank you! You didn't have to.",
+        "وای، ممنون! لازم نبود زحمت بکشید."
+      ],
+      [
+        "you",
+        "Can I help with anything?",
+        "کمکی از من برمی‌آید؟"
+      ],
+      [
+        "them",
+        "No, no. Please sit down. Dinner is ready.",
+        "نه، نه. بفرمایید بنشینید. شام آماده است."
+      ],
+      [
+        "you",
+        "Everything is delicious.",
+        "همه‌چیز خوشمزه است."
+      ],
+      [
+        "them",
+        "Thank you! Would you like some more turkey?",
+        "ممنون! باز هم بوقلمون میل دارید؟"
+      ],
+      [
+        "you",
+        "No, thank you. I'm full.",
+        "نه، ممنون. سیر شدم."
+      ]
+    ]
+  },
+  "respond": {
+    "setting": "سر میز شام، میزبان ظرف غذا را جلوی شما می‌گیرد.",
+    "them": [
+      "Would you like some more?",
+      "باز هم میل دارید؟"
+    ],
+    "ok": [
+      [
+        "Yes, please.",
+        "بله، لطفاً."
+      ],
+      [
+        "No, thank you. I'm full.",
+        "نه، ممنون. سیر شدم."
+      ],
+      [
+        "Just a little, please.",
+        "فقط کمی، لطفاً."
+      ]
+    ],
+    "off": [
+      "This is for you.",
+      "این برای شماست.",
+      "این جمله را موقع دادن هدیه می‌گویند. میزبان پرسید باز هم غذا می‌خواهید یا نه."
+    ],
+    "off2": 1
+  },
+  "task": [
+    [
+      "سر میز شام هستید و می‌خواهید از غذا تعریف کنید.",
+      4
+    ],
+    [
+      "جعبهٔ شیرینی را به میزبان می‌دهید.",
+      2
+    ]
+  ],
+  "grammar": {
+    "title": "Thank you for …",
+    "explain": "برای اینکه بگویید برای چه چیزی تشکر می‌کنید، بعد از «Thank you» بگویید «for».",
+    "examples": [
+      [
+        "Thank you for having us.",
+        "ممنون که دعوتمان کردید."
+      ],
+      [
+        "Thank you for your help.",
+        "ممنون از کمکتان."
+      ],
+      [
+        "Thank you for coming.",
+        "ممنون که آمدید."
+      ]
+    ],
+    "wrong": "Thank you your help.",
+    "right": "Thank you for your help.",
+    "why": "کلمهٔ «for» نباید جا بیفتد."
+  },
+  "review": {
+    "status": "draft",
+    "language": null,
+    "teaching": null,
+    "safety": null
+  }
+}

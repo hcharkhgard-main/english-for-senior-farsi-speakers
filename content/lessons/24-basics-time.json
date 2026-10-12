@@ -1,0 +1,66 @@
+{
+  "id": "basics-time",
+  "scenario": "phone",
+  "stage": 1,
+  "minutes": 8,
+  "title": { "fa": "ساعت و روزهای هفته", "en": "Time and days of the week" },
+  "intro": "برای وقت دکتر، اتوبوس و قرارها باید ساعت و روز را بفهمید و بگویید. در این درس همین را تمرین می‌کنیم.",
+  "canDo": "حالا می‌توانید ساعت و روز را بپرسید و بگویید.",
+  "mission": "امروز هر بار که به ساعت نگاه کردید، ساعت را آهسته به انگلیسی بگویید؛ مثلاً: It's three thirty.",
+  "them": { "role": "منشی", "voice": "b" },
+  "phrases": [
+    { "en": "What time is it?", "fa": "ساعت چند است؟", "ph": "وات تایم ایز ایت؟", "note": "برای پرسیدن ساعت.", "chunks": ["What time", "is it?"] },
+    { "en": "It's three thirty.", "fa": "ساعت سه و نیم است.", "ph": "ایتس تْری تِرتی", "note": "اول ساعت، بعد دقیقه: nine fifteen یعنی نُه و ربع، ten o'clock یعنی ده.", "chunks": ["It's", "three thirty."] },
+    { "en": "What day is it today?", "fa": "امروز چندشنبه است؟", "ph": "وات دِی ایز ایت تودِی؟", "note": "today یعنی امروز و tomorrow یعنی فردا.", "chunks": ["What day", "is it today?"] },
+    { "en": "Today is Monday.", "fa": "امروز دوشنبه است.", "ph": "تودِی ایز مانْدِی", "note": "روزها: Monday دوشنبه، Tuesday سه‌شنبه، Wednesday چهارشنبه، Thursday پنج‌شنبه، Friday جمعه، Saturday شنبه، Sunday یکشنبه.", "chunks": ["Today is", "Monday."] },
+    { "en": "See you tomorrow at ten.", "fa": "فردا ساعت ده می‌بینمتان.", "ph": "سی یو تومارُو اَت تِن", "note": "برای تأیید کردن قرار.", "chunks": ["See you tomorrow", "at ten."] }
+  ],
+  "dialogue": {
+    "setting": "منشی مطب زنگ زده تا وقت شما را یادآوری کند.",
+    "lines": [
+      ["them", "Hello. I'm calling to remind you. Your appointment is tomorrow.", "سلام. برای یادآوری زنگ زده‌ام. وقت شما فرداست."],
+      ["you", "Tomorrow? What time?", "فردا؟ چه ساعتی؟"],
+      ["them", "At ten o'clock in the morning.", "ساعت ده صبح."],
+      ["you", "Ten o'clock. What day is it today?", "ساعت ده. امروز چندشنبه است؟"],
+      ["them", "Today is Monday. Your appointment is on Tuesday.", "امروز دوشنبه است. وقت شما سه‌شنبه است."],
+      ["you", "Thank you. See you tomorrow at ten.", "ممنون. فردا ساعت ده می‌بینمتان."]
+    ]
+  },
+  "respond": {
+    "setting": "کسی در ایستگاه اتوبوس از شما می‌پرسد.",
+    "them": ["Excuse me, what time is it?", "ببخشید، ساعت چند است؟"],
+    "ok": [
+      ["It's three thirty.", "ساعت سه و نیم است."],
+      ["I'm sorry, I don't know.", "متأسفم، نمی‌دانم."]
+    ],
+    "off": ["Today is Monday.", "امروز دوشنبه است.", "او ساعت را پرسید، نه روز را."],
+    "off2": 5
+  },
+  "variants": [
+    { "en": "Do you have the time?", "fa": "می‌دانید ساعت چند است؟", "like": "Excuse me, what time is it?", "voice": "m" },
+    { "en": "This is a reminder about your appointment tomorrow.", "fa": "این تماس برای یادآوری وقتِ فردای شماست.", "like": "Hello. I'm calling to remind you. Your appointment is tomorrow." }
+  ],
+  "grid": {
+    "title": "روزهای هفته",
+    "note": "روی هر روز بزنید و گوش کنید. در تقویم‌های آمریکا هفته معمولاً از Sunday (یکشنبه) شروع می‌شود و Saturday و Sunday (شنبه و یکشنبه) آخر هفته است.",
+    "words": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+  },
+  "task": [
+    ["ساعت ندارید و می‌خواهید از کسی بپرسید.", 1],
+    ["می‌خواهید بدانید امروز چندشنبه است.", 3]
+  ],
+  "grammar": {
+    "title": "ساعت را چطور می‌گویند",
+    "explain": "اول عددِ ساعت را بگویید و بعد عددِ دقیقه. برای ساعتِ کامل «o'clock» بگویید.",
+    "examples": [
+      ["It's ten o'clock.", "ساعت ده است. (10:00)"],
+      ["It's nine fifteen.", "ساعت نُه و ربع است. (9:15)"],
+      ["It's two forty-five.", "ساعت یک ربع به سه است. (2:45)"]
+    ],
+    "wrong": "Thirteen.",
+    "right": "Thirty.",
+    "why": "این دو شبیه هم‌اند: thirteen یعنی ۱۳ و thirty یعنی ۳۰. اگر شک دارید، بخواهید ساعت را بنویسند.",
+    "compare": "listen"
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

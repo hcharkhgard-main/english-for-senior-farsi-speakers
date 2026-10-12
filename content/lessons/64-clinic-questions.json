@@ -1,0 +1,67 @@
+{
+  "id": "clinic-questions",
+  "scenario": "clinic",
+  "stage": 2,
+  "minutes": 7,
+  "safetyCritical": true,
+  "listenFirst": true,
+  "title": { "fa": "سؤال‌هایی که در مطب از شما می‌پرسند", "en": "Questions you hear at the clinic" },
+  "intro": "این درس بیشتر برای گوش دادن است. در مطب، منشی و پرستار و دکتر معمولاً همین سؤال‌ها را می‌پرسند و بعد می‌گویند چه کاری باید انجام شود. لازم نیست این جمله‌ها را خودتان بگویید؛ کافی است وقتی شنیدید، بفهمید و کوتاه جواب بدهید.",
+  "note": "این درس برای یادگیری زبان است و توصیهٔ پزشکی نیست. حرف‌های دکتر در این درس فقط نمونه‌اند.",
+  "canDo": "حالا می‌توانید سؤال‌های رایج مطب را بفهمید و متوجه شوید که دکتر از آزمایش خون یا متخصص حرف می‌زند.",
+  "mission": "دفعهٔ بعد که به مطب می‌روید، به سؤال‌های منشی و پرستار خوب گوش کنید و ببینید کدام‌یک از جمله‌های این درس را می‌شنوید.",
+  "them": { "role": "کارکنان مطب", "voice": "b" },
+  "phrases": [
+    { "en": "Are you a new patient?", "fa": "بیمار جدید هستید؟", "ph": "آر یو اِ نیو پِیشِنت؟", "note": "یعنی اولین بار است که به این مطب می‌آیید؟ جواب کوتاه: «Yes, I am.‎» یا «No, I'm not.‎» گاهی برعکس می‌پرسند: «Have you been here before?‎» یعنی «قبلاً اینجا آمده‌اید؟»", "voice": "b", "chunks": ["Are you", "a new patient?"] },
+    { "en": "What is the reason for your visit?", "fa": "علت مراجعه‌تان چیست؟", "ph": "وات ایز دِ ریزِن فُر یور ویزیت؟", "note": "یعنی برای چه مشکلی آمده‌اید. کوتاه جواب بدهید، مثلاً: «My stomach hurts.‎» (شکمم درد می‌کند).", "voice": "b", "chunks": ["What is the reason", "for your visit?"] },
+    { "en": "On a scale of one to ten, how bad is the pain?", "fa": "از یک تا ده، دردتان چقدر شدید است؟", "ph": "آن اِ سْکِیل آو وان تو تِن، هاو بَد ایز دِ پِین؟", "note": "ده یعنی بدترین درد و یک یعنی درد خیلی کم. فقط یک عدد بگویید، مثلاً «Six.‎»", "voice": "b", "chunks": ["On a scale", "of one to ten,", "how bad", "is the pain?"] },
+    { "en": "We need a blood test.", "fa": "باید آزمایش خون بدهید.", "ph": "وی نید اِ بْلاد تِست", "note": "blood test یعنی آزمایش خون. اگر نفهمیدید کجا باید بروید، بپرسید: «Where do I go?‎»", "voice": "b", "chunks": ["We need", "a blood test."] },
+    { "en": "I'm sending you to a specialist.", "fa": "شما را پیش متخصص می‌فرستم.", "ph": "آیْم سِندینگ یو تو اِ سْپِشِلیست", "note": "specialist یعنی دکتر متخصص، مثلاً متخصص قلب یا پوست. به این کار «referral» هم می‌گویند.", "voice": "b", "chunks": ["I'm sending you", "to a specialist."] }
+  ],
+  "dialogue": {
+    "setting": "در مطب هستید. اول منشی، بعد پرستار و بعد دکتر با شما صحبت می‌کنند.",
+    "lines": [
+      ["them", "Good morning. Are you a new patient?", "صبح به‌خیر. بیمار جدید هستید؟"],
+      ["you", "Yes, I am.", "بله، هستم."],
+      ["them", "What is the reason for your visit?", "علت مراجعه‌تان چیست؟"],
+      ["you", "My stomach hurts.", "شکمم درد می‌کند."],
+      ["them", "On a scale of one to ten, how bad is the pain?", "از یک تا ده، دردتان چقدر شدید است؟"],
+      ["you", "Six.", "شش."],
+      ["them", "We need a blood test. Please go to room twelve.", "باید آزمایش خون بدهید. لطفاً به اتاق دوازده بروید."],
+      ["you", "Okay.", "باشد."],
+      ["them", "And I'm sending you to a specialist. They'll call you.", "و شما را پیش متخصص می‌فرستم. خودشان به شما زنگ می‌زنند."]
+    ]
+  },
+  "respond": {
+    "setting": "پرستار دربارهٔ دردتان سؤال می‌کند.",
+    "them": ["On a scale of one to ten, how bad is the pain?", "از یک تا ده، دردتان چقدر شدید است؟"],
+    "ok": [
+      ["Six.", "شش."],
+      ["About a seven.", "حدود هفت."],
+      ["Could you repeat that, please?", "می‌شود لطفاً دوباره بگویید؟"]
+    ],
+    "off": ["Yes, I am.", "بله، هستم.", "این جوابِ «Are you a new patient?‎» است. پرستار یک عدد از یک تا ده می‌خواهد، مثلاً «Six.‎»"],
+    "off2": 4
+  },
+  "task": [
+    ["منشی می‌خواهد بداند اولین بار است که به این مطب می‌آیید یا نه.", 1],
+    ["دکتر می‌خواهد دکتر دیگری هم شما را ببیند.", 5]
+  ],
+  "grammar": {
+    "title": "Yes, I am. / No, I'm not.",
+    "explain": "وقتی سؤال با «Are you» شروع می‌شود، جواب کوتاهش «Yes, I am.‎» یا «No, I'm not.‎» است.",
+    "examples": [
+      ["Yes, I am.", "بله، هستم."],
+      ["No, I'm not.", "نه، نیستم."]
+    ],
+    "wrong": "Yes, I'm.",
+    "right": "Yes, I am.",
+    "why": "در جواب کوتاهِ «بله»، «I am» را کوتاه نمی‌کنند و نمی‌گویند «Yes, I'm.‎»؛ ولی در جواب «نه» می‌شود گفت «No, I'm not.‎»"
+  },
+  "variants": [
+    { "en": "Have you been here before?", "fa": "قبلاً اینجا آمده‌اید؟", "like": "Are you a new patient?" },
+    { "en": "What brings you in today?", "fa": "امروز برای چه مشکلی آمده‌اید؟", "like": "What is the reason for your visit?" },
+    { "en": "We're going to draw some blood.", "fa": "می‌خواهیم از شما خون بگیریم.", "like": "We need a blood test." }
+  ],
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

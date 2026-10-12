@@ -1,0 +1,57 @@
+{
+  "id": "driving-car",
+  "scenario": "driving",
+  "stage": 3,
+  "minutes": 8,
+  "title": { "fa": "پمپ‌بنزین و خرابی ماشین", "en": "Gas station and car trouble" },
+  "intro": "در این درس یاد می‌گیرید در پمپ‌بنزین پول بنزین را بدهید، بپرسید کجا پارک کنید و اگر ماشین خراب شد، کمک بخواهید.",
+  "canDo": "حالا می‌توانید در پمپ‌بنزین پرداخت کنید و برای خرابی ماشین کمک بخواهید.",
+  "mission": "در پمپ‌بنزین، شمارهٔ پمپی را که کنارش ایستاده‌اید پیدا کنید و به انگلیسی بگویید؛ مثلاً: Pump four, please.",
+  "them": { "role": "امداد خودرو (پشت تلفن)", "voice": "a" },
+  "phrases": [
+    { "en": "Twenty dollars on pump four, please.", "fa": "بیست دلار برای پمپ شمارهٔ چهار، لطفاً.", "ph": "تْوِنتی دالِرز آن پامپ فُر، پْلیز", "note": "در بیشتر پمپ‌بنزین‌های آمریکا خودتان بنزین می‌زنید. اگر نقد می‌دهید، اول داخل مغازه پول بدهید و شمارهٔ پمپ را بگویید.", "chunks": ["Twenty dollars", "on pump four,", "please."] },
+    { "en": "Where can I park?", "fa": "کجا می‌توانم پارک کنم؟", "ph": "وِر کَن آی پارک؟", "note": "تابلوی «No Parking» یعنی پارک ممنوع.", "chunks": ["Where", "can I park?"] },
+    { "en": "My car won't start.", "fa": "ماشینم روشن نمی‌شود.", "ph": "مای کار وُنت سْتارت", "note": "برای زنگ زدن به امداد خودرو یا تعمیرگاه.", "chunks": ["My car", "won't start."] },
+    { "en": "I have a flat tire.", "fa": "لاستیکم پنچر شده است.", "ph": "آی هَو اِ فْلَت تایِر", "note": "flat tire یعنی لاستیک پنچر.", "chunks": ["I have", "a flat tire."] },
+    { "en": "I need a tow truck.", "fa": "یدک‌کش لازم دارم.", "ph": "آی نید اِ تُو تْراک", "note": "tow truck ماشینی است که خودروی خراب را می‌برد.", "chunks": ["I need", "a tow truck."] }
+  ],
+  "dialogue": {
+    "setting": "ماشینتان در پارکینگ روشن نمی‌شود و به امداد خودرو زنگ زده‌اید.",
+    "lines": [
+      ["them", "Roadside assistance. How can I help you?", "امداد خودرو. چه کمکی از من برمی‌آید؟"],
+      ["you", "Hello. My car won't start.", "سلام. ماشینم روشن نمی‌شود."],
+      ["them", "I'm sorry to hear that. Where are you?", "متأسفم. کجا هستید؟"],
+      ["you", "I'm in the parking lot on Main Street.", "در پارکینگِ خیابان مِین هستم."],
+      ["them", "Okay. Do you need a tow truck?", "باشد. یدک‌کش لازم دارید؟"],
+      ["you", "Yes. I need a tow truck.", "بله. یدک‌کش لازم دارم."],
+      ["them", "A truck will be there in thirty minutes.", "تا سی دقیقهٔ دیگر یک یدک‌کش می‌رسد."]
+    ]
+  },
+  "respond": {
+    "setting": "داخل مغازهٔ پمپ‌بنزین هستید و می‌خواهید نقد بدهید.",
+    "them": ["Hi. Which pump?", "سلام. کدام پمپ؟"],
+    "ok": [
+      ["Twenty dollars on pump four, please.", "بیست دلار برای پمپ شمارهٔ چهار، لطفاً."],
+      ["Pump four, please.", "پمپ چهار، لطفاً."]
+    ],
+    "off": ["Where can I park?", "کجا می‌توانم پارک کنم؟", "فروشنده شمارهٔ پمپ را پرسید. شمارهٔ پمپ و مبلغ را بگویید."],
+    "off2": 3
+  },
+  "task": [
+    ["لاستیک ماشینتان پنچر شده و به امداد خودرو زنگ زده‌اید.", 4],
+    ["به مرکز خرید رسیده‌اید و نمی‌دانید ماشین را کجا بگذارید.", 2]
+  ],
+  "grammar": {
+    "title": "won't = will not",
+    "explain": "وقتی چیزی کاری را که باید بکند نمی‌کند، می‌گوییم «won't».",
+    "examples": [
+      ["My car won't start.", "ماشینم روشن نمی‌شود."],
+      ["The door won't open.", "در باز نمی‌شود."],
+      ["The key won't turn.", "کلید نمی‌چرخد."]
+    ],
+    "wrong": "My car no start.",
+    "right": "My car won't start.",
+    "why": "وقتی وسیله‌ای کاری را که باید بکند نمی‌کند (روشن نمی‌شود، باز نمی‌شود)، بگویید «won't» و بعد فعل."
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

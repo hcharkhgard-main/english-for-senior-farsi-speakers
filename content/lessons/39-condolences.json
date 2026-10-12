@@ -1,0 +1,165 @@
+{
+  "id": "condolences",
+  "scenario": "occasions",
+  "stage": 3,
+  "minutes": 8,
+  "title": {
+    "fa": "تسلیت گفتن",
+    "en": "Offering condolences"
+  },
+  "intro": "وقتی کسی عزیزی را از دست داده است، چند جملهٔ کوتاه و صمیمی کافی است. لازم نیست زیاد حرف بزنید؛ همین که کنارش باشید ارزش دارد.",
+  "canDo": "حالا می‌توانید به کسی که عزیزی را از دست داده تسلیت بگویید و پیشنهاد کمک بدهید.",
+  "mission": "این جمله را به خاطر بسپارید تا اگر روزی همسایه یا آشنایی عزادار شد، بتوانید به او بگویید: I'm so sorry for your loss.",
+  "them": {
+    "role": "همسایه",
+    "voice": "m"
+  },
+  "phrases": [
+    {
+      "en": "I'm so sorry for your loss.",
+      "fa": "تسلیت می‌گویم.",
+      "ph": "آیْم سُو ساری فُر یور لاس",
+      "note": "مهم‌ترین جملهٔ تسلیت در انگلیسی.",
+      "chunks": [
+        "I'm so sorry",
+        "for your loss."
+      ]
+    },
+    {
+      "en": "She was a wonderful person.",
+      "fa": "انسان بسیار خوبی بود.",
+      "ph": "شی واز اِ وانْدِرفول پِرسِن",
+      "note": "برای آقا بگویید: «He was a wonderful person.\u200e»",
+      "chunks": [
+        "She was",
+        "a wonderful person."
+      ]
+    },
+    {
+      "en": "My thoughts are with you and your family.",
+      "fa": "به یاد شما و خانواده‌تان هستم.",
+      "ph": "مای تاتس آر ویت یو اَند یور فَمیلی",
+      "note": "روی کارت تسلیت هم همین را می‌نویسند.",
+      "chunks": [
+        "My thoughts",
+        "are with you",
+        "and your family."
+      ]
+    },
+    {
+      "en": "Is there anything I can do?",
+      "fa": "کاری هست که از من بربیاید؟",
+      "ph": "ایز دِر اِنی‌تینگ آی کَن دو؟",
+      "note": "پیشنهاد کمک، مثلاً بردن غذا.",
+      "chunks": [
+        "Is there anything",
+        "I can do?"
+      ]
+    },
+    {
+      "en": "Thank you for coming.",
+      "fa": "ممنون که آمدید.",
+      "ph": "تَنک یو فُر کامینگ",
+      "note": "اگر مراسم برای عزیزِ خودتان است، این را به مهمان‌ها می‌گویید.",
+      "chunks": [
+        "Thank you",
+        "for coming."
+      ]
+    }
+  ],
+  "dialogue": {
+    "setting": "شنیده‌اید که مادر همسایه‌تان فوت کرده است.",
+    "lines": [
+      [
+        "you",
+        "David, I heard about your mother. I'm so sorry for your loss.",
+        "دیوید، خبر مادرتان را شنیدم. تسلیت می‌گویم."
+      ],
+      [
+        "them",
+        "Thank you, Maryam. That means a lot.",
+        "ممنون، مریم. برایم خیلی ارزش دارد."
+      ],
+      [
+        "you",
+        "She was a wonderful person.",
+        "انسان بسیار خوبی بود."
+      ],
+      [
+        "them",
+        "Yes, she was. We will miss her very much.",
+        "بله، همین‌طور بود. دلمان خیلی برایش تنگ می‌شود."
+      ],
+      [
+        "you",
+        "Is there anything I can do?",
+        "کاری هست که از من بربیاید؟"
+      ],
+      [
+        "them",
+        "Thank you. You are very kind.",
+        "ممنون. خیلی لطف دارید."
+      ]
+    ]
+  },
+  "respond": {
+    "setting": "همکارتان خبر بدی می‌دهد.",
+    "them": [
+      "My father passed away last week.",
+      "پدرم هفتهٔ پیش فوت کرد."
+    ],
+    "ok": [
+      [
+        "I'm so sorry for your loss.",
+        "تسلیت می‌گویم."
+      ],
+      [
+        "I'm so sorry. Is there anything I can do?",
+        "خیلی متأسفم. کاری هست که از من بربیاید؟"
+      ]
+    ],
+    "off": [
+      "Congratulations!",
+      "تبریک می‌گویم!",
+      "«passed away» یعنی «فوت کرد». «Congratulations» فقط برای خبر خوش است. اینجا باید تسلیت بگویید."
+    ],
+    "off2": 5
+  },
+  "task": [
+    [
+      "می‌خواهید به همسایهٔ داغ‌دار پیشنهاد کمک بدهید.",
+      4
+    ],
+    [
+      "در مراسم یادبود یکی از بستگانتان، مهمانی به شما تسلیت می‌گوید و می‌خواهید تشکر کنید.",
+      5
+    ]
+  ],
+  "grammar": {
+    "title": "was (بود)",
+    "explain": "وقتی دربارهٔ گذشته یا کسی که درگذشته حرف می‌زنیم، به‌جای «is» می‌گوییم «was».",
+    "examples": [
+      [
+        "She was a wonderful person.",
+        "انسان بسیار خوبی بود."
+      ],
+      [
+        "He was very kind.",
+        "خیلی مهربان بود."
+      ],
+      [
+        "It was a lovely wedding.",
+        "عروسی قشنگی بود."
+      ]
+    ],
+    "wrong": "She passed away. She is a wonderful person.",
+    "right": "She passed away. She was a wonderful person.",
+    "why": "برای کسی که درگذشته است «was» می‌گوییم."
+  },
+  "review": {
+    "status": "draft",
+    "language": null,
+    "teaching": null,
+    "safety": null
+  }
+}

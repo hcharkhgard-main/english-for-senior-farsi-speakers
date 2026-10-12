@@ -1,0 +1,61 @@
+{
+  "id": "bus-ride",
+  "scenario": "directions",
+  "stage": 2,
+  "minutes": 8,
+  "title": { "fa": "سوار شدن به اتوبوس", "en": "Taking the bus" },
+  "intro": "در این درس یاد می‌گیرید از رانندهٔ اتوبوس بپرسید به مقصد شما می‌رود یا نه، کرایه چقدر است و کجا باید پیاده شوید.",
+  "canDo": "حالا می‌توانید با رانندهٔ اتوبوس یا تاکسی صحبت کنید و بگویید کجا پیاده می‌شوید.",
+  "mission": "بارِ بعد که سوار اتوبوس شدید، به راننده بگویید: Please tell me when to get off.",
+  "them": { "role": "رانندهٔ اتوبوس", "voice": "m" },
+  "phrases": [
+    { "en": "Does this bus go to Main Street?", "fa": "این اتوبوس به خیابان مِین می‌رود؟", "ph": "داز دیس باس گُو تو مِین سْتْریت؟", "note": "اسم مقصد خودتان را بگویید: the hospital (بیمارستان)، downtown (مرکز شهر).", "chunks": ["Does this bus", "go to", "Main Street?"] },
+    { "en": "How much is the fare?", "fa": "کرایه چقدر است؟", "ph": "هاو ماچ ایز دِ فِر؟", "note": "fare یعنی کرایه. خیلی از اتوبوس‌ها فقط کارت یا پول خردِ به‌اندازه قبول می‌کنند.", "chunks": ["How much", "is the fare?"] },
+    { "en": "Please tell me when to get off.", "fa": "لطفاً بگویید کی پیاده شوم.", "ph": "پْلیز تِل می وِن تو گِت آف", "note": "راننده معمولاً وقتی به ایستگاه شما رسید خبرتان می‌کند.", "chunks": ["Please tell me", "when to get off."] },
+    { "en": "Is this seat taken?", "fa": "اینجا جای کسی است؟", "ph": "ایز دیس سیت تِیکِن؟", "note": "قبل از نشستن کنار کسی.", "chunks": ["Is this seat", "taken?"] },
+    { "en": "Please stop here.", "fa": "لطفاً همین‌جا نگه دارید.", "ph": "پْلیز سْتاپ هی‌یِر", "note": "برای تاکسی یا تاکسی‌های اینترنتی (مثل Uber)، وقتی به مقصد رسیدید.", "chunks": ["Please", "stop here."] }
+  ],
+  "dialogue": {
+    "setting": "اتوبوس به ایستگاه رسیده و در باز شده است.",
+    "lines": [
+      ["you", "Excuse me. Does this bus go to Main Street?", "ببخشید. این اتوبوس به خیابان مِین می‌رود؟"],
+      ["them", "Yes, it does. Come on in.", "بله، می‌رود. بفرمایید بالا."],
+      ["you", "How much is the fare?", "کرایه چقدر است؟"],
+      ["them", "Two dollars. You can tap your card here.", "دو دلار. می‌توانید کارتتان را اینجا بزنید."],
+      ["you", "Thank you. Please tell me when to get off.", "ممنون. لطفاً بگویید کی پیاده شوم."],
+      ["them", "Sure. Main Street is the fourth stop.", "حتماً. خیابان مِین ایستگاه چهارم است."]
+    ]
+  },
+  "respond": {
+    "setting": "راننده از شما سؤال می‌کند.",
+    "them": ["Good morning. Where are you going?", "صبح به‌خیر. کجا می‌روید؟"],
+    "ok": [
+      ["Does this bus go to Main Street?", "این اتوبوس به خیابان مِین می‌رود؟"],
+      ["Main Street. Please tell me when to get off.", "خیابان مِین. لطفاً بگویید کی پیاده شوم."]
+    ],
+    "off": ["Is this seat taken?", "اینجا جای کسی است؟", "این را به مسافرها می‌گویند. راننده پرسید کجا می‌روید."],
+    "off2": 5
+  },
+  "variants": [
+    { "en": "Where are you headed?", "fa": "مقصدتان کجاست؟", "like": "Good morning. Where are you going?" },
+    { "en": "That'll be two dollars.", "fa": "دو دلار می‌شود.", "like": "Two dollars. You can tap your card here." },
+    { "en": "Main Street is four stops from here.", "fa": "خیابان مِین چهار ایستگاه بعد از اینجاست.", "like": "Sure. Main Street is the fourth stop.", "voice": "b" }
+  ],
+  "task": [
+    ["در تاکسی هستید و به مقصد رسیده‌اید.", 5],
+    ["می‌خواهید روی صندلی خالی کنار یک مسافر بنشینید.", 4]
+  ],
+  "grammar": {
+    "title": "Does this … ?",
+    "explain": "وقتی می‌پرسید یک چیز (این اتوبوس، این غذا) کاری را می‌کند یا چیزی دارد، سؤال را با «Does» شروع کنید و بعد فعل را بگویید، مثل go یا have. ولی وقتی می‌پرسید چیزی چطور است، با «Is» شروع کنید: «Is this seat taken?\u200e»",
+    "examples": [
+      ["Does this bus go to Main Street?", "این اتوبوس به خیابان مِین می‌رود؟"],
+      ["Does this train stop at the airport?", "این قطار در فرودگاه می‌ایستد؟"],
+      ["Does this have pork?", "این گوشت خوک دارد؟"]
+    ],
+    "wrong": "This bus go to Main Street?",
+    "right": "Does this bus go to Main Street?",
+    "why": "چون در این سؤال فعل (go) هست، سؤال با «Does» شروع می‌شود."
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

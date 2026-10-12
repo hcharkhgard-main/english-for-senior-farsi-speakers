@@ -1,0 +1,841 @@
+{
+ "version": 1,
+ "_comment": "Sentence patterns for the sentence builder. Each pattern lists NEW sentences made by putting other words into a frame the lessons already taught. 'lesson' is the lesson whose grammar tip explains the frame (its done screen offers the pattern). A pattern is open in the builder when 'level' is 1, or once 'lesson' is finished, or once the optional 'opensAfter' lesson is finished: 'opensAfter' names an EARLIER lesson that already teaches a sentence of this frame.",
+ "review": {
+  "status": "draft",
+  "language": null,
+  "teaching": null
+ },
+ "patterns": [
+  {
+   "id": "where-is",
+   "frame": "Where is the … ?",
+   "fa": "برای پرسیدن جای هر چیزی",
+   "lesson": "store-where",
+   "level": 1,
+   "items": [
+    [
+     "Where is the bank?",
+     "بانک کجاست؟"
+    ],
+    [
+     "Where is the pharmacy?",
+     "داروخانه کجاست؟"
+    ],
+    [
+     "Where is the exit?",
+     "خروجی کجاست؟"
+    ],
+    [
+     "Where is the elevator?",
+     "آسانسور کجاست؟"
+    ],
+    [
+     "Where is the post office?",
+     "ادارهٔ پست کجاست؟"
+    ],
+    [
+     "Where is the hospital?",
+     "بیمارستان کجاست؟"
+    ]
+   ]
+  },
+  {
+   "id": "i-am",
+   "frame": "I'm …",
+   "fa": "برای گفتن حال و وضع خودتان",
+   "lesson": "social-hello",
+   "level": 1,
+   "items": [
+    [
+     "I'm tired.",
+     "خسته‌ام."
+    ],
+    [
+     "I'm cold.",
+     "سردم است."
+    ],
+    [
+     "I'm ready.",
+     "آماده‌ام."
+    ],
+    [
+     "I'm happy.",
+     "خوشحالم."
+    ],
+    [
+     "I'm late.",
+     "دیر کرده‌ام."
+    ],
+    [
+     "I'm busy today.",
+     "امروز سرم شلوغ است."
+    ]
+   ]
+  },
+  {
+   "id": "i-need",
+   "frame": "I need …",
+   "fa": "برای گفتن چیزی که لازم دارید",
+   "lesson": "emergency-911",
+   "level": 1,
+   "items": [
+    [
+     "I need a doctor.",
+     "دکتر لازم دارم."
+    ],
+    [
+     "I need a receipt.",
+     "رسید لازم دارم."
+    ],
+    [
+     "I need a taxi.",
+     "تاکسی لازم دارم."
+    ],
+    [
+     "I need my medicine.",
+     "دارویم را لازم دارم."
+    ],
+    [
+     "I need more time.",
+     "وقت بیشتری لازم دارم."
+    ],
+    [
+     "I need some water.",
+     "کمی آب لازم دارم."
+    ]
+   ]
+  },
+  {
+   "id": "could-you",
+   "frame": "Could you … , please?",
+   "fa": "برای درخواست مؤدبانه",
+   "lesson": "social-slowly",
+   "level": 1,
+   "items": [
+    [
+     "Could you help me, please?",
+     "می‌شود لطفاً کمکم کنید؟"
+    ],
+    [
+     "Could you open the door, please?",
+     "می‌شود لطفاً در را باز کنید؟"
+    ],
+    [
+     "Could you say that again, please?",
+     "می‌شود لطفاً دوباره بگویید؟"
+    ],
+    [
+     "Could you call a taxi, please?",
+     "می‌شود لطفاً یک تاکسی خبر کنید؟"
+    ],
+    [
+     "Could you show me, please?",
+     "می‌شود لطفاً نشانم بدهید؟"
+    ],
+    [
+     "Could you wait a minute, please?",
+     "می‌شود لطفاً یک دقیقه صبر کنید؟"
+    ]
+   ]
+  },
+  {
+   "id": "can-you",
+   "frame": "Can you … ?",
+   "fa": "برای خواستن کاری از کسی",
+   "lesson": "ask-help",
+   "level": 1,
+   "items": [
+    [
+     "Can you open this?",
+     "می‌شود این را باز کنید؟"
+    ],
+    [
+     "Can you read this for me?",
+     "می‌شود این را برایم بخوانید؟"
+    ],
+    [
+     "Can you take me home?",
+     "می‌شود مرا به خانه ببرید؟"
+    ],
+    [
+     "Can you call a doctor?",
+     "می‌شود دکتر خبر کنید؟"
+    ],
+    [
+     "Can you write it down?",
+     "می‌شود آن را بنویسید؟"
+    ],
+    [
+     "Can you wait for me?",
+     "می‌شود منتظرم بمانید؟"
+    ]
+   ]
+  },
+  {
+   "id": "how-much",
+   "frame": "How much is … ?",
+   "fa": "برای پرسیدن قیمت",
+   "lesson": "store-where",
+   "level": 1,
+   "items": [
+    [
+     "How much is the ticket?",
+     "قیمت بلیت چقدر است؟"
+    ],
+    [
+     "How much is this shirt?",
+     "قیمت این پیراهن چقدر است؟"
+    ],
+    [
+     "How much is the coffee?",
+     "قیمت قهوه چقدر است؟"
+    ],
+    [
+     "How much is the bread?",
+     "قیمت نان چقدر است؟"
+    ],
+    [
+     "How much is a taxi?",
+     "کرایهٔ تاکسی چقدر است؟"
+    ],
+    [
+     "How much is the fee?",
+     "کارمزدش چقدر است؟"
+    ]
+   ]
+  },
+  {
+   "id": "can-i-have",
+   "frame": "Can I have … , please?",
+   "fa": "برای خواستن چیزی در رستوران و فروشگاه",
+   "lesson": "restaurant-order",
+   "opensAfter": "store-checkout",
+   "level": 2,
+   "items": [
+    [
+     "Can I have the menu, please?",
+     "می‌شود لطفاً منو را بیاورید؟"
+    ],
+    [
+     "Can I have a fork, please?",
+     "می‌شود لطفاً یک چنگال بدهید؟"
+    ],
+    [
+     "Can I have a pen, please?",
+     "می‌شود لطفاً یک خودکار بدهید؟"
+    ],
+    [
+     "Can I have a bag, please?",
+     "می‌شود لطفاً یک کیسه بدهید؟"
+    ],
+    [
+     "Can I have a glass of water, please?",
+     "می‌شود لطفاً یک لیوان آب بدهید؟"
+    ],
+    [
+     "Can I have more bread, please?",
+     "می‌شود لطفاً نان بیشتری بیاورید؟"
+    ]
+   ]
+  },
+  {
+   "id": "id-like-to",
+   "frame": "I'd like to …",
+   "fa": "شکل مؤدبانهٔ «می‌خواهم»",
+   "lesson": "bank-help",
+   "opensAfter": "store-checkout",
+   "level": 2,
+   "items": [
+    [
+     "I'd like to see a doctor.",
+     "می‌خواهم دکتر مرا ببیند."
+    ],
+    [
+     "I'd like to send this letter.",
+     "می‌خواهم این نامه را بفرستم."
+    ],
+    [
+     "I'd like to open an account.",
+     "می‌خواهم حساب باز کنم."
+    ],
+    [
+     "I'd like to buy a ticket.",
+     "می‌خواهم بلیت بخرم."
+    ],
+    [
+     "I'd like to speak to the manager.",
+     "می‌خواهم با مدیر صحبت کنم."
+    ],
+    [
+     "I'd like to pay with cash.",
+     "می‌خواهم نقد پرداخت کنم."
+    ]
+   ]
+  },
+  {
+   "id": "my-hurts",
+   "frame": "My … hurts.",
+   "fa": "برای گفتن اینکه کجایتان درد می‌کند",
+   "lesson": "clinic-symptoms",
+   "level": 2,
+   "items": [
+    [
+     "My head hurts.",
+     "سرم درد می‌کند."
+    ],
+    [
+     "My stomach hurts.",
+     "شکمم درد می‌کند."
+    ],
+    [
+     "My knee hurts.",
+     "زانویم درد می‌کند."
+    ],
+    [
+     "My tooth hurts.",
+     "دندانم درد می‌کند."
+    ],
+    [
+     "My hand hurts.",
+     "دستم درد می‌کند."
+    ],
+    [
+     "My foot hurts.",
+     "پایم درد می‌کند."
+    ]
+   ]
+  },
+  {
+   "id": "i-have",
+   "frame": "I have …",
+   "fa": "برای گفتن چیزی که دارید",
+   "lesson": "clinic-checkin",
+   "level": 2,
+   "items": [
+    [
+     "I have a headache.",
+     "سردرد دارم."
+    ],
+    [
+     "I have a cold.",
+     "سرما خورده‌ام."
+    ],
+    [
+     "I have a question.",
+     "یک سؤال دارم."
+    ],
+    [
+     "I have an allergy.",
+     "حساسیت دارم."
+    ],
+    [
+     "I have two children.",
+     "دو فرزند دارم."
+    ],
+    [
+     "I have a problem.",
+     "مشکلی دارم."
+    ]
+   ]
+  },
+  {
+   "id": "i-dont",
+   "frame": "I don't …",
+   "fa": "برای منفی کردن",
+   "lesson": "immigration-office",
+   "opensAfter": "social-slowly",
+   "level": 2,
+   "items": [
+    [
+     "I don't have cash.",
+     "پول نقد ندارم."
+    ],
+    [
+     "I don't eat meat.",
+     "گوشت نمی‌خورم."
+    ],
+    [
+     "I don't drink coffee.",
+     "قهوه نمی‌خورم."
+    ],
+    [
+     "I don't have a car.",
+     "ماشین ندارم."
+    ],
+    [
+     "I don't want a bag.",
+     "کیسه نمی‌خواهم."
+    ],
+    [
+     "I don't need help.",
+     "کمک لازم ندارم."
+    ]
+   ]
+  },
+  {
+   "id": "is-it",
+   "frame": "Is it … ?",
+   "fa": "برای سؤال‌های کوتاه بله/نه",
+   "lesson": "directions-ask",
+   "level": 1,
+   "items": [
+    [
+     "Is it open?",
+     "باز است؟"
+    ],
+    [
+     "Is it closed?",
+     "تعطیل است؟"
+    ],
+    [
+     "Is it expensive?",
+     "گران است؟"
+    ],
+    [
+     "Is it close?",
+     "نزدیک است؟"
+    ],
+    [
+     "Is it ready?",
+     "آماده است؟"
+    ],
+    [
+     "Is it safe?",
+     "امن است؟"
+    ]
+   ]
+  },
+  {
+   "id": "i-cant",
+   "frame": "I can't …",
+   "fa": "برای گفتن «نمی‌توانم»",
+   "lesson": "appointment-change",
+   "opensAfter": "emergency-room",
+   "level": 2,
+   "items": [
+    [
+     "I can't open the door.",
+     "نمی‌توانم در را باز کنم."
+    ],
+    [
+     "I can't read this.",
+     "نمی‌توانم این را بخوانم."
+    ],
+    [
+     "I can't find my keys.",
+     "کلیدهایم را پیدا نمی‌کنم."
+    ],
+    [
+     "I can't walk fast.",
+     "نمی‌توانم تند راه بروم."
+    ],
+    [
+     "I can't come tomorrow.",
+     "فردا نمی‌توانم بیایم."
+    ],
+    [
+     "I can't see well.",
+     "خوب نمی‌بینم."
+    ]
+   ]
+  },
+  {
+   "id": "do-you-have",
+   "frame": "Do you have … ?",
+   "fa": "برای پرسیدن اینکه چیزی دارند یا نه",
+   "lesson": "clothes-shopping",
+   "opensAfter": "clinic-checkin",
+   "level": 2,
+   "items": [
+    [
+     "Do you have tea?",
+     "چای دارید؟"
+    ],
+    [
+     "Do you have a restroom?",
+     "دستشویی دارید؟"
+    ],
+    [
+     "Do you have a pen?",
+     "خودکار دارید؟"
+    ],
+    [
+     "Do you have a smaller size?",
+     "سایز کوچک‌تر دارید؟"
+    ],
+    [
+     "Do you have rice?",
+     "برنج دارید؟"
+    ],
+    [
+     "Do you have a map?",
+     "نقشه دارید؟"
+    ]
+   ]
+  },
+  {
+   "id": "not-working",
+   "frame": "The … is not working.",
+   "fa": "برای وسیله‌ای که خراب شده",
+   "lesson": "home-repair",
+   "level": 2,
+   "items": [
+    [
+     "The phone is not working.",
+     "تلفن کار نمی‌کند."
+    ],
+    [
+     "The TV is not working.",
+     "تلویزیون کار نمی‌کند."
+    ],
+    [
+     "The stove is not working.",
+     "اجاق گاز کار نمی‌کند."
+    ],
+    [
+     "The refrigerator is not working.",
+     "یخچال کار نمی‌کند."
+    ],
+    [
+     "The washing machine is not working.",
+     "ماشین لباسشویی کار نمی‌کند."
+    ],
+    [
+     "The air conditioner is not working.",
+     "کولر کار نمی‌کند."
+    ]
+   ]
+  },
+  {
+   "id": "where-can-i",
+   "frame": "Where can I … ?",
+   "fa": "برای پرسیدن اینکه کاری را کجا می‌شود انجام داد",
+   "lesson": "driving-car",
+   "level": 1,
+   "items": [
+    [
+     "Where can I pay?",
+     "کجا می‌توانم پرداخت کنم؟"
+    ],
+    [
+     "Where can I sit?",
+     "کجا می‌توانم بنشینم؟"
+    ],
+    [
+     "Where can I buy a ticket?",
+     "کجا می‌توانم بلیت بخرم؟"
+    ],
+    [
+     "Where can I wash my hands?",
+     "کجا می‌توانم دست‌هایم را بشویم؟"
+    ],
+    [
+     "Where can I find a taxi?",
+     "کجا می‌توانم تاکسی پیدا کنم؟"
+    ],
+    [
+     "Where can I get help?",
+     "از کجا می‌توانم کمک بگیرم؟"
+    ]
+   ]
+  },
+  {
+   "id": "what-time",
+   "frame": "What time … ?",
+   "fa": "برای پرسیدن ساعت هر چیزی",
+   "lesson": "basics-time",
+   "level": 2,
+   "items": [
+    [
+     "What time do you open?",
+     "چه ساعتی باز می‌کنید؟"
+    ],
+    [
+     "What time is the bus?",
+     "اتوبوس چه ساعتی است؟"
+    ],
+    [
+     "What time is lunch?",
+     "ناهار چه ساعتی است؟"
+    ],
+    [
+     "What time does it start?",
+     "چه ساعتی شروع می‌شود؟"
+    ],
+    [
+     "What time is my appointment?",
+     "وقت من چه ساعتی است؟"
+    ],
+    [
+     "What time is the meeting?",
+     "جلسه چه ساعتی است؟"
+    ]
+   ]
+  },
+  {
+   "id": "i-will",
+   "frame": "I will …",
+   "fa": "برای کاری که می‌خواهید انجام بدهید",
+   "lesson": "scam-call",
+   "level": 3,
+   "items": [
+    [
+     "I will come tomorrow.",
+     "فردا می‌آیم."
+    ],
+    [
+     "I will call my bank.",
+     "به بانکم زنگ می‌زنم."
+    ],
+    [
+     "I will wait here.",
+     "همین‌جا منتظر می‌مانم."
+    ],
+    [
+     "I will call you later.",
+     "بعداً به شما زنگ می‌زنم."
+    ],
+    [
+     "I will ask my son.",
+     "از پسرم می‌پرسم."
+    ],
+    [
+     "I will be back soon.",
+     "زود برمی‌گردم."
+    ]
+   ]
+  },
+  {
+   "id": "this-is",
+   "frame": "This is …",
+   "fa": "برای معرفی کردن یا نشان دادن",
+   "lesson": "dinner-guest",
+   "level": 2,
+   "items": [
+    [
+     "This is my son.",
+     "این پسر من است."
+    ],
+    [
+     "This is my daughter.",
+     "این دختر من است."
+    ],
+    [
+     "This is my address.",
+     "این آدرس من است."
+    ],
+    [
+     "This is my phone number.",
+     "این شمارهٔ تلفن من است."
+    ],
+    [
+     "This is too expensive.",
+     "این زیادی گران است."
+    ],
+    [
+     "This is very good.",
+     "این خیلی خوب است."
+    ]
+   ]
+  },
+  {
+   "id": "i-want-to",
+   "frame": "I want to …",
+   "fa": "برای گفتن کاری که می‌خواهید بکنید",
+   "lesson": "customer-service",
+   "level": 1,
+   "items": [
+    [
+     "I want to go home.",
+     "می‌خواهم به خانه بروم."
+    ],
+    [
+     "I want to learn English.",
+     "می‌خواهم انگلیسی یاد بگیرم."
+    ],
+    [
+     "I want to call my daughter.",
+     "می‌خواهم به دخترم زنگ بزنم."
+    ],
+    [
+     "I want to sit here.",
+     "می‌خواهم اینجا بنشینم."
+    ],
+    [
+     "I want to buy this.",
+     "می‌خواهم این را بخرم."
+    ],
+    [
+     "I want to see the doctor.",
+     "می‌خواهم دکتر را ببینم."
+    ]
+   ]
+  },
+  {
+   "id": "he-she-is",
+   "frame": "He is … / She is …",
+   "fa": "برای حرف زدن دربارهٔ دیگران",
+   "lesson": "incoming-call",
+   "level": 3,
+   "items": [
+    [
+     "She is my daughter.",
+     "او دختر من است."
+    ],
+    [
+     "He is my son.",
+     "او پسر من است."
+    ],
+    [
+     "She is a doctor.",
+     "او (خانم) دکتر است."
+    ],
+    [
+     "He is at work.",
+     "او (آقا) سر کار است."
+    ],
+    [
+     "She is at home.",
+     "او (خانم) خانه است."
+    ],
+    [
+     "He is sick.",
+     "او (آقا) مریض است."
+    ]
+   ]
+  },
+  {
+   "id": "there-is",
+   "frame": "There is …",
+   "fa": "برای گفتن اینکه چیزی وجود دارد",
+   "lesson": "emergency-911",
+   "level": 3,
+   "items": [
+    [
+     "There is a problem.",
+     "مشکلی هست."
+    ],
+    [
+     "There is a bank near here.",
+     "نزدیک اینجا یک بانک هست."
+    ],
+    [
+     "There is no hot water.",
+     "آب گرم نیست."
+    ],
+    [
+     "There is a restroom here.",
+     "اینجا دستشویی هست."
+    ],
+    [
+     "There is a bus at nine.",
+     "ساعت نُه یک اتوبوس هست."
+    ],
+    [
+     "There is a pharmacy on Main Street.",
+     "در خیابان مِین یک داروخانه هست."
+    ]
+   ]
+  },
+  {
+   "id": "will-be-ready",
+   "frame": "It will be ready …",
+   "fa": "برای گفتن اینکه چیزی کی آماده می‌شود",
+   "lesson": "work-tailor",
+   "level": 3,
+   "items": [
+    [
+     "It will be ready on Monday.",
+     "دوشنبه آماده می‌شود."
+    ],
+    [
+     "It will be ready this afternoon.",
+     "امروز بعدازظهر آماده می‌شود."
+    ],
+    [
+     "It will be ready in one hour.",
+     "یک ساعت دیگر آماده می‌شود."
+    ],
+    [
+     "It will be ready next week.",
+     "هفتهٔ آینده آماده می‌شود."
+    ],
+    [
+     "It will be ready by five o'clock.",
+     "تا ساعت پنج آماده می‌شود."
+    ],
+    [
+     "It will be ready in ten minutes.",
+     "ده دقیقهٔ دیگر آماده می‌شود."
+    ]
+   ]
+  },
+  {
+   "id": "im-here-to",
+   "frame": "I'm here to …",
+   "fa": "برای گفتن اینکه برای چه کاری آمده‌اید",
+   "lesson": "work-maintenance",
+   "level": 3,
+   "items": [
+    [
+     "I'm here to fix the light.",
+     "آمده‌ام چراغ را درست کنم."
+    ],
+    [
+     "I'm here to check the air conditioner.",
+     "آمده‌ام کولر را نگاه کنم."
+    ],
+    [
+     "I'm here to pick up an order.",
+     "آمده‌ام یک سفارش را بگیرم."
+    ],
+    [
+     "I'm here to see the manager.",
+     "آمده‌ام مدیر را ببینم."
+    ],
+    [
+     "I'm here to help you.",
+     "آمده‌ام کمکتان کنم."
+    ],
+    [
+     "I'm here to change the light bulb.",
+     "آمده‌ام لامپ را عوض کنم."
+    ]
+   ]
+  },
+  {
+   "id": "would-you-like",
+   "frame": "Would you like … ?",
+   "fa": "برای پیشنهاد مؤدبانه به مشتری یا مهمان",
+   "lesson": "work-bridal",
+   "level": 3,
+   "items": [
+    [
+     "Would you like a receipt?",
+     "رسید می‌خواهید؟"
+    ],
+    [
+     "Would you like a bag?",
+     "کیسه می‌خواهید؟"
+    ],
+    [
+     "Would you like some water?",
+     "آب میل دارید؟"
+    ],
+    [
+     "Would you like to sit down?",
+     "دوست دارید بنشینید؟"
+    ],
+    [
+     "Would you like a bigger size?",
+     "سایز بزرگ‌تر می‌خواهید؟"
+    ],
+    [
+     "Would you like to try another one?",
+     "دوست دارید یکی دیگر را پرو کنید؟"
+    ]
+   ]
+  }
+ ]
+}

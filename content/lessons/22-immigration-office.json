@@ -1,0 +1,60 @@
+{
+  "id": "immigration-office",
+  "scenario": "travel",
+  "stage": 3,
+  "minutes": 9,
+  "safetyCritical": true,
+  "title": { "fa": "وقت مصاحبه در ادارهٔ مهاجرت", "en": "An immigration office appointment" },
+  "intro": "برای کارهای اقامت گاهی باید به ادارهٔ مهاجرت بروید و به چند سؤال جواب بدهید. در این درس یاد می‌گیرید بگویید وقت دارید، بخواهید سؤال را تکرار کنند و اگر چیزی را نمی‌دانید یا یادتان نیست، همین را بگویید.",
+  "note": "این درس برای یادگیری زبان است و مشاورهٔ حقوقی یا مهاجرتی نیست. دربارهٔ مترجم و مدارک لازم، از قبل نامهٔ وقت مصاحبه را بخوانید یا از وکیل یا فرد مطلع بپرسید. همیشه راست بگویید و حدس نزنید.",
+  "canDo": "حالا می‌توانید در ادارهٔ مهاجرت بخواهید سؤال را تکرار کنند و ساده و درست جواب بدهید.",
+  "mission": "این جمله را آن‌قدر تکرار کنید که بدون فکر کردن به زبانتان بیاید، چون در هر مصاحبه‌ای به کارتان می‌آید: Could you repeat the question, please?",
+  "them": { "role": "افسر مهاجرت", "voice": "b" },
+  "phrases": [
+    { "en": "I have an appointment today. Here is my letter.", "fa": "امروز وقت دارم. این نامهٔ من است.", "ph": "آی هَو اَن اَپُینتمِنت تودِی. هی‌یِر ایز مای لِتِر", "note": "نامهٔ وقت مصاحبه و مدارک شناسایی را همراه داشته باشید.", "chunks": ["I have an appointment", "today.", "Here is my letter."] },
+    { "en": "Could you repeat the question, please?", "fa": "می‌شود لطفاً سؤال را دوباره بپرسید؟", "ph": "کُد یو ریپیت دِ کوئِسچِن، پْلیز؟", "note": "هر چند بار که لازم بود بپرسید. بهتر از جواب اشتباه است.", "chunks": ["Could you repeat", "the question,", "please?"] },
+    { "en": "I'm sorry, I don't remember.", "fa": "متأسفم، یادم نیست.", "ph": "آیْم ساری، آی دُنت ریمِمبِر", "note": "اگر نمی‌دانید: «I don't know.\u200e» هیچ‌وقت حدس نزنید.", "chunks": ["I'm sorry,", "I don't remember."] },
+    { "en": "Yes, that is correct.", "fa": "بله، درست است.", "ph": "یِس، دَت ایز کُرِکت", "note": "اگر درست نیست: «No, that is not correct.\u200e»", "chunks": ["Yes,", "that is correct."] },
+    { "en": "Can my son come in with me?", "fa": "پسرم می‌تواند همراه من داخل بیاید؟", "ph": "کَن مای سان کام این ویت می؟", "note": "my daughter یعنی دخترم.", "chunks": ["Can my son", "come in", "with me?"], "own": ["son"] }
+  ],
+  "dialogue": {
+    "setting": "تمرین: در ادارهٔ مهاجرت، افسر شما را صدا زده است.",
+    "lines": [
+      ["them", "Good morning. Do you have an appointment?", "صبح به‌خیر. وقت قبلی دارید؟"],
+      ["you", "Yes. I have an appointment today. Here is my letter.", "بله. امروز وقت دارم. این نامهٔ من است."],
+      ["them", "Thank you. Please raise your right hand. Do you swear to tell the truth?", "ممنون. لطفاً دست راستتان را بالا ببرید. قسم می‌خورید که حقیقت را بگویید؟"],
+      ["you", "Yes, I do.", "بله، قسم می‌خورم."],
+      ["them", "What is your current address?", "آدرس فعلی‌تان چیست؟"],
+      ["you", "Could you repeat the question, please?", "می‌شود لطفاً سؤال را دوباره بپرسید؟"],
+      ["them", "What is your current address?", "آدرس فعلی‌تان چیست؟"],
+      ["you", "I live at 25 Oak Street.", "در خیابان اوک، پلاک ۲۵ زندگی می‌کنم."]
+    ]
+  },
+  "respond": {
+    "setting": "تمرین: افسر سؤالی می‌پرسد که جوابش یادتان نیست.",
+    "them": ["When did you last travel outside the United States?", "آخرین بار کی به خارج از آمریکا سفر کردید؟"],
+    "ok": [
+      ["Could you repeat the question, please?", "می‌شود لطفاً سؤال را دوباره بپرسید؟"],
+      ["I'm sorry, I don't remember.", "متأسفم، یادم نیست."]
+    ],
+    "off": ["Yes, that is correct.", "بله، درست است.", "این سؤال جواب «بله» یا «نه» ندارد. اگر یادتان نیست، بگویید یادم نیست."],
+    "off2": 1
+  },
+  "task": [
+    ["افسر اسم و آدرس شما را از روی برگه می‌خواند و می‌پرسد درست است یا نه. درست است.", 4],
+    ["می‌خواهید پسرتان هم همراهتان به اتاق بیاید.", 5]
+  ],
+  "grammar": {
+    "title": "I don't …",
+    "explain": "برای منفی کردن، بعد از «I» بگویید «don't» و بعد فعل.",
+    "examples": [
+      ["I don't know.", "نمی‌دانم."],
+      ["I don't remember.", "یادم نیست."],
+      ["I don't understand.", "متوجه نمی‌شوم."]
+    ],
+    "wrong": "I no remember.",
+    "right": "I don't remember.",
+    "why": "در انگلیسی «no» قبل از فعل نمی‌آید؛ می‌گوییم «don't»."
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

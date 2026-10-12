@@ -1,0 +1,171 @@
+{
+  "id": "taxi-ride",
+  "scenario": "directions",
+  "stage": 2,
+  "minutes": 8,
+  "safetyCritical": true,
+  "title": {
+    "fa": "تاکسی و تاکسی اینترنتی",
+    "en": "Taxi and ride apps"
+  },
+  "intro": "در این درس یاد می‌گیرید به رانندهٔ تاکسی یا تاکسی اینترنتی بگویید کجا می‌روید، دربارهٔ کرایه و زمان بپرسید و بخواهید آهسته‌تر برود.",
+  "note": "در تاکسی‌های اینترنتی، قبل از سوار شدن پلاک ماشین و اسم راننده را با برنامهٔ گوشی مقایسه کنید. اسم خودتان را اول نگویید؛ از راننده بپرسید: «Who are you here for?\u200e» یعنی «دنبال چه کسی آمده‌اید؟»",
+  "canDo": "حالا می‌توانید با رانندهٔ تاکسی دربارهٔ مقصد، کرایه و زمان صحبت کنید.",
+  "mission": "دفعهٔ بعد که تاکسی اینترنتی گرفتید، قبل از سوار شدن از راننده بپرسید: Who are you here for?",
+  "them": {
+    "role": "راننده",
+    "voice": "m"
+  },
+  "phrases": [
+    {
+      "en": "I'm going to this address.",
+      "fa": "به این آدرس می‌روم.",
+      "ph": "آیْم گُوئینگ تو دیس اَدْرِس",
+      "note": "آدرس را روی کاغذ یا گوشی نشان بدهید.",
+      "chunks": [
+        "I'm going",
+        "to this address."
+      ]
+    },
+    {
+      "en": "How long will it take?",
+      "fa": "چقدر طول می‌کشد؟",
+      "ph": "هاو لانگ ویل ایت تِیک؟",
+      "note": "برای پرسیدن مدت راه.",
+      "chunks": [
+        "How long",
+        "will it take?"
+      ]
+    },
+    {
+      "en": "How much will it cost?",
+      "fa": "کرایه‌اش چقدر می‌شود؟",
+      "ph": "هاو ماچ ویل ایت کاست؟",
+      "note": "قبل از حرکت بپرسید.",
+      "chunks": [
+        "How much",
+        "will it cost?"
+      ]
+    },
+    {
+      "en": "Please slow down.",
+      "fa": "لطفاً آهسته‌تر بروید.",
+      "ph": "پْلیز سْلُو داون",
+      "note": "اگر راننده تند می‌رود و ناراحتید.",
+      "chunks": [
+        "Please",
+        "slow down."
+      ]
+    },
+    {
+      "en": "Can you help me with my bags?",
+      "fa": "می‌شود در بردن ساک‌هایم کمکم کنید؟",
+      "ph": "کَن یو هِلپ می ویت مای بَگز؟",
+      "note": "در آمریکا معمولاً به رانندهٔ تاکسی انعام می‌دهند (خیلی‌ها حدود ۱۵ تا ۲۰ درصد)، به‌خصوص اگر در بردن بار کمک کند.",
+      "chunks": [
+        "Can you help me",
+        "with my bags?"
+      ]
+    }
+  ],
+  "dialogue": {
+    "setting": "جلوی فرودگاه سوار تاکسی می‌شوید.",
+    "lines": [
+      [
+        "them",
+        "Hello! Where to?",
+        "سلام! کجا می‌روید؟"
+      ],
+      [
+        "you",
+        "Hello. I'm going to this address.",
+        "سلام. به این آدرس می‌روم."
+      ],
+      [
+        "them",
+        "Okay. Twenty-five Oak Street. No problem.",
+        "باشد. خیابان اوک، پلاک بیست و پنج. مشکلی نیست."
+      ],
+      [
+        "you",
+        "How long will it take?",
+        "چقدر طول می‌کشد؟"
+      ],
+      [
+        "them",
+        "About twenty minutes.",
+        "حدود بیست دقیقه."
+      ],
+      [
+        "you",
+        "How much will it cost?",
+        "کرایه‌اش چقدر می‌شود؟"
+      ],
+      [
+        "them",
+        "About thirty dollars.",
+        "حدود سی دلار."
+      ]
+    ]
+  },
+  "respond": {
+    "setting": "رانندهٔ تاکسی اینترنتی شیشه را پایین می‌دهد.",
+    "them": [
+      "Hi! Are you Maryam?",
+      "سلام! شما مریم هستید؟"
+    ],
+    "ok": [
+      [
+        "Yes, I am. I'm going to this address.",
+        "بله، خودم هستم. به این آدرس می‌روم."
+      ],
+      [
+        "Yes. Can you help me with my bags?",
+        "بله. می‌شود در بردن ساک‌هایم کمکم کنید؟"
+      ]
+    ],
+    "off": [
+      "How much will it cost?",
+      "کرایه‌اش چقدر می‌شود؟",
+      "راننده اول می‌خواهد مطمئن شود شما همان مسافرید. بگویید «Yes, I am»."
+    ],
+    "off2": 4
+  },
+  "task": [
+    [
+      "راننده خیلی تند می‌رود و می‌ترسید.",
+      4
+    ],
+    [
+      "می‌خواهید بدانید کی به مقصد می‌رسید.",
+      2
+    ]
+  ],
+  "grammar": {
+    "title": "How long … ? / How much … ?",
+    "explain": "«How long» برای مدت‌زمان است و «How much» برای پول.",
+    "examples": [
+      [
+        "How long will it take?",
+        "چقدر طول می‌کشد؟"
+      ],
+      [
+        "How much will it cost?",
+        "کرایه‌اش چقدر می‌شود؟"
+      ],
+      [
+        "How far is it?",
+        "چقدر راه است؟"
+      ]
+    ],
+    "wrong": "How much it takes?",
+    "right": "How long will it take?",
+    "why": "برای مدت‌زمان «How long» می‌گوییم، نه «How much»؛ و در سؤال «will» قبل از «it» می‌آید."
+  },
+  "review": {
+    "status": "draft",
+    "language": null,
+    "teaching": null,
+    "safety": null
+  }
+}

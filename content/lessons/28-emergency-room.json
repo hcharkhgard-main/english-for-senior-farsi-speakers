@@ -1,0 +1,64 @@
+{
+  "id": "emergency-room",
+  "scenario": "clinic",
+  "stage": 2,
+  "minutes": 9,
+  "safetyCritical": true,
+  "title": { "fa": "در اورژانس بیمارستان", "en": "At the emergency room" },
+  "intro": "در اورژانس بیمارستان باید سریع و کوتاه بگویید چه مشکلی دارید. در این درس یاد می‌گیرید مشکل، بیماری‌های قبلی و داروهایتان را بگویید.",
+  "note": "این درس برای یادگیری زبان است و توصیهٔ پزشکی نیست. در وضعیت اضطراری با ۹۱۱ تماس بگیرید. فهرست داروها و بیماری‌هایتان را به انگلیسی روی یک کارت در کیفتان نگه دارید.",
+  "canDo": "حالا می‌توانید در اورژانس بگویید چه مشکلی دارید و چه دارویی مصرف می‌کنید.",
+  "mission": "اسم داروها و بیماری‌هایتان را، از روی قوطی داروها یا با کمک خانواده، به انگلیسی روی یک کارت بنویسید و در کیف پولتان بگذارید.",
+  "them": { "role": "پرستار اورژانس", "voice": "b" },
+  "phrases": [
+    { "en": "I need to see a doctor now.", "fa": "باید همین الان دکتر مرا ببیند.", "ph": "آی نید تو سی اِ داکتِر ناو", "note": "وقتی حالتان بد است و نمی‌توانید صبر کنید.", "chunks": ["I need to see", "a doctor", "now."] },
+    { "en": "I have chest pain.", "fa": "قفسهٔ سینه‌ام درد می‌کند.", "ph": "آی هَو چِست پِین", "note": "این جمله را خیلی جدی می‌گیرند و زود به شما رسیدگی می‌کنند. اگر در سینه درد یا فشار دارید، حتماً بگویید.", "chunks": ["I have", "chest pain."] },
+    { "en": "I can't breathe well.", "fa": "نمی‌توانم خوب نفس بکشم.", "ph": "آی کَنت بْرید وِل", "note": "breathe یعنی نفس کشیدن. آخرِ breathe مثل اولِ the است، نه «س».", "chunks": ["I can't", "breathe well."] },
+    { "en": "I take medicine for blood pressure.", "fa": "داروی فشار خون مصرف می‌کنم.", "ph": "آی تِیک مِدیسِن فُر بْلاد پْرِشِر", "note": "به‌جای blood pressure می‌توانید بگویید: diabetes (دیابت)، my heart (قلبم).", "chunks": ["I take medicine", "for blood pressure."] },
+    { "en": "Please call my daughter.", "fa": "لطفاً به دخترم زنگ بزنید.", "ph": "پْلیز کال مای داتِر", "note": "my son یعنی پسرم. شماره‌اش را همراه داشته باشید.", "chunks": ["Please call", "my daughter."], "own": ["daughter"] }
+  ],
+  "dialogue": {
+    "setting": "تمرین: به اورژانس بیمارستان رسیده‌اید.",
+    "lines": [
+      ["them", "Hello. What's the problem today?", "سلام. امروز چه مشکلی دارید؟"],
+      ["you", "I have chest pain. I need to see a doctor now.", "قفسهٔ سینه‌ام درد می‌کند. باید همین الان دکتر مرا ببیند."],
+      ["them", "Okay. When did it start?", "باشد. از کی شروع شده؟"],
+      ["you", "One hour ago.", "یک ساعت پیش."],
+      ["them", "Do you take any medicine?", "دارویی مصرف می‌کنید؟"],
+      ["you", "Yes. I take medicine for blood pressure.", "بله. داروی فشار خون مصرف می‌کنم."],
+      ["them", "Thank you. Come with me, please.", "ممنون. لطفاً با من بیایید."]
+    ]
+  },
+  "respond": {
+    "setting": "تمرین: پرستار اورژانس از شما می‌پرسد.",
+    "them": ["Do you take any medicine?", "دارویی مصرف می‌کنید؟"],
+    "ok": [
+      ["Yes. I take medicine for blood pressure.", "بله. داروی فشار خون مصرف می‌کنم."],
+      ["No, I don't.", "نه، مصرف نمی‌کنم."]
+    ],
+    "off": ["I have an appointment at ten o'clock.", "ساعت ده وقت دارم.", "در اورژانس وقت قبلی لازم نیست. پرستار پرسید چه دارویی مصرف می‌کنید."],
+    "off2": 5
+  },
+  "variants": [
+    { "en": "Are you on any medications?", "fa": "دارویی مصرف می‌کنید؟", "like": "Do you take any medicine?" },
+    { "en": "How long has this been going on?", "fa": "چند وقت است این‌طور هستید؟", "like": "Okay. When did it start?", "voice": "m" },
+    { "en": "What's going on today?", "fa": "امروز چه مشکلی پیش آمده؟", "like": "Hello. What's the problem today?" }
+  ],
+  "task": [
+    ["تنها هستید و می‌خواهید بیمارستان به دخترتان خبر بدهد.", 5],
+    ["می‌خواهید به پرستار بگویید که نمی‌توانید خوب نفس بکشید.", 3]
+  ],
+  "grammar": {
+    "title": "I take …",
+    "explain": "برای دارویی که همیشه مصرف می‌کنید بگویید «I take» و بعد اسم دارو. اگر اسم دارو را نمی‌دانید، بگویید «I take medicine for» و بعد اسم بیماری.",
+    "examples": [
+      ["I take medicine for blood pressure.", "داروی فشار خون مصرف می‌کنم."],
+      ["I take insulin.", "انسولین مصرف می‌کنم."],
+      ["I take aspirin every day.", "هر روز آسپرین می‌خورم."]
+    ],
+    "wrong": "I eat medicine for blood pressure.",
+    "right": "I take medicine for blood pressure.",
+    "why": "در انگلیسی برای دارو «take» می‌گویند، نه «eat»."
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

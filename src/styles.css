@@ -1,0 +1,432 @@
+/* Hamrah — layout: one calm column, a fixed bar of the same three controls on top,
+   one clear primary action at the bottom. Farsi leads (right-to-left); English sits in its own left-to-right blocks. */
+:root {
+  --bg: #f7f4ec;            /* warm paper */
+  --surface: #ffffff;
+  --surface-2: #efeadd;     /* quiet tiles */
+  --ink: #14213d;           /* lapis ink */
+  --ink-2: #47526b;
+  --line: #d7d0bf;          /* quiet rules between areas (not the edge of a control) */
+  --edge: #857c66;          /* the edge of anything you can press or type in: at least 3:1 on every background */
+  --primary: #0b6b6b;       /* firoozeh (Persian turquoise), deepened for contrast */
+  --primary-ink: #ffffff;
+  --primary-soft: #d9eeeb;
+  --sound: #f2b233;         /* saffron: everything you can listen to */
+  --sound-ink: #2a1c00;
+  --sound-soft: #fdf1d3;
+  --sound-edge: #946500;    /* outline of the saffron buttons, so they stand out from paper and cards */
+  --good: #1f6f43;
+  --good-soft: #dff1e5;
+  --care: #8a4b00;          /* gentle "try again" */
+  --care-soft: #fbead0;
+  --danger: #a3262c;        /* pomegranate: emergency and delete only */
+  --danger-soft: #f9e1e0;
+  --focus: #1456d9;
+  --shadow: 0 1px 2px rgba(20, 33, 61, .08), 0 4px 14px rgba(20, 33, 61, .06);
+  --fa: "Vazirmatn", "Vazir", "SF Arabic", "Geeza Pro", "Noto Naskh Arabic", "Segoe UI", Tahoma, sans-serif;
+  --en: "Hamrah Digits", "Atkinson Hyperlegible", "Atkinson Hyperlegible Next", -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --r: 18px;
+  --tap: 3.5rem;            /* 56px at default size */
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1724; --surface: #19243a; --surface-2: #223049; --ink: #f3efe6; --ink-2: #bcc5d6; --line: #3a4963; --edge: #7385a3;
+    --primary: #5fd0c8; --primary-ink: #04201f; --primary-soft: #17393a;
+    --sound: #f2b233; --sound-ink: #2a1c00; --sound-soft: #3b3115; --sound-edge: #f2b233;
+    --good: #7ad6a0; --good-soft: #173526; --care: #f3c178; --care-soft: #3a2c12;
+    --danger: #ff9d96; --danger-soft: #45201f; --focus: #9cc0ff;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1724; --surface: #19243a; --surface-2: #223049; --ink: #f3efe6; --ink-2: #bcc5d6; --line: #3a4963; --edge: #7385a3;
+  --primary: #5fd0c8; --primary-ink: #04201f; --primary-soft: #17393a;
+  --sound: #f2b233; --sound-ink: #2a1c00; --sound-soft: #3b3115; --sound-edge: #f2b233;
+  --good: #7ad6a0; --good-soft: #173526; --care: #f3c178; --care-soft: #3a2c12;
+  --danger: #ff9d96; --danger-soft: #45201f; --focus: #9cc0ff;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .4); color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+html, body { height: 100%; }
+body {
+  margin: 0; padding-top: env(safe-area-inset-top, 0px); background: var(--bg); color: var(--ink);
+  font-family: var(--fa); font-size: 1.125rem; line-height: 1.75;
+  -webkit-tap-highlight-color: transparent; overflow-x: hidden;
+  overflow-wrap: break-word;      /* a word longer than its line is broken rather than pushing the page wider than the phone */
+}
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; touch-action: manipulation; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+h1, h2, h3, p { margin: 0; }
+h1, h2, h3 { text-wrap: balance; line-height: 1.45; }
+h1[tabindex="-1"]:focus, h2[tabindex="-1"]:focus { outline: none; }   /* headings receive focus so screen readers start there; nothing to show */
+svg { flex: none; }
+
+#app { max-width: 36rem; margin: 0 auto; min-height: 100%; display: flex; flex-direction: column; }
+#app > * { min-width: 0; }
+.wrap { padding-inline: 16px; }
+main.wrap { padding-block: 1rem 2rem; display: flex; flex-direction: column; gap: 1rem; flex: 1; }
+main.wrap > * { min-width: 0; }
+main.wrap.has-bar { padding-bottom: calc(7rem + env(safe-area-inset-bottom, 0px)); }
+
+/* ---- English blocks -------------------------------------------------- */
+.en { font-family: var(--en); direction: ltr; unicode-bidi: isolate; text-align: left; letter-spacing: .01em; }
+span.en { display: inline-block; max-width: 100%; }
+/* English words, prices and phone numbers inside a Farsi sentence (see bidi.js): same line, own direction, the legible Latin face */
+bdi.en { font-family: var(--en); text-align: inherit; letter-spacing: 0; }
+.fa { direction: rtl; unicode-bidi: isolate; }
+
+/* ---- top bar: Back, Emergency phrases, Home — always the same places --
+   Sizes are in px with a ceiling: the bar must stay small when the learner chooses very large text. */
+.topbar {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--bg);
+  border-bottom: 1px solid var(--line);
+}
+.topbar .wrap { display: flex; align-items: stretch; justify-content: space-between; gap: 8px; padding-block: 8px; }
+.tb-btn {
+  min-height: clamp(56px, var(--tap), 64px); min-width: 56px; padding: 4px 10px; flex: 0 1 auto;
+  display: inline-flex; flex-wrap: wrap; align-items: center; justify-content: center; align-content: center; gap: 0 6px;   /* on a narrow phone the word moves under its picture */
+  background: var(--surface); border: 2px solid var(--edge); border-radius: 14px; font-weight: 600; font-size: clamp(16px, 1rem, 19px); line-height: 1.3; text-align: center;
+}
+.tb-btn span { min-width: 0; }
+.tb-btn svg { width: clamp(22px, 1.5rem, 26px); height: clamp(22px, 1.5rem, 26px); }
+.tb-sos { color: var(--danger); border-color: var(--danger); }
+.tb-brand { display: flex; align-items: center; gap: .6rem; font-weight: 800; font-size: clamp(18px, 1.25rem, 24px); min-width: 0; }
+.tb-brand svg { width: clamp(36px, 2.25rem, 44px); height: clamp(36px, 2.25rem, 44px); color: var(--primary); }
+.tb-spacer { flex: 1; }
+
+/* ---- buttons ---------------------------------------------------------- */
+.btn {
+  min-height: var(--tap); max-width: 100%; padding: .6rem 1.1rem; border-radius: var(--r); border: 2px solid transparent;
+  display: inline-flex; align-items: center; justify-content: center; gap: .6rem;
+  font-weight: 700; font-size: 1.125rem; line-height: 1.4; text-align: center; background: var(--surface); color: var(--ink);
+}
+.btn > span { min-width: 0; }
+.btn svg { width: 1.6rem; height: 1.6rem; }
+.btn-primary { background: var(--primary); color: var(--primary-ink); }
+.btn-ghost { border-color: var(--edge); }
+.btn-sound { background: var(--sound); color: var(--sound-ink); border-color: var(--sound-edge); }
+.btn-sound.is-playing { outline: 3px solid var(--ink); outline-offset: 2px; }
+.btn-soft { background: var(--primary-soft); color: var(--ink); border-color: var(--primary); }
+.btn-danger { background: var(--surface); color: var(--danger); border-color: var(--danger); }
+.btn-block { width: 100%; }
+.btn-small { font-size: 1rem; padding: .4rem .8rem; border-radius: 14px; }   /* smaller words, same 56px target */
+.btn[disabled] { opacity: .5; cursor: default; }
+.row { display: flex; gap: .6rem; flex-wrap: wrap; align-items: center; }
+.row > .grow { flex: 1 1 8rem; }
+.row > * { min-width: 0; }
+.stack { display: flex; flex-direction: column; gap: .75rem; }
+.linkish { background: none; border: 0; padding: .6rem .2rem; min-height: 3rem; text-decoration: underline; text-underline-offset: .25em; color: var(--ink-2); font-weight: 600; }
+
+/* ---- bottom action bar ------------------------------------------------- */
+.bottombar {
+  position: fixed; inset-inline: 0; bottom: 0; z-index: 20; background: var(--bg); border-top: 1px solid var(--line);
+  padding: 10px max(16px, env(safe-area-inset-left, 0px)) calc(10px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-right, 0px));
+}
+.bottombar .inner { max-width: 34rem; margin: 0 auto; display: flex; gap: 10px; }
+/* like the top bar, this bar has a ceiling so that very large text leaves room to read */
+.bottombar .btn { min-height: clamp(56px, var(--tap), 64px); font-size: clamp(18px, 1.125rem, 22px); padding: 6px 12px; gap: 8px; min-width: 0; }
+.bottombar .btn svg { width: clamp(24px, 1.6rem, 28px); height: clamp(24px, 1.6rem, 28px); }
+.bottombar .btn-primary { flex: 2 1 auto; }
+.bottombar .btn-ghost { flex: 1 1 auto; }
+
+/* ---- home -------------------------------------------------------------- */
+.hello { background: var(--surface); border-radius: var(--r); padding: 1.1rem; box-shadow: var(--shadow); display: flex; gap: 1rem; align-items: center; }
+.hello h1 { font-size: 1.6rem; font-weight: 800; }
+.hello p { font-size: 1.2rem; color: var(--ink-2); }
+.hello .txt { flex: 1; min-width: 0; }
+.round-play {
+  width: clamp(80px, 5rem, 96px); height: clamp(80px, 5rem, 96px); border-radius: 50%; border: 2px solid var(--sound-edge); background: var(--sound); color: var(--sound-ink);
+  display: grid; place-items: center; flex: none; padding: 0;
+}
+.round-play svg { width: clamp(26px, 1.75rem, 32px); height: clamp(26px, 1.75rem, 32px); }
+.round-play small { display: block; font-size: clamp(16px, 1rem, 18px); line-height: 1.2; font-weight: 700; }
+.choice {
+  width: 100%; min-height: 5.25rem; display: flex; align-items: center; gap: 1rem; text-align: start;
+  background: var(--surface); border: 2px solid var(--edge); border-radius: var(--r); padding: .8rem 1rem; box-shadow: var(--shadow);
+}
+.choice > span:not(.ico):not(.go) { flex: 1; min-width: 0; }
+.choice .ico { width: clamp(56px, 3.5rem, 68px); height: clamp(56px, 3.5rem, 68px); border-radius: 14px; background: var(--primary-soft); color: var(--primary); display: grid; place-items: center; flex: none; }
+.choice .ico svg { width: 2.1rem; height: 2.1rem; }
+.choice .t { font-size: 1.35rem; font-weight: 800; display: block; }
+.choice .s { font-size: 1rem; color: var(--ink-2); display: block; line-height: 1.6; }
+.choice .go { margin-inline-start: auto; color: var(--ink-2); flex: none; }
+.choice .go svg { width: 1.5rem; height: 1.5rem; }
+.choice.is-primary { background: var(--primary); border-color: var(--primary); color: var(--primary-ink); }
+.choice.is-primary .ico { background: rgba(255, 255, 255, .18); color: inherit; }
+.choice.is-primary .s, .choice.is-primary .go { color: inherit; opacity: .92; }
+.quiet-row { display: flex; flex-wrap: wrap; gap: .6rem; }
+.quiet-row .btn { flex: 1 1 8rem; min-width: 0; }      /* side by side when there is room, one under the other when not */
+
+/* ---- cards -------------------------------------------------------------- */
+.card { background: var(--surface); border-radius: var(--r); padding: 1.1rem; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: .8rem; }
+.card h2 { font-size: 1.35rem; font-weight: 800; }
+.lead { font-size: 1.25rem; }
+.muted { color: var(--ink-2); }
+.small { font-size: 1rem; }
+.note { background: var(--care-soft); color: var(--ink); border-radius: 14px; padding: .8rem 1rem; display: flex; gap: .7rem; align-items: flex-start; font-size: 1.05rem; }
+.note > div { flex: 1; min-width: 0; }
+.note svg { width: 1.5rem; height: 1.5rem; margin-top: .25rem; color: var(--care); }
+.note.is-danger { background: var(--danger-soft); }
+.note.is-danger svg { color: var(--danger); }
+.note.is-good { background: var(--good-soft); }
+.note.is-good svg { color: var(--good); }
+.note.is-info { background: var(--primary-soft); }
+.note.is-info svg { color: var(--primary); }
+.eyebrow { font-size: 1rem; font-weight: 700; color: var(--ink-2); }
+.pic { width: 4.5rem; height: 4.5rem; border-radius: 18px; background: var(--primary-soft); color: var(--primary); display: grid; place-items: center; flex: none; }
+.pic svg { width: 2.75rem; height: 2.75rem; }
+.emoji { font-size: 3rem; line-height: 1; font-family: "Apple Color Emoji", "Noto Color Emoji", "Segoe UI Emoji", sans-serif; }
+
+/* progress: words and a bar, never colour alone */
+.progress { display: flex; flex-direction: column; gap: .3rem; }
+.progress .lbl { display: flex; justify-content: space-between; gap: 1rem; font-size: 1rem; font-weight: 700; color: var(--ink-2); }
+.progress .lbl > span { min-width: 0; }
+.progress .lbl .count { flex: none; white-space: nowrap; }
+.progress .bar { height: .6rem; border-radius: 1rem; background: var(--surface-2); overflow: hidden; }
+.progress .bar i { display: block; height: 100%; background: var(--primary); border-radius: 1rem; }
+
+/* ---- the phrase card ------------------------------------------------------ */
+.en-line { font-size: 1.5rem; font-weight: 700; line-height: 1.5; overflow-wrap: anywhere; }
+.phrase .en-line { font-size: 1.75rem; }
+.grow { flex: 1 1 0; min-width: 0; }
+.phrase .fa-line { font-size: 1.35rem; font-weight: 600; }
+/* a word you can tap to hear: at least 44 x 44 px however short the word, with room between neighbours and between lines */
+.w {
+  background: none; border: 0; padding: .1rem .3rem; margin: .25rem .1rem; border-bottom: 2px dotted var(--ink-2); border-radius: 6px 6px 0 0; font-weight: inherit;
+  display: inline-flex; align-items: center; justify-content: center; vertical-align: middle; min-height: max(44px, 2.6rem); min-width: 44px;
+}
+.w.is-on { background: var(--sound); color: var(--sound-ink); border-bottom-style: solid; }
+.w.is-weak { background: var(--care-soft); border-bottom: 3px dashed var(--care); }   /* dashed = "listen again"; solid = understood: not colour alone */
+.w.is-ok { border-bottom: 3px solid var(--good); }
+.w-plain { padding: .1rem .15rem; }
+.ph-line { font-size: 1.15rem; color: var(--ink-2); background: var(--surface-2); border-radius: 12px; padding: .5rem .8rem; }
+.ph-line b { font-weight: 700; color: var(--ink); }
+.when { font-size: 1.05rem; color: var(--ink-2); }
+.chunks { display: flex; flex-wrap: wrap; gap: .5rem; direction: ltr; }
+.chunk { font-family: var(--en); font-size: 1.25rem; font-weight: 700; min-height: 3.25rem; max-width: 100%; padding: .4rem .9rem; border-radius: 14px; border: 2px solid var(--sound-edge); background: var(--sound-soft); color: var(--ink); }
+.chunk.is-on { background: var(--sound); color: var(--sound-ink); }
+/* a page of words to tap and hear inside a lesson (the numbers, the days): the number, the English word, its meaning */
+.wgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 8.5rem), 1fr)); gap: .5rem; }
+.wcell { min-width: 0; min-height: 4.5rem; padding: .4rem .5rem; border-radius: 14px; border: 2px solid var(--sound-edge); background: var(--sound-soft); color: var(--ink); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .05rem; text-align: center; }
+.wcell .num { font-family: var(--en); font-size: 1.05rem; font-weight: 700; color: var(--ink-2); }
+.wcell .en { font-size: 1.3rem; font-weight: 700; line-height: 1.4; overflow-wrap: anywhere; }
+.wcell .fa { font-size: 1.05rem; color: var(--ink-2); }
+.wcell.is-on { background: var(--sound); color: var(--sound-ink); }
+.wcell.is-on .num, .wcell.is-on .fa { color: var(--sound-ink); }
+
+/* ---- sentence builder ---------------------------------------------------- */
+.tiles-line { direction: ltr; display: flex; flex-wrap: wrap; gap: .5rem; min-height: 4.25rem; padding: .6rem; border: 2px dashed var(--edge); border-radius: var(--r); background: var(--surface); align-items: center; }
+.tiles-line.is-right { border-style: solid; border-color: var(--good); background: var(--good-soft); }
+.tiles-pool { direction: ltr; display: flex; flex-wrap: wrap; gap: .5rem; }
+.wtile { font-family: var(--en); font-size: 1.35rem; font-weight: 700; min-height: 3.25rem; min-width: 3rem; max-width: 100%; padding: .35rem .85rem; border-radius: 14px; border: 2px solid var(--primary); background: var(--surface); color: var(--ink); box-shadow: var(--shadow); }
+.wtile.is-used { visibility: hidden; }
+.wtile.is-placed { border-color: var(--edge); }
+.wtile.is-ok { border-color: var(--good); border-bottom-width: 4px; }
+.wtile.is-off { border-color: var(--care); border-style: dashed; }
+
+/* ---- answer options -------------------------------------------------------- */
+.opt {
+  width: 100%; min-width: 0; min-height: 4rem; text-align: start; background: var(--surface); border: 2px solid var(--edge); border-radius: var(--r);
+  padding: .8rem 1rem; display: flex; align-items: center; gap: .8rem; font-size: 1.2rem; font-weight: 600; box-shadow: var(--shadow);
+}
+.opt .body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: .15rem; }
+.opt .body > span { min-width: 0; }
+.opt .en { display: block; font-size: 1.3rem; font-weight: 700; line-height: 1.5; }   /* English on its own line, from the left, in every kind of question */
+.opt .sub { display: block; font-size: 1.05rem; font-weight: 500; color: var(--ink-2); }   /* the Farsi meaning never shares a line with the English */
+.opt .mark { width: 2rem; height: 2rem; flex: none; display: grid; place-items: center; }
+.opt .mark:empty { display: none; }
+.opt .mark svg { width: 1.8rem; height: 1.8rem; }
+.opt.is-right { border-color: var(--good); background: var(--good-soft); }
+.opt.is-right .mark { color: var(--good); }
+.opt.is-tried { border-style: dashed; color: var(--ink-2); background: var(--surface-2); box-shadow: none; }
+.opt-wrap { display: flex; gap: .5rem; align-items: stretch; }
+.opt-wrap > * { min-width: 0; }
+.opt-wrap .opt { flex: 1; }
+.mini-play { width: clamp(56px, var(--tap), 68px); min-height: var(--tap); border-radius: var(--r); border: 2px solid var(--sound-edge); background: var(--sound); color: var(--sound-ink); display: grid; place-items: center; flex: none; padding: 0; }
+.mini-play svg { width: clamp(26px, 1.7rem, 32px); height: clamp(26px, 1.7rem, 32px); }
+.mini-play.is-playing { outline: 3px solid var(--ink); outline-offset: 2px; }
+
+/* ---- conversation ----------------------------------------------------------- */
+.chat { display: flex; flex-direction: column; gap: .7rem; }
+.bubble { max-width: 92%; border-radius: 18px; padding: .7rem .9rem; display: flex; flex-direction: column; gap: .3rem; background: var(--surface); box-shadow: var(--shadow); border: 2px solid transparent; }
+.bubble .who { font-size: 1rem; font-weight: 700; color: var(--ink-2); }
+.bubble .en { font-size: 1.3rem; font-weight: 700; line-height: 1.5; }
+.bubble .fa-line { font-size: 1.1rem; color: var(--ink-2); }
+.bubble.them { align-self: flex-end; border-end-end-radius: 4px; }
+.bubble.you { align-self: flex-start; background: var(--primary-soft); border-end-start-radius: 4px; }
+.bubble.is-on { border-color: var(--sound-edge); }
+.bubble .tools { display: flex; gap: .5rem; flex-wrap: wrap; }
+/* in a conversation the listen-again buttons keep a ceiling, like the top bar: with very large text «دوباره» and «آهسته»
+   still share one row, and the answers stay on the first screen */
+.tools.is-tight { display: flex; gap: 8px; flex-wrap: wrap; }
+.tools.is-tight .btn { min-height: clamp(56px, var(--tap), 64px); font-size: clamp(16px, 1rem, 20px); padding: 4px 12px; gap: 6px; }
+.tools.is-tight .btn svg { width: clamp(22px, 1.6rem, 26px); height: clamp(22px, 1.6rem, 26px); }
+.phone-mask { background: var(--surface-2); border-radius: 12px; padding: .5rem .8rem; color: var(--ink-2); font-weight: 600; }
+/* what the learner understood of a line («درست شنیدید: …»): a tick and words, kept with the line */
+.bubble .caught { display: flex; gap: .4rem; align-items: flex-start; font-size: 1.05rem; font-weight: 700; color: var(--good); }
+.bubble .caught svg { width: 1.4rem; height: 1.4rem; margin-top: .2rem; }
+.bubble .caught > span { min-width: 0; }
+.bubble .caught .en { font-size: 1.15rem; }
+/* "Could you repeat that, please?" — under the answers of every turn; it looks like a request, not like one more answer */
+.again-btn { width: 100%; min-width: 0; min-height: var(--tap); display: flex; align-items: center; gap: .7rem; text-align: start; padding: .45rem .9rem; border-radius: var(--r); border: 2px solid var(--edge); background: transparent; }
+.again-btn svg { width: 1.6rem; height: 1.6rem; color: var(--ink-2); }
+.again-btn .body { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.again-btn .en { display: block; font-size: 1.15rem; font-weight: 700; line-height: 1.45; }
+.again-btn .sub { display: block; font-size: 1rem; color: var(--ink-2); line-height: 1.6; }
+/* a line that stays in the top bar while the page scrolls ("this is only practice"); like the bar, it has a ceiling */
+.tb-banner { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 5px 16px 6px; background: var(--danger-soft); color: var(--ink); font-weight: 700; font-size: clamp(15px, .95rem, 18px); line-height: 1.5; text-align: center; }
+.tb-banner svg { width: 20px; height: 20px; color: var(--danger); }
+.tb-banner span { min-width: 0; }
+
+/* ---- lists and tiles ------------------------------------------------------------ */
+.tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; }
+.tile { min-width: 0; min-height: 8rem; background: var(--surface); border: 2px solid var(--edge); border-radius: var(--r); padding: .9rem .6rem; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .5rem; text-align: center; font-weight: 700; font-size: 1.1rem; line-height: 1.5; box-shadow: var(--shadow); }
+.tile .pic { width: 3.75rem; height: 3.75rem; }
+.tile .pic svg { width: 2.3rem; height: 2.3rem; }
+.tile.is-danger .pic { background: var(--danger-soft); color: var(--danger); }
+.item { width: 100%; min-height: 4.25rem; display: flex; align-items: center; gap: .8rem; text-align: start; background: var(--surface); border: 2px solid var(--edge); border-radius: var(--r); padding: .7rem .9rem; box-shadow: var(--shadow); }
+.item .body { flex: 1; min-width: 0; }
+.item .t { font-weight: 700; font-size: 1.2rem; display: block; }
+.item .s { color: var(--ink-2); font-size: 1rem; display: block; }
+.item .badge { flex: none; display: inline-flex; align-items: center; gap: .3rem; font-size: 1rem; font-weight: 700; color: var(--good); }
+.item .go { flex: none; color: var(--ink-2); }
+.item .go svg { width: 1.5rem; height: 1.5rem; }
+.item .badge svg { width: 1.4rem; height: 1.4rem; }
+.section-title { font-size: 1.2rem; font-weight: 800; margin-top: .5rem; }
+.pic-s { width: 3rem; height: 3rem; border-radius: 14px; }
+.pic-s svg { width: 1.9rem; height: 1.9rem; }
+
+/* ---- reading papers («خواندن نوشته‌ها») ----------------------------------------------------------
+   The question is the app speaking (turquoise, Farsi); the paper is the thing in the learner's hand:
+   white, square-cornered, English from the left, one line under the other. Every line is one
+   full-width button at least 56px high; the ring in the margin says "this can be chosen". */
+.paper-q { background: var(--primary-soft); border: 2px solid var(--primary); border-radius: var(--r); padding: .7rem 1rem .8rem; display: flex; flex-direction: column; gap: .35rem; box-shadow: var(--shadow); }
+.paper-q h1 { font-size: 1.4rem; font-weight: 800; }
+.paper-q .eyebrow, .paper-q .how { color: var(--ink); }
+.paper-done { font-size: 1.5rem; }
+.paper { background: var(--surface); border: 1px solid var(--edge); border-radius: 6px; box-shadow: 0 1px 2px rgba(20, 33, 61, .10), 0 8px 22px rgba(20, 33, 61, .10); padding: .4rem 0; }
+.paper-lines { list-style: none; margin: 0; padding: 0; }
+.paper-lines > li + li { border-top: 1px solid var(--line); }
+.pl {
+  width: 100%; min-height: var(--tap); padding: .55rem .9rem; display: flex; align-items: center; gap: .8rem; text-align: left;
+  background: none; border: 0; border-radius: 0; font-family: var(--en); font-size: 1.25rem; font-weight: 500; line-height: 1.45; letter-spacing: .01em; color: var(--ink);
+}
+.pl .txt { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.pl.is-strong { font-size: 1.5rem; font-weight: 700; }
+.nb { display: inline-block; max-width: 100%; }      /* a number with its hyphens or slashes: one piece, cut only when wider than the screen */
+.pl .ring { width: 1.7rem; height: 1.7rem; flex: none; border: 2px solid var(--edge); border-radius: 50%; display: grid; place-items: center; background: var(--surface); }
+.pl .ring svg { width: 1.2rem; height: 1.2rem; stroke-width: 3; }
+.pl:focus-visible { outline-offset: -3px; }
+.pl.is-right { background: var(--good-soft); }
+.pl.is-right .ring { background: var(--good); border-color: var(--good); color: var(--surface); }
+.pl.is-tried { background: var(--surface-2); color: var(--ink-2); }
+.pl.is-tried .ring { border-style: dashed; border-color: var(--care); }
+/* what the tapped line says, in Farsi, directly under it */
+.pl-says { direction: rtl; padding: .7rem 1rem .9rem; display: flex; flex-direction: column; gap: .5rem; align-items: flex-start; font-size: 1.1rem; background: var(--care-soft); border-top: 2px dashed var(--care); }
+.pl-says.is-right { background: var(--good-soft); border-top: 2px solid var(--good); }
+/* the finished paper, every line with its meaning */
+.pl-read { display: flex; gap: .7rem; align-items: center; padding: .6rem .8rem; }
+.pl-read > * { min-width: 0; }
+.pl-en { font-size: 1.25rem; font-weight: 500; line-height: 1.45; overflow-wrap: anywhere; }
+.pl-en.is-strong { font-size: 1.4rem; font-weight: 700; }
+.pl-fa { direction: rtl; font-size: 1.1rem; color: var(--ink-2); }
+/* on a screen with room, the question stays in view while the paper is read (papers.js gives the height of the top bar);
+   its holder is a plain band of the page colour, so no line of the paper shows between it and the top bar */
+@media (min-height: 640px) {
+  :root:not([data-big]) .paper-qwrap { position: sticky; top: calc(env(safe-area-inset-top, 0px) + var(--top-h, 73px)); z-index: 10; background: var(--bg); padding-top: 10px; margin-top: -10px; }
+  :root:not([data-big]) .paper-qwrap .paper-q { box-shadow: 0 6px 14px rgba(20, 33, 61, .14); }
+}
+:root[data-big] .paper-q .eyebrow { display: none; }      /* very large text: the question and what to do with it are enough */
+:root[data-big] .pl-read { flex-direction: column; align-items: stretch; }
+:root[data-big] .pl-read > .mini-play { width: 100%; min-height: clamp(56px, 3rem, 64px); }
+
+/* ---- pronunciation result ----------------------------------------------------------- */
+.mic-btn { width: 100%; min-width: 0; min-height: 4.5rem; padding: .5rem .8rem; text-align: center; line-height: 1.5; border-radius: var(--r); border: 2px solid var(--primary); background: var(--surface); color: var(--ink); font-weight: 800; font-size: 1.25rem; display: flex; align-items: center; justify-content: center; gap: .7rem; }
+.mic-btn svg { width: 2rem; height: 2rem; color: var(--primary); }
+.mic-btn.is-live { background: var(--danger-soft); border-color: var(--danger); }
+.mic-btn.is-live svg { color: var(--danger); }
+.level { height: .7rem; border-radius: 1rem; background: var(--surface-2); overflow: hidden; }
+.level i { display: block; height: 100%; width: 0; background: var(--primary); }
+.heard { font-size: 1.2rem; }
+.result-title { font-size: 1.35rem; font-weight: 800; display: flex; gap: .5rem; align-items: center; }
+.result-title svg { width: 1.8rem; height: 1.8rem; }
+
+/* ---- settings ----------------------------------------------------------------------- */
+.seg { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 4.75rem), 1fr)); gap: .5rem; }
+.seg button { min-height: var(--tap); min-width: 0; padding: .3rem .4rem; border-radius: 14px; border: 2px solid var(--edge); background: var(--surface); font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: .3rem; }
+.seg button svg { width: 1.3rem; height: 1.3rem; }
+.seg button[aria-pressed="true"] { background: var(--primary); color: var(--primary-ink); border-color: var(--primary); }
+.field { display: flex; flex-direction: column; gap: .3rem; }
+.field label { font-weight: 700; }
+.field input { width: 100%; min-width: 0; min-height: var(--tap); border-radius: 14px; border: 2px solid var(--edge); background: var(--surface); padding: .5rem .8rem; font-size: 1.2rem; }
+.field input.en { font-family: var(--en); }
+/* a list to choose from (date of birth): as large as a text field; the phone opens its own wheel or list */
+.field select { width: 100%; min-width: 0; min-height: var(--tap); border-radius: 14px; border: 2px solid var(--edge); background: var(--surface); padding: .5rem .8rem; font-size: 1.2rem; }
+/* «کارهایی که حالا می‌توانم بکنم»: a tick beside each thing, and "tried it" in words as well as colour */
+.did { display: inline-flex; align-items: center; gap: .4rem; font-weight: 700; color: var(--good); }
+.did svg { width: 1.5rem; height: 1.5rem; flex: none; }
+/* «جملهٔ خودِ شما»: one sentence under the other, each with its own listen buttons, a thin line between them */
+.own-line { gap: .45rem; }
+.own-line + .own-line { border-top: 2px solid var(--edge); padding-top: .8rem; }
+/* the small real-life task of a lesson: an English sentence inside the Farsi text stays in one piece, on a line of its own when it does not fit */
+.mission bdi.en { display: inline-block; max-width: 100%; }
+.switch { display: flex; align-items: center; gap: .8rem; min-height: var(--tap); width: 100%; background: none; border: 0; padding: 0; text-align: start; }
+.switch .box { width: 3.6rem; height: 2.1rem; border-radius: 2rem; background: var(--surface-2); border: 2px solid var(--edge); position: relative; flex: none; }
+.switch .box::after { content: ""; position: absolute; top: 2px; inset-inline-start: 2px; width: 1.6rem; height: 1.6rem; border-radius: 50%; background: var(--ink-2); }
+.switch[aria-checked="true"] .box { background: var(--primary); border-color: var(--primary); }
+.switch[aria-checked="true"] .box::after { inset-inline-start: calc(100% - 1.6rem - 2px); background: var(--primary-ink); }
+.switch .lbl { flex: 1; min-width: 0; font-weight: 700; }
+.switch .state { font-size: 1rem; color: var(--ink-2); font-weight: 600; }
+.steps { margin: 0; padding-inline-start: 1.6rem; display: flex; flex-direction: column; gap: .5rem; }
+ol.steps { list-style: persian; }
+
+/* ---- short messages: under the top bar, where they hide no button; a tap closes them ---------- */
+.toast {
+  position: fixed; inset-inline: 16px; top: calc(env(safe-area-inset-top, 0px) + 88px); z-index: 40; max-width: 34rem; margin: 0 auto; min-height: var(--tap);
+  display: flex; align-items: center; gap: .8rem; text-align: start; background: var(--ink); color: var(--bg); border: 2px solid var(--bg); border-radius: 14px; padding: .7rem 1rem; font-weight: 600; box-shadow: var(--shadow);
+}
+.toast .msg { flex: 1; min-width: 0; }
+.toast .x { flex: none; display: inline-flex; align-items: center; gap: .3rem; font-size: 1rem; text-decoration: underline; text-underline-offset: .25em; }
+.toast .x svg { width: 1.2rem; height: 1.2rem; }
+.sheet-back { position: fixed; inset: 0; background: rgba(10, 16, 28, .55); z-index: 50; display: flex; align-items: flex-end; justify-content: center; overscroll-behavior: contain; }
+.sheet { background: var(--bg); border: 2px solid var(--edge); border-bottom: 0; border-radius: 22px 22px 0 0; padding: 1.2rem 16px calc(1.2rem + env(safe-area-inset-bottom, 0px)); width: 100%; max-width: 36rem; max-height: 90%; overflow: auto; display: flex; flex-direction: column; gap: .9rem; }
+.sheet h2 { font-size: 1.4rem; font-weight: 800; }
+.center { text-align: center; align-items: center; }
+.big-check { width: 5rem; height: 5rem; border-radius: 50%; background: var(--good-soft); color: var(--good); display: grid; place-items: center; }
+.big-check svg { width: 3rem; height: 3rem; }
+.offline-flag { background: var(--care-soft); text-align: center; font-weight: 700; font-size: 1rem; padding: .35rem 1rem; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+@media (min-width: 40rem) {
+  main.wrap { padding-block: 1.5rem 3rem; }
+  main.wrap.has-bar { padding-bottom: calc(7rem + env(safe-area-inset-bottom, 0px)); }   /* the fixed bar must never cover the end of the page */
+}
+
+/* A small phone (iPhone SE size) or a phone held sideways: the two bars keep their smallest size
+   whatever the text size, so that at least two thirds of the screen is left for the lesson. */
+@media (max-width: 340px), (max-height: 600px) {
+  .topbar .wrap { gap: 8px; }
+  .tb-btn { min-height: 56px; font-size: 16px; padding: 2px 6px; line-height: 1.25; }
+  .tb-btn svg { width: 22px; height: 22px; }
+  .bottombar .btn { min-height: 56px; font-size: 18px; }
+  .bottombar .btn svg { width: 24px; height: 24px; }
+}
+
+/* ---- very large text (the learner's choice, or the phone's own text size) ----------------------
+   main.js sets data-big on <html> when the text is about 1.3 times normal or more. Things that sit
+   side by side at normal size are stacked, so that words keep whole lines to themselves. */
+:root[data-big] .opt-wrap { flex-direction: column; }
+:root[data-big] .opt-wrap { gap: 8px; }
+:root[data-big] .opt-wrap > .mini-play { width: 100%; min-height: clamp(56px, 3rem, 64px); }
+:root[data-big] .stack > .opt-wrap + .opt-wrap { margin-top: .6rem; }      /* each play bar sits close to its own answer, further from the one above */
+:root[data-big] .tiles { grid-template-columns: minmax(0, 1fr); }
+:root[data-big] .tile { flex-direction: row; justify-content: flex-start; text-align: start; min-height: var(--tap); padding: .7rem .9rem; gap: .8rem; }
+:root[data-big] .tile > span:not(.pic) { min-width: 0; }
+:root[data-big] .hello { flex-direction: column-reverse; align-items: stretch; }
+:root[data-big] .hello .round-play { align-self: flex-start; }
+:root[data-big] .choice { gap: .7rem; padding: .7rem .8rem; }
+:root[data-big] .choice .go { display: none; }
+@media (prefers-reduced-motion: no-preference) { .level i { transition: width .08s linear; } }

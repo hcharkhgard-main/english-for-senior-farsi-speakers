@@ -1,0 +1,171 @@
+{
+  "id": "on-the-plane",
+  "scenario": "travel",
+  "stage": 3,
+  "minutes": 8,
+  "title": {
+    "fa": "داخل هواپیما",
+    "en": "On the plane"
+  },
+  "intro": "در این درس یاد می‌گیرید در هواپیما صندلی‌تان را پیدا کنید، از مهماندار چیزی بخواهید و جمله‌های معمول مهماندارها را بفهمید.",
+  "canDo": "حالا می‌توانید در هواپیما از مهماندار کمک بخواهید و جمله‌های معمول را بفهمید.",
+  "mission": "در پرواز بعدی، خودتان از مهماندار چیزی بخواهید؛ مثلاً: Can I have a blanket, please?",
+  "them": {
+    "role": "مهماندار",
+    "voice": "b"
+  },
+  "phrases": [
+    {
+      "en": "Excuse me, I think this is my seat.",
+      "fa": "ببخشید، فکر می‌کنم اینجا جای من است.",
+      "ph": "اِکسکیوز می، آی تینک دیس ایز مای سیت",
+      "note": "شمارهٔ صندلی روی کارت پرواز است، مثل 24C.",
+      "chunks": [
+        "Excuse me,",
+        "I think",
+        "this is my seat."
+      ]
+    },
+    {
+      "en": "Can you help me with my bag?",
+      "fa": "می‌شود کمک کنید کیفم را بالا بگذارم؟",
+      "ph": "کَن یو هِلپ می ویت مای بَگ؟",
+      "note": "برای گذاشتن کیف در قفسهٔ بالای سر.",
+      "chunks": [
+        "Can you help me",
+        "with my bag?"
+      ]
+    },
+    {
+      "en": "Can I have a blanket, please?",
+      "fa": "می‌شود لطفاً یک پتو بدهید؟",
+      "ph": "کَن آی هَو اِ بْلَنکِت، پْلیز؟",
+      "note": "به‌جای blanket می‌توانید بگویید: water (آب)، a pillow (بالش).",
+      "chunks": [
+        "Can I have",
+        "a blanket,",
+        "please?"
+      ]
+    },
+    {
+      "en": "I don't feel well.",
+      "fa": "حالم خوب نیست.",
+      "ph": "آی دُنت فیل وِل",
+      "note": "به مهماندار بگویید؛ آن‌ها برای کمک آموزش دیده‌اند.",
+      "chunks": [
+        "I don't",
+        "feel well."
+      ]
+    },
+    {
+      "en": "Please fasten your seat belt.",
+      "fa": "لطفاً کمربندتان را ببندید.",
+      "ph": "پْلیز فَسِن یور سیت بِلت",
+      "note": "این را مهماندار می‌گوید. حرف t در fasten خوانده نمی‌شود.",
+      "voice": "b",
+      "chunks": [
+        "Please fasten",
+        "your seat belt."
+      ]
+    }
+  ],
+  "dialogue": {
+    "setting": "وارد هواپیما شده‌اید و دنبال صندلی‌تان می‌گردید.",
+    "lines": [
+      [
+        "them",
+        "Welcome aboard. What is your seat number?",
+        "خوش آمدید. شمارهٔ صندلی‌تان چند است؟"
+      ],
+      [
+        "you",
+        "Twenty-four C. Can you help me with my bag?",
+        "بیست و چهار سی. می‌شود کمک کنید کیفم را بالا بگذارم؟"
+      ],
+      [
+        "them",
+        "Of course. Please fasten your seat belt.",
+        "البته. لطفاً کمربندتان را ببندید."
+      ],
+      [
+        "you",
+        "Thank you. Can I have a blanket, please?",
+        "ممنون. می‌شود لطفاً یک پتو بدهید؟"
+      ],
+      [
+        "them",
+        "Here you go. Would you like chicken or pasta?",
+        "بفرمایید. مرغ میل دارید یا پاستا؟"
+      ],
+      [
+        "you",
+        "Chicken, please. And water.",
+        "مرغ، لطفاً. و آب."
+      ]
+    ]
+  },
+  "respond": {
+    "setting": "مهماندار با چرخ غذا کنار شما می‌ایستد.",
+    "them": [
+      "Would you like something to drink?",
+      "نوشیدنی میل دارید؟"
+    ],
+    "ok": [
+      [
+        "Water, please.",
+        "آب، لطفاً."
+      ],
+      [
+        "Tea, please.",
+        "چای، لطفاً."
+      ],
+      [
+        "No, thank you.",
+        "نه، ممنون."
+      ]
+    ],
+    "off": [
+      "Excuse me, I think this is my seat.",
+      "ببخشید، فکر می‌کنم اینجا جای من است.",
+      "مهماندار پرسید نوشیدنی می‌خواهید یا نه."
+    ],
+    "off2": 5
+  },
+  "task": [
+    [
+      "کسی روی صندلی شما نشسته است.",
+      1
+    ],
+    [
+      "وسط پرواز سرتان گیج می‌رود و حالتان بد است.",
+      4
+    ]
+  ],
+  "grammar": {
+    "title": "I think …",
+    "explain": "وقتی کاملاً مطمئن نیستید یا می‌خواهید مؤدبانه بگویید، جمله را با «I think» شروع کنید.",
+    "examples": [
+      [
+        "I think this is my seat.",
+        "فکر می‌کنم اینجا جای من است."
+      ],
+      [
+        "I think it's closed.",
+        "فکر می‌کنم تعطیل است."
+      ],
+      [
+        "I think so.",
+        "فکر می‌کنم همین‌طور است."
+      ]
+    ],
+    "wrong": "I am think this is my seat.",
+    "right": "I think this is my seat.",
+    "why": "بعد از «I» مستقیم «think» می‌آید، بدون am."
+  },
+  "review": {
+    "status": "draft",
+    "language": null,
+    "teaching": null,
+    "safety": null
+  }
+}

@@ -1,0 +1,14 @@
+name = "hamrah-ai-proxy"
+main = "worker.mjs"
+compatibility_date = "2025-01-01"
+# personas.json (the list of conversations the AI may play) is bundled from this folder.
+# After changing a conversation: npm run personas, then deploy again.
+
+[vars]
+# Your site's address, exactly as it appears in the browser: https, no path, no trailing slash.
+# Several: comma-separated. Addresses that are not https are ignored (http://localhost is allowed for testing).
+ALLOWED_ORIGINS = "https://YOUR-USERNAME.github.io"
+AI_PROVIDER = "anthropic"
+AI_MODEL = "claude-haiku-4-5-20251001"
+# The key is a secret, never a var:   npx wrangler secret put AI_API_KEY
+# Also set a monthly spend limit at the model provider: that limit, not this file, is what caps the cost.

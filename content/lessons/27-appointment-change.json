@@ -1,0 +1,63 @@
+{
+  "id": "appointment-change",
+  "scenario": "phone",
+  "stage": 3,
+  "minutes": 9,
+  "safetyCritical": true,
+  "title": { "fa": "عوض کردن وقت و تماس با مطب", "en": "Changing an appointment" },
+  "intro": "در این درس یاد می‌گیرید به مطب زنگ بزنید و وقتتان را عوض یا لغو کنید، بگویید دارویتان تمام شده و دربارهٔ جواب آزمایش بپرسید.",
+  "note": "این درس برای یادگیری زبان است و توصیهٔ پزشکی نیست.",
+  "canDo": "حالا می‌توانید تلفنی وقتتان را عوض کنید و دربارهٔ دارو و جواب آزمایش بپرسید.",
+  "mission": "اگر روزی نتوانستید سرِ وقتِ دکتر بروید، خودتان به مطب زنگ بزنید و بگویید: I need to change my appointment.",
+  "them": { "role": "منشی (پشت تلفن)", "voice": "b" },
+  "phrases": [
+    { "en": "I need to change my appointment.", "fa": "باید وقتم را عوض کنم.", "ph": "آی نید تو چِینج مای اَپُینتمِنت", "note": "برای لغو کردن: «I need to cancel my appointment.\u200e»", "chunks": ["I need to change", "my appointment."] },
+    { "en": "I can't come on Tuesday.", "fa": "سه‌شنبه نمی‌توانم بیایم.", "ph": "آی کَنت کام آن توزدِی", "note": "اسم روزِ وقتتان را بگویید.", "chunks": ["I can't come", "on Tuesday."], "own": ["Tuesday"] },
+    { "en": "Do you have another day?", "fa": "روز دیگری وقت دارید؟", "ph": "دو یو هَو اَنادِر دِی؟", "note": "another time یعنی ساعت دیگر.", "chunks": ["Do you have", "another day?"] },
+    { "en": "I need a refill on my medicine.", "fa": "دارویم تمام شده و دوباره لازم دارم.", "ph": "آی نید اِ ریفیل آن مای مِدیسِن", "note": "refill یعنی تمدید نسخه. اسم دارو را از روی قوطی بخوانید.", "chunks": ["I need a refill", "on my medicine."] },
+    { "en": "Are my test results ready?", "fa": "جواب آزمایشم آماده است؟", "ph": "آر مای تِست ریزالتس رِدی؟", "note": "test results یعنی جواب آزمایش.", "chunks": ["Are my test results", "ready?"] }
+  ],
+  "dialogue": {
+    "setting": "به مطب زنگ زده‌اید چون سه‌شنبه نمی‌توانید بروید.",
+    "lines": [
+      ["them", "Lakeside Clinic, how can I help you?", "درمانگاه لِیک‌ساید، چه کمکی از من برمی‌آید؟"],
+      ["you", "Hello, this is Maryam Ahmadi. I need to change my appointment.", "سلام، مریم احمدی هستم. باید وقتم را عوض کنم."],
+      ["them", "Okay. When is your appointment?", "باشد. وقتتان چه روزی است؟"],
+      ["you", "On Tuesday. I can't come on Tuesday. Do you have another day?", "سه‌شنبه. سه‌شنبه نمی‌توانم بیایم. روز دیگری وقت دارید؟"],
+      ["them", "How about Thursday at two o'clock?", "پنج‌شنبه ساعت دو چطور است؟"],
+      ["you", "Thursday at two o'clock is good. Thank you.", "پنج‌شنبه ساعت دو خوب است. ممنون."]
+    ]
+  },
+  "respond": {
+    "setting": "منشی وقت جدیدی پیشنهاد می‌کند.",
+    "them": ["I have Friday at eight in the morning. Does that work?", "جمعه ساعت هشت صبح وقت دارم. خوب است؟"],
+    "ok": [
+      ["Do you have another day?", "روز دیگری وقت دارید؟"],
+      ["Yes, that's good. Thank you.", "بله، خوب است. ممنون."]
+    ],
+    "off": ["Are my test results ready?", "جواب آزمایشم آماده است؟", "اول جواب منشی را بدهید: این وقت خوب است یا روز دیگری می‌خواهید؟"],
+    "off2": 2
+  },
+  "variants": [
+    { "en": "Would Thursday at two work for you?", "fa": "پنج‌شنبه ساعت دو برایتان مناسب است؟", "like": "How about Thursday at two o'clock?", "voice": "m" },
+    { "en": "What day were you scheduled for?", "fa": "وقتتان برای چه روزی بود؟", "like": "Okay. When is your appointment?" },
+    { "en": "The earliest I have is Friday at eight.", "fa": "زودترین وقتی که دارم جمعه ساعت هشت است.", "like": "I have Friday at eight in the morning. Does that work?" }
+  ],
+  "task": [
+    ["قرص‌هایتان دارد تمام می‌شود.", 4],
+    ["هفتهٔ پیش آزمایش خون داده‌اید و خبری نشده است.", 5]
+  ],
+  "grammar": {
+    "title": "I can't …",
+    "explain": "برای «نمی‌توانم» بگویید «I can't» و بعد فعل.",
+    "examples": [
+      ["I can't come on Tuesday.", "سه‌شنبه نمی‌توانم بیایم."],
+      ["I can't hear you.", "صدایتان را نمی‌شنوم."],
+      ["I can't find it.", "پیدایش نمی‌کنم."]
+    ],
+    "wrong": "I no can come.",
+    "right": "I can't come.",
+    "why": "«can't» شکل منفیِ «can» است و قبل از فعل می‌آید."
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

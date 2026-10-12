@@ -1,0 +1,199 @@
+{
+  "id": "haircut",
+  "scenario": "services",
+  "stage": 2,
+  "minutes": 8,
+  "title": {
+    "fa": "آرایشگاه و سالن ناخن",
+    "en": "Barber, hair salon and nail salon"
+  },
+  "intro": "در این درس یاد می‌گیرید در آرایشگاه بگویید موهایتان را چطور کوتاه کنند، قیمت را بپرسید و در سالن ناخن خدمتی را که می‌خواهید بگویید.",
+  "note": "در آرایشگاه و سالن ناخن هم معمولاً انعام می‌دهند؛ خیلی‌ها حدود ۱۵ تا ۲۰ درصد می‌دهند.",
+  "canDo": "حالا می‌توانید در آرایشگاه بگویید چه می‌خواهید و قیمت را بپرسید.",
+  "mission": "در آرایشگاه، این بار قبل از نشستن بپرسید: How much is a haircut?",
+  "them": {
+    "role": "آرایشگر",
+    "voice": "b"
+  },
+  "phrases": [
+    {
+      "en": "I'd like a haircut, please.",
+      "fa": "می‌خواهم موهایم را کوتاه کنم، لطفاً.",
+      "ph": "آیْد لایک اِ هِر‌کات، پْلیز",
+      "note": "در سالن ناخن: «I'd like a manicure.\u200e» یعنی مانیکور می‌خواهم.",
+      "chunks": [
+        "I'd like",
+        "a haircut,",
+        "please."
+      ]
+    },
+    {
+      "en": "Just a little, please.",
+      "fa": "فقط کمی، لطفاً.",
+      "ph": "جاست اِ لیتِل، پْلیز",
+      "note": "وقتی می‌خواهید فقط کمی کوتاه شود. به این «a trim» هم می‌گویند.",
+      "chunks": [
+        "Just a little,",
+        "please."
+      ]
+    },
+    {
+      "en": "A little shorter, please.",
+      "fa": "کمی کوتاه‌تر، لطفاً.",
+      "ph": "اِ لیتِل شُرتِر، پْلیز",
+      "note": "می‌توانید با دست هم نشان بدهید چقدر.",
+      "chunks": [
+        "A little shorter,",
+        "please."
+      ]
+    },
+    {
+      "en": "That's good. Thank you.",
+      "fa": "خوب است. ممنون.",
+      "ph": "دَتس گُد. تَنک یو",
+      "note": "وقتی آینه را نشانتان می‌دهند و راضی هستید.",
+      "chunks": [
+        "That's good.",
+        "Thank you."
+      ]
+    },
+    {
+      "en": "How much is a haircut?",
+      "fa": "قیمت کوتاه کردن مو چقدر است؟",
+      "ph": "هاو ماچ ایز اِ هِر‌کات؟",
+      "note": "قبل از شروع بپرسید.",
+      "chunks": [
+        "How much",
+        "is a haircut?"
+      ]
+    }
+  ],
+  "dialogue": {
+    "setting": "وارد آرایشگاه شده‌اید.",
+    "lines": [
+      [
+        "them",
+        "Hi! Do you have an appointment?",
+        "سلام! وقت قبلی دارید؟"
+      ],
+      [
+        "you",
+        "No. I'd like a haircut, please. How much is a haircut?",
+        "نه. می‌خواهم موهایم را کوتاه کنم، لطفاً. قیمتش چقدر است؟"
+      ],
+      [
+        "them",
+        "It's twenty-five dollars. Please have a seat.",
+        "بیست و پنج دلار. بفرمایید بنشینید."
+      ],
+      [
+        "them",
+        "How would you like it?",
+        "چطور کوتاه کنم؟"
+      ],
+      [
+        "you",
+        "Just a little, please.",
+        "فقط کمی، لطفاً."
+      ],
+      [
+        "them",
+        "Okay. How is this?",
+        "باشد. این‌طور چطور است؟"
+      ],
+      [
+        "you",
+        "A little shorter, please.",
+        "کمی کوتاه‌تر، لطفاً."
+      ],
+      [
+        "them",
+        "Okay. How is this?",
+        "باشد. این‌طور چطور است؟"
+      ],
+      [
+        "you",
+        "That's good. Thank you.",
+        "خوب است. ممنون."
+      ]
+    ]
+  },
+  "respond": {
+    "setting": "آرایشگر آینه را پشت سرتان می‌گیرد.",
+    "them": [
+      "How is this? Is it okay?",
+      "این‌طور چطور است؟ خوب است؟"
+    ],
+    "ok": [
+      [
+        "That's good. Thank you.",
+        "خوب است. ممنون."
+      ],
+      [
+        "A little shorter, please.",
+        "کمی کوتاه‌تر، لطفاً."
+      ]
+    ],
+    "off": [
+      "I'd like a haircut, please.",
+      "می‌خواهم موهایم را کوتاه کنم، لطفاً.",
+      "کارِ کوتاه کردن تمام شده است. آرایشگر می‌پرسد راضی هستید یا نه."
+    ],
+    "off2": 5
+  },
+  "variants": [
+    {
+      "en": "What are we doing today?",
+      "fa": "امروز موهایتان را چه کار کنیم؟",
+      "like": "How would you like it?"
+    },
+    {
+      "en": "How much do you want off?",
+      "fa": "چقدر کوتاه کنم؟",
+      "like": "How would you like it?",
+      "voice": "m"
+    },
+    {
+      "en": "How does that look?",
+      "fa": "چطور شده است؟",
+      "like": "Okay. How is this?"
+    }
+  ],
+  "task": [
+    [
+      "می‌خواهید قبل از نشستن روی صندلی قیمت را بدانید.",
+      5
+    ],
+    [
+      "نمی‌خواهید موهایتان زیاد کوتاه شود.",
+      2
+    ]
+  ],
+  "grammar": {
+    "title": "a little / shorter / longer",
+    "explain": "برای مقایسه، آخرِ کلمه‌های کوتاه «er» می‌آید: short می‌شود shorter. معنیِ «a little» هم «کمی» است.",
+    "examples": [
+      [
+        "A little shorter, please.",
+        "کمی کوتاه‌تر، لطفاً."
+      ],
+      [
+        "A little longer, please.",
+        "کمی بلندتر، لطفاً."
+      ],
+      [
+        "A little more, please.",
+        "کمی بیشتر، لطفاً."
+      ]
+    ],
+    "wrong": "A little more short, please.",
+    "right": "A little shorter, please.",
+    "why": "برای کلمه‌های کوتاه «er» می‌گذاریم، نه «more»."
+  },
+  "review": {
+    "status": "draft",
+    "language": null,
+    "teaching": null,
+    "safety": null
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "id": "emergency-911",
+  "scenario": "emergency",
+  "stage": 1,
+  "order": 6,
+  "minutes": 8,
+  "safetyCritical": true,
+  "title": { "fa": "کمک خواستن در وضعیت اضطراری", "en": "Asking for help in an emergency" },
+  "intro": "در آمریکا وقتی کسی فوراً به آمبولانس، آتش‌نشانی یا پلیس نیاز دارد، به شمارهٔ ۹۱۱ زنگ می‌زنند. اگر مطمئن نیستید اورژانسی است یا نه، زنگ بزنید؛ خودشان تصمیم می‌گیرند. در این درس فقط جمله‌ها را تمرین می‌کنیم.",
+  "note": "این فقط تمرین است. این برنامه هیچ‌وقت خودش به ۹۱۱ زنگ نمی‌زند.",
+  "canDo": "حالا می‌توانید در تماس اضطراری بگویید چه کمکی لازم دارید، آدرستان را بگویید و مترجم بخواهید.",
+  "mission": "آدرس خانه‌تان را به انگلیسی روی کاغذ بنویسید و آن را جایی بگذارید که همیشه جلوی چشمتان باشد، مثلاً کنار تلفن یا روی درِ یخچال.",
+  "them": { "role": "اپراتور ۹۱۱ (تمرینی)", "voice": "m" },
+  "phrases": [
+    { "en": "I need help.", "fa": "به کمک نیاز دارم.", "ph": "آی نید هِلپ", "note": "کوتاه‌ترین و مهم‌ترین جمله.", "chunks": ["I need", "help."] },
+    { "en": "I need an ambulance.", "fa": "آمبولانس لازم دارم.", "ph": "آی نید اَن اَمبیولِنس", "note": "برای پلیس: «I need the police.\u200e» برای آتش‌سوزی: «There is a fire.\u200e»", "chunks": ["I need", "an ambulance."] },
+    { "en": "My address is 25 Oak Street.", "fa": "آدرس من خیابان اوک، پلاک ۲۵ است.", "ph": "مای اَدْرِس ایز …", "note": "به‌جای این، آدرس خودتان را بگویید. آدرستان را به انگلیسی روی کاغذ بنویسید و کنار تلفن بگذارید. اگر بیرون از خانه هستید، آدرس خانه را نگویید؛ بگویید کجا هستید: «I am at …\u200e».", "chunks": ["My address is", "25 Oak Street."], "own": ["25", "Oak", "Street"] },
+    { "en": "I speak Farsi. I need an interpreter.", "fa": "من فارسی صحبت می‌کنم. مترجم لازم دارم.", "ph": "آی سْپیک فارسی. آی نید اَن اینتِرپْرِتِر", "note": "بسیاری از مراکز ۹۱۱ می‌توانند مترجم تلفنی بیاورند. تلفن را قطع نکنید و منتظر بمانید.", "chunks": ["I speak Farsi.", "I need", "an interpreter."] },
+    { "en": "Please send help.", "fa": "لطفاً کمک بفرستید.", "ph": "پْلیز سِند هِلپ", "note": "اگر چیز دیگری یادتان نیامد، همین را با آدرستان بگویید.", "chunks": ["Please", "send help."] }
+  ],
+  "dialogue": {
+    "setting": "تمرین تماس با ۹۱۱. این تماس واقعی نیست.",
+    "lines": [
+      ["them", "911, what is your emergency?", "۹۱۱، وضعیت اضطراری شما چیست؟"],
+      ["you", "I need an ambulance.", "آمبولانس لازم دارم."],
+      ["them", "What is the address of the emergency?", "آدرس محل حادثه کجاست؟"],
+      ["you", "My address is 25 Oak Street.", "آدرس من خیابان اوک، پلاک ۲۵ است."],
+      ["them", "What happened?", "چه اتفاقی افتاده؟"],
+      ["you", "My husband fell. He is hurt.", "شوهرم زمین خورده. آسیب دیده."],
+      ["them", "Help is on the way. Stay on the line.", "کمک در راه است. تماس را قطع نکنید."]
+    ]
+  },
+  "respond": {
+    "setting": "تمرین: اپراتور جواب می‌دهد.",
+    "them": ["911, what is your emergency?", "۹۱۱، وضعیت اضطراری شما چیست؟"],
+    "ok": [
+      ["I need an ambulance.", "آمبولانس لازم دارم."],
+      ["I need help. I speak Farsi.", "به کمک نیاز دارم. من فارسی صحبت می‌کنم."],
+      ["I need the police.", "پلیس لازم دارم."]
+    ],
+    "off": ["Hello! How are you?", "سلام! حال شما چطور است؟", "در تماس اضطراری لازم نیست احوال‌پرسی کنید. کوتاه بگویید چه کمکی لازم دارید."]
+  },
+  "variants": [
+    { "en": "Where is your emergency?", "fa": "محل حادثه کجاست؟", "like": "What is the address of the emergency?" },
+    { "en": "Do you need police, fire, or ambulance?", "fa": "پلیس لازم دارید، آتش‌نشانی یا آمبولانس؟", "like": "911, what is your emergency?", "voice": "b" },
+    { "en": "Don't hang up.", "fa": "تلفن را قطع نکنید.", "like": "Help is on the way. Stay on the line." }
+  ],
+  "task": [
+    ["اپراتور انگلیسی حرف می‌زند و شما نمی‌فهمید.", 4],
+    ["در خانه هستید و اپراتور می‌پرسد کجا هستید.", 3]
+  ],
+  "grammar": {
+    "title": "I need …",
+    "explain": "برای گفتن اینکه چه چیزی لازم دارید، بگویید «I need» و بعد آن چیز.",
+    "examples": [
+      ["I need help.", "به کمک نیاز دارم."],
+      ["I need an ambulance.", "آمبولانس لازم دارم."],
+      ["I need the police.", "پلیس لازم دارم."]
+    ],
+    "wrong": "I need ambulance.",
+    "right": "I need an ambulance.",
+    "why": "قبل از ambulance و interpreter کلمهٔ «an» می‌آید. ولی اگر در لحظهٔ اضطرار یادتان رفت، نگران نباشید؛ باز هم منظورتان را می‌فهمند."
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

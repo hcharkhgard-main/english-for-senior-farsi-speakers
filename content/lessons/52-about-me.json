@@ -1,0 +1,64 @@
+{
+  "id": "about-me",
+  "scenario": "social",
+  "stage": 1,
+  "order": 52,
+  "minutes": 7,
+  "title": { "fa": "چند کلمه دربارهٔ خودتان", "en": "A little about me" },
+  "intro": "وقتی با همسایه یا آشنای تازه‌ای گپ می‌زنید، معمولاً چند سؤال ساده دربارهٔ خودتان می‌پرسند. در این درس جواب این سؤال‌ها را یاد می‌گیرید.",
+  "canDo": "حالا می‌توانید در یک گپ کوتاه بگویید اهل کجایید، با چه کسی زندگی می‌کنید و چند وقت است اینجا هستید.",
+  "mission": "وقتی همسایه یا آشنایی پرسید اهل کجایید، با لبخند جواب بدهید: I'm from Iran.",
+  "them": { "role": "همسایه", "voice": "m" },
+  "phrases": [
+    { "en": "I'm from Iran.", "fa": "من اهل ایران هستم.", "ph": "آیْم فْرام ایران", "note": "جوابِ «Where are you from?\u200e» است، یعنی «اهل کجا هستید؟». اگر دوست داشتید، اسم شهرتان را هم بگویید.", "chunks": ["I'm from", "Iran."] },
+    { "en": "I have two children.", "fa": "دو فرزند دارم.", "ph": "آی هَو تو چیلدْرِن", "note": "یک فرزند می‌شود «one child». پسر «son»، دختر «daughter» و نوه «grandchild» است.", "chunks": ["I have", "two children."], "own": ["two", "children"] },
+    { "en": "I live with my daughter.", "fa": "با دخترم زندگی می‌کنم.", "ph": "آی لیو ویت مای داتِر", "note": "به‌جای «my daughter» می‌توانید بگویید: «my son» (پسرم)، «my husband» (شوهرم)، «my wife» (خانمم) یا «my family» (خانواده‌ام).", "chunks": ["I live", "with my daughter."], "own": ["daughter"] },
+    { "en": "I'm retired.", "fa": "بازنشسته هستم.", "ph": "آیْم ریتایِرد", "note": "جوابِ «Do you work?\u200e» (کار می‌کنید؟) یا «What do you do?\u200e» (کارتان چیست؟) است.", "chunks": ["I'm retired."] },
+    { "en": "I've been here for two years.", "fa": "دو سال است که اینجا هستم.", "ph": "آیْو بین هی‌یِر فُر تو ییِرز", "note": "جوابِ «How long have you been here?\u200e» است. مدت خودتان را بگویید: «six months» (شش ماه)، «one year» (یک سال)، «ten years» (ده سال).", "chunks": ["I've been here", "for two years."], "own": ["two", "years"] }
+  ],
+  "dialogue": {
+    "setting": "همسایه‌تان را جلوی صندوق‌های پست می‌بینید و با هم گپ می‌زنید.",
+    "lines": [
+      ["them", "Where are you from?", "اهل کجا هستید؟"],
+      ["you", "I'm from Iran.", "من اهل ایران هستم."],
+      ["them", "Oh, nice! Do you have family here?", "چه خوب! اینجا خانواده دارید؟"],
+      ["you", "Yes. I have two children. I live with my daughter.", "بله. دو فرزند دارم. با دخترم زندگی می‌کنم."],
+      ["them", "How long have you been here?", "چند وقت است اینجا هستید؟"],
+      ["you", "I've been here for two years.", "دو سال است که اینجا هستم."],
+      ["them", "That's great. Do you work?", "چه عالی. کار می‌کنید؟"],
+      ["you", "No. I'm retired.", "نه. بازنشسته هستم."]
+    ]
+  },
+  "respond": {
+    "setting": "همسایه‌تان در راهرو سر صحبت را با شما باز کرده است.",
+    "them": ["Do you have family here?", "اینجا خانواده دارید؟"],
+    "ok": [
+      ["Yes. I have two children.", "بله. دو فرزند دارم."],
+      ["Yes. I live with my daughter.", "بله. با دخترم زندگی می‌کنم."]
+    ],
+    "off": ["I'm retired.", "بازنشسته هستم.", "جملهٔ درستی است، ولی او دربارهٔ خانواده‌تان پرسید، نه کارتان. از فرزندان یا خانواده‌تان بگویید."],
+    "off2": 5
+  },
+  "variants": [
+    { "en": "Where are you from originally?", "fa": "اصالتاً اهل کجا هستید؟", "like": "Where are you from?" },
+    { "en": "How long have you lived here?", "fa": "چند وقت است اینجا زندگی می‌کنید؟", "like": "How long have you been here?", "voice": "b" },
+    { "en": "What do you do?", "fa": "کارتان چیست؟", "like": "That's great. Do you work?" }
+  ],
+  "task": [
+    ["همسایه می‌پرسد اهل کدام کشور هستید.", 1],
+    ["آشنای تازه‌ای می‌پرسد چند وقت است به آمریکا آمده‌اید.", 5]
+  ],
+  "grammar": {
+    "title": "I have … / I am …",
+    "explain": "برای چیزهایی که دارید، مثل فرزند، خانواده یا وقتِ دکتر، بگویید «I have». برای سن، کار و حال خودتان بگویید «I am» یا کوتاه‌شده‌اش «I'm».",
+    "examples": [
+      ["I have two children.", "دو فرزند دارم."],
+      ["I'm retired.", "بازنشسته هستم."],
+      ["I am sixty-five years old.", "شصت و پنج سال دارم."]
+    ],
+    "wrong": "I have sixty-five years.",
+    "right": "I am sixty-five years old.",
+    "why": "در فارسی می‌گوییم «شصت و پنج سال دارم»، ولی در انگلیسی سن را با «I am» می‌گویند، نه با «I have»."
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

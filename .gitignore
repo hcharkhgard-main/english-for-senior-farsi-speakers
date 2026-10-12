@@ -1,0 +1,9 @@
+node_modules/
+dist-artifact/
+tests/e2e/shots/
+audio-src/logs/
+audio-src/requests.json
+audio-src/verify-report.json
+*.tmp.mp3
+.DS_Store
+audio-src/clips/

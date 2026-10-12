@@ -1,0 +1,174 @@
+{
+  "id": "holiday-greetings",
+  "scenario": "occasions",
+  "stage": 2,
+  "minutes": 8,
+  "title": {
+    "fa": "تبریک جشن‌ها و تعطیلات",
+    "en": "Holiday greetings"
+  },
+  "intro": "در آمریکا آخر سال چند جشن بزرگ پشت سر هم است: روز شکرگزاری در آخر نوامبر، کریسمس در ۲۵ دسامبر و سال نو در اول ژانویه. در این درس یاد می‌گیرید تبریک بگویید و به تبریک دیگران جواب بدهید.",
+  "canDo": "حالا می‌توانید جشن‌های آمریکایی را تبریک بگویید و دربارهٔ نوروز توضیح بدهید.",
+  "mission": "وقتی یکی از این جشن‌ها نزدیک شد، به همسایه یا صندوق‌دار تبریک بگویید؛ مثلاً در ماه دسامبر: Happy holidays!",
+  "them": {
+    "role": "همسایه",
+    "voice": "b"
+  },
+  "phrases": [
+    {
+      "en": "Happy Thanksgiving!",
+      "fa": "روز شکرگزاری مبارک!",
+      "ph": "هَپی تَنکس‌گیوینگ",
+      "note": "روز شکرگزاری چهارمین پنج‌شنبهٔ ماه نوامبر است. خانواده‌ها دور هم جمع می‌شوند و معمولاً بوقلمون می‌خورند.",
+      "chunks": [
+        "Happy",
+        "Thanksgiving!"
+      ]
+    },
+    {
+      "en": "Merry Christmas!",
+      "fa": "کریسمس مبارک!",
+      "ph": "مِری کْریسمِس",
+      "note": "اگر مطمئن نیستید طرف مقابل کریسمس را جشن می‌گیرد، بگویید «Happy holidays!\u200e» یعنی «عیدتان مبارک».",
+      "chunks": [
+        "Merry",
+        "Christmas!"
+      ]
+    },
+    {
+      "en": "Happy New Year!",
+      "fa": "سال نو مبارک!",
+      "ph": "هَپی نیو ییِر",
+      "note": "از آخر دسامبر تا چند روز بعد از اول ژانویه می‌گویند.",
+      "chunks": [
+        "Happy",
+        "New Year!"
+      ]
+    },
+    {
+      "en": "Thank you. Same to you!",
+      "fa": "ممنون. برای شما هم همین‌طور!",
+      "ph": "تَنک یو. سِیم تو یو",
+      "note": "جواب تبریکِ عیدها و جشن‌های عمومی. (برای «Happy birthday» و «Congratulations» فقط بگویید «Thank you».)",
+      "chunks": [
+        "Thank you.",
+        "Same to you!"
+      ]
+    },
+    {
+      "en": "We celebrate Nowruz, the Persian New Year.",
+      "fa": "ما نوروز را جشن می‌گیریم؛ سال نوی ایرانی.",
+      "ph": "وی سِلِبرِیت نوروز، دِ پِرژِن نیو ییِر",
+      "note": "خیلی از آمریکایی‌ها دوست دارند دربارهٔ نوروز بشنوند.",
+      "chunks": [
+        "We celebrate Nowruz,",
+        "the Persian",
+        "New Year."
+      ]
+    }
+  ],
+  "dialogue": {
+    "setting": "آخر نوامبر است و همسایه را جلوی در می‌بینید.",
+    "lines": [
+      [
+        "them",
+        "Happy Thanksgiving, Maryam!",
+        "روز شکرگزاری مبارک، مریم!"
+      ],
+      [
+        "you",
+        "Thank you. Same to you!",
+        "ممنون. برای شما هم همین‌طور!"
+      ],
+      [
+        "them",
+        "Do you have plans for the holidays?",
+        "برای تعطیلات برنامه‌ای دارید؟"
+      ],
+      [
+        "you",
+        "Yes. My family is coming for dinner.",
+        "بله. خانواده‌ام برای شام می‌آیند."
+      ],
+      [
+        "them",
+        "That sounds wonderful. Do you celebrate Christmas?",
+        "چه عالی. شما کریسمس را جشن می‌گیرید؟"
+      ],
+      [
+        "you",
+        "We celebrate Nowruz, the Persian New Year. It's in March.",
+        "ما نوروز را جشن می‌گیریم؛ سال نوی ایرانی. در ماه مارس است."
+      ],
+      [
+        "them",
+        "How interesting! Happy holidays!",
+        "چه جالب! عیدتان مبارک!"
+      ]
+    ]
+  },
+  "respond": {
+    "setting": "ماه دسامبر است و صندوق‌دار فروشگاه به شما می‌گوید:",
+    "them": [
+      "Merry Christmas!",
+      "کریسمس مبارک!"
+    ],
+    "ok": [
+      [
+        "Thank you. Same to you!",
+        "ممنون. برای شما هم همین‌طور!"
+      ],
+      [
+        "Merry Christmas!",
+        "کریسمس مبارک!"
+      ],
+      [
+        "Happy holidays!",
+        "عیدتان مبارک!"
+      ]
+    ],
+    "off": [
+      "I'm fine, thank you. And you?",
+      "خوبم، ممنون. شما چطورید؟",
+      "او حال شما را نپرسید؛ تبریک گفت. شما هم تبریک بگویید یا تشکر کنید."
+    ],
+    "off2": 1
+  },
+  "task": [
+    [
+      "اول ژانویه است و همسایه را می‌بینید.",
+      3
+    ],
+    [
+      "همکارتان می‌پرسد شما چه عیدی را جشن می‌گیرید.",
+      5
+    ]
+  ],
+  "grammar": {
+    "title": "Happy … !",
+    "explain": "برای تبریکِ بیشتر جشن‌ها بگویید «Happy» و بعد اسم جشن. فقط برای کریسمس معمولاً «Merry» می‌گویند.",
+    "examples": [
+      [
+        "Happy birthday!",
+        "تولدتان مبارک!"
+      ],
+      [
+        "Happy New Year!",
+        "سال نو مبارک!"
+      ],
+      [
+        "Happy holidays!",
+        "عیدتان مبارک!"
+      ]
+    ],
+    "wrong": "Congratulations Christmas!",
+    "right": "Merry Christmas!",
+    "why": "«Congratulations» برای موفقیت و عروسی است، نه برای جشن‌های سالانه."
+  },
+  "review": {
+    "status": "draft",
+    "language": null,
+    "teaching": null,
+    "safety": null
+  }
+}

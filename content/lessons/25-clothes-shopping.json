@@ -1,0 +1,57 @@
+{
+  "id": "clothes-shopping",
+  "scenario": "store",
+  "stage": 2,
+  "minutes": 8,
+  "title": { "fa": "خرید لباس و کفش", "en": "Shopping for clothes" },
+  "intro": "در این درس یاد می‌گیرید در فروشگاه لباس اندازهٔ دیگری بخواهید، اتاق پرو را پیدا کنید و بگویید لباس بزرگ است یا کوچک.",
+  "canDo": "حالا می‌توانید لباس را امتحان کنید، اندازهٔ دیگری بخواهید و بگویید می‌خرید یا نه.",
+  "mission": "در خرید بعدیِ لباس، از فروشنده بپرسید: Where is the fitting room?",
+  "them": { "role": "فروشنده", "voice": "b" },
+  "phrases": [
+    { "en": "Where is the fitting room?", "fa": "اتاق پرو کجاست؟", "ph": "وِر ایز دِ فیتینگ روم؟", "note": "جایی که لباس را امتحان می‌کنید.", "chunks": ["Where is", "the fitting room?"] },
+    { "en": "Do you have this in a larger size?", "fa": "سایز بزرگ‌ترِ این را دارید؟", "ph": "دو یو هَو دیس این اِ لارجِر سایز؟", "note": "برای کوچک‌تر: «a smaller size». اندازه‌ها: small، medium، large.", "chunks": ["Do you have this", "in a larger size?"] },
+    { "en": "It's too small.", "fa": "زیادی کوچک است.", "ph": "ایتس تو سْمال", "note": "too big یعنی زیادی بزرگ؛ too tight یعنی زیادی تنگ.", "chunks": ["It's", "too small."] },
+    { "en": "Is this on sale?", "fa": "این حراج است؟", "ph": "ایز دیس آن سِیل؟", "note": "on sale یعنی با تخفیف.", "chunks": ["Is this", "on sale?"] },
+    { "en": "I'll take it.", "fa": "همین را می‌خرم.", "ph": "آیْل تِیک ایت", "note": "اگر نمی‌خواهید: «No, thank you. I'm just looking.\u200e»", "chunks": ["I'll take it."] }
+  ],
+  "dialogue": {
+    "setting": "در فروشگاه لباس، یک ژاکت پسندیده‌اید. وسط گفت‌وگو آن را می‌پوشید و پیش فروشنده برمی‌گردید.",
+    "lines": [
+      ["them", "Hi! Can I help you find anything?", "سلام! می‌توانم کمکتان کنم؟"],
+      ["you", "Yes. Where is the fitting room?", "بله. اتاق پرو کجاست؟"],
+      ["them", "It's in the back, on the left.", "ته فروشگاه، سمت چپ."],
+      ["you", "Excuse me. It's too small. Do you have this in a larger size?", "ببخشید. زیادی کوچک است. سایز بزرگ‌ترِ این را دارید؟"],
+      ["them", "Let me check. Yes, here is a large.", "بگذارید نگاه کنم. بله، این هم سایز لارج."],
+      ["you", "Perfect. I'll take it.", "عالی است. همین را می‌خرم."]
+    ]
+  },
+  "respond": {
+    "setting": "لباس را پوشیده‌اید و فروشنده می‌پرسد.",
+    "them": ["How does it fit?", "اندازه‌اش چطور است؟"],
+    "ok": [
+      ["It's too small.", "زیادی کوچک است."],
+      ["It's good. I'll take it.", "خوب است. همین را می‌خرم."],
+      ["Do you have this in a larger size?", "سایز بزرگ‌ترِ این را دارید؟"]
+    ],
+    "off": ["Where is the fitting room?", "اتاق پرو کجاست؟", "لباس را پوشیده‌اید. فروشنده پرسید اندازه‌اش خوب است یا نه."],
+    "off2": 4
+  },
+  "task": [
+    ["می‌خواهید بدانید کتی که برداشته‌اید تخفیف دارد یا نه.", 4],
+    ["می‌خواهید پیراهن را قبل از خرید بپوشید.", 1]
+  ],
+  "grammar": {
+    "title": "too …",
+    "explain": "وقتی چیزی بیش از اندازه است، قبل از آن «too» بگویید.",
+    "examples": [
+      ["It's too small.", "زیادی کوچک است."],
+      ["It's too big.", "زیادی بزرگ است."],
+      ["It's too expensive.", "زیادی گران است."]
+    ],
+    "wrong": "It's very small for me.",
+    "right": "It's too small.",
+    "why": "«very» یعنی خیلی، ولی «too» یعنی بیشتر از حدی که به درد بخورد."
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

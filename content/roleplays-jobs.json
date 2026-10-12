@@ -1,0 +1,387 @@
+{
+  "version": 1,
+  "roleplays": [
+    {
+      "id": "rp-rideshare", "scenario": "work", "stage": 3,
+      "title": "رانندهٔ تاکسی اینترنتی: مسافر تا فرودگاه",
+      "setting": "شما رانندهٔ تاکسی اینترنتی هستید. کنار خیابان نگه داشته‌اید و مسافر به طرف ماشین می‌آید.",
+      "goal": "مطمئن شوید مسافر را درست سوار کرده‌اید، مقصد را بپرسید و موقع رسیدن خداحافظی کنید.",
+      "note": "کرایه از راه برنامهٔ تاکسی اینترنتی پرداخت می‌شود. لازم نیست شمارهٔ تلفن یا اطلاعات شخصی‌تان را به مسافر بدهید.",
+      "them": { "role": "مسافر", "persona": "a friendly rideshare passenger named Sarah going to the airport; the learner is the driver; speak in short simple sentences, make a little small talk and thank the driver at the end; never ask for the driver's phone number, address or any personal or payment details", "voice": "k" },
+      "turns": [
+        { "them": ["Hi! Who are you here for?", "سلام! دنبال چه کسی آمده‌اید؟"],
+          "check": { "q": "چه پرسید؟", "right": "دنبال چه کسی آمده‌اید؟", "wrong": ["اسم شما چیست؟", "کجا می‌روید؟"] },
+          "replies": [
+            { "en": "Hi, are you Sarah?", "fa": "سلام، شما سارا هستید؟", "keys": ["are you"], "then": ["Yes, I'm Sarah.", "بله، من سارا هستم."] },
+            { "en": "I'm here for Sarah.", "fa": "دنبال سارا آمده‌ام.", "keys": ["here for", "i'm here"], "then": ["Great. That's me.", "عالی. خودم هستم."] }
+          ] },
+        { "them": ["Can I put my bag in the trunk?", "می‌توانم ساکم را در صندوق عقب بگذارم؟"],
+          "replies": [
+            { "en": "Sure. Let me help you.", "fa": "حتماً. بگذارید کمکتان کنم.", "keys": ["help", "let me", "sure"] },
+            { "en": "Yes, of course. The trunk is open.", "fa": "بله، البته. صندوق عقب باز است.", "keys": ["open", "of course", "yes"] }
+          ] },
+        { "them": ["Thank you! Okay, I'm ready.", "ممنون! خب، من آماده‌ام."],
+          "replies": [
+            { "en": "Are you going to the airport?", "fa": "به فرودگاه می‌روید؟", "keys": ["are you"], "then": ["Yes, the airport. Terminal two, please.", "بله، فرودگاه. ترمینال دو، لطفاً."], "thenCheck": { "q": "کدام ترمینال؟", "right": "ترمینال ۲", "wrong": ["ترمینال ۱۲", "ترمینال ۳"] } },
+            { "en": "Okay. We're going to the airport, right?", "fa": "باشد. به فرودگاه می‌رویم، درست است؟", "keys": ["right", "we're"], "then": ["That's right. Terminal two, please.", "درست است. ترمینال دو، لطفاً."], "thenCheck": { "q": "کدام ترمینال؟", "right": "ترمینال ۲", "wrong": ["ترمینال ۱۲", "ترمینال ۳"] } }
+          ] },
+        { "them": ["My flight is at six. I'm a little late.", "پروازم ساعت شش است. کمی دیرم شده است."],
+          "check": { "right": "پروازم ساعت شش است. کمی دیرم شده است.", "wrong": ["پروازم ساعت شش است. وقت زیادی دارم.", "پروازم شش ساعت تأخیر دارد."] },
+          "replies": [
+            { "en": "Don't worry. It's about twenty minutes.", "fa": "نگران نباشید. حدود بیست دقیقه راه است.", "keys": ["worry", "twenty", "minutes"], "then": ["Oh, good. Thank you.", "چه خوب. ممنون."] },
+            { "en": "Could you say that again, please?", "fa": "می‌شود لطفاً دوباره بگویید؟", "keys": ["again", "say"], "then": ["Sure. My flight is at six o'clock. I don't have much time.", "حتماً. پروازم ساعت شش است. وقت زیادی ندارم."] }
+          ] },
+        { "them": ["Excuse me, it's a little cold in here.", "ببخشید، اینجا کمی سرد است."],
+          "check": { "right": "ببخشید، اینجا کمی سرد است.", "wrong": ["ببخشید، اینجا کمی گرم است.", "ببخشید، کمی تند می‌روید."] },
+          "replies": [
+            { "en": "No problem. I'll turn the heat on.", "fa": "مشکلی نیست. بخاری را روشن می‌کنم.", "keys": ["heat", "turn", "problem"], "then": ["Thank you. That's better.", "ممنون. بهتر شد."] },
+            { "en": "I'm sorry. Is this better?", "fa": "ببخشید. این‌طور بهتر است؟", "keys": ["better", "sorry"], "then": ["Yes, much better. Thank you.", "بله، خیلی بهتر شد. ممنون."] }
+          ] },
+        { "them": ["Is this terminal two?", "اینجا ترمینال دو است؟"],
+          "replies": [
+            { "en": "Yes. We're here.", "fa": "بله. رسیدیم.", "keys": ["we're here", "here", "yes"] },
+            { "en": "Yes, it is. Do you have everything?", "fa": "بله، همین‌جاست. همه‌چیزتان را برداشته‌اید؟", "keys": ["everything"], "then": ["Yes. I just need my bag from the trunk.", "بله. فقط باید ساکم را از صندوق عقب بردارم."] }
+          ] },
+        { "them": ["Thank you so much. Five stars for you!", "خیلی ممنون. پنج ستاره به شما می‌دهم!"],
+          "replies": [
+            { "en": "Thank you. Have a good day!", "fa": "ممنون. روز خوبی داشته باشید!", "keys": ["day", "thank"] },
+            { "en": "Thank you very much. Have a safe flight!", "fa": "خیلی ممنون. پرواز خوبی داشته باشید!", "keys": ["flight", "safe"] }
+          ] }
+      ]
+    },
+    {
+      "id": "rp-delivery", "scenario": "work", "stage": 3,
+      "title": "تحویل بسته دمِ درِ مشتری",
+      "setting": "شما مأمور تحویل هستید. با یک جعبه جلوی خانهٔ مشتری ایستاده‌اید و او در را باز می‌کند.",
+      "goal": "بگویید بسته برای چه کسی است، امضا بگیرید و به سؤال‌های مشتری جواب بدهید.",
+      "note": "مأمور تحویل هیچ‌وقت شمارهٔ کارت بانکی یا رمز کارتِ مشتری را نمی‌خواهد و وارد خانه نمی‌شود. اسم‌ها و سفارش‌های این تمرین ساختگی‌اند.",
+      "them": { "role": "مشتری", "persona": "a polite customer named John receiving a package at his front door; the learner is the delivery driver; speak in short simple sentences, sign for the package and ask one simple question about a second box; never offer or ask for card numbers, cash, codes or other personal details", "voice": "a" },
+      "turns": [
+        { "them": ["Hello. Can I help you?", "سلام. می‌توانم کمکتان کنم؟"],
+          "replies": [
+            { "en": "Hi, I have a delivery for John.", "fa": "سلام، برای جان بسته آورده‌ام.", "keys": ["delivery"], "then": ["That's me. Thank you!", "خودم هستم. ممنون!"] },
+            { "en": "Hi. Are you John? I have a package for you.", "fa": "سلام. شما جان هستید؟ بسته‌ای برای شما دارم.", "keys": ["package", "are you"], "then": ["Yes, I'm John. Thank you!", "بله، من جان هستم. ممنون!"] }
+          ] },
+        { "them": ["Do I need to sign for it?", "لازم است امضا کنم؟"],
+          "check": { "q": "چه پرسید؟", "right": "لازم است امضا کنم؟", "wrong": ["لازم است پولش را بدهم؟", "می‌توانم بازش کنم؟"] },
+          "replies": [
+            { "en": "Yes. Can you sign here, please?", "fa": "بله. می‌شود لطفاً اینجا را امضا کنید؟", "keys": ["sign here", "can you"] },
+            { "en": "Yes, please. I need your signature.", "fa": "بله، لطفاً. امضای شما را لازم دارم.", "keys": ["signature", "need", "yes"] }
+          ] },
+        { "them": ["Here you go. I ordered two boxes. Where is the other one?", "بفرمایید. من دو تا جعبه سفارش داده بودم. آن یکی کجاست؟"],
+          "check": { "right": "من دو تا جعبه سفارش داده بودم. آن یکی کجاست؟", "wrong": ["من فقط یک جعبه سفارش داده بودم. این یکی مال من نیست.", "این جعبه را کجا بگذارم؟"] },
+          "replies": [
+            { "en": "I only have one box today.", "fa": "امروز فقط یک جعبه دارم.", "keys": ["today", "one box"], "then": ["Oh, okay. Maybe it will come tomorrow.", "آها، باشد. شاید فردا برسد."] },
+            { "en": "I'm sorry, I don't know. I only have this one.", "fa": "متأسفم، نمی‌دانم. فقط همین یکی را دارم.", "keys": ["sorry", "know", "this one"], "then": ["That's okay. I will call the company.", "اشکالی ندارد. به شرکت زنگ می‌زنم."] }
+          ] },
+        { "them": ["This one is heavy. Can you leave it by the garage, please?", "این یکی سنگین است. می‌شود لطفاً آن را کنار گاراژ بگذارید؟"],
+          "check": { "q": "جعبه را کجا بگذارید؟", "right": "کنار گاراژ", "wrong": ["داخل گاراژ", "جلوی درِ خانه"] },
+          "replies": [
+            { "en": "Sure. No problem.", "fa": "حتماً. مشکلی نیست.", "keys": ["sure", "problem"] },
+            { "en": "Could you say that again, please?", "fa": "می‌شود لطفاً دوباره بگویید؟", "keys": ["again", "say"], "then": ["Sure. Please put the box over there. By the garage door.", "حتماً. لطفاً جعبه را آنجا بگذارید. کنار درِ گاراژ."] }
+          ] },
+        { "them": ["Thank you. That's perfect. Do you need anything else?", "ممنون. عالی شد. چیز دیگری لازم دارید؟"],
+          "replies": [
+            { "en": "No, that's all. Thank you.", "fa": "نه، همین بود. ممنون.", "keys": ["all", "no"] },
+            { "en": "I just need to take a picture.", "fa": "فقط باید یک عکس بگیرم.", "keys": ["picture", "take"], "then": ["Sure. Go ahead.", "حتماً. بفرمایید."] }
+          ] },
+        { "them": ["Have a good day! Drive safely.", "روز خوبی داشته باشید! با احتیاط رانندگی کنید."],
+          "replies": [
+            { "en": "Thank you. You too!", "fa": "ممنون. شما هم همین‌طور!", "keys": ["too", "thank"] },
+            { "en": "Thank you. Goodbye!", "fa": "ممنون. خداحافظ!", "keys": ["goodbye", "bye"] }
+          ] }
+      ]
+    },
+    {
+      "id": "rp-delivery-call", "scenario": "work", "stage": 3,
+      "title": "تماس با مشتری: درِ ورودی بسته است",
+      "setting": "شما غذا تحویل می‌دهید. جلوی یک مجتمع آپارتمانی هستید، ولی درِ ورودی بسته است. به مشتری زنگ زده‌اید و فقط صدا می‌شنوید.",
+      "goal": "بگویید چه کسی هستید، رمزِ در و شمارهٔ آپارتمان را بپرسید و بگویید سفارش را کجا می‌گذارید.",
+      "note": "رمزِ در و شمارهٔ آپارتمانِ این تمرین ساختگی‌اند. در کار واقعی، از داخل برنامهٔ کارتان به مشتری زنگ بزنید یا پیام بدهید.",
+      "phone": true,
+      "them": { "role": "مشتری (پشت تلفن)", "persona": "a friendly customer named Emma answering a phone call from a food delivery driver (the learner) who is at the closed building gate; give a practice gate code and apartment number in short simple sentences; never ask the driver for personal details and never give or ask for card numbers", "voice": "b" },
+      "turns": [
+        { "them": ["Hello?", "الو؟"],
+          "replies": [
+            { "en": "Hi, this is your delivery driver.", "fa": "سلام، مأمور تحویل سفارشتان هستم.", "keys": ["driver", "this is"] },
+            { "en": "Hello. I have your food delivery.", "fa": "سلام. غذایتان را آورده‌ام.", "keys": ["food", "i have"] }
+          ] },
+        { "them": ["Oh, hi! Are you here already?", "آها، سلام! به همین زودی رسیدید؟"],
+          "check": { "q": "چه پرسید؟", "right": "به همین زودی رسیدید؟", "wrong": ["هنوز نرسیده‌اید؟", "کی می‌رسید؟"] },
+          "replies": [
+            { "en": "Yes, I'm at the gate. It's closed.", "fa": "بله، جلوی درِ ورودی هستم. بسته است.", "keys": ["closed", "at the gate"] },
+            { "en": "Yes, but I can't get in. What is the gate code?", "fa": "بله، ولی نمی‌توانم وارد شوم. رمزِ درِ ورودی چیست؟", "keys": ["code", "get in"] }
+          ] },
+        { "them": ["Oh, sorry! The gate code is two, five, eight, zero.", "ای وای، ببخشید! رمزِ در این است: دو، پنج، هشت، صفر."],
+          "check": { "q": "رمزِ در چیست؟", "right": "2580", "wrong": ["2850", "2508"] },
+          "replies": [
+            { "en": "Two, five, eight, zero. Thank you.", "fa": "دو، پنج، هشت، صفر. ممنون.", "keys": ["thank", "thanks"] },
+            { "en": "Could you say that again, please?", "fa": "می‌شود لطفاً دوباره بگویید؟", "keys": ["again", "say"], "then": ["Sure. Two. Five. Eight. Zero.", "حتماً. دو. پنج. هشت. صفر."] }
+          ] },
+        { "them": ["Did the gate open?", "در باز شد؟"],
+          "replies": [
+            { "en": "Yes, I'm in. What is your apartment number?", "fa": "بله، وارد شدم. شمارهٔ آپارتمانتان چند است؟", "keys": ["apartment number", "what is"] },
+            { "en": "Yes, thank you. But I can't find your apartment.", "fa": "بله، ممنون. ولی آپارتمانتان را پیدا نمی‌کنم.", "keys": ["find", "can't"] }
+          ] },
+        { "them": ["It's apartment 12, on the second floor. But the elevator is not working.", "آپارتمان ۱۲ است، در طبقهٔ دوم. ولی آسانسور کار نمی‌کند."],
+          "check": { "right": "آپارتمان ۱۲، طبقهٔ دوم. ولی آسانسور کار نمی‌کند.", "wrong": ["آپارتمان ۲۰، طبقهٔ دوم. ولی آسانسور کار نمی‌کند.", "آپارتمان ۱۲، طبقهٔ دوم. با آسانسور بیایید."] },
+          "replies": [
+            { "en": "That's okay. I'll take the stairs.", "fa": "اشکالی ندارد. از پله‌ها می‌آیم.", "keys": ["stairs", "take the"], "then": ["Thank you so much!", "خیلی ممنون!"] },
+            { "en": "Okay. Apartment 12, second floor. I'm coming.", "fa": "باشد. آپارتمان ۱۲، طبقهٔ دوم. الان می‌آیم.", "keys": ["coming", "second"], "then": ["Great. Thank you!", "عالی. ممنون!"] }
+          ] },
+        { "them": ["I can't come to the door right now. My baby is sleeping.", "الان نمی‌توانم دمِ در بیایم. بچه‌ام خوابیده است."],
+          "check": { "right": "الان نمی‌توانم دمِ در بیایم. بچه‌ام خوابیده است.", "wrong": ["الان می‌آیم دمِ در.", "لطفاً زنگِ در را بزنید."] },
+          "replies": [
+            { "en": "No problem. Where should I leave it?", "fa": "مشکلی نیست. کجا بگذارمش؟", "keys": ["where", "should"], "then": ["At my door is fine. Thank you!", "همان دمِ درِ من خوب است. ممنون!"], "thenCheck": { "q": "سفارش را کجا بگذارید؟", "right": "دمِ درِ آپارتمانش", "wrong": ["دمِ درِ ورودی ساختمان", "پیش همسایه"] } },
+            { "en": "That's okay. I'll leave it at your door.", "fa": "اشکالی ندارد. دمِ درتان می‌گذارم.", "keys": ["i'll leave", "your door"], "then": ["Perfect. Thank you!", "عالی. ممنون!"] }
+          ] },
+        { "them": ["Thanks again. Have a good night!", "باز هم ممنون. شب خوبی داشته باشید!"],
+          "replies": [
+            { "en": "I left it at your door. Good night!", "fa": "دمِ درتان گذاشتم. شب به‌خیر!", "keys": ["left"] },
+            { "en": "You're welcome. Enjoy your food!", "fa": "خواهش می‌کنم. نوش جان!", "keys": ["welcome", "enjoy"] }
+          ] }
+      ]
+    },
+    {
+      "id": "rp-maintenance", "scenario": "work", "stage": 3,
+      "title": "تعمیرکار ساختمان: سینکی که نشتی دارد",
+      "setting": "شما تعمیرکار ساختمان هستید. درِ آپارتمان شمارهٔ دوازده را زده‌اید، چون مستأجر خبر داده که سینک آشپزخانه نشتی دارد.",
+      "goal": "خودتان را معرفی کنید، مشکل را ببینید و بگویید چه کاری می‌کنید و کی برمی‌گردید.",
+      "note": "همیشه اول در بزنید، خودتان را معرفی کنید و با اجازه وارد شوید. قبل از بستن آب یا قطع کردن برق هم خبر بدهید.",
+      "them": { "role": "مستأجر", "persona": "a polite tenant named Ms. Garcia whose kitchen sink is leaking; the learner is the building maintenance worker at her door; speak in short simple sentences, ask what they will do and when they will come back; never ask for personal details or offer money", "voice": "b" },
+      "turns": [
+        { "them": ["Who is it?", "کیه؟"],
+          "replies": [
+            { "en": "Hi, I'm from maintenance. I'm here to fix the sink.", "fa": "سلام، من از بخش تعمیرات ساختمان هستم. آمده‌ام سینک را درست کنم.", "keys": ["fix", "sink"] },
+            { "en": "Maintenance. May I come in?", "fa": "تعمیرات ساختمان. اجازه هست بیایم داخل؟", "keys": ["may i", "come in"] }
+          ] },
+        { "them": ["Oh, good. Please come in. The kitchen is this way.", "چه خوب. بفرمایید داخل. آشپزخانه از این طرف است."],
+          "check": { "right": "بفرمایید داخل. آشپزخانه از این طرف است.", "wrong": ["لطفاً بیرون منتظر بمانید.", "بفرمایید داخل. حمام از این طرف است."] },
+          "replies": [
+            { "en": "Thank you. Can you show me the problem?", "fa": "ممنون. می‌شود مشکل را نشانم بدهید؟", "keys": ["show", "problem"] },
+            { "en": "Thank you. Where is the leak?", "fa": "ممنون. نشتی کجاست؟", "keys": ["leak", "where"] }
+          ] },
+        { "them": ["It's under the sink. There is water on the floor.", "زیر سینک است. آب روی زمین ریخته است."],
+          "check": { "q": "نشتی کجاست؟", "right": "زیر سینک؛ آب روی زمین ریخته است.", "wrong": ["بالای سینک؛ آب از شیر می‌چکد.", "زیر یخچال؛ آب روی زمین ریخته است."] },
+          "replies": [
+            { "en": "I see. I need to turn off the water.", "fa": "متوجه شدم. باید آب را ببندم.", "keys": ["turn off", "need"], "then": ["That's fine.", "اشکالی ندارد."] },
+            { "en": "Okay. Let me take a look.", "fa": "باشد. بگذارید نگاهی بکنم.", "keys": ["look", "let me", "let me see"], "then": ["Sure. Thank you.", "حتماً. ممنون."] },
+            { "en": "Could you say that again, please?", "fa": "می‌شود لطفاً دوباره بگویید؟", "keys": ["again", "say"], "then": ["Sure. Look here. Under the sink. Water is coming out.", "حتماً. اینجا را ببینید. زیر سینک. آب بیرون می‌آید."] }
+          ] },
+        { "them": ["Can you fix it today? I have guests tonight.", "امروز می‌توانید درستش کنید؟ امشب مهمان دارم."],
+          "check": { "right": "امروز می‌توانید درستش کنید؟ امشب مهمان دارم.", "wrong": ["فردا می‌توانید درستش کنید؟ امروز مهمان دارم.", "لازم نیست امروز درستش کنید. عجله‌ای ندارم."] },
+          "replies": [
+            { "en": "I'm sorry. I need to order a part.", "fa": "متأسفم. باید یک قطعه سفارش بدهم.", "keys": ["order", "sorry"] },
+            { "en": "Not today. I need a new part.", "fa": "امروز نه. قطعهٔ نو لازم دارم.", "keys": ["not today", "new", "no"] }
+          ] },
+        { "them": ["Oh no. When can you come back?", "ای وای. کی می‌توانید برگردید؟"],
+          "replies": [
+            { "en": "I'll come back tomorrow morning.", "fa": "فردا صبح برمی‌گردم.", "keys": ["come back", "morning", "tomorrow"], "then": ["Okay. I will be home in the morning.", "باشد. صبح خانه هستم."] },
+            { "en": "Tomorrow, between nine and eleven.", "fa": "فردا، بین ساعت نُه و یازده.", "keys": ["between", "nine"], "then": ["Okay. That's fine.", "باشد. خوب است."] }
+          ] },
+        { "them": ["Can I use the sink tonight?", "امشب می‌توانم از سینک استفاده کنم؟"],
+          "check": { "q": "چه پرسید؟", "right": "امشب می‌توانم از سینک استفاده کنم؟", "wrong": ["امشب سینک را درست می‌کنید؟", "امشب می‌توانم از حمام استفاده کنم؟"] },
+          "replies": [
+            { "en": "No, please don't use it tonight.", "fa": "نه، لطفاً امشب از آن استفاده نکنید.", "keys": ["don't", "no"], "then": ["Okay. I understand.", "باشد. متوجه شدم."] },
+            { "en": "Please use the bathroom sink tonight.", "fa": "لطفاً امشب از روشوییِ دستشویی استفاده کنید.", "keys": ["bathroom"], "then": ["Good idea. Thank you.", "فکر خوبی است. ممنون."] }
+          ] },
+        { "them": ["Thank you for coming. See you tomorrow.", "ممنون که آمدید. فردا می‌بینمتان."],
+          "replies": [
+            { "en": "You're welcome. See you tomorrow.", "fa": "خواهش می‌کنم. فردا می‌بینمتان.", "keys": ["welcome", "see you"] },
+            { "en": "Thank you. Have a good evening!", "fa": "ممنون. عصر خوبی داشته باشید!", "keys": ["evening", "thank"] }
+          ] }
+      ]
+    },
+    {
+      "id": "rp-tailor", "scenario": "work", "stage": 3,
+      "title": "در خیاطی: کوتاه کردن شلوار و تنگ کردن کت",
+      "setting": "شما خیاط هستید و در مغازهٔ تعمیر لباس کار می‌کنید. آقایی با یک شلوار و یک کت وارد می‌شود.",
+      "goal": "بپرسید چه کاری لازم دارد، اندازه بگیرید و قیمت و روز تحویل را بگویید.",
+      "note": "قیمت‌ها و اندازه‌های این تمرین ساختگی‌اند. «one inch» یعنی یک اینچ، حدود دو و نیم سانتی‌متر.",
+      "them": { "role": "مشتری", "persona": "a polite customer named Mr. Lee at a tailor shop; the learner is the tailor; he wants his pants hemmed and his jacket taken in, asks the price and whether it can be ready by Thursday; speak in short simple sentences; never give or ask for card numbers or personal details", "voice": "a" },
+      "turns": [
+        { "them": ["Hi. Do you do alterations?", "سلام. تعمیر لباس انجام می‌دهید؟"],
+          "replies": [
+            { "en": "Yes, we do. How can I help you?", "fa": "بله، انجام می‌دهیم. چه کمکی از من برمی‌آید؟", "keys": ["help", "how can", "yes"] },
+            { "en": "Yes. What do you need?", "fa": "بله. چه کاری لازم دارید؟", "keys": ["need", "what do"] }
+          ] },
+        { "them": ["These pants are too long. And this jacket is too big.", "این شلوار زیادی بلند است. این کت هم زیادی گشاد است."],
+          "check": { "right": "این شلوار زیادی بلند است. این کت هم زیادی گشاد است.", "wrong": ["این شلوار زیادی کوتاه است. این کت هم زیادی تنگ است.", "این شلوار زیادی گشاد است. این کت هم زیادی بلند است."] },
+          "replies": [
+            { "en": "No problem. Please try them on.", "fa": "مشکلی نیست. لطفاً آن‌ها را پرو کنید.", "keys": ["try", "problem"], "then": ["Okay. One minute, please.", "باشد. یک دقیقه، لطفاً."] },
+            { "en": "Could you say that again, please?", "fa": "می‌شود لطفاً دوباره بگویید؟", "keys": ["again", "say"], "then": ["Sure. The pants are too long. The jacket is too big. I will try them on.", "حتماً. شلوار زیادی بلند است. کت زیادی گشاد است. الان می‌پوشمشان."] }
+          ] },
+        { "them": ["Okay, I'm ready. How do they look?", "خب، آماده‌ام. چطور است؟"],
+          "replies": [
+            { "en": "How short would you like the pants?", "fa": "شلوار را چقدر کوتاه کنم؟", "keys": ["how short", "would"] },
+            { "en": "Please stand straight. Let me measure.", "fa": "لطفاً صاف بایستید. بگذارید اندازه بگیرم.", "keys": ["measure", "stand"], "then": ["Sure. Like this?", "حتماً. این‌طور؟"] }
+          ] },
+        { "them": ["I'd like the pants one inch shorter. And the jacket is loose here.", "می‌خواهم شلوار یک اینچ کوتاه‌تر شود. کت هم اینجا گشاد است."],
+          "check": { "right": "می‌خواهم شلوار یک اینچ کوتاه‌تر شود. کت هم اینجا گشاد است.", "wrong": ["می‌خواهم شلوار یک اینچ بلندتر شود. کت هم اینجا تنگ است.", "می‌خواهم شلوار دو اینچ کوتاه‌تر شود. کت خوب است."] },
+          "replies": [
+            { "en": "Okay. I can take in the jacket.", "fa": "باشد. می‌توانم کت را تنگ کنم.", "keys": ["take in", "i can", "okay"] },
+            { "en": "One inch shorter. And the jacket a little tighter?", "fa": "یک اینچ کوتاه‌تر. و کت کمی تنگ‌تر؟", "keys": ["tighter", "little"], "then": ["Yes, exactly.", "بله، دقیقاً."] }
+          ] },
+        { "them": ["How much will it be?", "چقدر می‌شود؟"],
+          "replies": [
+            { "en": "Fifteen for the pants. Thirty for the jacket.", "fa": "پانزده دلار برای شلوار. سی دلار برای کت.", "keys": ["pants", "jacket", "fifteen and thirty"], "then": ["So forty-five dollars. Okay.", "پس چهل و پنج دلار. باشد."], "thenCheck": { "q": "مشتری جمع را چقدر حساب کرد؟", "right": "$45", "wrong": ["$54", "$40"] } },
+            { "en": "That will be forty-five dollars.", "fa": "چهل و پنج دلار می‌شود.", "keys": ["forty", "that will"], "then": ["Okay. That's fine.", "باشد. خوب است."] }
+          ] },
+        { "them": ["Great. When will everything be ready?", "عالی. همه‌اش کی آماده می‌شود؟"],
+          "replies": [
+            { "en": "It will be ready on Friday.", "fa": "جمعه آماده می‌شود.", "keys": ["ready", "it will", "friday"] },
+            { "en": "On Friday, after two o'clock.", "fa": "جمعه، بعد از ساعت دو.", "keys": ["after", "two"] }
+          ] },
+        { "them": ["I have a party on Thursday night. Can you do it by Thursday instead?", "پنج‌شنبه‌شب مهمانی دارم. می‌شود به‌جای جمعه، تا پنج‌شنبه آماده‌اش کنید؟"],
+          "check": { "q": "تا چه روزی آماده‌اش می‌خواهد؟", "right": "تا پنج‌شنبه", "wrong": ["تا سه‌شنبه", "تا شنبه"] },
+          "replies": [
+            { "en": "Yes. I can do it by Thursday.", "fa": "بله. می‌توانم تا پنج‌شنبه آماده‌اش کنم.", "keys": ["yes", "i can"], "then": ["Thank you so much! See you on Thursday.", "خیلی ممنون! پنج‌شنبه می‌بینمتان."] },
+            { "en": "I'm sorry, Thursday is too soon. Friday morning?", "fa": "متأسفم، پنج‌شنبه خیلی زود است. جمعه صبح چطور است؟", "keys": ["sorry", "soon", "morning", "no", "can't"], "then": ["Okay. I'll wear something else to the party. See you on Friday morning.", "باشد. برای مهمانی چیز دیگری می‌پوشم. جمعه صبح می‌بینمتان."] }
+          ] }
+      ]
+    },
+    {
+      "id": "rp-bridal", "scenario": "work", "stage": 3,
+      "title": "در فروشگاه لباس عروس",
+      "setting": "شما در فروشگاه لباس عروس کار می‌کنید. خانم جوانی وارد می‌شود و دنبال لباس عروس می‌گردد.",
+      "goal": "تبریک بگویید، تاریخ عروسی و سایزش را بپرسید، لباسی پیشنهاد کنید و دربارهٔ زمان و بیعانه جواب بدهید.",
+      "note": "قیمت‌ها و تاریخ‌های این تمرین ساختگی‌اند. «deposit» در فروشگاه یعنی بیعانه. در کار واقعی، دربارهٔ بیعانه و زمان آماده شدن لباس طبق قرار فروشگاه خودتان جواب بدهید.",
+      "them": { "role": "عروس", "persona": "a happy bride named Emma shopping for a wedding dress; the learner is the salesperson; the wedding is in June, her budget is about one thousand dollars and she wears size eight; speak in short simple sentences; never give or ask for card numbers or real personal details", "voice": "k" },
+      "turns": [
+        { "them": ["Hi! I'm getting married. I need a wedding dress.", "سلام! دارم ازدواج می‌کنم. لباس عروس لازم دارم."],
+          "replies": [
+            { "en": "Congratulations! When is the wedding?", "fa": "تبریک می‌گویم! عروسی کی است؟", "keys": ["when"] },
+            { "en": "Congratulations! Is the wedding soon?", "fa": "تبریک می‌گویم! عروسی نزدیک است؟", "keys": ["soon"] }
+          ] },
+        { "them": ["Thank you! It's in June. I don't have much time.", "ممنون! ماه ژوئن است. وقت زیادی ندارم."],
+          "check": { "q": "عروسی چه ماهی است؟", "right": "ژوئن", "wrong": ["ژوئیه", "ژانویه"] },
+          "replies": [
+            { "en": "Don't worry. What size do you wear?", "fa": "نگران نباشید. سایزتان چند است؟", "keys": ["size", "wear"], "then": ["I'm a size eight.", "سایزم هشت است."], "thenCheck": { "q": "سایزش چند است؟", "right": "8", "wrong": ["18", "6"] } },
+            { "en": "Okay. Let me measure you.", "fa": "باشد. بگذارید اندازه‌تان را بگیرم.", "keys": ["measure", "let me"], "then": ["Sure. I think I'm a size eight.", "حتماً. فکر می‌کنم سایزم هشت باشد."], "thenCheck": { "q": "سایزش چند است؟", "right": "8", "wrong": ["18", "6"] } }
+          ] },
+        { "them": ["My budget is about one thousand dollars.", "بودجه‌ام حدود هزار دلار است."],
+          "check": { "q": "بودجه‌اش حدود چقدر است؟", "right": "$1,000", "wrong": ["$100", "$10,000"] },
+          "replies": [
+            { "en": "We have many dresses under one thousand dollars.", "fa": "لباس‌های زیادی زیر هزار دلار داریم.", "keys": ["many", "under", "dresses"] },
+            { "en": "Could you say that again, please?", "fa": "می‌شود لطفاً دوباره بگویید؟", "keys": ["again", "say"], "then": ["Sure. I can spend one thousand dollars. Not more.", "حتماً. می‌توانم هزار دلار خرج کنم. بیشتر نه."] }
+          ] },
+        { "them": ["I like simple dresses with long sleeves.", "لباس ساده با آستین بلند دوست دارم."],
+          "replies": [
+            { "en": "Would you like to try this one?", "fa": "دوست دارید این یکی را پرو کنید؟", "keys": ["would you", "this one"], "then": ["Oh, it's lovely! Yes, please.", "وای، چه قشنگ است! بله، لطفاً."] },
+            { "en": "I have a nice one. Please try it on.", "fa": "یک لباس قشنگ دارم. لطفاً آن را پرو کنید.", "keys": ["i have", "nice", "try it on"], "then": ["Oh, it's lovely! Thank you.", "وای، چه قشنگ است! ممنون."] }
+          ] },
+        { "them": ["I love it! But it's a little long. And it's loose here.", "(چند دقیقه بعد) خیلی دوستش دارم! ولی کمی بلند است. اینجایش هم گشاد است."],
+          "check": { "right": "خیلی دوستش دارم! ولی کمی بلند است. اینجایش هم گشاد است.", "wrong": ["دوستش ندارم. زیادی بلند و گشاد است.", "خیلی دوستش دارم! ولی کمی کوتاه است. اینجایش هم تنگ است."] },
+          "replies": [
+            { "en": "It looks beautiful on you. We can alter it.", "fa": "خیلی به شما می‌آید. می‌توانیم آن را اندازهٔ تنتان کنیم.", "keys": ["alter", "beautiful"] },
+            { "en": "No problem. We can make it shorter.", "fa": "مشکلی نیست. می‌توانیم کوتاهش کنیم.", "keys": ["shorter", "make", "problem"] }
+          ] },
+        { "them": ["How long do the alterations take?", "اندازه کردن لباس چقدر طول می‌کشد؟"],
+          "replies": [
+            { "en": "About four weeks.", "fa": "حدود چهار هفته.", "keys": ["four", "weeks"], "then": ["Okay. That's before June. Good.", "باشد. قبل از ژوئن آماده می‌شود. خوب است."] },
+            { "en": "About one month. You have time.", "fa": "حدود یک ماه. وقت دارید.", "keys": ["month"], "then": ["Great. Thank you.", "عالی. ممنون."] }
+          ] },
+        { "them": ["I'll take it! Do I pay today?", "همین را می‌خرم! پولش را امروز بدهم؟"],
+          "replies": [
+            { "en": "Just a deposit today. Two hundred dollars.", "fa": "امروز فقط بیعانه. دویست دلار.", "keys": ["just", "hundred"], "then": ["Okay. Thank you so much for your help!", "باشد. خیلی ممنون از کمکتان!"] },
+            { "en": "You can pay a deposit today.", "fa": "امروز می‌توانید بیعانه بدهید.", "keys": ["you can", "pay"], "then": ["Okay. Thank you so much for your help!", "باشد. خیلی ممنون از کمکتان!"] }
+          ] }
+      ]
+    },
+    {
+      "id": "rp-groom", "scenario": "work", "stage": 3,
+      "title": "پرو کت‌وشلوار داماد",
+      "setting": "شما در فروشگاه لباس دامادی کار می‌کنید. داماد برای پرو کت‌وشلوارش آمده است.",
+      "goal": "بگویید چه چیزی را درست می‌کنید، لباس کی آماده می‌شود و به سؤال‌های داماد جواب بدهید.",
+      "note": "روزها و زمان‌های این تمرین ساختگی‌اند. در کار واقعی فقط زمانی را قول بدهید که از آن مطمئن هستید.",
+      "them": { "role": "داماد", "persona": "a friendly groom named David being fitted for his wedding suit; the learner is the tailor; the sleeves are too long and the pants are a little tight; the wedding is next Saturday; speak in short simple sentences; never give or ask for card numbers or personal details", "voice": "m" },
+      "turns": [
+        { "them": ["Hi. I'm here for my suit fitting.", "سلام. برای پرو کت‌وشلوارم آمده‌ام."],
+          "replies": [
+            { "en": "Welcome! Please try it on.", "fa": "خوش آمدید! لطفاً آن را پرو کنید.", "keys": ["welcome", "try"] },
+            { "en": "Hello. The fitting room is over there.", "fa": "سلام. اتاق پرو آنجاست.", "keys": ["room", "over there"] }
+          ] },
+        { "them": ["Okay, I have it on. The sleeves are too long.", "(چند دقیقه بعد) خب، پوشیدمش. آستین‌ها زیادی بلند است."],
+          "check": { "right": "آستین‌ها زیادی بلند است.", "wrong": ["آستین‌ها زیادی کوتاه است.", "شلوار زیادی بلند است."] },
+          "replies": [
+            { "en": "Yes, a little. I can shorten the sleeves.", "fa": "بله، کمی. می‌توانم آستین‌ها را کوتاه کنم.", "keys": ["shorten", "i can", "yes"] },
+            { "en": "Let me see. Please stand straight.", "fa": "بگذارید ببینم. لطفاً صاف بایستید.", "keys": ["stand", "let me"], "then": ["Sure. Like this?", "حتماً. این‌طور؟"] },
+            { "en": "Could you say that again, please?", "fa": "می‌شود لطفاً دوباره بگویید؟", "keys": ["again", "say"], "then": ["Sure. The sleeves. They are too long. Look.", "حتماً. آستین‌ها. زیادی بلند است. ببینید."] }
+          ] },
+        { "them": ["And the pants are a little tight here.", "شلوار هم اینجا کمی تنگ است."],
+          "check": { "right": "شلوار هم اینجا کمی تنگ است.", "wrong": ["شلوار هم اینجا کمی گشاد است.", "شلوار هم کمی بلند است."] },
+          "replies": [
+            { "en": "I can make them a little bigger.", "fa": "می‌توانم کمی گشادترش کنم.", "keys": ["bigger", "make"] },
+            { "en": "Okay. Let me measure your waist.", "fa": "باشد. بگذارید دور کمرتان را اندازه بگیرم.", "keys": ["measure", "waist"], "then": ["Sure.", "حتماً."] }
+          ] },
+        { "them": ["How does the jacket look?", "کت چطور است؟"],
+          "replies": [
+            { "en": "It looks great on you.", "fa": "خیلی به شما می‌آید.", "keys": ["great", "looks"], "then": ["Thank you! I like it too.", "ممنون! خودم هم دوستش دارم."] },
+            { "en": "The jacket fits well. Only the sleeves are long.", "fa": "کت اندازه است. فقط آستین‌ها بلند است.", "keys": ["fits", "only"], "then": ["Good. I'm happy with it.", "خوب است. از آن راضی‌ام."] }
+          ] },
+        { "them": ["The wedding is next Saturday. Will it be ready before Saturday?", "عروسی شنبهٔ آینده است. قبل از شنبه آماده می‌شود؟"],
+          "check": { "right": "عروسی شنبهٔ آینده است. قبل از شنبه آماده می‌شود؟", "wrong": ["عروسی شنبهٔ آینده است. عجله‌ای نیست.", "عروسی یکشنبهٔ آینده است. شنبه آماده می‌شود؟"] },
+          "replies": [
+            { "en": "Yes. It will be ready on Wednesday.", "fa": "بله. چهارشنبه آماده می‌شود.", "keys": ["wednesday", "yes"], "then": ["Wednesday is perfect. Thank you!", "چهارشنبه عالی است. ممنون!"] },
+            { "en": "Don't worry. Please come back on Thursday.", "fa": "نگران نباشید. لطفاً پنج‌شنبه دوباره بیایید.", "keys": ["thursday", "worry"], "then": ["Thursday is fine. Thank you!", "پنج‌شنبه خوب است. ممنون!"] }
+          ] },
+        { "them": ["Do I need to try it on again?", "لازم است دوباره آن را بپوشم؟"],
+          "check": { "q": "چه پرسید؟", "right": "لازم است دوباره آن را بپوشم؟", "wrong": ["لازم است دوباره پول بدهم؟", "می‌توانم همین حالا ببرمش؟"] },
+          "replies": [
+            { "en": "Yes, please. One more fitting.", "fa": "بله، لطفاً. یک پرو دیگر.", "keys": ["more", "fitting", "yes"], "then": ["Okay. No problem.", "باشد. مشکلی نیست."] },
+            { "en": "Yes. Please try it on when you come.", "fa": "بله. وقتی آمدید، آن را بپوشید.", "keys": ["when you", "come"], "then": ["Okay. I will.", "باشد. حتماً."] }
+          ] },
+        { "them": ["Great. Thank you for your help!", "عالی. ممنون از کمکتان!"],
+          "replies": [
+            { "en": "You're welcome. Congratulations on your wedding!", "fa": "خواهش می‌کنم. عروسی‌تان مبارک!", "keys": ["congratulations", "wedding"] },
+            { "en": "My pleasure. See you soon!", "fa": "خواهش می‌کنم. به‌زودی می‌بینمتان!", "keys": ["pleasure", "see you", "soon"] }
+          ] }
+      ]
+    },
+    {
+      "id": "rp-unhappy-customer", "scenario": "work", "stage": 3,
+      "title": "مشتری ناراضی: شلوار هنوز بلند است",
+      "setting": "شما در مغازهٔ تعمیر لباس کار می‌کنید. خانمی که دیروز شلوارش را تحویل گرفته، ناراضی برگشته است.",
+      "goal": "آرام بمانید، عذرخواهی کنید، مشکل را بفهمید و بگویید چطور درستش می‌کنید.",
+      "note": "این فقط تمرین زبان است. در کار واقعی، اگر مشتری داد زد، توهین کرد یا تهدید کرد، بحث نکنید و مدیرتان را خبر کنید.",
+      "them": { "role": "مشتری ناراضی", "persona": "an unhappy but polite customer named Ms. Garcia at a tailor shop; her pants are still too long after the alteration and she needs them tomorrow; the learner is the worker; use short simple sentences and calm down when they apologize; never shout, insult or threaten; never ask for personal details", "voice": "b" },
+      "turns": [
+        { "them": ["Excuse me. I picked up these pants yesterday. They are still too long.", "ببخشید. این شلوار را دیروز تحویل گرفتم. هنوز زیادی بلند است."],
+          "check": { "right": "این شلوار را دیروز تحویل گرفتم. هنوز زیادی بلند است.", "wrong": ["این شلوار را دیروز تحویل گرفتم. حالا زیادی کوتاه است.", "می‌خواهم این شلوار را فردا تحویل بگیرم."] },
+          "replies": [
+            { "en": "I'm sorry about that.", "fa": "از این بابت متأسفم.", "keys": ["about", "sorry"] },
+            { "en": "I'm so sorry. Let me see.", "fa": "خیلی متأسفم. بگذارید ببینم.", "keys": ["let me", "see"] },
+            { "en": "Could you say that again, please?", "fa": "می‌شود لطفاً دوباره بگویید؟", "keys": ["again", "say"], "then": ["Sure. You made these pants shorter. But they are still too long.", "حتماً. شما این شلوار را کوتاه کردید. ولی هنوز زیادی بلند است."] }
+          ] },
+        { "them": ["I paid fifteen dollars, and they are not right.", "پانزده دلار داده‌ام، ولی درست نشده است."],
+          "check": { "q": "چقدر پول داده است؟", "right": "$15", "wrong": ["$50", "$5"] },
+          "replies": [
+            { "en": "You're right. Let me fix it.", "fa": "حق با شماست. بگذارید درستش کنم.", "keys": ["fix", "let me"] },
+            { "en": "I understand. I can make them shorter.", "fa": "متوجهم. می‌توانم کوتاه‌ترش کنم.", "keys": ["understand", "shorter"] }
+          ] },
+        { "them": ["Do I have to pay again?", "باید دوباره پول بدهم؟"],
+          "check": { "q": "چه پرسید؟", "right": "باید دوباره پول بدهم؟", "wrong": ["پولم را پس می‌دهید؟", "کی باید پول بدهم؟"] },
+          "replies": [
+            { "en": "No. There is no charge.", "fa": "نه. هزینه‌ای ندارد.", "keys": ["charge", "no"], "then": ["Good. Thank you.", "خوب است. ممنون."] },
+            { "en": "No, it's free. It was our mistake.", "fa": "نه، رایگان است. اشتباه از ما بود.", "keys": ["free", "mistake"], "then": ["Okay. Thank you for saying that.", "باشد. ممنون که این را گفتید."] }
+          ] },
+        { "them": ["I need them tomorrow morning. Can you do it today?", "فردا صبح لازمش دارم. می‌توانید همین امروز انجامش بدهید؟"],
+          "check": { "q": "شلوار را برای کی لازم دارد؟", "right": "فردا صبح", "wrong": ["امروز صبح", "فردا شب"] },
+          "replies": [
+            { "en": "Yes. It will be ready in one hour.", "fa": "بله. یک ساعت دیگر آماده می‌شود.", "keys": ["hour", "ready"], "then": ["One hour? That's great.", "یک ساعت؟ عالی است."] },
+            { "en": "Yes. Please come back at five o'clock.", "fa": "بله. لطفاً ساعت پنج برگردید.", "keys": ["five", "come back"], "then": ["Five o'clock. Okay, I can do that.", "ساعت پنج. باشد، می‌توانم بیایم."] }
+          ] },
+        { "them": ["Can I get a discount next time?", "دفعهٔ بعد می‌توانم تخفیف بگیرم؟"],
+          "replies": [
+            { "en": "Let me ask my manager.", "fa": "بگذارید از مدیرم بپرسم.", "keys": ["let me"], "then": ["Thank you. That's kind of you.", "ممنون. لطف می‌کنید."] },
+            { "en": "I'm not sure. I will ask my manager.", "fa": "مطمئن نیستم. از مدیرم می‌پرسم.", "keys": ["not sure", "i will", "don't know"], "then": ["Okay. Thank you for asking.", "باشد. ممنون که می‌پرسید."] }
+          ] },
+        { "them": ["Okay. Thank you for your help. I feel better now.", "باشد. ممنون از کمکتان. حالا خیالم راحت شد."],
+          "replies": [
+            { "en": "Thank you for your patience.", "fa": "ممنون از صبر و حوصله‌تان.", "keys": ["patience", "thank"] },
+            { "en": "You're welcome. I'm sorry again.", "fa": "خواهش می‌کنم. باز هم عذر می‌خواهم.", "keys": ["welcome", "again"] }
+          ] }
+      ]
+    }
+  ]
+}

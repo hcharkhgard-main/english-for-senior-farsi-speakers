@@ -1,0 +1,57 @@
+{
+  "id": "neighbor-chat",
+  "scenario": "social",
+  "stage": 2,
+  "order": 17,
+  "minutes": 9,
+  "title": { "fa": "گپ با همسایه و دعوت", "en": "Chatting with a neighbor" },
+  "intro": "در این درس یاد می‌گیرید سرِ صحبت را با همسایه باز کنید، او را به چای دعوت کنید و دعوت دیگران را قبول یا مؤدبانه رد کنید.",
+  "canDo": "حالا می‌توانید با همسایه چند جمله گپ بزنید، دعوت کنید و به دعوت جواب بدهید.",
+  "mission": "در اولین روز آفتابی، به همسایه‌ای که می‌بینید بگویید: It's a beautiful day, isn't it?",
+  "them": { "role": "همسایه", "voice": "b" },
+  "phrases": [
+    { "en": "It's a beautiful day, isn't it?", "fa": "روز قشنگی است، نه؟", "ph": "ایتس اِ بیوتیفول دِی، ایزِنت ایت؟", "note": "آمریکایی‌ها برای شروع صحبت اغلب از هوا حرف می‌زنند.", "chunks": ["It's a beautiful day,", "isn't it?"] },
+    { "en": "How is your family?", "fa": "خانواده‌تان چطورند؟", "ph": "هاو ایز یور فَمیلی؟", "note": "برای کسی که قبلاً با او آشنا شده‌اید.", "chunks": ["How is", "your family?"] },
+    { "en": "Would you like to come over for tea?", "fa": "دوست دارید برای چای به خانهٔ ما بیایید؟", "ph": "وُد یو لایک تو کام اُوِر فُر تی؟", "note": "دعوت دوستانه. come over یعنی به خانهٔ ما بیایید.", "chunks": ["Would you like", "to come over", "for tea?"] },
+    { "en": "Thank you, I'd love to.", "fa": "ممنون، با کمال میل.", "ph": "تَنک یو، آیْد لاو تو", "note": "برای قبول کردن دعوت.", "chunks": ["Thank you,", "I'd love to."] },
+    { "en": "I'm sorry, I can't. Maybe another time.", "fa": "متأسفم، نمی‌توانم. شاید یک وقت دیگر.", "ph": "آیْم ساری، آی کَنت. مِی‌بی اَنادِر تایم", "note": "برای رد کردن مؤدبانه. لازم نیست دلیل بیاورید.", "chunks": ["I'm sorry,", "I can't.", "Maybe another time."] }
+  ],
+  "dialogue": {
+    "setting": "صبح، همسایه‌تان سوزان را جلوی در می‌بینید.",
+    "lines": [
+      ["them", "Good morning, Maryam! It's a beautiful day, isn't it?", "صبح به‌خیر، مریم! روز قشنگی است، نه؟"],
+      ["you", "Good morning, Susan! Yes, it is. How is your family?", "صبح به‌خیر، سوزان! بله، همین‌طور است. خانواده‌تان چطورند؟"],
+      ["them", "They're doing well, thank you. My daughter is visiting this weekend.", "خوب‌اند، ممنون. دخترم آخر این هفته به دیدنم می‌آید."],
+      ["you", "That's wonderful. Would you like to come over for tea?", "چه عالی. دوست دارید برای چای به خانهٔ ما بیایید؟"],
+      ["them", "Thank you, I'd love to. Is four o'clock okay?", "ممنون، با کمال میل. ساعت چهار خوب است؟"],
+      ["you", "Four o'clock is perfect. See you then!", "ساعت چهار عالی است. می‌بینمتان!"]
+    ]
+  },
+  "respond": {
+    "setting": "همسایه شما را دعوت می‌کند.",
+    "them": ["We're having a barbecue on Saturday. Would you like to come?", "شنبه مهمانی کباب داریم. دوست دارید بیایید؟"],
+    "ok": [
+      ["Thank you, I'd love to.", "ممنون، با کمال میل."],
+      ["I'm sorry, I can't. Maybe another time.", "متأسفم، نمی‌توانم. شاید یک وقت دیگر."]
+    ],
+    "off": ["How is your family?", "خانواده‌تان چطورند؟", "سؤال خوبی است، ولی همسایه شما را دعوت کرده و منتظر جواب است."],
+    "off2": 1
+  },
+  "task": [
+    ["هوا آفتابی است، همسایه را جلوی در می‌بینید و می‌خواهید سر صحبت را باز کنید.", 1],
+    ["می‌خواهید همسایه را به خانه‌تان دعوت کنید.", 3]
+  ],
+  "grammar": {
+    "title": "Would you like … ?",
+    "explain": "برای دعوت کردن یا تعارف کردن بگویید «Would you like». این جمله از «Do you want» مؤدبانه‌تر است.",
+    "examples": [
+      ["Would you like some tea?", "چای میل دارید؟"],
+      ["Would you like to come over?", "دوست دارید به خانهٔ ما بیایید؟"],
+      ["Would you like to sit down?", "دوست دارید بنشینید؟"]
+    ],
+    "wrong": "Would you like come?",
+    "right": "Would you like to come?",
+    "why": "بعد از «Would you like» اگر فعل بیاید، قبلش «to» می‌گوییم."
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

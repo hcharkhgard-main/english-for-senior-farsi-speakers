@@ -1,0 +1,173 @@
+{
+  "id": "drugstore",
+  "scenario": "clinic",
+  "stage": 2,
+  "minutes": 8,
+  "safetyCritical": true,
+  "title": {
+    "fa": "خرید از داروخانه بدون نسخه",
+    "en": "At the drugstore"
+  },
+  "intro": "در داروخانه‌های آمریکا خیلی از داروها و ویتامین‌ها بدون نسخه در قفسه‌ها هست. در این درس یاد می‌گیرید چیزی را که می‌خواهید پیدا کنید و از داروساز سؤال کنید.",
+  "note": "این درس برای یادگیری زبان است و توصیهٔ پزشکی نیست. قبل از مصرف هر دارویی، اگر داروی دیگری می‌خورید، از داروساز یا دکترتان بپرسید.",
+  "canDo": "حالا می‌توانید در داروخانه چیزی را که لازم دارید بپرسید و از داروساز راهنمایی بخواهید.",
+  "mission": "در داروخانه، جای چیزی را که لازم دارید از یک کارمند بپرسید؛ مثلاً: Where are the vitamins?",
+  "them": {
+    "role": "داروساز",
+    "voice": "m"
+  },
+  "phrases": [
+    {
+      "en": "I'm looking for something for a cold.",
+      "fa": "چیزی برای سرماخوردگی می‌خواهم.",
+      "ph": "آیْم لُکینگ فُر سام‌تینگ فُر اِ کُلد",
+      "note": "به‌جای a cold می‌توانید بگویید: a headache (سردرد)، a cough (سرفه)، allergies (حساسیت).",
+      "chunks": [
+        "I'm looking for",
+        "something",
+        "for a cold."
+      ]
+    },
+    {
+      "en": "Where are the vitamins?",
+      "fa": "ویتامین‌ها کجاست؟",
+      "ph": "وِر آر دِ وایتِمینز؟",
+      "note": "برای چند چیز می‌گوییم «Where are».",
+      "chunks": [
+        "Where are",
+        "the vitamins?"
+      ]
+    },
+    {
+      "en": "Do I need a prescription for this?",
+      "fa": "این دارو نسخه می‌خواهد؟",
+      "ph": "دو آی نید اِ پْرِسکْریپشِن فُر دیس؟",
+      "note": "داروهای بدون نسخه را «over the counter» می‌گویند.",
+      "chunks": [
+        "Do I need",
+        "a prescription",
+        "for this?"
+      ]
+    },
+    {
+      "en": "I take other medicine. Is this okay?",
+      "fa": "من داروی دیگری هم مصرف می‌کنم. این اشکالی ندارد؟",
+      "ph": "آی تِیک آدِر مِدیسِن. ایز دیس اُکِی؟",
+      "note": "این سؤال مهم است. اسم داروهایتان را همراه داشته باشید و به داروساز نشان بدهید.",
+      "chunks": [
+        "I take",
+        "other medicine.",
+        "Is this okay?"
+      ]
+    },
+    {
+      "en": "Which one do you recommend?",
+      "fa": "شما کدام را پیشنهاد می‌کنید؟",
+      "ph": "ویچ وان دو یو رِکُمِند؟",
+      "note": "وقتی چند نوع هست و نمی‌دانید کدام را بردارید.",
+      "chunks": [
+        "Which one",
+        "do you recommend?"
+      ]
+    }
+  ],
+  "dialogue": {
+    "setting": "سرما خورده‌اید و به داروخانه رفته‌اید.",
+    "lines": [
+      [
+        "you",
+        "Excuse me. I'm looking for something for a cold.",
+        "ببخشید. چیزی برای سرماخوردگی می‌خواهم."
+      ],
+      [
+        "them",
+        "Sure. The cold medicine is in aisle six.",
+        "حتماً. داروهای سرماخوردگی در راهروی شش است."
+      ],
+      [
+        "you",
+        "There are so many. Which one do you recommend?",
+        "خیلی زیادند. شما کدام را پیشنهاد می‌کنید؟"
+      ],
+      [
+        "them",
+        "Do you take any other medicine?",
+        "داروی دیگری هم مصرف می‌کنید؟"
+      ],
+      [
+        "you",
+        "Yes. I take medicine for blood pressure.",
+        "بله. داروی فشار خون مصرف می‌کنم."
+      ],
+      [
+        "them",
+        "Then let me show you the right one.",
+        "پس بگذارید داروی مناسب را نشانتان بدهم."
+      ],
+      [
+        "you",
+        "Thank you for your help.",
+        "ممنون از کمکتان."
+      ]
+    ]
+  },
+  "respond": {
+    "setting": "سرما خورده‌اید و نسخه ندارید. داروساز از شما می‌پرسد.",
+    "them": [
+      "Hi. Can I help you find something?",
+      "سلام. می‌توانم کمکتان کنم چیزی پیدا کنید؟"
+    ],
+    "ok": [
+      [
+        "I'm looking for something for a cold.",
+        "چیزی برای سرماخوردگی می‌خواهم."
+      ],
+      [
+        "Where are the vitamins?",
+        "ویتامین‌ها کجاست؟"
+      ]
+    ],
+    "off": [
+      "I'm here to pick up my prescription.",
+      "آمده‌ام داروی نسخه‌ام را بگیرم.",
+      "این جمله برای وقتی است که دکتر نسخه نوشته باشد. اینجا شما دنبال داروی بدون نسخه هستید."
+    ]
+  },
+  "task": [
+    [
+      "داروی فشار خون می‌خورید و می‌خواهید مطمئن شوید این شربت سرفه برایتان مشکلی ندارد.",
+      4
+    ],
+    [
+      "دارویی را که می‌خواهید پشت پیشخوان گذاشته‌اند و نمی‌دانید نسخه می‌خواهد یا نه.",
+      3
+    ]
+  ],
+  "grammar": {
+    "title": "Where is … ? / Where are … ?",
+    "explain": "برای یک چیز «Where is» و برای چند چیز «Where are» می‌گوییم.",
+    "examples": [
+      [
+        "Where is the pharmacy?",
+        "داروخانه کجاست؟"
+      ],
+      [
+        "Where are the vitamins?",
+        "ویتامین‌ها کجاست؟"
+      ],
+      [
+        "Where are the restrooms?",
+        "دستشویی‌ها کجاست؟"
+      ]
+    ],
+    "wrong": "Where is the vitamins?",
+    "right": "Where are the vitamins?",
+    "why": "vitamins چند تاست، پس «are» می‌گوییم."
+  },
+  "review": {
+    "status": "draft",
+    "language": null,
+    "teaching": null,
+    "safety": null
+  }
+}

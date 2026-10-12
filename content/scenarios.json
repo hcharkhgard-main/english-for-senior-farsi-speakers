@@ -1,0 +1,100 @@
+{
+  "scenarios": [
+    {
+      "id": "social",
+      "title": "سلام و احوال‌پرسی، همسایه‌ها",
+      "en": "Greetings and neighbors",
+      "icon": "people"
+    },
+    {
+      "id": "me",
+      "title": "مشخصات خودم",
+      "en": "My information",
+      "icon": "card"
+    },
+    {
+      "id": "store",
+      "title": "خرید و فروشگاه",
+      "en": "Shopping",
+      "icon": "cart"
+    },
+    {
+      "id": "clinic",
+      "title": "دکتر و داروخانه",
+      "en": "Doctor and pharmacy",
+      "icon": "clinic"
+    },
+    {
+      "id": "emergency",
+      "title": "وضعیت اضطراری و ایمنی",
+      "en": "Emergency and safety",
+      "icon": "siren"
+    },
+    {
+      "id": "directions",
+      "title": "آدرس، اتوبوس و تاکسی",
+      "en": "Getting around",
+      "icon": "bus"
+    },
+    {
+      "id": "phone",
+      "title": "تلفن و وقت گرفتن",
+      "en": "Phone calls",
+      "icon": "phone"
+    },
+    {
+      "id": "restaurant",
+      "title": "رستوران و کافه",
+      "en": "Restaurants and cafés",
+      "icon": "food"
+    },
+    {
+      "id": "bank",
+      "title": "بانک و پول",
+      "en": "Bank and money",
+      "icon": "bank"
+    },
+    {
+      "id": "home",
+      "title": "خانه و تعمیرات",
+      "en": "Home and repairs",
+      "icon": "home"
+    },
+    {
+      "id": "driving",
+      "title": "رانندگی و ماشین",
+      "en": "Driving",
+      "icon": "car"
+    },
+    {
+      "id": "office",
+      "title": "اداره، پست و کتابخانه",
+      "en": "Offices and services",
+      "icon": "office"
+    },
+    {
+      "id": "travel",
+      "title": "فرودگاه و مهاجرت",
+      "en": "Airport and immigration",
+      "icon": "plane"
+    },
+    {
+      "id": "services",
+      "title": "آرایشگاه و خدمات",
+      "en": "Barber, salon and services",
+      "icon": "scissors"
+    },
+    {
+      "id": "occasions",
+      "title": "جشن‌ها، مهمانی و مراسم",
+      "en": "Holidays and occasions",
+      "icon": "gift"
+    },
+    {
+      "id": "work",
+      "title": "کار و شغل",
+      "en": "Work and jobs",
+      "icon": "work"
+    }
+  ]
+}

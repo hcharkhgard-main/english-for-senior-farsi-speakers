@@ -1,0 +1,67 @@
+{
+  "id": "power-weather",
+  "scenario": "emergency",
+  "stage": 3,
+  "minutes": 9,
+  "safetyCritical": true,
+  "title": { "fa": "قطع برق، توفان و گرمای شدید", "en": "Power outage and bad weather" },
+  "intro": "وقتی برق می‌رود، یا توفان و گرمای شدید در راه است، باید بتوانید خبر بدهید و چند سؤال ساده بپرسید. در این درس یاد می‌گیرید قطع برق را به شرکت برق خبر بدهید و دربارهٔ هشدار هوا و پناهگاه بپرسید.",
+  "note": "این درس برای یادگیری زبان است. قطع برق را به شرکت برق خبر می‌دهند، نه به ۹۱۱؛ شمارهٔ قطع برق معمولاً روی قبض برق نوشته شده است. ۹۱۱ برای وقتی است که کسی فوراً به آمبولانس، آتش‌نشانی یا پلیس نیاز دارد؛ مثلاً آتش‌سوزی شده یا سیم برق روی زمین افتاده است. اگر مطمئن نیستید اورژانسی است یا نه، به ۹۱۱ زنگ بزنید.",
+  "canDo": "حالا می‌توانید قطع برق را به شرکت برق خبر بدهید و دربارهٔ هشدار توفان و نزدیک‌ترین پناهگاه بپرسید.",
+  "mission": "شمارهٔ تلفنِ قطع برق را روی قبض برقتان پیدا کنید و کنار تلفن بنویسید. یک چراغ‌قوه هم دمِ دست بگذارید.",
+  "them": { "role": "کارمند شرکت برق (پشت تلفن)", "voice": "a" },
+  "phrases": [
+    { "en": "The power is out.", "fa": "برق رفته است.", "ph": "دِ پاوِر ایز آوت", "note": "power یعنی برق. وقتی برق برگشت، می‌گویند: «The power is back on.‎»", "chunks": ["The power", "is out."] },
+    { "en": "I want to report a power outage.", "fa": "می‌خواهم قطع برق را خبر بدهم.", "ph": "آی وانْت تو ریپُرت اِ پاوِر آوتِج", "note": "outage یعنی قطع برق. این را وقتی می‌گویید که به شمارهٔ قطع برقِ شرکت برق زنگ زده‌اید.", "chunks": ["I want to report", "a power outage."] },
+    { "en": "When will the power be back on?", "fa": "برق کی وصل می‌شود؟", "ph": "وِن ویل دِ پاوِر بی بَک آن؟", "note": "جواب معمولاً یک ساعت است، مثلاً «by six tonight» یعنی تا ساعت شش عصرِ امروز.", "chunks": ["When will the power", "be back on?"] },
+    { "en": "Is there a storm warning?", "fa": "هشدار توفان داده‌اند؟", "ph": "ایز دِر اِ سْتُرم وُرنینگ؟", "note": "warning یعنی هشدار. برای گرمای شدید می‌گویند «a heat warning» و برای سیل «a flood warning».", "chunks": ["Is there", "a storm warning?"] },
+    { "en": "Where is the nearest shelter?", "fa": "نزدیک‌ترین پناهگاه کجاست؟", "ph": "وِر ایز دِ نی‌یِرِست شِلتِر؟", "note": "shelter یعنی پناهگاه یا جای امن. در روزهای خیلی گرم، شهرها جاهای خنکی باز می‌کنند که به آن «cooling center» می‌گویند: «Where is the nearest cooling center?‎»", "chunks": ["Where is", "the nearest shelter?"] }
+  ],
+  "dialogue": {
+    "setting": "برق خانه رفته است و به شمارهٔ قطع برقِ شرکت برق زنگ زده‌اید.",
+    "lines": [
+      ["them", "City Power outage line. How can I help you?", "شرکت برق، بخش قطع برق. بفرمایید."],
+      ["you", "Hello. I want to report a power outage.", "سلام. می‌خواهم قطع برق را خبر بدهم."],
+      ["them", "Okay. What is your address?", "باشد. آدرستان چیست؟"],
+      ["you", "25 Oak Street.", "خیابان اوک، پلاک ۲۵."],
+      ["them", "Thank you. We know about the outage in your area. A crew is working on it.", "ممنون. از قطع برق در منطقهٔ شما خبر داریم. گروه تعمیر دارد روی آن کار می‌کند."],
+      ["you", "When will the power be back on?", "برق کی وصل می‌شود؟"],
+      ["them", "We expect it back on by six tonight.", "انتظار داریم تا ساعت شش عصرِ امروز وصل شود."],
+      ["you", "Okay. Thank you.", "باشد. ممنون."],
+      ["them", "You're welcome. If you see a power line on the ground, stay away and call 911.", "خواهش می‌کنم. اگر دیدید سیم برق روی زمین افتاده، نزدیک نشوید و به ۹۱۱ زنگ بزنید."]
+    ]
+  },
+  "respond": {
+    "setting": "پرسیده‌اید برق کی وصل می‌شود و کارمند شرکت برق جواب می‌دهد.",
+    "them": ["We expect it back on by six tonight.", "انتظار داریم تا ساعت شش عصرِ امروز وصل شود."],
+    "ok": [
+      ["Okay. Thank you.", "باشد. ممنون."],
+      ["By six tonight. Thank you.", "تا شش عصرِ امروز. ممنون."],
+      ["Could you repeat that, please?", "می‌شود لطفاً دوباره بگویید؟"]
+    ],
+    "off": ["I want to report a power outage.", "می‌خواهم قطع برق را خبر بدهم.", "این را اولِ تماس گفته‌اید. کارمند گفت برق تا ساعت شش عصر وصل می‌شود؛ کافی است تشکر کنید."],
+    "off2": 4
+  },
+  "task": [
+    ["از رادیو شنیده‌اید هوا دارد خراب می‌شود. می‌خواهید از همسایه بپرسید هشدار رسمی داده‌اند یا نه.", 4],
+    ["توفان شدیدی در راه است و می‌خواهید بدانید نزدیک‌ترین جای امن کجاست.", 5]
+  ],
+  "grammar": {
+    "title": "the nearest …",
+    "explain": "nearest یعنی «نزدیک‌ترین». برای پیدا کردنِ نزدیک‌ترین جا بگویید «Where is the nearest» و بعد اسم آن جا.",
+    "examples": [
+      ["Where is the nearest shelter?", "نزدیک‌ترین پناهگاه کجاست؟"],
+      ["Where is the nearest bus stop?", "نزدیک‌ترین ایستگاه اتوبوس کجاست؟"],
+      ["Where is the nearest pharmacy?", "نزدیک‌ترین داروخانه کجاست؟"]
+    ],
+    "wrong": "Where is the most near pharmacy?",
+    "right": "Where is the nearest pharmacy?",
+    "why": "برای کلمه‌های کوتاهی مثل near، «ترین» را با «est» در آخرِ کلمه می‌سازند: nearest. «most near» نمی‌گویند."
+  },
+  "variants": [
+    { "en": "Power should be restored by six p.m.", "fa": "برق باید تا ساعت شش عصر وصل شود.", "like": "We expect it back on by six tonight." },
+    { "en": "We're aware of the outage in your neighborhood.", "fa": "از قطع برق در محلهٔ شما باخبریم.", "like": "Thank you. We know about the outage in your area. A crew is working on it." },
+    { "en": "Stay away from downed power lines.", "fa": "به سیم‌های برقی که روی زمین افتاده‌اند نزدیک نشوید.", "like": "You're welcome. If you see a power line on the ground, stay away and call 911." }
+  ],
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

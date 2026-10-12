@@ -1,0 +1,57 @@
+{
+  "id": "social-slowly",
+  "scenario": "social",
+  "stage": 1,
+  "order": 2,
+  "minutes": 7,
+  "title": { "fa": "وقتی متوجه نمی‌شوید", "en": "When you don't understand" },
+  "intro": "این پنج جمله از همهٔ جمله‌ها مهم‌ترند. با این‌ها هر جا که متوجه نشدید، می‌توانید بخواهید آهسته‌تر یا دوباره بگویند. نفهمیدن هیچ عیبی ندارد.",
+  "canDo": "حالا می‌توانید بگویید متوجه نشده‌اید و بخواهید آهسته‌تر یا دوباره بگویند.",
+  "mission": "هر وقت کسی تند حرف زد و متوجه نشدید، با آرامش بگویید: Please speak slowly.",
+  "them": { "role": "صندوق‌دار", "voice": "b" },
+  "phrases": [
+    { "en": "I'm learning English.", "fa": "من دارم انگلیسی یاد می‌گیرم.", "ph": "آیْم لِرنینگ اینگْلیش", "note": "وقتی این را بگویید، بیشتر مردم با حوصلهٔ بیشتری صحبت می‌کنند.", "chunks": ["I'm learning", "English."] },
+    { "en": "Please speak slowly.", "fa": "لطفاً آهسته صحبت کنید.", "ph": "پْلیز سْپیک سْلُولی", "note": "وقتی کسی تند حرف می‌زند.", "chunks": ["Please", "speak slowly."] },
+    { "en": "Could you repeat that, please?", "fa": "می‌شود لطفاً دوباره بگویید؟", "ph": "کُد یو ریپیت دَت، پْلیز؟", "note": "وقتی جمله‌ای را نشنیدید یا نفهمیدید.", "chunks": ["Could you", "repeat that,", "please?"] },
+    { "en": "I don't understand.", "fa": "متوجه نمی‌شوم.", "ph": "آی دُنت آندِرستَند", "note": "ساده و مؤدبانه است. از گفتنش خجالت نکشید.", "chunks": ["I don't", "understand."] },
+    { "en": "What does this mean?", "fa": "این یعنی چه؟", "ph": "وات داز دیس مین؟", "note": "وقتی کلمه‌ای را روی برگه یا تابلو می‌بینید و معنی‌اش را نمی‌دانید.", "chunks": ["What does", "this mean?"] }
+  ],
+  "dialogue": {
+    "setting": "پای صندوق فروشگاه، صندوق‌دار تند حرف می‌زند.",
+    "lines": [
+      ["them", "Do you want to sign up for our rewards card?", "می‌خواهید برای کارت امتیاز ما ثبت‌نام کنید؟"],
+      ["you", "Sorry, I don't understand. I'm learning English.", "ببخشید، متوجه نمی‌شوم. من دارم انگلیسی یاد می‌گیرم."],
+      ["them", "Oh, no problem!", "اوه، اشکالی ندارد!"],
+      ["you", "Could you repeat that, please? Please speak slowly.", "می‌شود لطفاً دوباره بگویید؟ لطفاً آهسته صحبت کنید."],
+      ["them", "Sure. Do you want a store card? It's free.", "حتماً. کارت فروشگاه می‌خواهید؟ رایگان است."],
+      ["you", "No, thank you.", "نه، ممنون."]
+    ]
+  },
+  "respond": {
+    "setting": "صندوق‌دار جمله‌ای می‌گوید که نمی‌فهمید.",
+    "them": ["Would you like to round up for charity today?", "می‌خواهید مبلغ خریدتان را برای کمک به خیریه رُند کنید؟"],
+    "ok": [
+      ["Could you repeat that, please?", "می‌شود لطفاً دوباره بگویید؟"],
+      ["Sorry, I don't understand.", "ببخشید، متوجه نمی‌شوم."],
+      ["Please speak slowly.", "لطفاً آهسته صحبت کنید."]
+    ],
+    "off": ["Nice to meet you.", "از آشنایی با شما خوشوقتم.", "این جمله برای آشنایی است. اینجا بهتر است بگویید متوجه نشده‌اید."]
+  },
+  "task": [
+    ["کسی خیلی تند با شما صحبت می‌کند و می‌خواهید آهسته‌تر حرف بزند.", 2],
+    ["روی یک برگه کلمه‌ای می‌بینید که معنی‌اش را نمی‌دانید و می‌خواهید بپرسید.", 5]
+  ],
+  "grammar": {
+    "title": "Could you … ?",
+    "explain": "وقتی از کسی چیزی می‌خواهید، جمله را با «Could you» شروع کنید. این‌طوری درخواستتان مؤدبانه می‌شود.",
+    "examples": [
+      ["Could you repeat that?", "می‌شود دوباره بگویید؟"],
+      ["Could you help me?", "می‌شود کمکم کنید؟"],
+      ["Could you write it down?", "می‌شود آن را بنویسید؟"]
+    ],
+    "wrong": "You repeat.",
+    "right": "Could you repeat that, please?",
+    "why": "با «Could you» و «please» جمله مؤدبانه می‌شود."
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

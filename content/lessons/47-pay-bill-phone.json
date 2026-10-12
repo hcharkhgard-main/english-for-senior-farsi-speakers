@@ -1,0 +1,194 @@
+{
+  "id": "pay-bill-phone",
+  "scenario": "phone",
+  "stage": 3,
+  "minutes": 9,
+  "safetyCritical": true,
+  "title": {
+    "fa": "پرداخت قبض با تلفن",
+    "en": "Paying a bill by phone"
+  },
+  "intro": "در این درس یاد می‌گیرید به شرکت برق، گاز یا تلفن زنگ بزنید، بپرسید چقدر بدهکارید و قبضتان را بپردازید.",
+  "note": "فقط وقتی شمارهٔ کارتتان را بگویید که خودتان به شمارهٔ رسمیِ روی قبض زنگ زده باشید. اگر کسی به شما زنگ زد و برای قبض پول یا شمارهٔ کارت خواست، قطع کنید و خودتان با شمارهٔ روی قبض تماس بگیرید.",
+  "canDo": "حالا می‌توانید تلفنی دربارهٔ قبضتان بپرسید و آن را بپردازید.",
+  "mission": "یکی از قبض‌هایتان را بردارید و این دو نوشته را رویش پیدا کنید: Account number و Due date.",
+  "them": {
+    "role": "کارمند شرکت برق",
+    "voice": "m"
+  },
+  "phrases": [
+    {
+      "en": "I'd like to pay my electricity bill.",
+      "fa": "می‌خواهم قبض برقم را بپردازم.",
+      "ph": "آیْد لایک تو پِی مای ایلِکتریسیتی بیل",
+      "note": "به‌جای electricity می‌توانید بگویید: gas (گاز)، water (آب)، phone (تلفن).",
+      "chunks": [
+        "I'd like to pay",
+        "my electricity bill."
+      ]
+    },
+    {
+      "en": "My account number is on the bill.",
+      "fa": "شمارهٔ اشتراکم روی قبض نوشته شده است.",
+      "ph": "مای اَکاونت نامبِر ایز آن دِ بیل",
+      "note": "قبض را جلوی دستتان بگذارید و شماره را رقم‌به‌رقم و آهسته بخوانید. account number اینجا یعنی شمارهٔ اشتراکِ روی قبض، نه شمارهٔ حساب بانکی.",
+      "chunks": [
+        "My account number",
+        "is on the bill."
+      ]
+    },
+    {
+      "en": "How much do I owe?",
+      "fa": "چقدر بدهکارم؟",
+      "ph": "هاو ماچ دو آی اُو؟",
+      "note": "owe یعنی بدهکار بودن.",
+      "chunks": [
+        "How much",
+        "do I owe?"
+      ]
+    },
+    {
+      "en": "When is it due?",
+      "fa": "مهلت پرداختش تا کی است؟",
+      "ph": "وِن ایز ایت دو؟",
+      "note": "due date یعنی آخرین روز پرداخت.",
+      "chunks": [
+        "When is it",
+        "due?"
+      ]
+    },
+    {
+      "en": "Can I have a confirmation number?",
+      "fa": "می‌شود شمارهٔ پیگیری بدهید؟",
+      "ph": "کَن آی هَو اِ کانفِرمِیشِن نامبِر؟",
+      "note": "این شماره را یادداشت کنید؛ مدرک پرداخت شماست.",
+      "chunks": [
+        "Can I have",
+        "a confirmation number?"
+      ]
+    }
+  ],
+  "dialogue": {
+    "setting": "خودتان به شماره‌ای که روی قبض برق نوشته شده زنگ زده‌اید.",
+    "lines": [
+      [
+        "them",
+        "Thank you for calling City Power. How can I help you?",
+        "ممنون که با شرکت برق تماس گرفتید. چه کمکی از من برمی‌آید؟"
+      ],
+      [
+        "you",
+        "Hello. I'd like to pay my electricity bill.",
+        "سلام. می‌خواهم قبض برقم را بپردازم."
+      ],
+      [
+        "them",
+        "Sure. What is your account number?",
+        "حتماً. شمارهٔ اشتراکتان چند است؟"
+      ],
+      [
+        "you",
+        "My account number is on the bill. One moment, please.",
+        "شمارهٔ اشتراکم روی قبض نوشته شده است. یک لحظه، لطفاً."
+      ],
+      [
+        "them",
+        "Take your time.",
+        "عجله نکنید."
+      ],
+      [
+        "you",
+        "How much do I owe?",
+        "چقدر بدهکارم؟"
+      ],
+      [
+        "them",
+        "You owe eighty-two dollars. It's due on Friday.",
+        "هشتاد و دو دلار بدهکارید. مهلت پرداختش جمعه است."
+      ],
+      [
+        "you",
+        "I'll pay now. Can I have a confirmation number?",
+        "الان پرداخت می‌کنم. می‌شود شمارهٔ پیگیری بدهید؟"
+      ]
+    ]
+  },
+  "respond": {
+    "setting": "تمرین: کسی به شما زنگ زده و می‌گوید از شرکت برق است.",
+    "them": [
+      "Your power will be cut off today. Give me your card number now.",
+      "برقتان همین امروز قطع می‌شود. همین الان شمارهٔ کارتتان را بدهید."
+    ],
+    "ok": [
+      [
+        "I will call the company myself. Goodbye.",
+        "خودم به شرکت زنگ می‌زنم. خداحافظ."
+      ],
+      [
+        "I don't give personal information over the phone.",
+        "من پشت تلفن اطلاعات شخصی نمی‌دهم."
+      ]
+    ],
+    "off": [
+      "I'd like to pay my electricity bill.",
+      "می‌خواهم قبض برقم را بپردازم.",
+      "مراقب باشید! این شخص خودش به شما زنگ زده و عجله و تهدید دارد. این نشانهٔ کلاه‌برداری است. قطع کنید و خودتان به شمارهٔ روی قبض زنگ بزنید."
+    ],
+    "off2": 3
+  },
+  "variants": [
+    {
+      "en": "Your balance is eighty-two dollars.",
+      "fa": "بدهی شما هشتاد و دو دلار است.",
+      "like": "You owe eighty-two dollars. It's due on Friday."
+    },
+    {
+      "en": "Do you have your account number?",
+      "fa": "شمارهٔ اشتراکتان را دارید؟",
+      "like": "Sure. What is your account number?",
+      "voice": "b"
+    },
+    {
+      "en": "No rush.",
+      "fa": "عجله‌ای نیست.",
+      "like": "Take your time."
+    }
+  ],
+  "task": [
+    [
+      "می‌خواهید بدانید تا چه روزی وقت دارید قبض را بپردازید.",
+      4
+    ],
+    [
+      "پرداخت تمام شده و می‌خواهید مدرکی داشته باشید.",
+      5
+    ]
+  ],
+  "grammar": {
+    "title": "How much do I … ?",
+    "explain": "وقتی با «How much» یا «When» می‌پرسید خودتان چه کاری باید بکنید، بعدش «do I» می‌آید و بعد فعل.",
+    "examples": [
+      [
+        "How much do I owe?",
+        "چقدر بدهکارم؟"
+      ],
+      [
+        "How much do I pay?",
+        "چقدر باید بپردازم؟"
+      ],
+      [
+        "When do I pay?",
+        "کی باید بپردازم؟"
+      ]
+    ],
+    "wrong": "How much I owe?",
+    "right": "How much do I owe?",
+    "why": "در این سؤال‌ها «do» قبل از «I» لازم است: «How much do I owe?\u200e»"
+  },
+  "review": {
+    "status": "draft",
+    "language": null,
+    "teaching": null,
+    "safety": null
+  }
+}

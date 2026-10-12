@@ -1,0 +1,32 @@
+{
+  "_comment": "Gentle corrections for mistakes Farsi speakers often make. 'match' is a regular expression tested on the learner's lower-cased sentence; 'fix' rewrites it; 'why' is shown in Farsi. Used by the built-in conversation partner. The optional AI partner writes its own corrections.",
+  "rules": [
+    { "id": "id-like", "match": "^i like (buy|go|see|pay|make|talk|speak|check|send|return|order|open|deposit|withdraw|ask|have|get|know)\\b", "fix": "I'd like to $1", "why": "برای درخواست مؤدبانه می‌گوییم «I'd like to …\u200e»، نه «I like …\u200e»." },
+    { "id": "want-to", "match": "\\b(i|we|you|they) (want|need|like) (buy|go|see|pay|make|talk|speak|eat|drink|check(?!(?:,? please)?$)|send|return|call|know|sign|sit|come|take|get|have|ask|find)\\b", "fix": "$1 $2 to $3", "why": "بعد از want، need و like، قبل از فعل بعدی «to» می‌آید." },
+    { "id": "i-am", "match": "^i (fine|good|okay|ok|sick|tired|hungry|thirsty|sorry|here|from)\\b", "fix": "I'm $1", "why": "در انگلیسی «am» نباید جا بیفتد: I'm fine." },
+    { "id": "i-am-lost", "match": "^i lost$", "fix": "I'm lost", "why": "در انگلیسی «am» نباید جا بیفتد: I'm lost." },
+    { "id": "no-verb", "match": "\\bi no (understand|know|remember|speak|have|want|need|eat|like)\\b", "fix": "I don't $1", "why": "برای منفی کردن می‌گوییم «I don't …\u200e»، نه «I no …\u200e»." },
+    { "id": "not-work-it", "match": "^it(?:'?s| is)? (?:no|not) work\\b", "fix": "It is not working", "why": "برای وسیلهٔ خراب می‌گوییم «It is not working»." },
+    { "id": "not-work", "match": "\\b(is|it|it's) (no|not) work\\b", "fix": "is not working", "why": "برای وسیلهٔ خراب می‌گوییم «is not working»." },
+    { "id": "have-years", "match": "\\bi have (\\d+|[a-z-]+) years(?: old)?$", "fix": "I am $1 years old", "why": "برای سن می‌گوییم «I am … years old»، نه «I have … years»." },
+    { "id": "where-the", "match": "^where is (milk|bread|rice|bank|pharmacy|restroom|bathroom|bus stop|hospital|exit|elevator|post office|library)\\b", "fix": "Where is the $1", "why": "برای جاها و چیزهای مشخص «the» می‌آید: Where is the …" },
+    { "id": "an-article", "match": "\\b(have|need|want|make) (appointment|ambulance|interpreter|allergy)\\b", "fix": "$1 an $2", "why": "قبل از این کلمه «an» می‌آید." },
+    { "id": "a-article", "match": "\\b(have|need|want) (receipt|bag|question|fever|cough|headache|problem|table|taxi|doctor)\\b", "fix": "$1 a $2", "why": "قبل از این کلمه «a» می‌آید." },
+    { "id": "i-am-agree", "match": "\\bi(?: am|'m) agree\\b", "fix": "I agree", "why": "می‌گوییم «I agree»، بدون am." },
+    { "id": "how-do", "match": "^how i (take|pay|go|get|use|open|sign)\\b", "fix": "How do I $1", "why": "وقتی می‌پرسید کاری را چطور انجام بدهید، بعد از How می‌گوییم «do I»." },
+    { "id": "what-do", "match": "^(what|where|when) ((?!do |does |did |can |could |should |must |may |will |would |is |are |am )\\w+ )?i (need|sign|go|pay|come)\\b(?!.*(?:,|\\bi\\b|\\bis\\b))", "fix": "$1 $2do I $3", "why": "در این سؤال، قبل از «I» کلمهٔ «do» لازم است." },
+    { "id": "can-i", "match": "^(what|where|when|how) i (can|could|should) (?!.*(?:,|\\bis\\b))", "fix": "$1 $2 I ", "why": "در سؤال، can قبل از «I» می‌آید: «Where can I …\u200e؟»" },
+    { "id": "on-day", "match": "\\bin (monday|tuesday|wednesday|thursday|friday|saturday|sunday)\\b", "fix": "on $1", "why": "با اسم روزها «on» می‌آید." },
+    { "id": "it-started", "match": "\\bit start (?=yesterday|today|last |this |\\w+ (?:days?|weeks?|months?|years?|hours?) (?:ago|before))", "fix": "it started ", "why": "برای چیزی که در گذشته شروع شده می‌گوییم «It started …\u200e»." },
+    { "id": "ago", "match": "\\b(\\w+ (?:days?|weeks?|months?|years?|hours?)) before$", "fix": "$1 ago", "why": "برای «… پیش» می‌گوییم «ago»." },
+    { "id": "can-to", "match": "\\b(can|could|will|should|must) to (\\w+)", "fix": "$1 $2", "why": "بعد از can و will، «to» نمی‌آید." }
+  ],
+  "soundTips": [
+    { "id": "th", "test": "th", "title": "صدای th", "fa": "برای «th» نوک زبان را آرام بین دندان‌ها بگذارید و هوا را بیرون بدهید. مثل «س»، «ت»، «ز» یا «د» نگویید." },
+    { "id": "w", "test": "^w(?!r|ho)", "title": "صدای w", "fa": "برای «w» لب‌ها را مثل وقتی که «او» می‌گویید گرد کنید. مثل «و»ی فارسی (v) نگویید." },
+    { "id": "cluster", "test": "^(s[ptkmnlw]|sc[^eiy]|squ)", "title": "شروع کلمه با s", "fa": "اول کلمه «اِ» اضافه نکنید. بگویید «sssتاپ»، نه «اِستاپ»." },
+    { "id": "short-i", "test": "^(this|is|it|six|milk|sick|sit|bill|fill|live|in)$", "title": "صدای کوتاه i", "fa": "این «i» کوتاه است، نزدیک به «اِ». آن را مثل «ای» نکشید." },
+    { "id": "r", "test": "r", "title": "صدای r", "fa": "«r» انگلیسی نرم است؛ زبان به سقف دهان نمی‌خورد و نمی‌لرزد." },
+    { "id": "ed", "test": "^(?!need$|hundred$|red$|bed$|feed$)\\w+ed$", "title": "آخر فعل‌های ed‌دار", "fa": "در بیشتر فعل‌ها «ed» هجای جدا نیست؛ فقط یک «t» یا «d» کوتاه است: finished تقریباً «فینیشت»، called تقریباً «کالد». فقط بعد از t و d «اِد» گفته می‌شود، مثل started." }
+  ]
+}

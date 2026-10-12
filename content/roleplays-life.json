@@ -1,0 +1,378 @@
+{
+  "version": 1,
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null },
+  "roleplays": [
+    {
+      "id": "rp-clinic-questions", "scenario": "clinic", "stage": 2, "safetyCritical": true,
+      "title": "سؤال‌های مطب",
+      "setting": "برای دل‌درد به مطب آمده‌اید. اول منشی، بعد پرستار و بعد دکتر با شما صحبت می‌کنند.",
+      "goal": "به سؤال‌های مطب جواب بدهید و بفهمید بعدش چه باید بکنید.",
+      "note": "این فقط تمرین زبان است و توصیهٔ پزشکی نیست. حرف‌های دکتر در این تمرین ساختگی‌اند.",
+      "them": { "role": "کارکنان مطب", "persona": "a clinic receptionist, then a nurse, then a doctor in a clearly simulated practice visit; ask the short routine questions one at a time (been here before, the reason for the visit, pain from one to ten) and say what happens next (a blood test in room twelve, a referral to a specialist whose office will call); never give medical advice, a diagnosis or medicine instructions, and never ask for real personal details", "voice": "b" },
+      "turns": [
+        { "them": ["Good morning. Have you been here before?", "صبح به‌خیر. قبلاً اینجا آمده‌اید؟"],
+          "check": { "q": "چه پرسید؟", "right": "قبلاً به این مطب آمده‌اید؟", "wrong": ["وقت قبلی دارید؟", "بیمه دارید؟"] },
+          "replies": [
+            { "en": "No. I'm a new patient.", "fa": "نه. بیمار جدید هستم.", "keys": ["no", "new patient", "first time", "have not", "new"], "then": ["Welcome. Please fill out this form.", "خوش آمدید. لطفاً این فرم را پر کنید."], "thenCheck": { "q": "چه باید بکنید؟", "right": "این فرم را پر کنید.", "wrong": ["اینجا را امضا کنید.", "کارت بیمه‌تان را نشان بدهید."] } },
+            { "en": "Yes, I have.", "fa": "بله، آمده‌ام.", "keys": ["yes"], "then": ["Good. We have your information.", "خوب است. اطلاعاتتان را داریم."], "thenCheck": { "right": "اطلاعاتتان را دارند.", "wrong": ["اطلاعاتتان را ندارند.", "باید فرم تازه پر کنید."] } }
+          ] },
+        { "them": ["What is the reason for your visit today?", "علت مراجعهٔ امروزتان چیست؟"],
+          "check": { "q": "چه پرسید؟", "right": "برای چه مشکلی آمده‌اید؟", "wrong": ["از کی این مشکل را دارید؟", "اسم دکترتان چیست؟"] },
+          "replies": [
+            { "en": "My stomach hurts.", "fa": "شکمم درد می‌کند.", "keys": ["stomach"] },
+            { "en": "I have a stomachache.", "fa": "دل‌درد دارم.", "keys": ["stomachache", "stomach ache"] }
+          ] },
+        { "them": ["I'm sorry to hear that. On a scale of one to ten, how bad is the pain?", "متأسفم. از یک تا ده، دردتان چقدر شدید است؟"],
+          "check": { "q": "چه پرسید؟", "right": "دردتان از یک تا ده چقدر شدید است؟", "wrong": ["چند روز است درد دارید؟", "ساعت ده وقت دارید؟"] },
+          "replies": [
+            { "en": "It's a six.", "fa": "شش است.", "keys": ["six"] },
+            { "en": "About an eight.", "fa": "حدود هشت.", "keys": ["eight"] }
+          ], "open": true },
+        { "them": ["Okay. The doctor wants a blood test. Please go to room twelve.", "بسیار خب. دکتر می‌خواهد آزمایش خون بدهید. لطفاً به اتاق دوازده بروید."],
+          "check": { "q": "حالا چه باید بکنید؟", "right": "برای آزمایش خون به اتاق دوازده بروید.", "wrong": ["برای آزمایش خون به اتاق بیست بروید.", "برای گرفتن فشار خون به اتاق دوازده بروید."] },
+          "replies": [
+            { "en": "Okay. Room twelve. Thank you.", "fa": "باشد. اتاق دوازده. ممنون.", "keys": ["okay"] },
+            { "en": "Where is room twelve?", "fa": "اتاق دوازده کجاست؟", "keys": ["where"], "then": ["It's down the hall, on the left.", "جلوتر در همین راهرو، سمت چپ است."], "thenCheck": { "q": "اتاق دوازده کجاست؟", "right": "جلوتر در همین راهرو، سمت چپ", "wrong": ["جلوتر در همین راهرو، سمت راست", "طبقهٔ بالا، سمت چپ"] } },
+            { "en": "Do I come back here after the test?", "fa": "بعد از آزمایش دوباره به اینجا برگردم؟", "keys": ["come back", "after the test"], "then": ["Yes. Come back here after the test.", "بله. بعد از آزمایش دوباره به اینجا بیایید."], "thenCheck": { "right": "بعد از آزمایش به همین‌جا برگردید.", "wrong": ["بعد از آزمایش می‌توانید به خانه بروید.", "فردا دوباره بیایید."] } }
+          ] },
+        { "them": ["Thank you for waiting. I'm sending you to a specialist. Their office will call you next week.", "(بعد از آزمایش) ممنون که صبر کردید. شما را پیش متخصص می‌فرستم. هفتهٔ آینده از مطب او به شما زنگ می‌زنند."],
+          "check": { "q": "دکتر چه گفت؟", "right": "شما را پیش متخصص می‌فرستد؛ هفتهٔ آینده از مطب او به شما زنگ می‌زنند.", "wrong": ["شما را پیش متخصص می‌فرستد؛ خودتان باید هفتهٔ آینده زنگ بزنید.", "لازم نیست پیش متخصص بروید؛ هفتهٔ آینده دوباره بیایید."] },
+          "replies": [
+            { "en": "Okay. Thank you, doctor.", "fa": "باشد. ممنون، دکتر.", "keys": ["okay", "thank"] },
+            { "en": "Should I call them?", "fa": "خودم باید به آن‌ها زنگ بزنم؟", "keys": ["should i call", "call them"], "then": ["No. They'll call you.", "نه. خودشان به شما زنگ می‌زنند."], "thenCheck": { "right": "نه؛ خودشان به شما زنگ می‌زنند.", "wrong": ["بله؛ همین امروز زنگ بزنید.", "بله؛ هفتهٔ آینده زنگ بزنید."] } }
+          ] },
+        { "them": ["That's all for today. Take care!", "برای امروز همین بود. مراقب خودتان باشید!"],
+          "replies": [
+            { "en": "Thank you. Goodbye!", "fa": "ممنون. خداحافظ!", "keys": ["thank", "goodbye", "bye"] },
+            { "en": "Thank you. You too!", "fa": "ممنون. شما هم همین‌طور!", "keys": ["too"] }
+          ] }
+      ]
+    },
+    {
+      "id": "rp-pharmacy-problems", "scenario": "clinic", "stage": 2, "safetyCritical": true,
+      "title": "داروخانه: وقتی دارو آماده نیست",
+      "setting": "دارویتان تمام شده و به داروخانه آمده‌اید. این بار کار طبق معمول پیش نمی‌رود؛ به حرف‌های داروساز خوب گوش کنید.",
+      "goal": "بگویید دارویتان را دوباره لازم دارید، بفهمید مشکل چیست و کی می‌توانید دارو را بگیرید.",
+      "note": "این فقط تمرین زبان است و توصیهٔ پزشکی نیست. اسم، تاریخ و مبلغ‌های این تمرین ساختگی‌اند. دربارهٔ داروی خودتان از دکتر و داروساز خودتان بپرسید.",
+      "them": { "role": "داروساز", "persona": "a patient pharmacist in a clearly simulated practice visit; the learner asks for a refill, there are no refills left, the pharmacy will call the doctor for a new prescription, and two days later the medicine is ready after a twenty-minute wait; never give medicine instructions, doses or medical advice, and never ask for real personal, insurance or payment details", "voice": "m" },
+      "turns": [
+        { "them": ["Hi. Are you picking up or dropping off?", "سلام. آمده‌اید دارو بگیرید یا نسخه بدهید؟"],
+          "check": { "q": "چه پرسید؟", "right": "آمده‌اید دارو بگیرید یا نسخه بدهید؟", "wrong": ["دارو را با غذا می‌خورید یا بدون غذا؟", "نقد می‌پردازید یا با کارت؟"] },
+          "replies": [
+            { "en": "I need a refill.", "fa": "دارویم تمام شده و دوباره لازم دارم.", "keys": ["refill"] },
+            { "en": "Hello. I'm here for a refill.", "fa": "سلام. آمده‌ام دارویم را دوباره بگیرم.", "keys": ["here for"] },
+            { "en": "Picking up.", "fa": "آمده‌ام دارو بگیرم.", "keys": ["picking", "pick up"] }
+          ] },
+        { "them": ["Okay. What's your last name and date of birth?", "باشد. نام خانوادگی و تاریخ تولدتان چیست؟"],
+          "check": { "q": "چه پرسید؟", "right": "نام خانوادگی و تاریخ تولدتان چیست؟", "wrong": ["اسم دارو و اسم دکترتان چیست؟", "نام خانوادگی و شمارهٔ تلفنتان چیست؟"] },
+          "replies": [
+            { "en": "Ahmadi. March 5th, 1958.", "fa": "احمدی. ۵ مارس ۱۹۵۸.", "keys": ["ahmadi", "march"] },
+            { "en": "My last name is Ahmadi. I was born on March 5th, 1958.", "fa": "نام خانوادگی من احمدی است. من در ۵ مارس ۱۹۵۸ به دنیا آمده‌ام.", "keys": ["last name", "born"] }
+          ], "open": true },
+        { "them": ["Let me check. I'm sorry, you have no refills left.", "بگذارید نگاه کنم. متأسفم، با این نسخه دیگر نمی‌توانید دارو بگیرید."],
+          "check": { "right": "با این نسخه دیگر نمی‌توانید دارو بگیرید.", "wrong": ["دارویتان هنوز آماده نیست.", "این دارو را امروز ندارند."] },
+          "replies": [
+            { "en": "Can you call my doctor?", "fa": "می‌شود به دکترم زنگ بزنید؟", "keys": ["can you call", "please call"], "then": ["Yes. We'll call your doctor today.", "بله. همین امروز به دکترتان زنگ می‌زنیم."], "thenCheck": { "q": "کی به دکترتان زنگ می‌زنند؟", "right": "همین امروز", "wrong": ["سه‌شنبه", "فردا"] } },
+            { "en": "Okay. I will call my doctor.", "fa": "باشد. خودم به دکترم زنگ می‌زنم.", "keys": ["i will call"], "then": ["That works, too. Ask for a new prescription.", "این‌طور هم می‌شود. نسخهٔ تازه بخواهید."], "thenCheck": { "q": "از دکتر چه بخواهید؟", "right": "نسخهٔ تازه", "wrong": ["وقت تازه", "داروی دیگر"] } },
+            { "en": "What do I need to do?", "fa": "چه کار باید بکنم؟", "keys": ["need to do", "what do i do"], "then": ["Nothing. We need to call your doctor for a new prescription.", "هیچ. ما باید برای نسخهٔ تازه به دکترتان زنگ بزنیم."], "thenCheck": { "q": "حالا چه می‌شود؟", "right": "داروخانه برای نسخهٔ تازه به دکترتان زنگ می‌زند.", "wrong": ["شما باید پیش دکتر بروید و نسخهٔ تازه بیاورید.", "شما باید فردا دوباره به داروخانه زنگ بزنید."] } }
+          ] },
+        { "them": ["It can take a day or two. We'll text you when it's ready.", "یکی دو روز طول می‌کشد. وقتی آماده شد برایتان پیامک می‌فرستیم."],
+          "check": { "q": "چقدر طول می‌کشد و چطور خبر می‌دهند؟", "right": "یکی دو روز؛ پیامک می‌فرستند.", "wrong": ["یکی دو ساعت؛ پیامک می‌فرستند.", "یکی دو روز؛ خودتان باید زنگ بزنید."] },
+          "replies": [
+            { "en": "Okay. Thank you.", "fa": "باشد. ممنون.", "keys": ["okay", "thank"] },
+            { "en": "Can you call me, please? I don't read text messages.", "fa": "می‌شود لطفاً زنگ بزنید؟ من پیامک نمی‌خوانم.", "keys": ["call me"], "then": ["Sure. We'll call you instead.", "حتماً. به‌جایش زنگ می‌زنیم."] }
+          ] },
+        { "them": ["Hello again. I'm sorry, it's not ready yet. Come back in twenty minutes.", "(دو روز بعد) دوباره سلام. متأسفم، هنوز آماده نیست. بیست دقیقهٔ دیگر برگردید."],
+          "check": { "q": "داروساز چه گفت؟", "right": "هنوز آماده نیست؛ بیست دقیقهٔ دیگر برگردید.", "wrong": ["هنوز آماده نیست؛ دوازده دقیقهٔ دیگر برگردید.", "آماده است؛ بیست دلار می‌شود."] },
+          "replies": [
+            { "en": "Okay. I'll come back in twenty minutes.", "fa": "باشد. بیست دقیقهٔ دیگر برمی‌گردم.", "keys": ["come back"] },
+            { "en": "Okay. I'll wait here.", "fa": "باشد. همین‌جا منتظر می‌مانم.", "keys": ["wait"] }
+          ] },
+        { "them": ["Thank you for waiting. Your medicine is ready. That's fifteen dollars.", "ممنون که صبر کردید. دارویتان آماده است. پانزده دلار می‌شود."],
+          "check": { "q": "چقدر باید بدهید؟", "right": "$15", "wrong": ["$50", "$5"] },
+          "replies": [
+            { "en": "Here you go. Thank you.", "fa": "بفرمایید. ممنون.", "keys": ["here", "okay"] },
+            { "en": "Can I pay by card?", "fa": "می‌توانم با کارت پرداخت کنم؟", "keys": ["card"], "then": ["Yes, of course.", "بله، البته."] },
+            { "en": "Can I pay with cash?", "fa": "می‌توانم نقد پرداخت کنم؟", "keys": ["cash"], "then": ["Yes, of course.", "بله، البته."] }
+          ] }
+      ]
+    },
+    {
+      "id": "rp-dentist", "scenario": "clinic", "stage": 2, "safetyCritical": true,
+      "title": "در مطب دندان‌پزشک",
+      "setting": "دندانتان درد می‌کند و به مطب دندان‌پزشک آمده‌اید. اول منشی و بعد دندان‌پزشک با شما صحبت می‌کنند.",
+      "goal": "بگویید مشکل دندانتان چیست، حرف‌های دندان‌پزشک را بفهمید و وقت بعدی را درست بشنوید.",
+      "note": "این فقط تمرین زبان است و توصیهٔ پزشکی نیست. حرف‌های دندان‌پزشک و وقتِ این تمرین ساختگی‌اند.",
+      "them": { "role": "منشی و دندان‌پزشک", "persona": "a dental office receptionist and then a calm dentist named Doctor Lee in a clearly simulated practice visit; use short sentences (a fifteen-minute wait, sit back and open wide, does this hurt, an X-ray, come back next Thursday at two thirty); never give a diagnosis, treatment advice or medicine instructions, and never ask for real personal or insurance details", "voice": "k" },
+      "turns": [
+        { "them": ["Good afternoon. What can we do for you today?", "بعدازظهر به‌خیر. امروز چه کاری برایتان انجام بدهیم؟"],
+          "replies": [
+            { "en": "I have a toothache.", "fa": "دندانم درد می‌کند.", "keys": ["toothache", "tooth ache", "tooth hurts"] },
+            { "en": "My tooth broke.", "fa": "دندانم شکسته است.", "keys": ["broke", "broken"] }
+          ] },
+        { "them": ["Okay. The dentist is with another patient. It will be about fifteen minutes.", "بسیار خب. دندان‌پزشک الان بیمار دیگری دارد. حدود پانزده دقیقه طول می‌کشد."],
+          "check": { "q": "چقدر باید صبر کنید؟", "right": "حدود ۱۵ دقیقه", "wrong": ["حدود ۵۰ دقیقه", "حدود ۵ دقیقه"] },
+          "replies": [
+            { "en": "Okay. I'll wait.", "fa": "باشد. منتظر می‌مانم.", "keys": ["wait", "okay"] },
+            { "en": "That's fine. Thank you.", "fa": "اشکالی ندارد. ممنون.", "keys": ["fine"] }
+          ] },
+        { "them": ["Hello. I'm Doctor Lee. Please sit back and open wide.", "(در اتاق دندان‌پزشک) سلام. من دکتر لی هستم. لطفاً تکیه بدهید و دهانتان را کاملاً باز کنید."],
+          "check": { "q": "دندان‌پزشک چه خواست؟", "right": "تکیه بدهید و دهانتان را کاملاً باز کنید.", "wrong": ["دهانتان را ببندید و دندان‌ها را روی هم فشار بدهید.", "بلند شوید و دهانتان را بشویید."] },
+          "replies": [
+            { "en": "Okay.", "fa": "باشد.", "keys": ["okay", "ok"] },
+            { "en": "Like this?", "fa": "این‌طوری؟", "keys": ["like this"], "then": ["Yes, just like that. Thank you.", "بله، همین‌طور. ممنون."] }
+          ] },
+        { "them": ["Does this hurt?", "درد می‌گیرد؟"],
+          "check": { "q": "چه پرسید؟", "right": "درد می‌گیرد؟", "wrong": ["از کی درد می‌کند؟", "کدام دندان است؟"] },
+          "replies": [
+            { "en": "Yes, it does.", "fa": "بله، درد می‌گیرد.", "keys": ["yes", "it hurts", "a lot"] },
+            { "en": "A little.", "fa": "کمی.", "keys": ["little", "not much"] },
+            { "en": "No, it doesn't.", "fa": "نه، درد نمی‌گیرد.", "keys": ["no"] }
+          ] },
+        { "them": ["I see. We need to take an X-ray. It only takes a minute.", "متوجه شدم. باید عکس رادیولوژی بگیریم. فقط یک دقیقه طول می‌کشد."],
+          "check": { "q": "حالا چه کار می‌کنند؟", "right": "از دندانتان عکس رادیولوژی می‌گیرند؛ یک دقیقه طول می‌کشد.", "wrong": ["دندانتان را پر می‌کنند؛ یک ساعت طول می‌کشد.", "امروز کاری نمی‌کنند؛ باید روز دیگری بیایید."] },
+          "replies": [
+            { "en": "Okay.", "fa": "باشد.", "keys": ["okay", "ok"] },
+            { "en": "Will it hurt?", "fa": "درد دارد؟", "keys": ["will it hurt", "hurt"], "then": ["No, not at all.", "نه، اصلاً."], "thenCheck": { "right": "نه، اصلاً درد ندارد.", "wrong": ["بله، کمی درد دارد.", "بله، خیلی درد دارد."] } }
+          ] },
+        { "them": ["All done for today. You need to come back next Thursday at two thirty.", "برای امروز تمام شد. باید پنج‌شنبهٔ آینده ساعت دو و نیم دوباره بیایید."],
+          "check": { "q": "وقت بعدی شما کی است؟", "right": "پنج‌شنبهٔ آینده، ساعت ۲:۳۰", "wrong": ["سه‌شنبهٔ آینده، ساعت ۲:۳۰", "پنج‌شنبهٔ آینده، ساعت ۱۲:۳۰"] },
+          "replies": [
+            { "en": "Next Thursday at two thirty. Thank you.", "fa": "پنج‌شنبهٔ آینده ساعت دو و نیم. ممنون.", "keys": ["thursday", "two thirty", "okay"] },
+            { "en": "Can I come in the morning?", "fa": "می‌توانم صبح بیایم؟", "keys": ["morning"], "then": ["I'm sorry, the mornings are full. Two thirty is the only time.", "متأسفم، صبح‌ها وقت نداریم. فقط همان ساعت دو و نیم هست."], "thenCheck": { "right": "صبح‌ها وقت ندارند؛ فقط همان ساعت دو و نیم هست.", "wrong": ["بله، می‌توانید صبح بیایید.", "صبح‌ها وقت ندارند؛ باید هفتهٔ بعدش بیایید."] } }
+          ] },
+        { "them": ["See you then. Take care!", "تا آن روز. مراقب خودتان باشید!"],
+          "replies": [
+            { "en": "Thank you. Goodbye!", "fa": "ممنون. خداحافظ!", "keys": ["thank", "goodbye", "bye"] },
+            { "en": "Thank you. See you next Thursday!", "fa": "ممنون. پنج‌شنبهٔ آینده می‌بینمتان!", "keys": ["see you"] }
+          ] }
+      ]
+    },
+    {
+      "id": "rp-card-reader", "scenario": "store", "stage": 2, "safetyCritical": true,
+      "title": "پرداخت با کارت پای صندوق",
+      "setting": "پای صندوق فروشگاه هستید و می‌خواهید با کارت بانکی پرداخت کنید. صندوق‌دار چند سؤال کوتاه و تند می‌پرسد.",
+      "goal": "به سؤال‌های صندوق‌دار جواب بدهید و با کارت پرداخت کنید.",
+      "note": "این فقط تمرین زبان است و مبلغ‌هایش ساختگی‌اند. رمز کارت (PIN) را فقط خودتان روی دستگاه وارد کنید و به هیچ‌کس نگویید. اگر پرسیدند می‌خواهید به خیریه کمک کنید، آزادید بگویید «No, thank you.‎»؛ بی‌ادبی نیست.",
+      "them": { "role": "صندوق‌دار", "persona": "a quick but friendly supermarket cashier in a clearly simulated checkout; ask the usual short questions one at a time (rewards number, credit or debit, cash back, a one-dollar donation, receipt); never ask the learner to say a PIN, a card number, a phone number or any other real personal or payment detail aloud", "voice": "b" },
+      "turns": [
+        { "them": ["Hi there! Do you have a rewards number?", "سلام! شمارهٔ عضویت فروشگاه را دارید؟"],
+          "check": { "q": "چه پرسید؟", "right": "شمارهٔ عضویت فروشگاه را دارید؟", "wrong": ["رمز کارتتان چند است؟", "رسید می‌خواهید؟"] },
+          "replies": [
+            { "en": "No, I don't.", "fa": "نه، ندارم.", "keys": ["no"], "then": ["That's okay.", "اشکالی ندارد."] },
+            { "en": "I'm not a member.", "fa": "عضو نیستم.", "keys": ["member"], "then": ["No problem.", "مشکلی نیست."] }
+          ] },
+        { "them": ["Your total is thirty-four sixteen. Credit or debit?", "جمع خرید شما سی و چهار دلار و شانزده سنت است. کارت اعتباری یا کارت بانکی؟"],
+          "check": { "q": "جمع خرید چقدر شد؟", "right": "$34.16", "wrong": ["$34.60", "$43.16"] },
+          "replies": [
+            { "en": "Debit.", "fa": "کارت بانکی.", "keys": ["debit"] },
+            { "en": "It's a debit card.", "fa": "کارت بانکی است.", "keys": ["debit card"] }
+          ] },
+        { "them": ["Go ahead and insert your card. Then enter your PIN.", "بفرمایید کارتتان را در دستگاه بگذارید. بعد رمزتان را وارد کنید."],
+          "check": { "q": "حالا چه باید بکنید؟", "right": "کارت را در دستگاه بگذارید و رمز را خودتان وارد کنید.", "wrong": ["رمز کارت را به صندوق‌دار بگویید.", "کارت را به صندوق‌دار بدهید و امضا کنید."] },
+          "replies": [
+            { "en": "Okay.", "fa": "باشد.", "keys": ["okay", "ok"] },
+            { "en": "Where do I put my card?", "fa": "کارت را کجا بگذارم؟", "keys": ["where"], "then": ["Right here, at the bottom.", "همین‌جا، پایینِ دستگاه."], "thenCheck": { "q": "کارت را کجا بگذارید؟", "right": "پایینِ دستگاه", "wrong": ["بالای دستگاه", "کنارِ دستگاه"] } }
+          ] },
+        { "them": ["Do you want cash back?", "می‌خواهید پول نقد هم از حسابتان بگیرید؟"],
+          "check": { "q": "چه پرسید؟", "right": "می‌خواهید پول نقد هم از حسابتان بگیرید؟", "wrong": ["می‌خواهید نقد پرداخت کنید؟", "می‌خواهید پولتان را پس بگیرید؟"] },
+          "replies": [
+            { "en": "No cash back, thank you.", "fa": "نه، پول نقد نمی‌خواهم، ممنون.", "keys": ["no cash back"] },
+            { "en": "No, thank you.", "fa": "نه، ممنون.", "keys": ["no"] },
+            { "en": "Yes. Twenty dollars, please.", "fa": "بله. بیست دلار، لطفاً.", "keys": ["yes", "twenty"], "then": ["Okay. Twenty dollars cash back.", "باشد. بیست دلار پول نقد."] }
+          ] },
+        { "them": ["Would you like to donate a dollar to the food bank today?", "می‌خواهید امروز یک دلار به بانک غذا کمک کنید؟"],
+          "check": { "q": "چه پرسید؟", "right": "می‌خواهید یک دلار به خیریه کمک کنید؟", "wrong": ["یک دلار تخفیف می‌خواهید؟", "یک دلار کم دارید؟"] },
+          "replies": [
+            { "en": "No, thank you.", "fa": "نه، ممنون.", "keys": ["no", "not today"] },
+            { "en": "Yes, okay.", "fa": "بله، باشد.", "keys": ["yes", "okay", "sure"], "then": ["Thank you so much!", "خیلی ممنون!"] }
+          ] },
+        { "them": ["You're all set. Please take your card. Would you like your receipt?", "تمام شد. لطفاً کارتتان را بردارید. رسیدتان را می‌خواهید؟"],
+          "check": { "q": "صندوق‌دار چه گفت؟", "right": "کارتتان را بردارید؛ رسید می‌خواهید؟", "wrong": ["کارتتان قبول نشد؛ دوباره امتحان کنید.", "کارتتان را دوباره در دستگاه بگذارید."] },
+          "replies": [
+            { "en": "Yes, please.", "fa": "بله، لطفاً.", "keys": ["yes"] },
+            { "en": "No, thank you.", "fa": "نه، ممنون.", "keys": ["no"] }
+          ] },
+        { "them": ["Have a great day!", "روز خوبی داشته باشید!"],
+          "replies": [
+            { "en": "Thank you. You too!", "fa": "ممنون. شما هم همین‌طور!", "keys": ["thank", "too"] }
+          ] }
+      ]
+    },
+    {
+      "id": "rp-benefits", "scenario": "office", "stage": 2, "safetyCritical": true,
+      "title": "نامه‌ای از اداره",
+      "setting": "نامه‌ای از اداره‌ای که کمک‌های دولتی می‌دهد به دستتان رسیده و آن را پیش کارمند آورده‌اید.",
+      "goal": "بپرسید نامه یعنی چه، چه کار باید بکنید و تا چه تاریخی وقت دارید.",
+      "note": "این فقط تمرین زبان است و راهنمایی حقوقی یا راهنمایی دربارهٔ کمک‌های دولتی نیست. نامه، مدرک و تاریخ‌های این تمرین ساختگی‌اند. دربارهٔ نامهٔ خودتان از همان اداره بپرسید و چیزی را که نمی‌فهمید امضا نکنید.",
+      "them": { "role": "کارمند اداره", "persona": "a patient clerk at a public benefits office in a clearly simulated practice visit, explaining a fictional letter in short sentences (the office needs proof of address, a bill is enough, it can be brought or mailed, by March fifteenth); never give legal, immigration or benefits advice, never say what any real programme requires, and never ask for a Social Security number, a case number, bank details or any other real personal information", "voice": "k" },
+      "turns": [
+        { "them": ["Good morning. What can I do for you?", "صبح به‌خیر. چه کاری برایتان انجام بدهم؟"],
+          "replies": [
+            { "en": "I got this letter. What does it mean?", "fa": "این نامه برایم آمده است. یعنی چه؟", "keys": ["letter"] },
+            { "en": "Hello. I got this letter. Can I get this in Farsi?", "fa": "سلام. این نامه برایم آمده است. می‌شود این را به فارسی بگیرم؟", "keys": ["can i get", "get this in"], "then": ["I'm sorry, we don't have this letter in Farsi. But I can explain it slowly.", "متأسفم، این نامه را به فارسی نداریم. ولی می‌توانم آهسته توضیحش بدهم."], "thenCheck": { "right": "این نامه را به فارسی ندارند؛ ولی آهسته توضیحش می‌دهد.", "wrong": ["این نامه را به فارسی دارند و الان می‌آورد.", "این نامه را به فارسی ندارند؛ باید با مترجم برگردید."] } },
+            { "en": "I'm sorry. My English is not good.", "fa": "ببخشید. انگلیسی‌ام خوب نیست.", "keys": ["english"], "then": ["That's okay. I'll speak slowly. Show me your letter, please.", "اشکالی ندارد. آهسته صحبت می‌کنم. لطفاً نامه‌تان را نشانم بدهید."] }
+          ] },
+        { "them": ["Let me see. This letter says we need proof of your address.", "بگذارید ببینم. در این نامه نوشته شده مدرکی لازم داریم که آدرستان را نشان بدهد."],
+          "check": { "q": "نامه چه می‌گوید؟", "right": "اداره مدرکی می‌خواهد که آدرستان را نشان بدهد.", "wrong": ["اداره می‌خواهد آدرستان را عوض کنید.", "اداره نامه را به آدرس اشتباه فرستاده است."] },
+          "replies": [
+            { "en": "What do I need to do?", "fa": "چه کار باید بکنم؟", "keys": ["need to do", "what do i do"], "then": ["Please bring a bill with your name and address on it.", "لطفاً یک قبض بیاورید که اسم و آدرستان رویش باشد."], "thenCheck": { "q": "چه چیزی باید بیاورید؟", "right": "یک قبض که اسم و آدرستان رویش باشد", "wrong": ["یک قبض که هنوز پرداخت نشده باشد", "کارت شناسایی و یک عکس"] } },
+            { "en": "What does that mean?", "fa": "یعنی چه؟", "keys": ["mean", "what is proof"], "then": ["It means a paper with your name and address on it. For example, a bill.", "یعنی کاغذی که اسم و آدرستان رویش باشد. مثلاً یک قبض."], "thenCheck": { "q": "چه چیزی لازم است؟", "right": "کاغذی که اسم و آدرستان رویش باشد، مثلاً یک قبض", "wrong": ["کاغذی که اسم و امضایتان رویش باشد، مثلاً یک چک", "کارت شناسایی و یک عکس"] } }
+          ] },
+        { "them": ["You can bring it here, or you can mail it.", "می‌توانید خودتان بیاورید، یا با پست بفرستید."],
+          "check": { "right": "می‌توانید خودتان بیاورید یا با پست بفرستید.", "wrong": ["باید حتماً خودتان بیاورید.", "باید با ایمیل بفرستید."] },
+          "replies": [
+            { "en": "Is there a deadline?", "fa": "مهلت دارد؟", "keys": ["deadline"], "then": ["Yes. We need it by March fifteenth.", "بله. تا پانزدهم مارس لازمش داریم."], "thenCheck": { "q": "تا چه تاریخی وقت دارید؟", "right": "تا ۱۵ مارس", "wrong": ["تا ۵ مارس", "تا ۱۵ مه"] } },
+            { "en": "When do you need it?", "fa": "تا کی لازمش دارید؟", "keys": ["when"], "then": ["By March fifteenth. That's in two weeks.", "تا پانزدهم مارس. یعنی دو هفتهٔ دیگر."], "thenCheck": { "q": "تا چه تاریخی وقت دارید؟", "right": "تا ۱۵ مارس، یعنی دو هفتهٔ دیگر", "wrong": ["تا ۵ مارس، یعنی دو هفتهٔ دیگر", "تا ۱۵ مارس، یعنی دو روز دیگر"] } }
+          ] },
+        { "them": ["Is there anything else?", "کار دیگری هم دارید؟"],
+          "replies": [
+            { "en": "Yes. I need to report a change of address.", "fa": "بله. باید تغییر آدرسم را خبر بدهم.", "keys": ["report", "change of address", "moved", "address changed"], "then": ["Okay. Please fill out this form. Write your new address here.", "باشد. لطفاً این فرم را پر کنید. آدرس تازه‌تان را اینجا بنویسید."], "thenCheck": { "q": "چه باید بکنید؟", "right": "فرم را پر کنید و آدرس تازه را در آن بنویسید.", "wrong": ["آدرس تازه را تلفنی خبر بدهید.", "آدرس تازه را پشت نامه بنویسید."] } },
+            { "en": "No, thank you. That's all.", "fa": "نه، ممنون. همین بود.", "keys": ["no", "all"] }
+          ] },
+        { "them": ["All right. Have a good day!", "بسیار خب. روز خوبی داشته باشید!"],
+          "replies": [
+            { "en": "Thank you for your help.", "fa": "ممنون از کمکتان.", "keys": ["thank", "help"] },
+            { "en": "Thank you. You too!", "fa": "ممنون. شما هم همین‌طور!", "keys": ["too"] }
+          ] }
+      ]
+    },
+    {
+      "id": "rp-bus-transfer", "scenario": "directions", "stage": 2,
+      "title": "با دو اتوبوس تا بیمارستان",
+      "setting": "می‌خواهید با اتوبوس به بیمارستان بروید. سوار اتوبوسی شده‌اید و راننده با شما صحبت می‌کند.",
+      "goal": "بپرسید کدام اتوبوس به بیمارستان می‌رود و کجا باید اتوبوس عوض کنید، و جواب راننده را بفهمید.",
+      "them": { "role": "رانندهٔ اتوبوس", "persona": "a helpful city bus driver; the learner wants to go to the hospital, but this bus does not go there; explain in short sentences: you need the number forty, ride to Main Street and transfer there, the stop is across the street, the forty comes every fifteen minutes; never ask for personal details", "voice": "a" },
+      "turns": [
+        { "them": ["Good morning. Where are you headed?", "صبح به‌خیر. کجا می‌روید؟"],
+          "check": { "q": "چه پرسید؟", "right": "کجا می‌روید؟", "wrong": ["کرایه را داده‌اید؟", "کجا سوار شدید؟"] },
+          "replies": [
+            { "en": "Which bus goes to the hospital?", "fa": "کدام اتوبوس به بیمارستان می‌رود؟", "keys": ["which"] },
+            { "en": "To the hospital.", "fa": "به بیمارستان.", "keys": ["hospital"] },
+            { "en": "Does this bus go to the hospital?", "fa": "این اتوبوس به بیمارستان می‌رود؟", "keys": ["does this"] }
+          ] },
+        { "them": ["Not this one. You need the number forty.", "این یکی نه. باید اتوبوس شمارهٔ چهل را سوار شوید."],
+          "check": { "q": "کدام اتوبوس به بیمارستان می‌رود؟", "right": "اتوبوس شمارهٔ ۴۰", "wrong": ["اتوبوس شمارهٔ ۱۴", "همین اتوبوس"] },
+          "replies": [
+            { "en": "Where do I transfer?", "fa": "کجا باید اتوبوس عوض کنم؟", "keys": ["transfer"] },
+            { "en": "The number forty. Where is the stop?", "fa": "شمارهٔ چهل. ایستگاهش کجاست؟", "keys": ["stop", "where do i get", "where is it"] }
+          ] },
+        { "them": ["Ride with me to Main Street and transfer there. The stop is across the street.", "با من تا خیابان مِین بیایید و آنجا اتوبوس عوض کنید. ایستگاهش آن طرف خیابان است."],
+          "check": { "q": "کجا باید اتوبوس عوض کنید؟", "right": "در خیابان مِین؛ ایستگاه آن طرف خیابان است.", "wrong": ["در خیابان مِین؛ ایستگاه همان‌جاست که پیاده می‌شوید.", "در ایستگاه بعدی؛ ایستگاه آن طرف خیابان است."] },
+          "replies": [
+            { "en": "Okay. Please tell me when to get off.", "fa": "باشد. لطفاً بگویید کی پیاده شوم.", "keys": ["tell me", "get off"], "then": ["Sure. It's four more stops.", "حتماً. چهار ایستگاه دیگر مانده است."], "thenCheck": { "q": "چند ایستگاه مانده است؟", "right": "۴ ایستگاه", "wrong": ["۱۴ ایستگاه", "۴۰ ایستگاه"] } },
+            { "en": "When is the next bus?", "fa": "اتوبوس بعدی کی می‌آید؟", "keys": ["next bus", "when"], "then": ["The forty comes every fifteen minutes.", "اتوبوس چهل هر پانزده دقیقه یک بار می‌آید."], "thenCheck": { "q": "اتوبوس چهل هر چند دقیقه می‌آید؟", "right": "هر ۱۵ دقیقه", "wrong": ["هر ۵۰ دقیقه", "هر ۵ دقیقه"] } },
+            { "en": "Okay. Thank you.", "fa": "باشد. ممنون.", "keys": ["okay", "thank"] }
+          ] },
+        { "them": ["Main Street is next. That's your stop.", "(چند دقیقه بعد) ایستگاه بعدی خیابان مِین است. همان‌جا باید پیاده شوید."],
+          "check": { "q": "راننده چه گفت؟", "right": "ایستگاه بعدی خیابان مِین است؛ آنجا پیاده شوید.", "wrong": ["از خیابان مِین رد شده‌ایم.", "تا خیابان مِین هنوز چهار ایستگاه مانده است."] },
+          "replies": [
+            { "en": "Thank you. The number forty is across the street, right?", "fa": "ممنون. اتوبوس شمارهٔ چهل آن طرف خیابان است، درست است؟", "keys": ["across"], "then": ["That's right. Cross at the light.", "درست است. از محل چراغ راهنمایی رد شوید."], "thenCheck": { "right": "بله؛ از محل چراغ راهنمایی از خیابان رد شوید.", "wrong": ["نه؛ ایستگاه همین طرف خیابان است.", "بله؛ ولی باید تا چهارراه بعدی پیاده بروید."] } },
+            { "en": "Thank you very much.", "fa": "خیلی ممنون.", "keys": ["thank", "okay"] }
+          ] },
+        { "them": ["You're welcome. Have a good day!", "خواهش می‌کنم. روز خوبی داشته باشید!"],
+          "replies": [
+            { "en": "You too. Goodbye!", "fa": "شما هم همین‌طور. خداحافظ!", "keys": ["too", "goodbye", "bye"] }
+          ] }
+      ]
+    },
+    {
+      "id": "rp-senior-ride", "scenario": "social", "stage": 3, "safetyCritical": true,
+      "title": "رزرو ماشین برای وقت دکتر",
+      "setting": "چهارشنبه وقت دکتر دارید. به سرویس رفت‌وآمد سالمندان زنگ زده‌اید تا ماشین بگیرید. فقط صدا می‌شنوید؛ مثل تلفن واقعی.",
+      "goal": "برای چهارشنبه ماشین رزرو کنید و بفهمید چه ساعتی دنبالتان می‌آیند.",
+      "note": "این فقط تمرین زبان است. آدرس و ساعت‌های این تمرین ساختگی‌اند. قانون و هزینهٔ این سرویس‌ها در هر شهر فرق دارد؛ از مرکز سالمندان یا خانواده‌تان بپرسید.",
+      "phone": true,
+      "them": { "role": "کارمند سرویس رفت‌وآمد (پشت تلفن)", "persona": "a friendly dispatcher named Linda at a senior ride service answering the phone in a clearly simulated practice call; book a ride for Wednesday in short sentences (ask the appointment time, offer a nine fifteen pickup, ask the pickup address and whether the rider uses a wheelchair or a walker, say to be outside five minutes early); accept whatever address the learner gives without checking it, and never ask for a date of birth, an insurance, Medicare or Social Security number, or payment details", "voice": "k" },
+      "turns": [
+        { "them": ["Senior Ride. This is Linda. How can I help you?", "سرویس رفت‌وآمد سالمندان. لیندا هستم. بفرمایید."],
+          "replies": [
+            { "en": "Hello. I'd like to book a ride for Wednesday.", "fa": "سلام. می‌خواهم برای چهارشنبه ماشین رزرو کنم.", "keys": ["book", "ride for"] },
+            { "en": "Hello. I need a ride to the doctor on Wednesday.", "fa": "سلام. چهارشنبه برای رفتن پیش دکتر ماشین لازم دارم.", "keys": ["need a ride", "doctor"] }
+          ] },
+        { "them": ["Sure. What time is your appointment?", "حتماً. وقت دکترتان ساعت چند است؟"],
+          "check": { "q": "چه پرسید؟", "right": "وقت دکترتان ساعت چند است؟", "wrong": ["چه ساعتی دنبالتان بیاییم؟", "اسم دکترتان چیست؟"] },
+          "replies": [
+            { "en": "It's at ten o'clock.", "fa": "ساعت ده است.", "keys": ["ten"] },
+            { "en": "At ten. Can you pick me up at nine o'clock?", "fa": "ساعت ده. می‌شود ساعت نُه دنبالم بیایید؟", "keys": ["pick me up"], "then": ["I'm sorry, nine o'clock is full.", "متأسفم، ساعت نُه جا نداریم."], "thenCheck": { "right": "ساعت نُه جا ندارند.", "wrong": ["ساعت نُه می‌آیند.", "چهارشنبه جا ندارند."] } }
+          ] },
+        { "them": ["The van can pick you up at nine fifteen. Is that okay?", "ون می‌تواند ساعت نُه و ربع دنبالتان بیاید. خوب است؟"],
+          "check": { "q": "ون چه ساعتی دنبالتان می‌آید؟", "right": "9:15", "wrong": ["9:50", "5:15"] },
+          "replies": [
+            { "en": "Yes, nine fifteen is fine.", "fa": "بله، نُه و ربع خوب است.", "keys": ["yes", "fine"] },
+            { "en": "Okay. Thank you.", "fa": "باشد. ممنون.", "keys": ["okay"] }
+          ] },
+        { "them": ["What is your address?", "آدرستان چیست؟"],
+          "replies": [
+            { "en": "My address is 25 Oak Street.", "fa": "آدرس من خیابان اوک، پلاک ۲۵ است.", "keys": ["my address"] },
+            { "en": "25 Oak Street, apartment 12.", "fa": "خیابان اوک، پلاک ۲۵، آپارتمان ۱۲.", "keys": ["apartment"] }
+          ], "open": true },
+        { "them": ["Got it. Do you use a wheelchair or a walker?", "متوجه شدم. از ویلچر یا واکر استفاده می‌کنید؟"],
+          "check": { "q": "چه پرسید؟", "right": "از ویلچر یا واکر استفاده می‌کنید؟", "wrong": ["کسی همراهتان می‌آید؟", "کارت بیمه دارید؟"] },
+          "replies": [
+            { "en": "No, I don't.", "fa": "نه، استفاده نمی‌کنم.", "keys": ["no"] },
+            { "en": "I use a walker.", "fa": "از واکر استفاده می‌کنم.", "keys": ["walker"] },
+            { "en": "I use a cane.", "fa": "عصا دارم.", "keys": ["cane"] },
+            { "en": "I use a wheelchair.", "fa": "از ویلچر استفاده می‌کنم.", "keys": ["wheelchair"] }
+          ] },
+        { "them": ["Okay. You're all set for Wednesday at nine fifteen. Please be outside five minutes early.", "بسیار خب. برای چهارشنبه ساعت نُه و ربع رزرو شد. لطفاً پنج دقیقه زودتر بیرون باشید."],
+          "check": { "q": "چه باید بکنید؟", "right": "پنج دقیقه زودتر، بیرون از خانه منتظر باشید.", "wrong": ["داخل خانه منتظر بمانید تا راننده در بزند.", "نُه دقیقه زودتر، بیرون از خانه منتظر باشید."] },
+          "replies": [
+            { "en": "Okay. I will be outside. Thank you.", "fa": "باشد. بیرون منتظر می‌مانم. ممنون.", "keys": ["outside", "okay"] },
+            { "en": "Can the van take me home, too?", "fa": "ون مرا به خانه هم برمی‌گرداند؟", "keys": ["home"], "then": ["Yes. Call us when you're done, and we'll send the van.", "بله. وقتی کارتان تمام شد زنگ بزنید تا ون بفرستیم."], "thenCheck": { "right": "بله؛ وقتی کارتان تمام شد زنگ بزنید تا ون بفرستند.", "wrong": ["بله؛ ون همان‌جا منتظرتان می‌ماند.", "نه؛ برای برگشتن باید تاکسی بگیرید."] } }
+          ] },
+        { "them": ["Thank you for calling. Goodbye!", "ممنون که زنگ زدید. خداحافظ!"],
+          "replies": [
+            { "en": "Thank you. Goodbye!", "fa": "ممنون. خداحافظ!", "keys": ["thank", "goodbye", "bye"] }
+          ] }
+      ]
+    },
+    {
+      "id": "rp-power-outage", "scenario": "emergency", "stage": 3, "safetyCritical": true,
+      "title": "قطع برق: تماس با شرکت برق",
+      "setting": "برق خانه رفته است و به شمارهٔ قطع برقِ شرکت برق زنگ زده‌اید. فقط صدا می‌شنوید؛ مثل تلفن واقعی.",
+      "goal": "بگویید برق رفته است، آدرس را بگویید و بفهمید برق کی وصل می‌شود.",
+      "note": "این فقط تمرین زبان است؛ آدرس و ساعت‌هایش ساختگی‌اند. قطع برق را به شرکت برق خبر می‌دهند. ۹۱۱ برای وقتی است که کسی فوراً به آمبولانس، آتش‌نشانی یا پلیس نیاز دارد؛ مثلاً وقتی سیم برق روی زمین افتاده است. در بیشتر شهرهای آمریکا شمارهٔ ۲۱۱ دربارهٔ خدمات محلی، مثل پناهگاه و مرکز خنک، راهنمایی می‌کند.",
+      "phone": true,
+      "them": { "role": "کارمند شرکت برق (پشت تلفن)", "persona": "a calm power company agent on the outage line in a clearly simulated practice call; ask whether the call is about an outage and for the address, say that a crew is on the way and that power is expected back by six tonight, ask whether any power lines are on the ground and say to stay away and call 911 if one is, and promise a text message when power is back; accept whatever address the learner gives without checking it, and never ask for an account number, card details, a Social Security number or any payment", "voice": "a" },
+      "turns": [
+        { "them": ["Thank you for calling City Power. Are you calling about a power outage?", "ممنون که با شرکت برق تماس گرفتید. برای قطع برق زنگ زده‌اید؟"],
+          "check": { "q": "چه پرسید؟", "right": "برای قطع برق زنگ زده‌اید؟", "wrong": ["برای پرداخت قبض زنگ زده‌اید؟", "برقتان وصل شده است؟"] },
+          "replies": [
+            { "en": "Yes. The power is out.", "fa": "بله. برق رفته است.", "keys": ["yes", "power is out", "no power"] },
+            { "en": "Yes. I want to report a power outage.", "fa": "بله. می‌خواهم قطع برق را خبر بدهم.", "keys": ["report", "outage"] }
+          ] },
+        { "them": ["I'm sorry about that. What is your address?", "متأسفم. آدرستان چیست؟"],
+          "replies": [
+            { "en": "My address is 25 Oak Street.", "fa": "آدرس من خیابان اوک، پلاک ۲۵ است.", "keys": ["my address"] },
+            { "en": "25 Oak Street, apartment 12.", "fa": "خیابان اوک، پلاک ۲۵، آپارتمان ۱۲.", "keys": ["apartment"] }
+          ], "open": true },
+        { "them": ["Thank you. We know about the outage in your area. A crew is on the way.", "ممنون. از قطع برق در منطقهٔ شما خبر داریم. گروه تعمیر در راه است."],
+          "check": { "q": "کارمند چه گفت؟", "right": "از قطع برق خبر دارند و گروه تعمیر در راه است.", "wrong": ["در منطقهٔ شما قطع برقی نیست.", "باید خودتان برق‌کار خبر کنید."] },
+          "replies": [
+            { "en": "When will the power be back on?", "fa": "برق کی وصل می‌شود؟", "keys": ["when", "back on", "what time"], "then": ["We expect it back on by six tonight.", "انتظار داریم تا ساعت شش عصرِ امروز وصل شود."], "thenCheck": { "q": "برق کی وصل می‌شود؟", "right": "تا ساعت شش عصرِ امروز", "wrong": ["تا ساعت شش صبحِ فردا", "تا شانزده ساعت دیگر"] } },
+            { "en": "How long will it take?", "fa": "چقدر طول می‌کشد؟", "keys": ["how long"], "then": ["About four hours. It should be back on by six tonight.", "حدود چهار ساعت. تا ساعت شش عصرِ امروز باید وصل شود."], "thenCheck": { "q": "چقدر طول می‌کشد؟", "right": "حدود چهار ساعت؛ تا شش عصرِ امروز", "wrong": ["حدود چهارده ساعت؛ تا شش صبحِ فردا", "حدود چهل دقیقه"] } }
+          ] },
+        { "them": ["Do you see any power lines on the ground?", "سیم برقی می‌بینید که روی زمین افتاده باشد؟"],
+          "check": { "q": "چه پرسید؟", "right": "سیم برقی می‌بینید که روی زمین افتاده باشد؟", "wrong": ["چراغ‌های خیابان روشن است؟", "برقتان دوباره وصل شده است؟"] },
+          "replies": [
+            { "en": "No, I don't.", "fa": "نه، نمی‌بینم.", "keys": ["no"] },
+            { "en": "No. Everything looks okay.", "fa": "نه. همه‌چیز عادی به نظر می‌رسد.", "keys": ["everything", "looks okay"] }
+          ] },
+        { "them": ["Good. If you see one, stay away and call 911.", "خوب است. اگر دیدید، نزدیک نشوید و به ۹۱۱ زنگ بزنید."],
+          "check": { "q": "اگر سیم برق روی زمین دیدید، چه کنید؟", "right": "نزدیک نشوید و به ۹۱۱ زنگ بزنید.", "wrong": ["نزدیک نشوید و منتظر گروه تعمیر بمانید.", "برای شرکت برق پیامک بفرستید."] },
+          "replies": [
+            { "en": "Okay. I understand.", "fa": "باشد. متوجه شدم.", "keys": ["okay", "understand", "thank"] },
+            { "en": "It's very hot here. Where is the nearest cooling center?", "fa": "اینجا خیلی گرم است. نزدیک‌ترین مرکز خنک کجاست؟", "keys": ["cooling", "hot"], "then": ["Please call two one one. They can tell you.", "لطفاً به شمارهٔ ۲۱۱ زنگ بزنید. آن‌ها می‌توانند بگویند."], "thenCheck": { "q": "برای پیدا کردن مرکز خنک به چه شماره‌ای زنگ بزنید؟", "right": "211", "wrong": ["911", "411"] } },
+            { "en": "Where is the nearest shelter?", "fa": "نزدیک‌ترین پناهگاه کجاست؟", "keys": ["shelter"], "then": ["Please call two one one. They can tell you.", "لطفاً به شمارهٔ ۲۱۱ زنگ بزنید. آن‌ها می‌توانند بگویند."], "thenCheck": { "q": "برای پیدا کردن پناهگاه به چه شماره‌ای زنگ بزنید؟", "right": "211", "wrong": ["911", "411"] } }
+          ] },
+        { "them": ["We'll text you when the power is back on. Thank you for calling.", "وقتی برق وصل شد برایتان پیامک می‌فرستیم. ممنون که زنگ زدید."],
+          "check": { "q": "چطور خبر می‌دهند که برق وصل شده است؟", "right": "پیامک می‌فرستند.", "wrong": ["دوباره زنگ می‌زنند.", "خودتان باید زنگ بزنید و بپرسید."] },
+          "replies": [
+            { "en": "Thank you. Goodbye!", "fa": "ممنون. خداحافظ!", "keys": ["thank", "goodbye", "bye"] },
+            { "en": "Thank you for your help.", "fa": "ممنون از کمکتان.", "keys": ["help"] }
+          ] }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "id": "restaurant-order",
+  "scenario": "restaurant",
+  "stage": 2,
+  "order": 14,
+  "minutes": 8,
+  "title": { "fa": "سفارش غذا در رستوران", "en": "Ordering at a restaurant" },
+  "intro": "در این درس یاد می‌گیرید در رستوران میز بخواهید، غذا و نوشیدنی سفارش بدهید و صورت‌حساب بخواهید.",
+  "note": "در رستوران‌های آمریکا معمولاً به گارسون انعام می‌دهند؛ خیلی‌ها حدود ۱۵ تا ۲۰ درصدِ صورت‌حساب می‌دهند.",
+  "canDo": "حالا می‌توانید در رستوران میز بخواهید، غذا سفارش بدهید و صورت‌حساب بخواهید.",
+  "mission": "در رستوران، این بار خودتان از گارسون آب بخواهید: Can I have some water, please?",
+  "them": { "role": "گارسون", "voice": "m" },
+  "phrases": [
+    { "en": "A table for two, please.", "fa": "یک میز دونفره، لطفاً.", "ph": "اِ تِیبِل فُر تو، پْلیز", "note": "تعداد را عوض کنید: for one (یک نفر)، for four (چهار نفر).", "chunks": ["A table", "for two,", "please."] },
+    { "en": "I'd like the chicken, please.", "fa": "من مرغ می‌خواهم، لطفاً.", "ph": "آیْد لایک دِ چیکِن، پْلیز", "note": "می‌توانید با انگشت روی منو هم نشان بدهید و بگویید «This one, please.\u200e»", "chunks": ["I'd like", "the chicken,", "please."] },
+    { "en": "Can I have some water, please?", "fa": "می‌شود لطفاً آب بیاورید؟", "ph": "کَن آی هَو سام واتِر، پْلیز؟", "note": "آب معمولی در رستوران‌ها معمولاً رایگان است.", "chunks": ["Can I have", "some water,", "please?"] },
+    { "en": "I don't eat pork.", "fa": "من گوشت خوک نمی‌خورم.", "ph": "آی دُنت ایت پُرک", "note": "برای پرسیدن: «Does this have pork?\u200e» یعنی «این غذا گوشت خوک دارد؟»", "chunks": ["I don't eat", "pork."] },
+    { "en": "Can I have the check, please?", "fa": "می‌شود لطفاً صورت‌حساب را بیاورید؟", "ph": "کَن آی هَو دِ چِک، پْلیز؟", "note": "در رستوران check یعنی صورت‌حساب.", "chunks": ["Can I have", "the check,", "please?"] }
+  ],
+  "dialogue": {
+    "setting": "با همسرتان وارد رستوران می‌شوید.",
+    "lines": [
+      ["them", "Hi, welcome! How many?", "سلام، خوش آمدید! چند نفرید؟"],
+      ["you", "A table for two, please.", "یک میز دونفره، لطفاً."],
+      ["them", "Right this way. Are you ready to order?", "از این طرف بفرمایید. آمادهٔ سفارش هستید؟"],
+      ["you", "Yes. I'd like the chicken, please.", "بله. من مرغ می‌خواهم، لطفاً."],
+      ["them", "Sure. Anything to drink?", "حتماً. نوشیدنی چه میل دارید؟"],
+      ["you", "Can I have some water, please?", "می‌شود لطفاً آب بیاورید؟"],
+      ["them", "Of course. I'll be right back.", "البته. الان برمی‌گردم."]
+    ]
+  },
+  "respond": {
+    "setting": "سر میز نشسته‌اید و گارسون می‌آید.",
+    "them": ["Are you ready to order?", "آمادهٔ سفارش هستید؟"],
+    "ok": [
+      ["Yes. I'd like the chicken, please.", "بله. من مرغ می‌خواهم، لطفاً."],
+      ["Can I have some water, please?", "می‌شود لطفاً آب بیاورید؟"]
+    ],
+    "off": ["Can I have the check, please?", "می‌شود لطفاً صورت‌حساب را بیاورید؟", "صورت‌حساب را آخر غذا می‌خواهند. الان وقت سفارش دادن است."],
+    "off2": 1
+  },
+  "variants": [
+    { "en": "What can I get you?", "fa": "چه برایتان بیاورم؟", "like": "Are you ready to order?" },
+    { "en": "How many in your party?", "fa": "چند نفر هستید؟", "like": "Hi, welcome! How many?", "voice": "b" },
+    { "en": "Can I get you something to drink?", "fa": "نوشیدنی برایتان بیاورم؟", "like": "Sure. Anything to drink?" }
+  ],
+  "task": [
+    ["غذایتان تمام شده و می‌خواهید پول بدهید.", 5],
+    ["می‌خواهید به گارسون بگویید چه چیزی نمی‌خورید.", 4]
+  ],
+  "grammar": {
+    "title": "Can I have … ?",
+    "explain": "برای خواستن هر چیزی در رستوران یا فروشگاه بگویید «Can I have» و بعد آن چیز. آخرش «please» بگویید.",
+    "examples": [
+      ["Can I have some water?", "می‌شود آب بیاورید؟"],
+      ["Can I have the check?", "می‌شود صورت‌حساب را بیاورید؟"],
+      ["Can I have a receipt?", "می‌شود رسید بدهید؟"]
+    ],
+    "wrong": "Give me water.",
+    "right": "Can I have some water, please?",
+    "why": "«Give me» به انگلیسی تند و دستوری به گوش می‌رسد. «Can I have … please» مؤدبانه است."
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

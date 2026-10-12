@@ -1,0 +1,61 @@
+{
+  "id": "office-interpreter",
+  "scenario": "office",
+  "stage": 2,
+  "order": 15,
+  "minutes": 8,
+  "safetyCritical": true,
+  "title": { "fa": "در اداره: فرم و مدارک", "en": "At a government office" },
+  "intro": "در این درس یاد می‌گیرید در اداره بپرسید چه مدارکی لازم است، بخواهید فرم را توضیح بدهند و چیزی را که نفهمیده‌اید امضا نکنید.",
+  "note": "این درس برای یادگیری زبان است و مشاورهٔ حقوقی نیست. برای کارهای مهم اداری از فرد مورد اعتماد یا مترجم کمک بگیرید.",
+  "canDo": "حالا می‌توانید در اداره مترجم بخواهید، دربارهٔ مدارک بپرسید و بگویید فعلاً امضا نمی‌کنید.",
+  "mission": "هر وقت در اداره‌ای کار داشتید، همان اول بگویید: I need an interpreter, please.",
+  "them": { "role": "کارمند اداره", "voice": "b" },
+  "phrases": [
+    { "en": "I need an interpreter, please.", "fa": "مترجم لازم دارم، لطفاً.", "ph": "آی نید اَن اینتِرپْرِتِر، پْلیز", "note": "خیلی از اداره‌ها مترجم تلفنی رایگان دارند. بگویید «Farsi» تا مترجم فارسی بیاورند.", "chunks": ["I need", "an interpreter,", "please."] },
+    { "en": "What documents do I need?", "fa": "چه مدارکی لازم دارم؟", "ph": "وات داکیومِنتس دو آی نید؟", "note": "جواب را روی کاغذ بخواهید تا چیزی جا نماند.", "chunks": ["What documents", "do I need?"] },
+    { "en": "Can you explain this form?", "fa": "می‌شود این فرم را توضیح بدهید؟", "ph": "کَن یو اِکسپلِین دیس فُرم؟", "note": "form یعنی فرم یا برگه‌ای که باید پر کنید.", "chunks": ["Can you explain", "this form?"] },
+    { "en": "I don't want to sign yet.", "fa": "فعلاً نمی‌خواهم امضا کنم.", "ph": "آی دُنت وانْت تو ساین یِت", "note": "می‌توانید قبل از امضا بخواهید متن را برایتان توضیح بدهند. عجله نکنید.", "chunks": ["I don't want", "to sign yet."] },
+    { "en": "Can I bring someone to help me?", "fa": "می‌توانم کسی را برای کمک با خودم بیاورم؟", "ph": "کَن آی بْرینگ سام‌وان تو هِلپ می؟", "note": "مثلاً فرزندتان یا یک دوست مورد اعتماد.", "chunks": ["Can I bring someone", "to help me?"] }
+  ],
+  "dialogue": {
+    "setting": "در اداره، نوبت شما رسیده است.",
+    "lines": [
+      ["them", "Next, please. How can I help you?", "نفر بعد، بفرمایید. چه کمکی از من برمی‌آید؟"],
+      ["you", "Hello. I need an interpreter, please. I speak Farsi.", "سلام. مترجم لازم دارم، لطفاً. من فارسی صحبت می‌کنم."],
+      ["them", "No problem. We can call an interpreter by phone. One moment.", "مشکلی نیست. می‌توانیم تلفنی با مترجم تماس بگیریم. یک لحظه."],
+      ["you", "Thank you. What documents do I need?", "ممنون. چه مدارکی لازم دارم؟"],
+      ["them", "You need a photo ID and proof of address.", "کارت شناسایی عکس‌دار و مدرکی که آدرستان را نشان بدهد لازم دارید."],
+      ["you", "Can you explain this form?", "می‌شود این فرم را توضیح بدهید؟"],
+      ["them", "Of course. Let's go through it together.", "البته. بیایید با هم مرورش کنیم."]
+    ]
+  },
+  "respond": {
+    "setting": "کارمند برگه‌ای جلویتان می‌گذارد که نفهمیده‌اید.",
+    "them": ["Please sign here.", "لطفاً اینجا را امضا کنید."],
+    "ok": [
+      ["Can you explain this form?", "می‌شود این فرم را توضیح بدهید؟"],
+      ["I don't want to sign yet.", "فعلاً نمی‌خواهم امضا کنم."],
+      ["I need an interpreter, please.", "مترجم لازم دارم، لطفاً."]
+    ],
+    "off": ["Thank you for your help.", "ممنون از کمکتان.", "اگر متن را نفهمیده‌اید، قبل از امضا بخواهید آن را توضیح بدهند."],
+    "off2": 2
+  },
+  "task": [
+    ["نامه‌ای آمده که باید به اداره بروید، ولی نمی‌دانید چه چیزهایی باید همراهتان باشد.", 2],
+    ["می‌خواهید دفعهٔ بعد دخترتان هم کنارتان باشد.", 5]
+  ],
+  "grammar": {
+    "title": "… do I need?",
+    "explain": "وقتی با What، Where یا When می‌پرسید خودتان چه کاری باید بکنید، قبل از فعل «do I» می‌آید.",
+    "examples": [
+      ["What documents do I need?", "چه مدارکی لازم دارم؟"],
+      ["Where do I sign?", "کجا را امضا کنم؟"],
+      ["When do I come back?", "کی دوباره بیایم؟"]
+    ],
+    "wrong": "What documents I need?",
+    "right": "What documents do I need?",
+    "why": "در این سؤال‌ها (با What، Where و When) قبل از فعل می‌گوییم «do I»، نه فقط «I»."
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

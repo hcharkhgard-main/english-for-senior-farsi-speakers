@@ -1,0 +1,54 @@
+# Publishes the ready-built site/ folder to GitHub Pages on every push to main — but only after
+# checking that site/ really is the build of this commit (a stale site/ once nearly went out).
+# One-time setup: repository Settings → Pages → Build and deployment → Source: "GitHub Actions".
+#
+# Every action is pinned to the commit of a release (the tag is in the comment), so a moved tag
+# cannot change what runs here. To update one: take the commit id of the new release tag from the
+# action's repository and replace both the id and the comment.
+#
+# Rights: nothing by default. The job that runs this repository's own tools (npm packages
+# included) can only read the code; only the last job, which runs nothing but GitHub's own
+# deploy actions, may publish.
+name: Deploy to GitHub Pages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions: {}
+concurrency:
+  group: pages
+  cancel-in-progress: true
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+      - name: "Install the build tools (exact versions from package-lock.json; no install scripts are run)"
+        run: npm ci --ignore-scripts
+      - name: "Content is valid and unit tests pass (they also check that review/ and ai-proxy/personas.json are up to date)"
+        run: npm run validate && npm test
+      - name: "site/ must be the build of this commit"
+        run: node tools/build.mjs --check
+      - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
+        with:
+          path: site
+  deploy:
+    needs: check
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5.0.0
+      - id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5

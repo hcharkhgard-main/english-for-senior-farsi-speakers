@@ -1,0 +1,58 @@
+{
+  "id": "at-the-door",
+  "scenario": "home",
+  "stage": 1,
+  "minutes": 8,
+  "safetyCritical": true,
+  "title": { "fa": "وقتی کسی در می‌زند", "en": "Someone at the door" },
+  "intro": "در این درس یاد می‌گیرید وقتی کسی در می‌زند بپرسید کیست، بسته را تحویل بگیرید و به فروشنده‌های دوره‌گرد مؤدبانه «نه» بگویید.",
+  "note": "لازم نیست در را برای غریبه‌ها باز کنید. می‌توانید از پشت درِ بسته حرف بزنید.",
+  "canDo": "حالا می‌توانید از پشت در بپرسید کیست، بسته را بگیرید یا مؤدبانه «نه» بگویید.",
+  "mission": "از این به بعد هر وقت کسی در زد، قبل از باز کردنِ در، از پشتِ در بپرسید: Who is it?",
+  "them": { "role": "مأمور تحویل بسته", "voice": "m" },
+  "phrases": [
+    { "en": "Who is it?", "fa": "کیه؟", "ph": "هو ایز ایت؟", "note": "قبل از باز کردن در، از پشت در بپرسید.", "chunks": ["Who is it?"] },
+    { "en": "Just a minute, please.", "fa": "یک لحظه، لطفاً.", "ph": "جاست اِ مینِت، پْلیز", "note": "وقتی کمی طول می‌کشد تا به در برسید.", "chunks": ["Just a minute,", "please."] },
+    { "en": "Please leave it at the door.", "fa": "لطفاً آن را دمِ در بگذارید.", "ph": "پْلیز لیو ایت اَت دِ دُر", "note": "برای بسته‌های پستی، وقتی نمی‌خواهید در را باز کنید.", "chunks": ["Please leave it", "at the door."] },
+    { "en": "I'm not interested, thank you.", "fa": "علاقه‌ای ندارم، ممنون.", "ph": "آیْم نات اینتِرِستِد، تَنک یو", "note": "برای فروشنده‌های دوره‌گرد. لازم نیست توضیح بدهید یا در را باز کنید.", "chunks": ["I'm not interested,", "thank you."] },
+    { "en": "I didn't order this.", "fa": "من این را سفارش نداده‌ام.", "ph": "آی دیدِنت اُردِر دیس", "note": "وقتی چیزی می‌آورند که مال شما نیست.", "chunks": ["I didn't", "order this."] }
+  ],
+  "dialogue": {
+    "setting": "زنگ در را می‌زنند.",
+    "lines": [
+      ["you", "Who is it?", "کیه؟"],
+      ["them", "Delivery. I have a package for Maryam Ahmadi.", "تحویل بسته. بسته‌ای برای مریم احمدی دارم."],
+      ["you", "Just a minute, please.", "یک لحظه، لطفاً."],
+      ["them", "No problem. Can you sign here, please?", "مشکلی نیست. می‌شود لطفاً اینجا را امضا کنید؟"],
+      ["you", "Yes. Thank you.", "بله. ممنون."],
+      ["them", "Have a good day!", "روز خوبی داشته باشید!"]
+    ]
+  },
+  "respond": {
+    "setting": "غریبه‌ای در زده و می‌خواهد چیزی بفروشد.",
+    "them": ["Hello! I'm selling a new internet service. Do you have a few minutes?", "سلام! من سرویس اینترنت جدیدی می‌فروشم. چند دقیقه وقت دارید؟"],
+    "ok": [
+      ["I'm not interested, thank you.", "علاقه‌ای ندارم، ممنون."],
+      ["No, thank you. Goodbye.", "نه، ممنون. خداحافظ."]
+    ],
+    "off": ["Just a minute, please.", "یک لحظه، لطفاً.", "اگر نمی‌خواهید چیزی بخرید، لازم نیست او را منتظر نگه دارید. مؤدبانه بگویید علاقه‌ای ندارید."],
+    "off2": 3
+  },
+  "task": [
+    ["مأمور پست بسته آورده، ولی شما نمی‌خواهید در را باز کنید.", 3],
+    ["بسته‌ای آورده‌اند، ولی شما چیزی سفارش نداده‌اید.", 5]
+  ],
+  "grammar": {
+    "title": "I didn't …",
+    "explain": "برای کاری که در گذشته انجام نداده‌اید بگویید «I didn't» و بعد فعل.",
+    "examples": [
+      ["I didn't order this.", "من این را سفارش نداده‌ام."],
+      ["I didn't call.", "من زنگ نزده‌ام."],
+      ["I didn't sign anything.", "من چیزی را امضا نکرده‌ام."]
+    ],
+    "wrong": "I no order this.",
+    "right": "I didn't order this.",
+    "why": "برای منفیِ گذشته «didn't» می‌گوییم."
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

@@ -1,0 +1,62 @@
+{
+  "id": "phone-appointment",
+  "scenario": "phone",
+  "stage": 2,
+  "order": 11,
+  "minutes": 9,
+  "title": { "fa": "وقت گرفتن با تلفن", "en": "Making an appointment by phone" },
+  "intro": "تلفنی حرف زدن سخت‌تر است، چون صورت طرف را نمی‌بینید. در این درس یاد می‌گیرید خودتان را معرفی کنید، وقت بگیرید و پیام بگذارید.",
+  "canDo": "حالا می‌توانید تلفنی وقت بگیرید و روی پیام‌گیر پیام کوتاه بگذارید.",
+  "mission": "هر وقت لازم شد وقت بگیرید، خودتان تلفن بزنید و با این جمله شروع کنید: I'd like to make an appointment.",
+  "them": { "role": "منشی (پشت تلفن)", "voice": "b" },
+  "phrases": [
+    { "en": "Hello, this is Maryam Ahmadi.", "fa": "سلام، مریم احمدی هستم.", "ph": "هِلُو، دیس ایز مریم احمدی", "note": "پشت تلفن می‌گویند «This is …\u200e»، نه «I am …\u200e».", "chunks": ["Hello,", "this is", "Maryam Ahmadi."], "own": ["Maryam", "Ahmadi"] },
+    { "en": "I'd like to make an appointment.", "fa": "می‌خواهم وقت بگیرم.", "ph": "آیْد لایک تو مِیک اَن اَپُینتمِنت", "note": "برای دکتر، دندان‌پزشک، بانک یا اداره.", "chunks": ["I'd like", "to make", "an appointment."] },
+    { "en": "Is Tuesday morning available?", "fa": "سه‌شنبه صبح وقت دارید؟", "ph": "ایز توزدِی مُرنینگ اَوِیلِبِل؟", "note": "روزها: Monday دوشنبه، Tuesday سه‌شنبه، Wednesday چهارشنبه، Thursday پنج‌شنبه، Friday جمعه.", "chunks": ["Is Tuesday morning", "available?"] },
+    { "en": "Can you call me back?", "fa": "می‌شود بعداً به من زنگ بزنید؟", "ph": "کَن یو کال می بَک؟", "note": "وقتی طرف سرش شلوغ است یا پیام می‌گذارید.", "chunks": ["Can you", "call me back?"] },
+    { "en": "My phone number is 212-555-0142.", "fa": "شمارهٔ تلفن من \u200e۲۱۲-۵۵۵-۰۱۴۲ است.", "ph": "مای فُن نامبِر ایز …", "note": "این شماره فقط برای تمرین است. شمارهٔ خودتان را رقم‌به‌رقم و آهسته بگویید. صفر را «zero» یا «oh» می‌گویند.", "chunks": ["My phone number is", "212-555-0142."], "own": ["212-555-0142"] }
+  ],
+  "dialogue": {
+    "setting": "به مطب زنگ زده‌اید تا وقت بگیرید.",
+    "lines": [
+      ["them", "Good afternoon, Lakeside Clinic. How can I help you?", "بعدازظهر به‌خیر، درمانگاه لِیک‌ساید. چه کمکی از من برمی‌آید؟"],
+      ["you", "Hello, this is Maryam Ahmadi. I'd like to make an appointment.", "سلام، مریم احمدی هستم. می‌خواهم وقت بگیرم."],
+      ["them", "Of course. What day works for you?", "حتماً. چه روزی برایتان مناسب است؟"],
+      ["you", "Is Tuesday morning available?", "سه‌شنبه صبح وقت دارید؟"],
+      ["them", "Yes. We have Tuesday at nine thirty.", "بله. سه‌شنبه ساعت نُه و نیم وقت داریم."],
+      ["you", "Tuesday at nine thirty. That works. Thank you.", "سه‌شنبه ساعت نُه و نیم. خوب است. ممنون."],
+      ["them", "You're all set. See you Tuesday!", "وقتتان ثبت شد. سه‌شنبه می‌بینیمتان!"]
+    ]
+  },
+  "respond": {
+    "setting": "کسی گوشی را برنمی‌دارد و صدای ضبط‌شده می‌شنوید.",
+    "them": ["Please leave a message after the tone.", "لطفاً بعد از شنیدن بوق پیام بگذارید."],
+    "ok": [
+      ["Hello, this is Maryam Ahmadi. Can you call me back?", "سلام، مریم احمدی هستم. می‌شود بعداً به من زنگ بزنید؟"],
+      ["This is Maryam Ahmadi. My phone number is 212-555-0142.", "مریم احمدی هستم. شمارهٔ تلفن من \u200e۲۱۲-۵۵۵-۰۱۴۲ است."]
+    ],
+    "off": ["Is Tuesday morning available?", "سه‌شنبه صبح وقت دارید؟", "پیام‌گیر نمی‌تواند جواب بدهد. اسمتان را بگویید و بخواهید با شما تماس بگیرند."]
+  },
+  "variants": [
+    { "en": "When would you like to come in?", "fa": "چه وقت می‌خواهید بیایید؟", "like": "Of course. What day works for you?" },
+    { "en": "I have an opening on Tuesday at nine thirty.", "fa": "سه‌شنبه ساعت نُه و نیم وقت خالی دارم.", "like": "Yes. We have Tuesday at nine thirty." },
+    { "en": "Please leave your name and number after the beep.", "fa": "لطفاً بعد از بوق اسم و شماره‌تان را بگویید.", "like": "Please leave a message after the tone.", "voice": "m" }
+  ],
+  "task": [
+    ["منشی می‌گوید الان سرش شلوغ است.", 4],
+    ["تلفن را برداشته‌اند و می‌خواهید خودتان را معرفی کنید.", 1]
+  ],
+  "grammar": {
+    "title": "on Tuesday / at nine",
+    "explain": "برای روز «on» می‌گوییم و برای ساعت «at». برای صبح و بعدازظهر «in the».",
+    "examples": [
+      ["On Tuesday.", "سه‌شنبه."],
+      ["At nine thirty.", "ساعت نُه و نیم."],
+      ["In the morning.", "صبح."]
+    ],
+    "wrong": "In Tuesday.",
+    "right": "On Tuesday.",
+    "why": "با اسم روزها «on» می‌آید، نه «in»."
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

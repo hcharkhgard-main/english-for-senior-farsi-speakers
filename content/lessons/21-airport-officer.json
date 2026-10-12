@@ -1,0 +1,67 @@
+{
+  "id": "airport-officer",
+  "scenario": "travel",
+  "stage": 3,
+  "minutes": 9,
+  "safetyCritical": true,
+  "title": { "fa": "افسر مرزی در فرودگاه", "en": "The border officer at the airport" },
+  "intro": "وقتی وارد آمریکا می‌شوید، افسر مرزی در فرودگاه چند سؤال کوتاه می‌پرسد. در این درس سؤال‌های معمول و جواب‌های ساده را تمرین می‌کنیم.",
+  "note": "این درس برای یادگیری زبان است و مشاورهٔ حقوقی یا مهاجرتی نیست. همیشه جواب واقعی خودتان را بگویید. اگر سؤالی را نفهمیدید، حدس نزنید و مترجم بخواهید.",
+  "canDo": "حالا می‌توانید به سؤال‌های سادهٔ افسر فرودگاه جواب بدهید و اگر لازم شد مترجم بخواهید.",
+  "mission": "قبل از سفر بعدی، جواب واقعیِ خودتان را به انگلیسی روی کاغذ بنویسید و چند بار بلند بخوانید؛ مثلاً: I'm visiting my son.",
+  "them": { "role": "افسر مرزی", "voice": "m" },
+  "phrases": [
+    { "en": "Here is my passport.", "fa": "این گذرنامهٔ من است.", "ph": "هی‌یِر ایز مای پَسپُرت", "note": "گذرنامه و مدارکتان را دمِ دست نگه دارید.", "chunks": ["Here is", "my passport."] },
+    { "en": "I'm visiting my son.", "fa": "به دیدن پسرم آمده‌ام.", "ph": "آیْم ویزیتینگ مای سان", "note": "my daughter یعنی دخترم و my family یعنی خانواده‌ام. جواب واقعی خودتان را بگویید.", "chunks": ["I'm visiting", "my son."], "own": ["son"] },
+    { "en": "I will stay for three months.", "fa": "سه ماه می‌مانم.", "ph": "آی ویل سْتِی فُر تْری مانتس", "note": "مدت واقعی را بگویید: two weeks (دو هفته)، six months (شش ماه).", "chunks": ["I will stay", "for three months."], "own": ["three", "months"] },
+    { "en": "I live here. I have a green card.", "fa": "من اینجا زندگی می‌کنم. گرین‌کارت دارم.", "ph": "آی لیو هی‌یِر. آی هَو اِ گْرین کارد", "note": "فقط اگر واقعاً مقیم آمریکا هستید این را بگویید.", "chunks": ["I live here.", "I have", "a green card."] },
+    { "en": "I don't understand. I need a Farsi interpreter, please.", "fa": "متوجه نمی‌شوم. مترجم فارسی لازم دارم، لطفاً.", "ph": "آی دُنت آندِرستَند. آی نید اِ فارسی اینتِرپْرِتِر، پْلیز", "note": "می‌توانید مترجم بخواهید؛ هیچ اشکالی ندارد. شاید کمی منتظر بمانید.", "chunks": ["I don't understand.", "I need", "a Farsi interpreter,", "please."] }
+  ],
+  "dialogue": {
+    "setting": "تمرین: در فرودگاه، نوبت شما پیش افسر مرزی رسیده است.",
+    "lines": [
+      ["them", "Passport, please.", "گذرنامه، لطفاً."],
+      ["you", "Here is my passport.", "این گذرنامهٔ من است."],
+      ["them", "What is the purpose of your trip?", "هدف سفرتان چیست؟"],
+      ["you", "I'm visiting my son.", "به دیدن پسرم آمده‌ام."],
+      ["them", "How long will you stay?", "چه مدت می‌مانید؟"],
+      ["you", "I will stay for three months.", "سه ماه می‌مانم."],
+      ["them", "Where will you stay?", "کجا اقامت می‌کنید؟"],
+      ["you", "At my son's house.", "در خانهٔ پسرم."],
+      ["them", "Okay. Welcome to the United States.", "بسیار خب. به آمریکا خوش آمدید."]
+    ]
+  },
+  "respond": {
+    "setting": "تمرین: گذرنامه را داده‌اید و افسر سؤال می‌کند.",
+    "them": ["What is the purpose of your trip?", "هدف سفرتان چیست؟"],
+    "ok": [
+      ["I'm visiting my son.", "به دیدن پسرم آمده‌ام."],
+      ["I live here. I have a green card.", "من اینجا زندگی می‌کنم. گرین‌کارت دارم."],
+      ["I don't understand. I need a Farsi interpreter, please.", "متوجه نمی‌شوم. مترجم فارسی لازم دارم، لطفاً."]
+    ],
+    "off": ["Here is my passport.", "این گذرنامهٔ من است.", "گذرنامه را داده‌اید. افسر پرسید برای چه سفر کرده‌اید. جواب واقعی خودتان را بگویید."],
+    "off2": 3
+  },
+  "variants": [
+    { "en": "Why are you visiting the United States?", "fa": "برای چه به آمریکا آمده‌اید؟", "like": "What is the purpose of your trip?", "voice": "b" },
+    { "en": "How long are you planning to stay?", "fa": "قصد دارید چه مدت بمانید؟", "like": "How long will you stay?" },
+    { "en": "Where are you staying?", "fa": "کجا می‌مانید؟", "like": "Where will you stay?" }
+  ],
+  "task": [
+    ["افسر گذرنامه‌تان را می‌خواهد.", 1],
+    ["سؤال افسر را نمی‌فهمید و نمی‌خواهید حدس بزنید.", 5]
+  ],
+  "grammar": {
+    "title": "for three months",
+    "explain": "برای گفتن مدت‌زمان، قبل از آن «for» بگویید.",
+    "examples": [
+      ["For three months.", "برای سه ماه."],
+      ["For two weeks.", "برای دو هفته."],
+      ["For ten days.", "برای ده روز."]
+    ],
+    "wrong": "I will stay three month.",
+    "right": "I will stay for three months.",
+    "why": "قبل از مدت «for» می‌آید و months آخرش «s» دارد."
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

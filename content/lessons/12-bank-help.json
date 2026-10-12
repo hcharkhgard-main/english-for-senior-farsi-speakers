@@ -1,0 +1,64 @@
+{
+  "id": "bank-help",
+  "scenario": "bank",
+  "stage": 2,
+  "order": 12,
+  "minutes": 8,
+  "safetyCritical": true,
+  "title": { "fa": "کار در بانک", "en": "At the bank" },
+  "intro": "در این درس یاد می‌گیرید در بانک موجودی‌تان را بپرسید، پول به حساب بگذارید یا بردارید، و دربارهٔ کارمزد سؤال کنید.",
+  "note": "در تمرین‌های این برنامه هیچ‌وقت شمارهٔ کارت، رمز یا اطلاعات واقعی بانکی‌تان را وارد نکنید. بانک واقعی هیچ‌وقت خودش به شما زنگ نمی‌زند یا پیام نمی‌دهد که رمز کارت (PIN) یا کد تأیید را بپرسد. اگر کسی زنگ زد و این‌ها را خواست، قطع کنید و خودتان به شمارهٔ پشت کارتتان زنگ بزنید.",
+  "canDo": "حالا می‌توانید در بانک بگویید چه کاری دارید و بخواهید چیزی را برایتان توضیح بدهند.",
+  "mission": "بارِ بعد که به بانک رفتید، به کارمند باجه بگویید: I'd like to check my balance.",
+  "them": { "role": "کارمند بانک", "voice": "m" },
+  "phrases": [
+    { "en": "I'd like to check my balance.", "fa": "می‌خواهم موجودی حسابم را بدانم.", "ph": "آیْد لایک تو چِک مای بَلِنس", "note": "balance یعنی موجودی حساب.", "chunks": ["I'd like", "to check", "my balance."] },
+    { "en": "I'd like to deposit this check.", "fa": "می‌خواهم این چک را به حسابم واریز کنم.", "ph": "آیْد لایک تو دیپازیت دیس چِک", "note": "deposit یعنی پول گذاشتن به حساب.", "chunks": ["I'd like", "to deposit", "this check."] },
+    { "en": "I'd like to withdraw one hundred dollars.", "fa": "می‌خواهم صد دلار برداشت کنم.", "ph": "آیْد لایک تو ویت‌دْرا وان هانْدْرِد دالِرز", "note": "withdraw یعنی برداشتن پول از حساب.", "chunks": ["I'd like", "to withdraw", "one hundred dollars."] },
+    { "en": "What is this fee for?", "fa": "این کارمزد برای چیست؟", "ph": "وات ایز دیس فی فُر؟", "note": "fee یعنی کارمزد. می‌توانید دربارهٔ هر مبلغی که از حسابتان کم شده بپرسید.", "chunks": ["What is", "this fee for?"] },
+    { "en": "Can you explain this to me?", "fa": "می‌شود این را برایم توضیح بدهید؟", "ph": "کَن یو اِکسپلِین دیس تو می؟", "note": "برای هر برگه، نامه یا مبلغی که متوجه نمی‌شوید.", "chunks": ["Can you explain", "this to me?"] }
+  ],
+  "dialogue": {
+    "setting": "در شعبهٔ بانک، جلوی باجه ایستاده‌اید.",
+    "lines": [
+      ["them", "Good morning! How can I help you today?", "صبح به‌خیر! امروز چه کمکی از من برمی‌آید؟"],
+      ["you", "Good morning. I'd like to deposit this check.", "صبح به‌خیر. می‌خواهم این چک را به حسابم واریز کنم."],
+      ["them", "Sure. Can I see your ID, please?", "حتماً. می‌شود کارت شناسایی‌تان را ببینم؟"],
+      ["you", "Here you go.", "بفرمایید."],
+      ["them", "Thank you. Is there anything else I can help you with?", "ممنون. کار دیگری هم دارید؟"],
+      ["you", "Yes. What is this fee for?", "بله. این کارمزد برای چیست؟"],
+      ["them", "That's a monthly service fee. I can explain it to you.", "این کارمزد ماهانهٔ خدمات است. می‌توانم برایتان توضیح بدهم."]
+    ]
+  },
+  "respond": {
+    "setting": "وارد بانک شده‌اید و نوبتتان رسیده است.",
+    "them": ["Welcome! What can I do for you today?", "خوش آمدید! امروز چه کاری برایتان انجام بدهم؟"],
+    "ok": [
+      ["I'd like to check my balance.", "می‌خواهم موجودی حسابم را بدانم."],
+      ["I'd like to deposit this check.", "می‌خواهم این چک را به حسابم واریز کنم."],
+      ["I'd like to withdraw one hundred dollars.", "می‌خواهم صد دلار برداشت کنم."]
+    ],
+    "off": ["Here you go.", "بفرمایید.", "«Here you go» را وقتی می‌گویید که چیزی به کسی می‌دهید. اول بگویید چه کاری دارید."]
+  },
+  "variants": [
+    { "en": "Do you have your ID with you?", "fa": "کارت شناسایی همراهتان هست؟", "like": "Sure. Can I see your ID, please?" },
+    { "en": "Will that be all for today?", "fa": "برای امروز همین بود؟", "like": "Thank you. Is there anything else I can help you with?", "voice": "b" }
+  ],
+  "task": [
+    ["در صورت‌حسابتان یک کارمزد (fee) نوشته‌اند و می‌خواهید بپرسید برای چیست.", 4],
+    ["کارمند بانک برگه‌ای جلویتان می‌گذارد که نمی‌فهمید.", 5]
+  ],
+  "grammar": {
+    "title": "I'd like to …",
+    "explain": "«I'd like to» شکل مؤدبانهٔ «می‌خواهم» است. در بانک، مطب و اداره همیشه مناسب است.",
+    "examples": [
+      ["I'd like to check my balance.", "می‌خواهم موجودی حسابم را بدانم."],
+      ["I'd like to pay by card.", "می‌خواهم با کارت پرداخت کنم."],
+      ["I'd like to make an appointment.", "می‌خواهم وقت بگیرم."]
+    ],
+    "wrong": "I like check my balance.",
+    "right": "I'd like to check my balance.",
+    "why": "«I like» یعنی «دوست دارم». برای «می‌خواهم» بگویید «I'd like to»."
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

@@ -1,0 +1,59 @@
+{
+  "id": "school-pickup",
+  "scenario": "social",
+  "stage": 2,
+  "minutes": 8,
+  "title": { "fa": "مدرسهٔ نوه‌ها", "en": "At the grandchildren's school" },
+  "intro": "در این درس یاد می‌گیرید وقتی برای بردن نوه‌تان به مدرسه می‌روید، خودتان را معرفی کنید و با معلم چند جملهٔ ساده حرف بزنید.",
+  "canDo": "حالا می‌توانید در مدرسه بگویید برای بردن نوه‌تان آمده‌اید و حالش را از معلم بپرسید.",
+  "mission": "بارِ بعد که دنبال نوه‌تان رفتید، از معلمش بپرسید: How was his day? و اگر نوه‌تان دختر است: How was her day?",
+  "them": { "role": "کارمند مدرسه", "voice": "b" },
+  "phrases": [
+    { "en": "I'm here to pick up my grandson.", "fa": "آمده‌ام نوه‌ام را ببرم.", "ph": "آیْم هی‌یِر تو پیک آپ مای گْرَند‌سان", "note": "grandson یعنی نوه‌ای که پسر است و granddaughter یعنی نوه‌ای که دختر است.", "chunks": ["I'm here", "to pick up", "my grandson."], "own": ["grandson"] },
+    { "en": "His name is Arman Ahmadi.", "fa": "اسمش آرمان احمدی است.", "ph": "هِز نِیم ایز آرمان احمدی", "note": "برای دختر: «Her name is …\u200e»", "chunks": ["His name is", "Arman Ahmadi."], "own": ["Arman", "Ahmadi"] },
+    { "en": "I'm his grandmother.", "fa": "من مادربزرگش هستم.", "ph": "آیْم هِز گْرَند‌مادِر", "note": "آقایان می‌گویند: «I'm his grandfather.\u200e» (grandfather یعنی پدربزرگ). معمولاً کارت شناسایی هم می‌خواهند و اسمتان باید از قبل در فهرست مدرسه باشد؛ از پدر یا مادر بچه بخواهید اسمتان را بدهند.", "chunks": ["I'm", "his grandmother."], "own": ["grandmother"] },
+    { "en": "How was his day?", "fa": "روزش چطور بود؟", "ph": "هاو واز هِز دِی؟", "note": "سؤال دوستانه از معلم. برای نوهٔ دختر: «How was her day?\u200e»", "chunks": ["How was", "his day?"] },
+    { "en": "What time does school end?", "fa": "مدرسه چه ساعتی تعطیل می‌شود؟", "ph": "وات تایم داز سْکول اِند؟", "note": "start یعنی شروع شدن.", "chunks": ["What time", "does school end?"] }
+  ],
+  "dialogue": {
+    "setting": "جلوی دفتر مدرسه هستید.",
+    "lines": [
+      ["them", "Hello. Can I help you?", "سلام. می‌توانم کمکتان کنم؟"],
+      ["you", "Hello. I'm here to pick up my grandson.", "سلام. آمده‌ام نوه‌ام را ببرم."],
+      ["them", "What is his name?", "اسمش چیست؟"],
+      ["you", "His name is Arman Ahmadi. I'm his grandmother.", "اسمش آرمان احمدی است. من مادربزرگش هستم."],
+      ["them", "Can I see your ID, please?", "می‌شود کارت شناسایی‌تان را ببینم؟"],
+      ["you", "Here you go.", "بفرمایید."],
+      ["them", "Thank you. Here is his teacher.", "ممنون. این هم معلمش."],
+      ["you", "Hello. How was his day?", "سلام. روزش چطور بود؟"],
+      ["them", "He had a great day. He will be right out.", "روز خیلی خوبی داشت. الان می‌آید."]
+    ]
+  },
+  "respond": {
+    "setting": "در دفتر مدرسه از شما می‌پرسند.",
+    "them": ["Who are you here to pick up?", "برای بردن چه کسی آمده‌اید؟"],
+    "ok": [
+      ["I'm here to pick up my grandson.", "آمده‌ام نوه‌ام را ببرم."],
+      ["His name is Arman Ahmadi.", "اسمش آرمان احمدی است."]
+    ],
+    "off": ["What time does school end?", "مدرسه چه ساعتی تعطیل می‌شود؟", "اول بگویید برای بردن چه کسی آمده‌اید."],
+    "off2": 4
+  },
+  "task": [
+    ["می‌خواهید بدانید فردا چه ساعتی باید دنبال نوه‌تان بیایید.", 5],
+    ["معلم را می‌بینید و می‌خواهید بدانید نوه‌تان امروز چطور بوده است.", 4]
+  ],
+  "grammar": {
+    "title": "his / her",
+    "explain": "برای پسر و مرد «his» می‌گوییم و برای دختر و زن «her». در فارسی هر دو «ـش» است.",
+    "examples": [
+      ["His name is Arman.", "اسمش آرمان است. (پسر)"],
+      ["Her name is Sara.", "اسمش سارا است. (دختر)"],
+      ["I'm her grandfather.", "من پدربزرگش هستم. (نوه دختر است)"]
+    ],
+    "wrong": "This is my grandson. Her name is Arman.",
+    "right": "This is my grandson. His name is Arman.",
+    "why": "grandson یعنی نوه‌ای که پسر است، پس «his» می‌گوییم."
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

@@ -1,0 +1,238 @@
+// Words and saved phrases: a review queue that builds itself, plus browsable word lists.
+import { h, icon, btn, en, note, progress, fnum } from '../ui.js';
+import { clipEn, listenBtn, miniPlay, favBtn, wordsLine, sayPanel, playNow, faListen } from '../components.js';
+import { grade, counts, answered, minutes, cardMode, SETS_PER_DAY } from '../srs.js';
+import { shuffle, mix, numberRound, micOn, later, todaysSet } from '../learn.js';
+import { quiz } from './lesson.js';
+import { papersLink } from './papers.js';
+
+export function wordsView(app) {
+  const { t, store, content } = app;
+  const s = store.state;
+  // The day's plan is two short sets (srs.js). What is said here is the plan and the size of the next set —
+  // never how much is waiting behind it.
+  const q = todaysSet(s, content, app.today());
+  const c = counts(s.srs, app.pool(), app.today());
+  const favs = Object.keys(s.fav).length;
+  const n = fnum(q.queue.length), min = fnum(minutes(q.queue.length));
+  const planDone = q.set > SETS_PER_DAY;            // both sets of today are done; more is there only for someone who asks
+  const main = h('main', { class: 'wrap' }, h('h1', { class: 'section-title' }, t('words.title')),
+    h('section', { class: 'card' }, h('h2', null, t('words.today')),
+      h('p', { class: 'lead' }, planDone ? t('words.today.done') : !q.queue.length ? t('words.today.none')
+        : q.set > 1 ? t('words.today.second', { n, min }) : q.nDue ? t('words.today.first', { n, min }) : t('words.today.new', { n })),
+      q.queue.length && !planDone ? btn(t('words.start'), { cls: 'btn-primary', icon: 'cards', block: true, onclick: () => app.go('review') }) : null,
+      h('p', { class: 'muted' }, t('words.plan')),
+      c.known && c.learning ? h('p', { class: 'muted' }, t('words.known', { known: fnum(c.known), learning: fnum(c.learning) }))
+        : c.learning ? h('p', { class: 'muted' }, t('words.learning', { n: fnum(c.learning) }))
+          : c.known ? h('p', { class: 'muted' }, t('words.knownAll', { n: fnum(c.known) })) : null,
+      q.queue.length && planDone ? btn(t('words.extra'), { cls: 'btn-ghost', icon: 'cards', block: true, onclick: () => app.go('review') }) : null),
+    content.numbers.length ? h('button', { type: 'button', class: 'item', onclick: () => app.go('numbers') }, h('span', { class: 'pic', style: 'width:3.25rem;height:3.25rem' }, icon('ear')),
+      h('span', { class: 'body' }, h('span', { class: 't' }, t('num.title')), h('span', { class: 's' }, t('num.sub'))), h('span', { class: 'go' }, icon('next'))) : null,
+    papersLink(app),      // «خواندن نوشته‌ها» (views/papers.js)
+    btn(t('words.saved', { n: fnum(favs) }), { cls: 'btn-ghost', icon: 'starFill', block: true, onclick: () => app.go('saved') }),
+    btn(t('words.build'), { cls: 'btn-soft', icon: 'pieces', block: true, onclick: () => app.go('build') }),
+    btn(t('words.grammar'), { cls: 'btn-ghost', icon: 'bulb', block: true, onclick: () => app.go('grammar') }),
+    h('h2', { class: 'section-title' }, t('words.cats')),
+    content.vocabCats.map((cat) => {
+      const n = content.vocab.filter((w) => w.cat === cat.id).length;
+      return h('button', { type: 'button', class: 'item', onclick: () => app.go('cat.' + cat.id) }, h('span', { class: 'body' }, h('span', { class: 't' }, cat.title), h('span', { class: 's' }, t('words.count', { n: fnum(n) }))), h('span', { class: 'go' }, icon('next')));
+    }));
+  return { main };
+}
+
+function wordRow(app, it) {
+  return h('div', { class: 'card' },
+    h('div', { class: 'opt-wrap' }, miniPlay(app, clipEn(it.say || it.en, it.voice, 'n')),
+      h('div', { class: 'grow' }, en(it.en, 'p', 'en-line'), h('p', { class: 'fa-line' }, it.fa)),
+      it.pic ? h('span', { class: 'emoji', 'aria-hidden': 'true' }, it.pic) : null),
+    it.ph && app.store.state.settings.ph ? h('p', { class: 'ph-line' }, h('b', null, app.t('phrase.phLabel') + ' '), it.ph) : null,
+    it.ex ? h('div', { class: 'opt-wrap' }, miniPlay(app, clipEn(it.ex.en, 's', 'n')), h('div', { class: 'grow' }, en(it.ex.en, 'p'), h('p', { class: 'muted' }, it.ex.fa))) : null,
+    h('div', { class: 'row' }, listenBtn(app, clipEn(it.say || it.en, it.voice, 's'), { label: app.t('audio.slow'), cls: 'btn-ghost', ic: 'slow', small: true }), favBtn(app, it.id)));
+}
+
+export function catView(app, catId) {
+  const { t, content } = app;
+  const cat = content.vocabCats.find((c) => c.id === catId) || content.vocabCats[0];
+  const words = content.vocab.filter((w) => w.cat === cat.id);
+  if (!app.ui.warmed) { app.ui.warmed = true; app.audio.loadIndex().then(() => app.audio.warm(['v-' + cat.id])).catch(() => {}); }
+  return { main: h('main', { class: 'wrap' }, h('h1', { class: 'section-title' }, cat.title), h('p', { class: 'muted' }, t('words.cat.hint')), words.map((w) => wordRow(app, app.item(w.id)))) };
+}
+
+export function savedView(app) {
+  const { t, store } = app;
+  const items = Object.keys(store.state.fav).map((id) => app.item(id)).filter(Boolean);
+  const main = h('main', { class: 'wrap' }, h('h1', { class: 'section-title' }, t('saved.title')));
+  if (!items.length) main.append(note(t('saved.none'), 'info', 'star'));
+  items.forEach((it) => main.append(wordRow(app, it)));
+  return { main };
+}
+
+// One set of review (srs.js builds it: what is due, then new words). Anything answered «هنوز نه» is shown once more
+// at the end of the set and then comes back tomorrow.
+//
+// A card is not always the same question (cardMode in srs.js):
+//   read  the English is on the card with its sound — «معنی‌اش چیست؟»           new, or missed last time
+//   hear  only the sound; «نمایش کلمه» shows the English for those who want it    known at least once
+//   say   the Farsi is on the card — «این را به انگلیسی چطور می‌گویید؟»           every other time
+// The picture never stands beside the English question (it would be the answer): it is on the back of the card,
+// and on the front only when the question is the Farsi word.
+const sayable = (app, id, it) => {
+  if (it.kind === 'word') return !/[A-Za-z]/.test(it.fa);          // «حرف A», «ID»: the Farsi side would give the answer away
+  const L = app.content.lessons[id.split(':')[1]];
+  return !(L && L.listenFirst);                                    // sentences the learner only has to understand (the pharmacist's instructions)
+};
+export function reviewView(app) {
+  const { t, store, content } = app;
+  const day = app.today();
+  const nextSet = () => todaysSet(store.state, content, day);
+  const begin = () => {
+    const q = nextSet(), mode = {};
+    for (const id of q.queue) { const it = app.item(id); if (it) mode[id] = cardMode(id, store.state.srs[id], sayable(app, id, it)); }
+    return { queue: q.queue, set: q.set, mode, again: [], pass: 1, i: 0, shown: false, text: false, knew: 0, total: 0, say: false };
+  };
+  const S = (app.ui.rev ||= begin());
+  const list = S.pass === 1 ? S.queue : S.again;
+  const main = h('main', { class: 'wrap' });
+  if (!S.warmed) { S.warmed = true; app.audio.loadIndex().then(() => app.audio.warm(app.audio.index.packs.filter((p) => p.id.startsWith('v-') || p.id === 'words').map((p) => p.id))).catch(() => {}); }
+
+  if (S.i >= list.length) {
+    // The end of a set. After the first set of the day the second one is mentioned as something for later —
+    // going home is the main button. After the second, or when nothing is left, the day's review is simply done:
+    // what may still be waiting is never counted out to the learner.
+    const next = nextSet();
+    const second = S.total > 0 && next.queue.length > 0 && next.set <= SETS_PER_DAY;
+    main.append(h('section', { class: 'card center' }, h('span', { class: 'big-check' }, icon('check')),
+      h('h1', { style: 'font-size:1.5rem' }, !S.total ? t('rev.none') : second ? t('rev.first') : t('rev.done')),
+      !S.total ? h('p', null, t('rev.none.sub')) : h('p', { class: 'lead' }, S.knew ? t('rev.sum', { n: fnum(S.total), k: fnum(S.knew) }) : t('rev.sum.none', { n: fnum(S.total) })),
+      second ? h('p', null, t('rev.second')) : h('p', { class: 'muted' }, t('rev.back'))));
+    main.append(btn(t('nav.home'), { cls: 'btn-primary', icon: 'home', block: true, onclick: app.home }));
+    if (second) main.append(btn(t('rev.goNow'), { cls: 'btn-ghost', icon: 'cards', block: true, onclick: () => { app.ui.rev = null; app.render(true); } }));
+    return { main };
+  }
+
+  const id = list[S.i];
+  const it = app.item(id);
+  if (!it) { S.i++; return reviewView(app); }
+  const word = it.kind === 'word';
+  const mode = S.pass === 1 ? S.mode[id] || 'read' : 'read';     // the repeat at the end of a set shows everything
+  const answer = (knew) => {
+    const isNew = !store.state.srs[id];        // a word met for the first time (sentences from lessons are not "new")
+    app.speech.cancel(); app.audio.stop();
+    store.update((s) => {
+      s.srs[id] = grade(s.srs[id], knew, day);
+      if (S.pass === 1) s.newDay = answered(s.newDay, day, isNew);
+    });
+    if (S.pass === 1) { S.total++; if (knew) S.knew++; else S.again.push(id); }
+    S.i++; S.shown = false; S.text = false; S.say = false;
+    if (S.pass === 1 && S.i >= S.queue.length && S.again.length) { S.pass = 2; S.i = 0; }
+    delete app.ui['say-rev'];
+    app.render(true);
+  };
+
+  main.append(progress(S.pass === 1 ? t('rev.title') : t('rev.again'), `${fnum(S.i + 1)} ${t('lesson.of')} ${fnum(list.length)}`, S.i / list.length));
+  const card = h('section', { class: 'card phrase' }, h('h1', { class: 'sr' }, t('rev.title')));
+  const add = (...kids) => card.append(...kids.filter(Boolean));
+  const clip = clipEn(it.say || it.en, it.voice, 'n');
+  const picture = () => (it.pic ? h('span', { class: 'emoji center', 'aria-hidden': 'true' }, it.pic) : null);
+  // one spelling, two words (the word "I" and the letter "I"): the card says which group this one belongs to
+  const twins = word ? content.vocab.filter((w) => w.en === it.en) : [];
+  const group = twins.length > 1 ? content.vocabCats.find((c) => c.id === twins.find((w) => w.id === id).cat) : null;
+  const english = () => wordsLine(app, it.en, { voice: it.voice, headword: word });
+  const listen = () => h('div', { class: 'row' }, listenBtn(app, clip, { label: t('audio.listen') }), listenBtn(app, clipEn(it.say || it.en, it.voice, 's'), { label: t('audio.slow'), cls: 'btn-ghost', ic: 'slow' }));
+  const reveal = (label, sound) => btn(label, { cls: 'btn-primary', icon: 'eye', block: true, onclick: () => { S.shown = true; app.render(); if (sound) playNow(app, clip); } });
+
+  if (!S.shown && mode === 'say') {
+    // Farsi first: the direction a speaker needs. The answer is shown — and heard — when the learner asks for it.
+    add(h('p', { class: 'eyebrow' }, t('rev.sayIt')), picture(), h('p', { class: 'fa-line', 'data-rev': 'say' }, it.fa), h('p', { class: 'muted' }, t('rev.sayIt.hint')));
+    main.append(card, reveal(t('rev.showEn'), true));
+  } else if (!S.shown) {
+    if (group) card.append(h('p', { class: 'eyebrow' }, group.title));
+    const hidden = mode === 'hear' && !S.text;       // heard first: the English appears when asked for
+    if (!hidden) card.append(english());
+    card.append(listen(), h('p', { class: 'muted', 'data-rev': hidden ? 'hear' : 'read' }, mode === 'hear' ? t('rev.hear') : t('rev.think')));
+    main.append(card);
+    if (hidden) main.append(btn(word ? t('rev.showWord') : t('rev.showPhrase'), { cls: 'btn-ghost', icon: 'eye', block: true, onclick: () => { S.text = true; app.render(); } }));
+    main.append(reveal(t('rev.show'), false));
+  } else {
+    if (group) card.append(h('p', { class: 'eyebrow' }, group.title));
+    add(picture(), english(), listen(), h('div', { class: 'row' }, h('p', { class: 'fa-line grow' }, it.fa), faListen(app, it.fa, t('audio.fa'))));
+    if (it.ph && store.state.settings.ph) card.append(h('p', { class: 'ph-line' }, h('b', null, t('phrase.phLabel') + ' '), it.ph));
+    if (it.ex) card.append(h('div', { class: 'opt-wrap' }, miniPlay(app, clipEn(it.ex.en, 's', 'n')), h('div', { class: 'grow' }, en(it.ex.en, 'p'), h('p', { class: 'muted' }, it.ex.fa))));
+    if (it.note) card.append(h('p', { class: 'when' }, it.note));
+    card.append(h('div', { class: 'row' }, favBtn(app, id), micOn(app) ? btn(t('rev.say'), { cls: 'btn-ghost', icon: 'mic', small: true, onclick: () => { S.say = !S.say; if (!S.say) app.speech.cancel(); app.render(); } }) : null));
+    main.append(card);
+    if (S.say) main.append(sayPanel(app, { key: 'say-rev', target: it.en, say: it.say, voice: it.voice, headword: word, own: it.own }));      // own: "My name is Maryam." said with the learner's own name is right
+    main.append(h('p', { class: 'section-title center' }, t('rev.ask')),
+      h('div', { class: 'row' }, btn(t('rev.knew'), { cls: 'btn-primary grow', icon: 'check', onclick: () => answer(true) }), btn(t('rev.notYet'), { cls: 'btn-ghost grow', icon: 'repeat', onclick: () => answer(false) })));
+  }
+  const at = S.i, pass = S.pass;
+  // the sentence plays by itself when its card opens — except where the English is the answer
+  const after = (navigated) => {
+    if (navigated && store.state.settings.auto && !S.shown && mode !== 'say') later(app, 250, () => { if (app.ui.rev === S && S.i === at && S.pass === pass && !S.shown) playNow(app, clip, { quiet: true }); });
+  };
+  return { main, after };
+}
+
+// «شنیدن عددها»: hear a price, a time, a date or a phone number the way people really say it and tap what was said.
+// The wrong answers are the ones that sound alike (15 / 50). Any number of replays; a wrong tap costs nothing.
+const NUM_ROUND = 8;
+export function numbersView(app) {
+  const { t, content, store } = app;
+  const S = (app.ui.num ||= { seed: Math.random(), ids: null, i: 0 });
+  S.ids ||= numberRound(content.numbers, NUM_ROUND, S.seed, store.state.heard).map((x) => x.id);
+  if (!S.warmed) { S.warmed = true; app.audio.loadIndex().then(() => app.audio.warm(['n-numbers'])).catch(() => {}); }
+  const main = h('main', { class: 'wrap' });
+
+  if (S.i >= S.ids.length) {
+    main.append(h('section', { class: 'card center' }, h('span', { class: 'big-check' }, icon('check')), h('h1', { style: 'font-size:1.5rem' }, t('num.done')), h('p', { class: 'lead' }, t('num.done.sub'))),
+      btn(t('num.more'), { cls: 'btn-primary', icon: 'ear', block: true, onclick: () => { app.ui.num = null; app.render(true); } }),
+      btn(t('nav.home'), { cls: 'btn-ghost', icon: 'home', block: true, onclick: app.home }));
+    return { main };
+  }
+
+  const it = content.numbers.find((x) => x.id === S.ids[S.i]);
+  const key = `num:${S.seed}:${S.i}`;
+  const clip = clipEn(it.say, it.voice, 'n');
+  const options = shuffle([it.show, ...it.alts], mix(S.seed, S.i)).map((v) => ({ id: v, right: v === it.show, label: h('span', { class: 'en', lang: 'en', dir: 'ltr', style: 'font-size:1.6rem;text-align:center' }, v) }));
+  const solved = app.ui[key] && app.ui[key].solved != null;
+  main.append(progress(t('num.title'), `${fnum(S.i + 1)} ${t('lesson.of')} ${fnum(S.ids.length)}`, S.i / S.ids.length));
+  main.append(h('section', { class: 'card' }, h('p', { class: 'eyebrow' }, t('num.kind.' + it.kind)), h('h1', { style: 'font-size:1.35rem' }, t('num.ask')),
+    h('div', { class: 'row' }, listenBtn(app, clip, { label: t('audio.listen') }), listenBtn(app, clipEn(it.say, it.voice, 's'), { label: t('audio.slow'), cls: 'btn-ghost', ic: 'slow' }))));
+  // recognised at the first try: it has had its turn; otherwise it simply comes round again sooner
+  main.append(quiz(app, key, options, { missNote: t('listen.again'), onSolved: (o, first) => { if (first) store.update((s) => { s.heard[it.id] = (s.heard[it.id] || 0) + 1; }); } }));
+  // what was said, in words, appears under the answers once the right one is found
+  if (solved) main.append(h('section', { class: 'card' }, en(it.say, 'p', 'en-line'), h('p', { class: 'fa-line' }, it.fa)));
+  const step = (d) => { S.i = Math.max(0, S.i + d); app.audio.stop(); app.render(true); };
+  const bar = h('div', { class: 'bottombar' }, h('div', { class: 'inner' },
+    S.i > 0 ? btn(t('nav.prev'), { cls: 'btn-ghost', icon: 'back', onclick: () => step(-1) }) : null,
+    btn(t('nav.next'), { cls: 'btn-primary', 'data-next': '', onclick: () => step(1) })));
+  const at = S.i;
+  const after = (navigated) => { if (navigated && store.state.settings.auto) later(app, 250, () => { if (app.ui.num === S && S.i === at) playNow(app, clip, { quiet: true }); }); };
+  return { main, bar, after };
+}
+
+// Every small grammar pattern met so far, in one place to look back at.
+export function grammarView(app) {
+  const { t, content, store } = app;
+  const main = h('main', { class: 'wrap' }, h('h1', { class: 'section-title' }, t('gram.title')), h('p', { class: 'muted' }, t('gram.sub')));
+  const seen = app.order.filter((id) => store.state.done[id] && content.lessons[id].grammar);
+  const rest = app.order.filter((id) => !store.state.done[id] && content.lessons[id].grammar);
+  const card = (id) => {
+    const L = content.lessons[id], G = L.grammar, listen = G.compare === 'listen';
+    return h('section', { class: 'card' },
+      h('h2', null, G.title), h('p', null, G.explain),
+      G.examples.map((e) => h('div', { class: 'opt-wrap' }, miniPlay(app, clipEn(e.en, 's', 'n')), h('div', { class: 'grow' }, en(e.en, 'p', 'en-line'), h('p', { class: 'muted' }, e.fa)))),
+      listen ? null : h('p', null, h('b', null, t('grammar.dont') + ' '), h('s', { class: 'en', lang: 'en', dir: 'ltr' }, G.wrong)),
+      listen ? null : h('p', null, h('b', null, t('grammar.do') + ' '), en(G.right)),
+      h('p', { class: 'muted' }, G.why),
+      btn(t('gram.from', { title: L.title.fa }), { cls: 'btn-ghost', small: true, icon: 'book', onclick: () => app.go('lesson.' + id) }));
+  };
+  if (!seen.length) main.append(note(t('gram.none'), 'info', 'bulb'));
+  seen.forEach((id) => main.append(card(id)));
+  if (rest.length) {
+    main.append(h('h2', { class: 'section-title' }, t('gram.later')));
+    rest.forEach((id) => { const L = content.lessons[id]; main.append(h('button', { type: 'button', class: 'item', onclick: () => app.go('lesson.' + id) },
+      h('span', { class: 'body' }, h('span', { class: 't' }, L.grammar.title), h('span', { class: 's' }, L.title.fa)), h('span', { class: 'go' }, icon('next')))); });
+  }
+  return { main };
+}

@@ -1,0 +1,61 @@
+{
+  "id": "customer-service",
+  "scenario": "phone",
+  "stage": 3,
+  "minutes": 9,
+  "title": { "fa": "تماس با شرکت‌ها و صدای ضبط‌شده", "en": "Calling customer service" },
+  "intro": "وقتی به شرکت تلفن، برق یا اینترنت زنگ می‌زنید، اول صدای ضبط‌شده جواب می‌دهد. در این درس یاد می‌گیرید از آن رد شوید، با یک آدم واقعی صحبت کنید و مشکلتان را بگویید.",
+  "canDo": "حالا می‌توانید از صدای ضبط‌شده رد شوید و مشکل قبض یا اینترنتتان را بگویید.",
+  "mission": "هر وقت به شرکتی زنگ زدید و صدای ضبط‌شده جواب داد، بگویید: Representative, please.",
+  "them": { "role": "کارمند پشتیبانی", "voice": "a" },
+  "phrases": [
+    { "en": "Representative, please.", "fa": "می‌خواهم با یک کارمند صحبت کنم.", "ph": "رِپرِزِنتِتیو، پْلیز", "note": "وقتی صدای ضبط‌شده گزینه‌ها را می‌گوید، در خیلی از شرکت‌ها اگر این کلمه را بگویید یا عدد صفر را بزنید، به یک آدم واقعی وصل می‌شوید. اگر نشد، عددِ مربوط به کارتان را بزنید.", "chunks": ["Representative,", "please."] },
+    { "en": "I have a problem with my bill.", "fa": "قبضم مشکلی دارد.", "ph": "آی هَو اِ پْرابلِم ویت مای بیل", "note": "bill یعنی قبض یا صورت‌حساب.", "chunks": ["I have a problem", "with my bill."] },
+    { "en": "My internet is not working.", "fa": "اینترنتم کار نمی‌کند.", "ph": "مای اینتِرنِت ایز نات وِرکینگ", "note": "به‌جای internet می‌توانید بگویید: my phone (تلفنم)، my TV (تلویزیونم).", "chunks": ["My internet", "is not working."] },
+    { "en": "Can you speak more slowly, please?", "fa": "می‌شود لطفاً آهسته‌تر صحبت کنید؟", "ph": "کَن یو سْپیک مُر سْلُولی، پْلیز؟", "note": "پشت تلفن همه تند حرف می‌زنند. بدون خجالت این را بگویید.", "chunks": ["Can you speak", "more slowly,", "please?"] },
+    { "en": "Can you send it by mail?", "fa": "می‌شود آن را با پست بفرستید؟", "ph": "کَن یو سِند ایت بای مِیل؟", "note": "mail یعنی پست کاغذی، نه ایمیل. اگر چیزی را روی کاغذ داشته باشید، می‌توانید به خانواده‌تان نشان بدهید.", "chunks": ["Can you send it", "by mail?"] }
+  ],
+  "dialogue": {
+    "setting": "به شرکت اینترنت زنگ زده‌اید. اول صدای ضبط‌شده جواب می‌دهد.",
+    "lines": [
+      ["them", "Thank you for calling. For billing, press one. For technical support, press two.", "ممنون که تماس گرفتید. برای قبض، عدد یک را بزنید. برای پشتیبانی فنی، عدد دو را بزنید."],
+      ["you", "Representative, please.", "می‌خواهم با یک کارمند صحبت کنم."],
+      ["them", "Please hold. Hello, this is Mike. How can I help you?", "لطفاً منتظر بمانید. سلام، مایک هستم. چه کمکی از من برمی‌آید؟"],
+      ["you", "Hello. My internet is not working.", "سلام. اینترنتم کار نمی‌کند."],
+      ["them", "I'm sorry about that. Can I have your name and address?", "متأسفم. می‌شود اسم و آدرستان را بگویید؟"],
+      ["you", "Can you speak more slowly, please?", "می‌شود لطفاً آهسته‌تر صحبت کنید؟"],
+      ["them", "Of course. First, your name, please.", "البته. اول اسمتان، لطفاً."]
+    ]
+  },
+  "respond": {
+    "setting": "صدای ضبط‌شده گزینه‌ها را می‌گوید و شما فقط می‌خواهید با یک نفر حرف بزنید.",
+    "them": ["For billing, press one. For technical support, press two.", "برای قبض، عدد یک را بزنید. برای پشتیبانی فنی، عدد دو را بزنید."],
+    "ok": [
+      ["Representative, please.", "می‌خواهم با یک کارمند صحبت کنم."],
+      ["I want to talk to a person.", "می‌خواهم با یک نفر صحبت کنم."]
+    ],
+    "off": ["Can you send it by mail?", "می‌شود آن را با پست بفرستید؟", "صدای ضبط‌شده این را نمی‌فهمد. بگویید «Representative» تا به یک کارمند وصل شوید، یا عدد مناسب را بزنید."],
+    "off2": 4
+  },
+  "variants": [
+    { "en": "Can you verify your name and address?", "fa": "می‌شود برای تأیید، اسم و آدرستان را بگویید؟", "like": "I'm sorry about that. Can I have your name and address?", "voice": "b" },
+    { "en": "Please stay on the line.", "fa": "لطفاً پشت خط بمانید.", "like": "Please hold. Hello, this is Mike. How can I help you?" }
+  ],
+  "task": [
+    ["این ماه مبلغ قبضتان خیلی بیشتر از همیشه است.", 2],
+    ["کارمند می‌خواهد چیزی را تلفنی توضیح بدهد، ولی شما ترجیح می‌دهید نوشته‌اش را داشته باشید.", 5]
+  ],
+  "grammar": {
+    "title": "press one / press two",
+    "explain": "صدای ضبط‌شده می‌گوید برای هر کار کدام عدد را بزنید. اول اسم کار را می‌گوید و بعد عدد را. اگر می‌خواهید با یک نفر حرف بزنید، بگویید «Representative» یا «I want to talk to a person.\u200e»",
+    "examples": [
+      ["For billing, press one.", "برای قبض، عدد یک را بزنید."],
+      ["For Spanish, press two.", "برای اسپانیایی، عدد دو را بزنید."],
+      ["To speak to a representative, press zero.", "برای صحبت با کارمند، عدد صفر را بزنید."]
+    ],
+    "wrong": "I want talk to a person.",
+    "right": "I want to talk to a person.",
+    "why": "بعد از want کلمهٔ «to» می‌آید: «I want to talk …»."
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

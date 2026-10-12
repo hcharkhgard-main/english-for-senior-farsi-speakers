@@ -1,0 +1,64 @@
+{
+  "id": "driving-police",
+  "scenario": "driving",
+  "stage": 3,
+  "minutes": 9,
+  "safetyCritical": true,
+  "title": { "fa": "وقتی پلیس ماشین را نگه می‌دارد", "en": "When the police stop your car" },
+  "intro": "اگر ماشین پلیس پشت سرتان چراغ زد، آرام کنار بزنید، در ماشین بمانید و دست‌هایتان را روی فرمان بگذارید تا افسر بیاید. در این درس جمله‌های لازم را تمرین می‌کنیم.",
+  "note": "این درس برای یادگیری زبان است و مشاورهٔ حقوقی نیست. آرام و مؤدب بمانید و حرکت ناگهانی نکنید.",
+  "canDo": "حالا می‌توانید با آرامش مدارکتان را به افسر پلیس بدهید و بگویید متوجه نمی‌شوید.",
+  "mission": "همین امروز ببینید گواهینامه، کارت ماشین و کارت بیمهٔ ماشینتان کجاست و این جمله را دو بار بلند تمرین کنید: Here is my license and registration.",
+  "them": { "role": "افسر پلیس", "voice": "m" },
+  "phrases": [
+    { "en": "Here is my license and registration.", "fa": "این گواهینامه و کارت ماشین من است.", "ph": "هی‌یِر ایز مای لایسِنس اَند رِجیستْرِیشِن", "note": "معمولاً کارت بیمهٔ ماشین (insurance) را هم می‌خواهند.", "chunks": ["Here is", "my license", "and registration."] },
+    { "en": "My documents are in the glove box.", "fa": "مدارکم در داشبورد است.", "ph": "مای داکیومِنتس آر این دِ گْلاو باکس", "note": "قبل از اینکه دستتان را به طرف داشبورد یا کیفتان ببرید، این را بگویید.", "chunks": ["My documents", "are in", "the glove box."] },
+    { "en": "I'm sorry, officer. I don't understand.", "fa": "ببخشید جناب افسر، متوجه نمی‌شوم.", "ph": "آیْم ساری، آفیسِر. آی دُنت آندِرستَند", "note": "به پلیس می‌گویند «officer».", "chunks": ["I'm sorry, officer.", "I don't understand."] },
+    { "en": "I speak Farsi. Could you speak slowly, please?", "fa": "من فارسی صحبت می‌کنم. می‌شود لطفاً آهسته صحبت کنید؟", "ph": "آی سْپیک فارسی. کُد یو سْپیک سْلُولی، پْلیز؟", "note": "اگر باز هم نفهمیدید، حدس نزنید. دوباره بگویید متوجه نمی‌شوید.", "chunks": ["I speak Farsi.", "Could you", "speak slowly,", "please?"] },
+    { "en": "Can I go now, officer?", "fa": "جناب افسر، حالا می‌توانم بروم؟", "ph": "کَن آی گُو ناو، آفیسِر؟", "note": "تا وقتی افسر نگفته، حرکت نکنید.", "chunks": ["Can I go now,", "officer?"] }
+  ],
+  "dialogue": {
+    "setting": "تمرین: کنار زده‌اید و افسر پلیس کنار پنجرهٔ ماشین آمده است.",
+    "lines": [
+      ["them", "Good afternoon. License and registration, please.", "بعدازظهر به‌خیر. گواهینامه و کارت ماشین، لطفاً."],
+      ["you", "Yes, officer. My documents are in the glove box.", "بله، جناب افسر. مدارکم در داشبورد است."],
+      ["them", "Okay. Go ahead.", "باشد. بردارید."],
+      ["you", "Here is my license and registration.", "این گواهینامه و کارت ماشین من است."],
+      ["them", "Do you know why I stopped you?", "می‌دانید چرا شما را نگه داشتم؟"],
+      ["you", "I'm sorry, officer. I don't understand. Could you speak slowly, please?", "ببخشید جناب افسر، متوجه نمی‌شوم. می‌شود لطفاً آهسته صحبت کنید؟"],
+      ["them", "You were driving too fast. The speed limit here is thirty-five.", "تند می‌رفتید. سرعت مجاز اینجا سی و پنج است."]
+    ]
+  },
+  "respond": {
+    "setting": "تمرین: افسر کنار پنجرهٔ ماشین ایستاده است.",
+    "them": ["License and registration, please.", "گواهینامه و کارت ماشین، لطفاً."],
+    "ok": [
+      ["Here is my license and registration.", "این گواهینامه و کارت ماشین من است."],
+      ["Yes, officer. My documents are in the glove box.", "بله، جناب افسر. مدارکم در داشبورد است."]
+    ],
+    "off": ["Where can I park?", "کجا می‌توانم پارک کنم؟", "افسر مدارکتان را خواست. آرام بگویید مدارک کجاست و بعد آن‌ها را بدهید."],
+    "off2": 5
+  },
+  "variants": [
+    { "en": "Do you know why I pulled you over?", "fa": "می‌دانید چرا خواستم کنار بزنید؟", "like": "Do you know why I stopped you?", "voice": "b" },
+    { "en": "Can I see your license and registration?", "fa": "می‌شود گواهینامه و کارت ماشینتان را ببینم؟", "like": "License and registration, please." },
+    { "en": "You were speeding.", "fa": "سرعتتان بیشتر از حدِ مجاز بود.", "like": "You were driving too fast. The speed limit here is thirty-five." }
+  ],
+  "task": [
+    ["افسر تند حرف می‌زند و می‌خواهید آهسته‌تر صحبت کند.", 4],
+    ["می‌خواهید دستتان را به طرف داشبورد ببرید تا مدارک را بردارید.", 2]
+  ],
+  "grammar": {
+    "title": "Here is …",
+    "explain": "وقتی چیزی را به کسی می‌دهید یا نشان می‌دهید، بگویید «Here is» و بعد آن چیز.",
+    "examples": [
+      ["Here is my license.", "این گواهینامهٔ من است."],
+      ["Here is my passport.", "این گذرنامهٔ من است."],
+      ["Here is my insurance card.", "این کارت بیمهٔ من است."]
+    ],
+    "wrong": "Here my license.",
+    "right": "Here is my license.",
+    "why": "کلمهٔ «is» نباید جا بیفتد."
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

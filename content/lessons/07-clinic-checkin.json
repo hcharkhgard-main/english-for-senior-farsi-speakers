@@ -1,0 +1,65 @@
+{
+  "id": "clinic-checkin",
+  "scenario": "clinic",
+  "stage": 2,
+  "order": 7,
+  "minutes": 8,
+  "safetyCritical": true,
+  "title": { "fa": "پذیرش در مطب دکتر", "en": "Checking in at the clinic" },
+  "intro": "وقتی به مطب یا درمانگاه می‌رسید، اول باید پیش منشی بروید. در این درس یاد می‌گیرید بگویید وقت دارید و به سؤال‌های منشی جواب بدهید.",
+  "note": "این درس برای یادگیری زبان است و توصیهٔ پزشکی نیست.",
+  "canDo": "حالا می‌توانید در مطب بگویید وقت دارید و اسم و تاریخ تولدتان را بگویید.",
+  "mission": "دفعهٔ بعد که به مطب رفتید، خودتان جلوی میز پذیرش بگویید: I have an appointment.",
+  "them": { "role": "منشی مطب", "voice": "b" },
+  "phrases": [
+    { "en": "I have an appointment at ten o'clock.", "fa": "ساعت ده وقت دارم.", "ph": "آی هَو اَن اَپُینتمِنت اَت تِن اُکْلاک", "note": "ساعت خودتان را بگویید: nine (۹)، eleven (۱۱)، two thirty (۲:۳۰).", "chunks": ["I have", "an appointment", "at ten o'clock."], "own": ["ten", "o'clock"] },
+    { "en": "My last name is Ahmadi.", "fa": "نام خانوادگی من احمدی است.", "ph": "مای لَست نِیم ایز احمدی", "note": "last name یعنی نام خانوادگی و first name یعنی اسم کوچک.", "chunks": ["My last name", "is Ahmadi."], "own": ["Ahmadi"] },
+    { "en": "My date of birth is March 5th, 1958.", "fa": "تاریخ تولد من ۵ مارس ۱۹۵۸ است.", "ph": "مای دِیت آو بِرت ایز …", "note": "تقریباً همیشه تاریخ تولد را می‌پرسند. تاریخ تولد میلادی خودتان را از قبل تمرین کنید: اول ماه، بعد روز، بعد سال.", "chunks": ["My date of birth", "is March 5th,", "1958."], "own": ["March", "5th", "1958"] },
+    { "en": "Here is my insurance card.", "fa": "این کارت بیمهٔ من است.", "ph": "هی‌یِر ایز مای اینشورِنس کارد", "note": "کارت بیمه و کارت شناسایی را همراه داشته باشید.", "chunks": ["Here is", "my insurance card."] },
+    { "en": "Do you have a Farsi interpreter?", "fa": "مترجم فارسی دارید؟", "ph": "دو یو هَو اِ فارسی اینتِرپْرِتِر؟", "note": "خیلی از مطب‌ها و بیمارستان‌ها مترجم تلفنی دارند. از پرسیدن خجالت نکشید.", "chunks": ["Do you have", "a Farsi interpreter?"] }
+  ],
+  "dialogue": {
+    "setting": "به مطب دکتر رسیده‌اید و جلوی میز پذیرش ایستاده‌اید.",
+    "lines": [
+      ["them", "Good morning. How can I help you?", "صبح به‌خیر. چه کمکی از من برمی‌آید؟"],
+      ["you", "Good morning. I have an appointment at ten o'clock.", "صبح به‌خیر. ساعت ده وقت دارم."],
+      ["them", "What is your last name?", "نام خانوادگی‌تان چیست؟"],
+      ["you", "Ahmadi. A-H-M-A-D-I.", "احمدی. (حرف‌به‌حرف)"],
+      ["them", "And your date of birth?", "و تاریخ تولدتان؟"],
+      ["you", "March 5th, 1958.", "۵ مارس ۱۹۵۸."],
+      ["them", "Thank you. Please have a seat. The nurse will call you.", "ممنون. لطفاً بنشینید. پرستار صدایتان می‌کند."]
+    ]
+  },
+  "respond": {
+    "setting": "جلوی میز پذیرش هستید.",
+    "them": ["Hello. Do you have an appointment?", "سلام. وقت قبلی دارید؟"],
+    "ok": [
+      ["Yes. I have an appointment at ten o'clock.", "بله. ساعت ده وقت دارم."],
+      ["Yes. My last name is Ahmadi.", "بله. نام خانوادگی من احمدی است."]
+    ],
+    "off": ["Please have a seat.", "لطفاً بنشینید.", "این را منشی به شما می‌گوید. شما باید بگویید که وقت دارید."],
+    "off2": 3
+  },
+  "variants": [
+    { "en": "Can you confirm your date of birth?", "fa": "می‌شود برای تأیید، تاریخ تولدتان را بگویید؟", "like": "And your date of birth?", "voice": "m" },
+    { "en": "Can I get your last name?", "fa": "می‌شود نام خانوادگی‌تان را بگویید؟", "like": "What is your last name?" },
+    { "en": "Are you checking in?", "fa": "برای پذیرش آمده‌اید؟", "like": "Hello. Do you have an appointment?" }
+  ],
+  "task": [
+    ["منشی کارت بیمه‌تان را می‌خواهد.", 4],
+    ["حرف‌های منشی را نمی‌فهمید و می‌خواهید کسی به فارسی کمکتان کند.", 5]
+  ],
+  "grammar": {
+    "title": "I have …",
+    "explain": "برای گفتن اینکه چیزی دارید، بگویید «I have» و بعد آن چیز. برای وقتِ دکتر هم همین را می‌گوییم.",
+    "examples": [
+      ["I have an appointment.", "وقت قبلی دارم."],
+      ["I have a question.", "یک سؤال دارم."],
+      ["I have insurance.", "بیمه دارم."]
+    ],
+    "wrong": "I have appointment.",
+    "right": "I have an appointment.",
+    "why": "قبل از appointment کلمهٔ «an» می‌آید."
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

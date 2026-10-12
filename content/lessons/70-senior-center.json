@@ -1,0 +1,65 @@
+{
+  "id": "senior-center",
+  "scenario": "social",
+  "stage": 3,
+  "minutes": 9,
+  "title": { "fa": "مرکز سالمندان: کلاس و سرویس رفت‌وآمد", "en": "Senior center: classes and rides" },
+  "intro": "در خیلی از شهرهای آمریکا «مرکز سالمندان» (Senior center) کلاس، ناهار و برنامه‌های دسته‌جمعی دارد، و سرویس رفت‌وآمدی هم برای سالمندان هست که باید از قبل رزروش کرد. این‌ها در هر شهر فرق دارد. در این درس یاد می‌گیرید در کلاس اسم بنویسید، ماشین رزرو کنید و با آشناها احوال‌پرسی کنید.",
+  "canDo": "حالا می‌توانید در مرکز سالمندان در کلاس اسم بنویسید، برای رفت‌وآمد ماشین رزرو کنید و با آشناها احوال‌پرسی کنید.",
+  "mission": "از خانواده یا همسایه بپرسید نزدیک‌ترین مرکز سالمندان یا مرکز محلی کجاست و چه کلاس‌هایی دارد. جمله‌ای که آنجا لازم دارید: I'd like to join the exercise class.",
+  "them": { "role": "کارمند مرکز سالمندان", "voice": "b" },
+  "phrases": [
+    { "en": "I'd like to book a ride for Wednesday.", "fa": "می‌خواهم برای چهارشنبه ماشین رزرو کنم.", "ph": "آیْد لایک تو بُک اِ راید فُر وِنزدِی", "note": "ride یعنی رفتن با ماشین. به‌جای Wednesday روزی را بگویید که ماشین می‌خواهید. این سرویس را معمولاً باید یک یا چند روز زودتر رزرو کرد.", "chunks": ["I'd like", "to book a ride", "for Wednesday."] },
+    { "en": "Can you pick me up at nine o'clock?", "fa": "می‌شود ساعت نُه دنبالم بیایید؟", "ph": "کَن یو پیک می آپ اَت ناین اُکْلاک؟", "note": "pick up یعنی دنبال کسی رفتن و او را سوار کردن. ساعتی را که خودتان می‌خواهید بگویید.", "chunks": ["Can you", "pick me up", "at nine o'clock?"] },
+    { "en": "I'd like to join the exercise class.", "fa": "می‌خواهم در کلاس ورزش شرکت کنم.", "ph": "آیْد لایک تو جُین دِ اِکسِرسایز کْلَس", "note": "کلاس‌های دیگر: the English class (کلاس انگلیسی)، the computer class (کلاس کامپیوتر)، the art class (کلاس هنر).", "chunks": ["I'd like", "to join", "the exercise class."] },
+    { "en": "Do I need to sign up?", "fa": "باید اسم بنویسم؟", "ph": "دو آی نید تو ساین آپ؟", "note": "sign up یعنی اسم نوشتن یا ثبت‌نام. به برگه‌ای که اسمتان را رویش می‌نویسید می‌گویند «sign-up sheet».", "chunks": ["Do I need", "to sign up?"] },
+    { "en": "It's good to see you again.", "fa": "خوشحالم که دوباره می‌بینمتان.", "ph": "ایتس گُد تو سی یو اِگِن", "note": "وقتی آشنایی را دوباره می‌بینید: در مرکز سالمندان، در مسجد، کلیسا یا معبد، یا در مرکز فرهنگی. اگر بار اول است که کسی را می‌بینید، بگویید: «Nice to meet you.‎»", "chunks": ["It's good", "to see you again."] }
+  ],
+  "dialogue": {
+    "setting": "در مرکز سالمندان محله، جلوی میز پذیرش هستید.",
+    "lines": [
+      ["you", "Good morning. It's good to see you again.", "صبح به‌خیر. خوشحالم که دوباره می‌بینمتان."],
+      ["them", "Good morning! You too. What can I do for you?", "صبح به‌خیر! من هم همین‌طور. چه کاری برایتان انجام بدهم؟"],
+      ["you", "I'd like to join the exercise class. Do I need to sign up?", "می‌خواهم در کلاس ورزش شرکت کنم. باید اسم بنویسم؟"],
+      ["them", "Yes. Please write your name on this list. It's free.", "بله. لطفاً اسمتان را در این فهرست بنویسید. رایگان است."],
+      ["you", "Thank you. I'd like to book a ride for Wednesday.", "ممنون. می‌خواهم برای چهارشنبه ماشین رزرو کنم."],
+      ["them", "Sure. What time?", "حتماً. چه ساعتی؟"],
+      ["you", "Can you pick me up at nine o'clock?", "می‌شود ساعت نُه دنبالم بیایید؟"],
+      ["them", "Yes. The van will be at your door at nine.", "بله. ون ساعت نُه جلوی درِ خانه‌تان است."],
+      ["you", "Thank you very much.", "خیلی ممنون."]
+    ]
+  },
+  "respond": {
+    "setting": "چند هفته به مرکز سالمندان نیامده‌اید. کارمند مرکز شما را می‌بیند.",
+    "them": ["Hello! How have you been?", "سلام! این مدت حالتان چطور بوده؟"],
+    "ok": [
+      ["I'm fine, thank you. It's good to see you again.", "خوبم، ممنون. خوشحالم که دوباره می‌بینمتان."],
+      ["I've been well, thank you. And you?", "خوب بوده‌ام، ممنون. شما چطور؟"],
+      ["Hello! It's good to see you again.", "سلام! خوشحالم که دوباره می‌بینمتان."]
+    ],
+    "off": ["Do I need to sign up?", "باید اسم بنویسم؟", "او احوالتان را پرسید. اول جواب احوال‌پرسی را بدهید؛ بعد سؤالتان را بپرسید."],
+    "off2": 2
+  },
+  "task": [
+    ["ماشین را رزرو کرده‌اید. کارمند می‌پرسد چه ساعتی، و شما ساعت نُه را می‌خواهید.", 2],
+    ["کلاس را پیدا کرده‌اید. فقط می‌خواهید بدانید باید از قبل اسم بنویسید یا نه.", 4]
+  ],
+  "grammar": {
+    "title": "pick me up",
+    "explain": "pick up یعنی دنبال کسی رفتن و او را سوار کردن. وقتی می‌گویید چه کسی را (me، him، her)، آن کلمه بین pick و up می‌آید.",
+    "examples": [
+      ["Can you pick me up?", "می‌شود دنبالم بیایید؟"],
+      ["My son will pick me up.", "پسرم دنبالم می‌آید."],
+      ["Please pick her up at ten.", "لطفاً ساعت ده دنبال او بروید. (خانم)"]
+    ],
+    "wrong": "Can you pick up me?",
+    "right": "Can you pick me up?",
+    "why": "کلمه‌های کوتاهی مثل me، him و her بین pick و up می‌آیند: «pick me up»، نه «pick up me»."
+  },
+  "variants": [
+    { "en": "What time would you like to be picked up?", "fa": "چه ساعتی می‌خواهید دنبالتان بیایند؟", "like": "Sure. What time?" },
+    { "en": "Just put your name on the sign-up sheet. There's no charge.", "fa": "فقط اسمتان را در برگهٔ ثبت‌نام بنویسید. هزینه‌ای ندارد.", "like": "Yes. Please write your name on this list. It's free." },
+    { "en": "Your pickup time is nine o'clock.", "fa": "ساعت نُه دنبالتان می‌آیند.", "like": "Yes. The van will be at your door at nine." }
+  ],
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

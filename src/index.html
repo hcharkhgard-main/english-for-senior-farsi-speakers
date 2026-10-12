@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- Content security policy. Only this site's own files may run or be loaded, and the app may talk only to this
+     site (plus the optional live-partner service, filled in from config.json by the build). Each exception, and why:
+       script-src 'wasm-unsafe-eval'  the on-device speech recogniser is WebAssembly; without it the pronunciation check
+                                      cannot start (tested: tests/e2e/mic.mjs fails without it).
+       script-src 'unsafe-eval'       for iPhones that cannot go beyond iOS 15 (6s, 7, first SE): Safari 15 does not know
+                                      'wasm-unsafe-eval' and, as far as its documentation says, then refuses WebAssembly.
+                                      NOT TESTED on an iOS 15 device. Chromium does not need it. The app never evaluates
+                                      text as code. Remove it when iOS 15 no longer has to be supported.
+       media-src blob:                every sound is cut out of a downloaded pack and played from memory.
+       media-src data:                the moment of silence that lets an iPhone play sound after the first tap.
+     Not needed and therefore absent: data: images, blob: workers, inline styles or scripts, any other site.
+     (A policy in a meta tag cannot say who may put this page in a frame; GitHub Pages cannot send that header.) -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval' 'unsafe-eval'; style-src 'self'; img-src 'self'; font-src 'self'; media-src 'self' blob: data:; connect-src 'self'__CONNECT__; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>همراه انگلیسی</title>
+<meta name="description" content="همراه انگلیسی: یادگیری انگلیسیِ کارهای روزمره برای فارسی‌زبان‌ها — Hamrah, a Farsi-first English companion.">
+<meta name="theme-color" content="#f7f4ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1724" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="همراه">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="app.css?v=__BUILD__">
+</head>
+<body>
+<div id="app"><noscript><p class="lead wrap">برای استفاده از این برنامه باید جاوااسکریپت مرورگر روشن باشد.</p></noscript></div>
+<div id="live" class="sr" role="status" aria-live="polite" aria-atomic="true"></div>
+<script type="module" src="app.js?v=__BUILD__"></script>
+</body>
+</html>

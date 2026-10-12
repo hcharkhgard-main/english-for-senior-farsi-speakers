@@ -1,0 +1,287 @@
+{
+  "_comment": "Reading practice «خواندن نوشته‌ها»: realistic pieces of paper and screens. Every name, number, date, amount and organisation here is made up; no paper copies a real letterhead. 'lines' are shown as on the paper (English, left to right) with the exact Farsi of each line; a question is answered by tapping the line it names ('line' counts from 1). A paper that shows money, medicine or personal details carries a note and is flagged safetyCritical.",
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null },
+  "papers": [
+    {
+      "id": "store-receipt", "kind": "receipt", "stage": 1, "lesson": "store-checkout",
+      "title": "رسید خرید فروشگاه",
+      "lines": [
+        { "en": "OAK STREET MARKET", "fa": "فروشگاه خیابان اوک", "strong": true },
+        { "en": "Milk 1 gal $3.99", "fa": "شیر، یک گالن: ۳ دلار و ۹۹ سنت" },
+        { "en": "Bread $2.50", "fa": "نان: ۲ دلار و ۵۰ سنت" },
+        { "en": "Rice 5 lb $6.49", "fa": "برنج، ۵ پوند: ۶ دلار و ۴۹ سنت" },
+        { "en": "Subtotal $12.98", "fa": "جمع قبل از مالیات: ۱۲ دلار و ۹۸ سنت" },
+        { "en": "Tax $0.52", "fa": "مالیات: ۵۲ سنت" },
+        { "en": "TOTAL $13.50", "fa": "جمع کل: ۱۳ دلار و ۵۰ سنت", "strong": true },
+        { "en": "CASH $20.00", "fa": "پول نقد: ۲۰ دلار" },
+        { "en": "CHANGE $6.50", "fa": "باقی پول: ۶ دلار و ۵۰ سنت" },
+        { "en": "Returns within 30 days with receipt", "fa": "پس دادن جنس تا ۳۰ روز، با رسید" }
+      ],
+      "questions": [
+        { "fa": "جمع کل خرید چقدر شد؟", "line": 7 },
+        { "fa": "باقی پولتان چقدر است؟", "line": 9 },
+        { "fa": "تا چند روز می‌توانید جنس را پس بدهید؟", "line": 10 }
+      ]
+    },
+    {
+      "id": "appointment-card", "kind": "reminder", "stage": 2, "lesson": "phone-appointment",
+      "title": "کارت یادآوری وقت دکتر",
+      "lines": [
+        { "en": "LAKESIDE CLINIC", "fa": "درمانگاه لِیک‌ساید", "strong": true },
+        { "en": "APPOINTMENT REMINDER", "fa": "یادآوری وقت" },
+        { "en": "Patient: Maryam Ahmadi", "fa": "بیمار: مریم احمدی" },
+        { "en": "Date: Tuesday, May 5", "fa": "تاریخ: سه‌شنبه، ۵ مه", "strong": true },
+        { "en": "Time: 10:30 AM", "fa": "ساعت: ۱۰:۳۰ صبح", "strong": true },
+        { "en": "Doctor: Dr. Lee", "fa": "دکتر: دکتر لی" },
+        { "en": "Please arrive 15 minutes early.", "fa": "لطفاً ۱۵ دقیقه زودتر بیایید." },
+        { "en": "Bring your insurance card and photo ID.", "fa": "کارت بیمه و کارت شناسایی عکس‌دارتان را بیاورید." },
+        { "en": "To cancel or reschedule, call 555-0160.", "fa": "برای لغو یا عوض کردن وقت، به شمارهٔ ‎۵۵۵-۰۱۶۰ زنگ بزنید." }
+      ],
+      "questions": [
+        { "fa": "وقت شما چه روزی است؟", "line": 4 },
+        { "fa": "چه ساعتی وقت دارید؟", "line": 5 },
+        { "fa": "چه چیزهایی باید همراهتان باشد؟", "line": 8 }
+      ]
+    },
+    {
+      "id": "text-reminder", "kind": "reminder", "stage": 2, "lesson": "appointment-change",
+      "title": "پیامک یادآوری وقت",
+      "note": "این پیامک ساختگی است. پیامک واقعیِ مطب از شما پول، رمز یا شمارهٔ کارت نمی‌خواهد. اگر پیامکی ناآشنا بود، روی لینکش نزنید و خودتان به مطب زنگ بزنید.",
+      "lines": [
+        { "en": "Text message from 555-0160", "fa": "پیامک از شمارهٔ ‎۵۵۵-۰۱۶۰" },
+        { "en": "Lakeside Clinic: You have an appointment", "fa": "درمانگاه لِیک‌ساید: شما وقت دارید", "strong": true },
+        { "en": "on Thursday, June 11 at 2:15 PM.", "fa": "پنج‌شنبه، ۱۱ ژوئن، ساعت ۲:۱۵ بعدازظهر.", "strong": true },
+        { "en": "Reply C to confirm.", "fa": "برای تأیید، حرف C را بفرستید." },
+        { "en": "Reply R to reschedule.", "fa": "برای عوض کردن وقت، حرف R را بفرستید." },
+        { "en": "Reply STOP to stop these messages.", "fa": "برای اینکه دیگر این پیام‌ها نیاید، کلمهٔ STOP را بفرستید." }
+      ],
+      "questions": [
+        { "fa": "وقت شما چه روز و چه ساعتی است؟", "line": 3 },
+        { "fa": "می‌خواهید بگویید «می‌آیم». کدام خط می‌گوید چه بفرستید؟", "line": 4 },
+        { "fa": "آن روز نمی‌توانید بروید و وقت دیگری می‌خواهید. کدام خط می‌گوید چه بفرستید؟", "line": 5 }
+      ]
+    },
+    {
+      "id": "medicine-label", "kind": "label", "stage": 2, "lesson": "medicine-instructions", "safetyCritical": true,
+      "title": "برچسب دارو (نمونهٔ تمرینی)",
+      "note": "این برچسب ساختگی است و فقط برای تمرین خواندن است. دستور واقعی داروی شما همان است که روی برچسب داروی خودتان نوشته شده و داروساز خودتان می‌گوید.",
+      "lines": [
+        { "en": "CITY PHARMACY 555-0136", "fa": "داروخانهٔ سیتی، تلفن ‎۵۵۵-۰۱۳۶", "strong": true },
+        { "en": "AHMADI, MARYAM", "fa": "احمدی، مریم" },
+        { "en": "SAMPLE MEDICINE 10 MG TABLETS", "fa": "داروی نمونه، قرص ۱۰ میلی‌گرمی" },
+        { "en": "TAKE 1 TABLET TWICE DAILY WITH FOOD", "fa": "روزی دو بار، هر بار یک قرص، همراه غذا بخورید", "strong": true },
+        { "en": "QTY: 60", "fa": "تعداد: ۶۰ قرص" },
+        { "en": "REFILLS: 2 BEFORE 11/30/2026", "fa": "دو بار دیگر می‌شود با این نسخه دارو گرفت، تا ۳۰ نوامبر ۲۰۲۶" },
+        { "en": "MAY CAUSE DROWSINESS", "fa": "ممکن است خواب‌آلودگی بیاورد" },
+        { "en": "DISCARD AFTER 05/2027", "fa": "بعد از ماه مه ۲۰۲۷ دور بیندازید" },
+        { "en": "DR. LEE", "fa": "دکتر لی" }
+      ],
+      "questions": [
+        { "fa": "کدام خط می‌گوید دارو را چطور و روزی چند بار بخورید؟", "line": 4 },
+        { "fa": "کدام خط می‌گوید چند بار دیگر می‌شود با همین نسخه دارو گرفت؟", "line": 6 },
+        { "fa": "کدام خط دربارهٔ خواب‌آلودگی هشدار می‌دهد؟", "line": 7 }
+      ]
+    },
+    {
+      "id": "pharmacy-receipt", "kind": "receipt", "stage": 2, "lesson": "pharmacy-problems", "safetyCritical": true,
+      "title": "رسید داروخانه",
+      "note": "این رسید ساختگی است و فقط برای تمرین خواندن است. مبلغ‌ها و تاریخ‌هایش واقعی نیستند.",
+      "lines": [
+        { "en": "CITY PHARMACY", "fa": "داروخانهٔ سیتی", "strong": true },
+        { "en": "Date: 03/14/2026", "fa": "تاریخ: ۱۴ مارس ۲۰۲۶" },
+        { "en": "1 PRESCRIPTION", "fa": "۱ داروی نسخه‌ای" },
+        { "en": "Price: $48.00", "fa": "قیمت: ۴۸ دلار" },
+        { "en": "Insurance paid: $33.00", "fa": "بیمه پرداخت کرد: ۳۳ دلار" },
+        { "en": "YOUR COPAY: $15.00", "fa": "سهم شما: ۱۵ دلار", "strong": true },
+        { "en": "Paid by: DEBIT CARD", "fa": "پرداخت با: کارت بانکی" },
+        { "en": "Refills left: 2", "fa": "دو بار دیگر می‌شود با این نسخه دارو گرفت" },
+        { "en": "Next refill after: 04/10/2026", "fa": "دفعهٔ بعد از این تاریخ به بعد: ۱۰ آوریل ۲۰۲۶" }
+      ],
+      "questions": [
+        { "fa": "خودتان چقدر پرداخت کرده‌اید؟", "line": 6 },
+        { "fa": "بیمه چقدر پرداخت کرده است؟", "line": 5 },
+        { "fa": "از چه تاریخی می‌توانید دوباره همین دارو را بگیرید؟", "line": 9 }
+      ]
+    },
+    {
+      "id": "card-reader-screen", "kind": "sign", "stage": 2, "lesson": "card-reader", "safetyCritical": true,
+      "title": "صفحهٔ دستگاه کارت‌خوان",
+      "note": "رمز کارت (PIN) را فقط خودتان روی دستگاه وارد کنید و به هیچ‌کس نگویید. مبلغ این صفحه ساختگی است.",
+      "lines": [
+        { "en": "TOTAL: $34.16", "fa": "جمع: ۳۴ دلار و ۱۶ سنت", "strong": true },
+        { "en": "INSERT, TAP OR SWIPE CARD", "fa": "کارت را وارد کنید، نزدیک کنید یا بکشید" },
+        { "en": "CREDIT / DEBIT", "fa": "کارت اعتباری / کارت بانکی" },
+        { "en": "ENTER PIN", "fa": "رمز را وارد کنید", "strong": true },
+        { "en": "CASH BACK? NO / $20 / $40", "fa": "پول نقد می‌خواهید؟ نه / ۲۰ دلار / ۴۰ دلار" },
+        { "en": "IS $34.16 OK? YES / NO", "fa": "مبلغ ۳۴ دلار و ۱۶ سنت درست است؟ بله / نه" },
+        { "en": "APPROVED", "fa": "تأیید شد" },
+        { "en": "PLEASE REMOVE CARD", "fa": "لطفاً کارت را بردارید", "strong": true }
+      ],
+      "questions": [
+        { "fa": "کدام خط از شما رمز کارت را می‌خواهد؟", "line": 4 },
+        { "fa": "کدام خط می‌پرسد پول نقد هم می‌خواهید یا نه؟", "line": 5 },
+        { "fa": "کدام خط می‌گوید کارتتان را بردارید؟", "line": 8 }
+      ]
+    },
+    {
+      "id": "bus-stop-sign", "kind": "sign", "stage": 2, "lesson": "bus-transfer",
+      "title": "تابلوی ایستگاه اتوبوس",
+      "lines": [
+        { "en": "BUS STOP", "fa": "ایستگاه اتوبوس", "strong": true },
+        { "en": "MAIN ST & 5TH AVE", "fa": "تقاطع خیابان مِین و خیابان پنجم" },
+        { "en": "Route 40 - City Hospital", "fa": "خط ۴۰ - بیمارستان شهر", "strong": true },
+        { "en": "Route 12 - Downtown", "fa": "خط ۱۲ - مرکز شهر", "strong": true },
+        { "en": "Weekdays: every 15 minutes", "fa": "روزهای کاری: هر ۱۵ دقیقه" },
+        { "en": "Saturday and Sunday: every 30 minutes", "fa": "شنبه و یکشنبه: هر ۳۰ دقیقه" },
+        { "en": "First bus 5:30 AM - Last bus 10:45 PM", "fa": "اولین اتوبوس ۵:۳۰ صبح - آخرین اتوبوس ۱۰:۴۵ شب" },
+        { "en": "Fare: $1.75 - Seniors 65+: $0.85", "fa": "کرایه: ۱ دلار و ۷۵ سنت - سالمندان ۶۵ سال به بالا: ۸۵ سنت" },
+        { "en": "Exact change only", "fa": "فقط پول خردِ به‌اندازه" }
+      ],
+      "questions": [
+        { "fa": "کدام خط به بیمارستان می‌رود؟", "line": 3 },
+        { "fa": "آخرین اتوبوس چه ساعتی است؟", "line": 7 },
+        { "fa": "یکشنبه‌ها اتوبوس هر چند دقیقه می‌آید؟", "line": 6 }
+      ]
+    },
+    {
+      "id": "benefits-letter", "kind": "letter", "stage": 2, "lesson": "benefits-office", "safetyCritical": true,
+      "title": "نامه‌ای از ادارهٔ کمک‌های دولتی (نمونهٔ تمرینی)",
+      "note": "این نامه ساختگی است و فقط برای تمرین خواندن است؛ راهنمایی حقوقی یا راهنمایی دربارهٔ کمک‌های دولتی نیست. دربارهٔ نامهٔ خودتان از همان اداره یا از فردی مورد اعتماد بپرسید.",
+      "lines": [
+        { "en": "COUNTY BENEFITS OFFICE", "fa": "ادارهٔ کمک‌های دولتیِ شهرستان", "strong": true },
+        { "en": "Date: March 1, 2027", "fa": "تاریخ: ۱ مارس ۲۰۲۷" },
+        { "en": "Case number: 2027-0147", "fa": "شمارهٔ پرونده: ‎۲۰۲۷-۰۱۴۷" },
+        { "en": "Dear Maryam Ahmadi,", "fa": "خانم مریم احمدیِ گرامی،" },
+        { "en": "We need more information from you.", "fa": "از شما اطلاعات بیشتری لازم داریم." },
+        { "en": "Please send us proof of your address.", "fa": "لطفاً مدرکی برای ما بفرستید که آدرستان را نشان بدهد.", "strong": true },
+        { "en": "We must receive it by March 15, 2027.", "fa": "باید تا ۱۵ مارس ۲۰۲۷ به دست ما برسد.", "strong": true },
+        { "en": "If we do not hear from you, your benefits may stop.", "fa": "اگر از شما خبری نرسد، ممکن است کمک‌هایتان قطع شود." },
+        { "en": "Questions? Call 555-0148.", "fa": "سؤالی دارید؟ به شمارهٔ ‎۵۵۵-۰۱۴۸ زنگ بزنید." },
+        { "en": "Free interpreter services are available.", "fa": "خدمات مترجم رایگان در دسترس است." }
+      ],
+      "questions": [
+        { "fa": "اداره چه چیزی از شما می‌خواهد؟", "line": 6 },
+        { "fa": "تا چه تاریخی باید به دستشان برسد؟", "line": 7 },
+        { "fa": "کدام خط می‌گوید می‌توانید مترجم رایگان بخواهید؟", "line": 10 }
+      ]
+    },
+    {
+      "id": "delivery-slip", "kind": "form", "stage": 2, "lesson": "post-office",
+      "title": "برگهٔ پست: «نبودید و بسته تحویل نشد»",
+      "note": "این برگه ساختگی است. پیامک‌هایی که می‌گویند برای تحویل دوبارهٔ بسته باید پول بدهید معمولاً کلاهبرداری‌اند؛ روی لینکشان نزنید.",
+      "lines": [
+        { "en": "SORRY WE MISSED YOU", "fa": "متأسفیم که شما را ندیدیم", "strong": true },
+        { "en": "We tried to deliver a package today.", "fa": "امروز خواستیم بسته‌ای را تحویل بدهیم." },
+        { "en": "Date: Monday, April 6 - Time: 2:40 PM", "fa": "تاریخ: دوشنبه، ۶ آوریل - ساعت: ۲:۴۰ بعدازظهر" },
+        { "en": "A signature is required.", "fa": "امضا لازم است." },
+        { "en": "We will try again tomorrow.", "fa": "فردا دوباره می‌آییم." },
+        { "en": "Or pick it up at the post office after 9:00 AM.", "fa": "یا بعد از ساعت ۹ صبح آن را از ادارهٔ پست بگیرید." },
+        { "en": "Bring this slip and a photo ID.", "fa": "این برگه و کارت شناسایی عکس‌دار همراهتان بیاورید." },
+        { "en": "Tracking number: 7319-0042", "fa": "شمارهٔ رهگیری: ‎۷۳۱۹-۰۰۴۲" }
+      ],
+      "questions": [
+        { "fa": "مأمور پست کی دوباره می‌آید؟", "line": 5 },
+        { "fa": "اگر بخواهید خودتان بسته را بگیرید، کجا و از چه ساعتی؟", "line": 6 },
+        { "fa": "برای گرفتن بسته چه چیزهایی باید همراهتان باشد؟", "line": 7 }
+      ]
+    },
+    {
+      "id": "water-notice", "kind": "sign", "stage": 2, "lesson": "home-repair",
+      "title": "اطلاعیهٔ ساختمان: قطع آب",
+      "lines": [
+        { "en": "NOTICE TO RESIDENTS", "fa": "اطلاعیه برای ساکنان", "strong": true },
+        { "en": "Maple Apartments", "fa": "آپارتمان‌های مِیپل" },
+        { "en": "The water will be shut off for repairs.", "fa": "آب برای تعمیرات قطع می‌شود.", "strong": true },
+        { "en": "Date: Wednesday, March 11", "fa": "تاریخ: چهارشنبه، ۱۱ مارس" },
+        { "en": "Time: 9:00 AM to 1:00 PM", "fa": "ساعت: ۹ صبح تا ۱ بعدازظهر" },
+        { "en": "Please do not use the water during this time.", "fa": "لطفاً در این مدت از آب استفاده نکنید." },
+        { "en": "We are sorry for the inconvenience.", "fa": "از اینکه به زحمت می‌افتید متأسفیم." },
+        { "en": "Questions? Call the office: 555-0115", "fa": "سؤالی دارید؟ به دفتر زنگ بزنید: ‎۵۵۵-۰۱۱۵" }
+      ],
+      "questions": [
+        { "fa": "آب چه روزی قطع می‌شود؟", "line": 4 },
+        { "fa": "آب از چه ساعتی تا چه ساعتی قطع است؟", "line": 5 },
+        { "fa": "اگر سؤالی داشتید به چه شماره‌ای زنگ بزنید؟", "line": 8 }
+      ]
+    },
+    {
+      "id": "electric-bill", "kind": "bill", "stage": 3, "lesson": "pay-bill-phone", "safetyCritical": true,
+      "title": "قبض برق (نمونهٔ تمرینی)",
+      "note": "این قبض ساختگی است. قبض را فقط از راه‌هایی بپردازید که روی قبض واقعیِ خودتان نوشته شده است. اگر کسی زنگ زد و گفت برقتان همین امروز قطع می‌شود و فوراً پول یا شمارهٔ کارت خواست، تلفن را قطع کنید و خودتان به شماره‌ای که روی قبض است زنگ بزنید.",
+      "lines": [
+        { "en": "CITY POWER", "fa": "شرکت برق", "strong": true },
+        { "en": "Account number: 4471-2209", "fa": "شمارهٔ اشتراک: ‎۴۴۷۱-۲۲۰۹" },
+        { "en": "Service address: 25 Oak Street, Apt 12", "fa": "آدرس محل مصرف: خیابان اوک، پلاک ۲۵، آپارتمان ۱۲" },
+        { "en": "Billing period: Feb 1 - Feb 28", "fa": "دورهٔ قبض: ۱ تا ۲۸ فوریه" },
+        { "en": "AMOUNT DUE: $82.00", "fa": "مبلغ قابل پرداخت: ۸۲ دلار", "strong": true },
+        { "en": "DUE DATE: March 20", "fa": "مهلت پرداخت: ۲۰ مارس", "strong": true },
+        { "en": "Late fee after due date: $5.00", "fa": "جریمهٔ دیرکرد بعد از مهلت: ۵ دلار" },
+        { "en": "To pay by phone, call 555-0170", "fa": "برای پرداخت تلفنی به شمارهٔ ‎۵۵۵-۰۱۷۰ زنگ بزنید" },
+        { "en": "Power outage? Call 555-0188", "fa": "برق قطع شده؟ به شمارهٔ ‎۵۵۵-۰۱۸۸ زنگ بزنید" }
+      ],
+      "questions": [
+        { "fa": "چقدر باید بپردازید؟", "line": 5 },
+        { "fa": "تا چه تاریخی باید بپردازید؟", "line": 6 },
+        { "fa": "اگر برق قطع شد، به چه شماره‌ای زنگ بزنید؟", "line": 9 }
+      ]
+    },
+    {
+      "id": "phone-bill", "kind": "bill", "stage": 3, "lesson": "customer-service", "safetyCritical": true,
+      "title": "قبض تلفن همراه (نمونهٔ تمرینی)",
+      "note": "این قبض ساختگی است و فقط برای تمرین خواندن است. اسم، شماره و مبلغ‌هایش واقعی نیستند.",
+      "lines": [
+        { "en": "YOUR WIRELESS BILL", "fa": "قبض تلفن همراه شما", "strong": true },
+        { "en": "Account holder: Maryam Ahmadi", "fa": "صاحب حساب: مریم احمدی" },
+        { "en": "Phone number: 212-555-0142", "fa": "شمارهٔ تلفن: ‎۲۱۲-۵۵۵-۰۱۴۲" },
+        { "en": "Monthly plan: $35.00", "fa": "هزینهٔ ماهانهٔ طرح: ۳۵ دلار" },
+        { "en": "Taxes and fees: $4.80", "fa": "مالیات و هزینه‌های دیگر: ۴ دلار و ۸۰ سنت" },
+        { "en": "TOTAL DUE: $39.80", "fa": "جمع قابل پرداخت: ۳۹ دلار و ۸۰ سنت", "strong": true },
+        { "en": "Due date: April 5", "fa": "مهلت پرداخت: ۵ آوریل", "strong": true },
+        { "en": "AutoPay: OFF", "fa": "پرداخت خودکار: خاموش" },
+        { "en": "Questions? Call 555-0109", "fa": "سؤالی دارید؟ به شمارهٔ ‎۵۵۵-۰۱۰۹ زنگ بزنید" }
+      ],
+      "questions": [
+        { "fa": "این ماه روی‌هم چقدر باید بپردازید؟", "line": 6 },
+        { "fa": "تا چه تاریخی وقت دارید؟", "line": 7 },
+        { "fa": "اگر سؤالی داشتید به چه شماره‌ای زنگ بزنید؟", "line": 9 }
+      ]
+    },
+    {
+      "id": "weather-alert", "kind": "sign", "stage": 3, "lesson": "power-weather", "safetyCritical": true,
+      "title": "هشدار هوا روی صفحهٔ تلفن (نمونهٔ تمرینی)",
+      "note": "این هشدار ساختگی است و فقط برای تمرین خواندن است. در گرمای شدید یا توفان به هشدارهای واقعی شهر خودتان توجه کنید و اگر کسی در خطر است به ۹۱۱ زنگ بزنید.",
+      "lines": [
+        { "en": "EMERGENCY ALERT", "fa": "هشدار اضطراری", "strong": true },
+        { "en": "Weather alert for your area", "fa": "هشدار هوا برای منطقهٔ شما" },
+        { "en": "HEAT WARNING until 8:00 PM Friday", "fa": "هشدار گرمای شدید تا ساعت ۸ شبِ جمعه", "strong": true },
+        { "en": "High today: 105 degrees", "fa": "بیشترین دمای امروز: ۱۰۵ درجهٔ فارنهایت" },
+        { "en": "Drink water. Stay indoors.", "fa": "آب بنوشید. در خانه بمانید." },
+        { "en": "Check on older neighbors.", "fa": "به همسایه‌های سالمند سر بزنید." },
+        { "en": "Cooling centers are open. Call 211.", "fa": "مراکز خنک باز هستند. به ۲۱۱ زنگ بزنید." }
+      ],
+      "questions": [
+        { "fa": "این هشدار تا کی ادامه دارد؟", "line": 3 },
+        { "fa": "امروز هوا تا چند درجه گرم می‌شود؟", "line": 4 },
+        { "fa": "برای پیدا کردن جای خنک به چه شماره‌ای زنگ بزنید؟", "line": 7 }
+      ]
+    },
+    {
+      "id": "class-signup", "kind": "form", "stage": 3, "lesson": "senior-center",
+      "title": "برگهٔ ثبت‌نام کلاس در مرکز سالمندان",
+      "lines": [
+        { "en": "OAK STREET SENIOR CENTER", "fa": "مرکز سالمندان خیابان اوک", "strong": true },
+        { "en": "EXERCISE CLASS - SIGN-UP SHEET", "fa": "کلاس ورزش - برگهٔ ثبت‌نام", "strong": true },
+        { "en": "Mondays and Wednesdays, 10:00 AM", "fa": "دوشنبه‌ها و چهارشنبه‌ها، ساعت ۱۰ صبح" },
+        { "en": "Room 3 - Free for members", "fa": "اتاق ۳ - برای عضوها رایگان" },
+        { "en": "Class size: 15 people", "fa": "ظرفیت کلاس: ۱۵ نفر" },
+        { "en": "Print your name below.", "fa": "اسمتان را با حروف خوانا در پایین بنویسید." },
+        { "en": "Need a ride? Call 555-0153 by Friday.", "fa": "ماشین لازم دارید؟ تا جمعه به شمارهٔ ‎۵۵۵-۰۱۵۳ زنگ بزنید." }
+      ],
+      "questions": [
+        { "fa": "کلاس چه روزهایی و چه ساعتی است؟", "line": 3 },
+        { "fa": "کدام خط می‌گوید اسمتان را بنویسید؟", "line": 6 },
+        { "fa": "اگر ماشین بخواهید، به چه شماره‌ای و تا چه روزی زنگ بزنید؟", "line": 7 }
+      ]
+    }
+  ]
+}

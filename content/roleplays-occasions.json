@@ -1,0 +1,175 @@
+{
+  "version": 1,
+  "roleplays": [
+    {
+      "id": "rp-holiday-dinner", "scenario": "occasions", "stage": 2,
+      "title": "مهمانی شام روز شکرگزاری",
+      "setting": "برای شام روز شکرگزاری به خانهٔ همسایه دعوت شده‌اید.",
+      "goal": "تشکر کنید، هدیه بدهید و سر میز شام جواب بدهید.",
+      "them": { "role": "میزبان", "persona": "a warm American host welcoming a neighbor to Thanksgiving dinner", "voice": "b" },
+      "turns": [
+        { "them": ["Happy Thanksgiving! Come in, come in!", "روز شکرگزاری مبارک! بفرمایید داخل!"],
+          "replies": [
+            { "en": "Happy Thanksgiving! Thank you for having us.", "fa": "روز شکرگزاری مبارک! ممنون که دعوتمان کردید.", "keys": ["thanksgiving", "having"] },
+            { "en": "Thank you. This is for you.", "fa": "ممنون. این برای شماست.", "keys": ["for you"], "then": ["Oh, thank you! You didn't have to.", "وای، ممنون! لازم نبود زحمت بکشید."], "thenCheck": { "right": "وای، ممنون! لازم نبود زحمت بکشید.", "wrong": ["ممنون، ولی این را نمی‌خواهم.", "چرا چیزی نیاوردید؟"] } }
+          ] },
+        { "them": ["Can I get you something to drink?", "نوشیدنی میل دارید؟"],
+          "replies": [
+            { "en": "Water, please.", "fa": "آب، لطفاً.", "keys": ["water"] },
+            { "en": "Tea, please.", "fa": "چای، لطفاً.", "keys": ["tea"] },
+            { "en": "No, thank you. Can I help with anything?", "fa": "نه، ممنون. کمکی از من برمی‌آید؟", "keys": ["help", "no"], "then": ["No, no. Please sit down.", "نه، نه. بفرمایید بنشینید."], "thenCheck": { "right": "نه، نه. بفرمایید بنشینید.", "wrong": ["بله، لطفاً میز را بچینید.", "نه، لطفاً همین‌جا بایستید."] } }
+          ] },
+        { "them": ["Dinner is ready. This is turkey, and these are sweet potatoes.", "شام آماده است. این بوقلمون است و این سیب‌زمینی شیرین."],
+          "check": { "q": "شام چیست؟", "right": "بوقلمون و سیب‌زمینی شیرین", "wrong": ["مرغ و سیب‌زمینی سرخ‌کرده", "بوقلمون و برنج"] },
+          "replies": [
+            { "en": "Everything looks delicious.", "fa": "همه‌چیز خیلی خوشمزه به نظر می‌رسد.", "keys": ["delicious"] },
+            { "en": "It looks wonderful. Thank you.", "fa": "خیلی عالی به نظر می‌رسد. ممنون.", "keys": ["wonderful"] }
+          ] },
+        { "them": ["Would you like some more?", "باز هم میل دارید؟"],
+          "check": { "q": "چه پرسید؟", "right": "باز هم میل دارید؟", "wrong": ["غذا را دوست نداشتید؟", "سیر شدید؟"] },
+          "replies": [
+            { "en": "Yes, please.", "fa": "بله، لطفاً.", "keys": ["yes"] },
+            { "en": "Just a little, please.", "fa": "فقط کمی، لطفاً.", "keys": ["little"] },
+            { "en": "No, thank you. I'm full.", "fa": "نه، ممنون. سیر شدم.", "keys": ["no", "full"] }
+          ] },
+        { "them": ["I'm so glad you came. Happy holidays!", "خیلی خوشحالم که آمدید. عیدتان مبارک!"],
+          "replies": [
+            { "en": "Thank you for having us. Good night!", "fa": "ممنون که دعوتمان کردید. شب به‌خیر!", "keys": ["thank", "night"] }
+          ] }
+      ]
+    },
+    {
+      "id": "rp-sale", "scenario": "store", "stage": 3,
+      "title": "خرید در روز حراج",
+      "setting": "روز حراج بزرگ است و می‌خواهید برای نوه‌تان هدیه بخرید.",
+      "goal": "دربارهٔ تخفیف بپرسید و رسید هدیه بگیرید.",
+      "them": { "role": "فروشنده", "persona": "a busy but friendly store employee on a big sale day", "voice": "a" },
+      "turns": [
+        { "them": ["Hi there! Are you looking for something?", "سلام! دنبال چیزی می‌گردید؟"],
+          "replies": [
+            { "en": "Yes. Is this the sale price?", "fa": "بله. این قیمتِ حراج است؟", "keys": ["sale", "price"], "then": ["Yes. It's forty percent off today.", "بله. امروز چهل درصد تخفیف دارد."], "thenCheck": { "q": "چند درصد تخفیف دارد؟", "right": "۴۰ درصد", "wrong": ["۱۴ درصد", "۵۰ درصد"] } },
+            { "en": "I'm looking for a gift.", "fa": "دنبال هدیه می‌گردم.", "keys": ["gift"], "then": ["Great. The toys are on sale today. This one is very popular.", "عالی. اسباب‌بازی‌ها امروز حراج است. این یکی خیلی طرفدار دارد."], "thenCheck": { "right": "اسباب‌بازی‌ها امروز حراج است. این یکی خیلی طرفدار دارد.", "wrong": ["اسباب‌بازی‌ها امروز حراج نیست.", "این یکی تمام شده است."] } }
+          ] },
+        { "them": ["Do you want this one?", "همین را می‌خواهید؟"],
+          "replies": [
+            { "en": "How much is it after the discount?", "fa": "بعد از تخفیف چقدر می‌شود؟", "keys": ["much", "discount"], "then": ["It's thirty dollars.", "سی دلار."], "thenCheck": { "q": "بعد از تخفیف چقدر می‌شود؟", "right": "$30", "wrong": ["$13", "$33"] } },
+            { "en": "Yes. I'll take it.", "fa": "بله. همین را می‌خرم.", "keys": ["yes", "i'll take"] }
+          ] },
+        { "them": ["You can pay at the front.", "می‌توانید جلوی فروشگاه پرداخت کنید."],
+          "check": { "q": "کجا می‌توانید پرداخت کنید؟", "right": "جلوی فروشگاه", "wrong": ["همین‌جا", "تهِ فروشگاه"] },
+          "replies": [
+            { "en": "Where does the line start?", "fa": "صف از کجا شروع می‌شود؟", "keys": ["line"], "then": ["The line starts by the door.", "صف از کنار در شروع می‌شود."], "thenCheck": { "q": "صف از کجا شروع می‌شود؟", "right": "از کنار در", "wrong": ["از کنار صندوق", "از تهِ فروشگاه"] } },
+            { "en": "Thank you.", "fa": "ممنون.", "keys": ["thank"] }
+          ] },
+        { "them": ["Hello! Is this a gift?", "(پای صندوق) سلام! این هدیه است؟"],
+          "check": { "q": "چه پرسید؟", "right": "این هدیه است؟", "wrong": ["این را پس می‌دهید؟", "کیسه می‌خواهید؟"] },
+          "replies": [
+            { "en": "Yes. Can I get a gift receipt?", "fa": "بله. می‌شود رسید هدیه بدهید؟", "keys": ["receipt", "yes"], "then": ["Of course.", "البته."] },
+            { "en": "No, it's for me.", "fa": "نه، برای خودم است.", "keys": ["for me", "no", "not a gift"] }
+          ] },
+        { "them": ["Here you go. Happy holidays!", "بفرمایید. عیدتان مبارک!"],
+          "replies": [
+            { "en": "Thank you. Same to you!", "fa": "ممنون. برای شما هم همین‌طور!", "keys": ["same", "thank"] }
+          ] }
+      ]
+    },
+    {
+      "id": "rp-wedding", "scenario": "occasions", "stage": 3,
+      "title": "گپ در جشن عروسی",
+      "setting": "در جشن عروسی نشسته‌اید و مهمانی با شما حرف می‌زند.",
+      "goal": "تبریک بگویید و به چند سؤال ساده جواب بدهید.",
+      "them": { "role": "یکی از مهمان‌ها", "persona": "a friendly wedding guest making small talk at the table", "voice": "k" },
+      "turns": [
+        { "them": ["Hi! Isn't this a beautiful wedding?", "سلام! عروسی قشنگی است، نه؟"],
+          "check": { "right": "عروسی قشنگی است، نه؟", "wrong": ["عروسی قشنگی نیست، نه؟", "شما عروس را می‌شناسید؟"] },
+          "replies": [
+            { "en": "Yes, it is. The bride looks beautiful.", "fa": "بله، همین‌طور است. عروس خیلی زیبا شده است.", "keys": ["bride", "beautiful"] },
+            { "en": "Yes. It is a lovely wedding.", "fa": "بله. عروسی قشنگی است.", "keys": ["lovely", "yes"] }
+          ] },
+        { "them": ["How do you know the couple?", "عروس و داماد را از کجا می‌شناسید؟"],
+          "check": { "q": "چه پرسید؟", "right": "عروس و داماد را از کجا می‌شناسید؟", "wrong": ["عروس و داماد کجا هستند؟", "عروس و داماد را دیده‌اید؟"] },
+          "replies": [
+            { "en": "I'm a friend of the family.", "fa": "من دوست خانوادگی‌شان هستم.", "keys": ["friend"] },
+            { "en": "The groom is my neighbor.", "fa": "داماد همسایهٔ من است.", "keys": ["neighbor", "groom"] }
+          ], "open": true },
+        { "them": ["That's nice. I'm the bride's cousin. Are you from here?", "چه خوب. من دخترخالهٔ عروس هستم. شما اهل همین‌جا هستید؟"],
+          "check": { "q": "چه پرسید؟", "right": "شما اهل همین‌جا هستید؟", "wrong": ["از اینجا خوشتان می‌آید؟", "تا کی اینجا هستید؟"] },
+          "replies": [
+            { "en": "I'm from Iran. I live here now.", "fa": "من اهل ایران هستم. الان اینجا زندگی می‌کنم.", "keys": ["live", "now"] },
+            { "en": "No. I'm from Iran.", "fa": "نه. من اهل ایران هستم.", "keys": ["no"] }
+          ], "open": true },
+        { "them": ["Oh, look! Here come the bride and groom. Let's congratulate them.", "وای، نگاه کنید! عروس و داماد دارند می‌آیند. برویم تبریک بگوییم."],
+          "check": { "right": "عروس و داماد دارند می‌آیند. برویم تبریک بگوییم.", "wrong": ["عروس و داماد رفتند. ما هم برویم.", "عروس و داماد هنوز نیامده‌اند."] },
+          "replies": [
+            { "en": "Congratulations!", "fa": "تبریک می‌گویم!", "keys": ["congratulations"] },
+            { "en": "I wish you a happy life together.", "fa": "برایتان زندگی شادی در کنار هم آرزو می‌کنم.", "keys": ["wish", "happy"] }
+          ] },
+        { "them": ["It was so nice to meet you!", "از آشنایی با شما خیلی خوشحال شدم!"],
+          "replies": [
+            { "en": "Nice to meet you too.", "fa": "من هم از آشنایی‌تان خوشوقتم.", "keys": ["nice", "meet"] }
+          ] }
+      ]
+    },
+    {
+      "id": "rp-condolence", "scenario": "occasions", "stage": 3,
+      "title": "تسلیت گفتن به همسایه",
+      "setting": "همسایه‌تان را می‌بینید. مادرش به‌تازگی فوت کرده است.",
+      "goal": "کوتاه و صمیمی تسلیت بگویید.",
+      "scripted": true,
+      "them": { "role": "همسایه", "persona": "", "voice": "m" },
+      "turns": [
+        { "them": ["Hello. I have sad news. My mother passed away last week.", "سلام. خبر بدی دارم. مادرم هفتهٔ پیش فوت کرد."],
+          "check": { "right": "خبر بدی دارم. مادرم هفتهٔ پیش فوت کرد.", "wrong": ["خبر خوبی دارم. مادرم هفتهٔ پیش به دیدنم آمد.", "مادرم هفتهٔ پیش به سفر رفت."] },
+          "replies": [
+            { "en": "I'm so sorry for your loss.", "fa": "تسلیت می‌گویم.", "keys": ["loss", "sorry"] },
+            { "en": "Oh, David. I'm so sorry.", "fa": "وای، دیوید. خیلی متأسفم.", "keys": ["david", "oh"] }
+          ] },
+        { "them": ["Thank you. She was eighty-five.", "ممنون. هشتاد و پنج سالش بود."],
+          "check": { "q": "مادرش چند سال داشت؟", "right": "۸۵ سال", "wrong": ["۵۸ سال", "۷۵ سال"] },
+          "replies": [
+            { "en": "She was a wonderful person.", "fa": "انسان بسیار خوبی بود.", "keys": ["wonderful"] },
+            { "en": "My thoughts are with you and your family.", "fa": "به یاد شما و خانواده‌تان هستم.", "keys": ["thoughts", "family"] }
+          ] },
+        { "them": ["Thank you. That means a lot.", "ممنون. برایم خیلی ارزش دارد."],
+          "check": { "right": "ممنون. برایم خیلی ارزش دارد.", "wrong": ["ممنون، ولی منظورتان را نفهمیدم.", "ممنون. لازم نیست چیزی بگویید."] },
+          "replies": [
+            { "en": "Is there anything I can do?", "fa": "کاری هست که از من بربیاید؟", "keys": ["anything", "do"], "then": ["That's very kind of you. Thank you.", "لطف دارید. ممنون."] }
+          ] }
+      ],
+      "praise": "خیلی خوب بود. چند جملهٔ کوتاه و صمیمی، همان چیزی است که در چنین لحظه‌ای لازم است."
+    },
+    {
+      "id": "rp-work", "scenario": "work", "stage": 3,
+      "title": "روز اول سر کار",
+      "setting": "روز اول کارتان است و سرپرست با شما حرف می‌زند.",
+      "goal": "سؤال کنید و به سؤال‌های سرپرست جواب بدهید.",
+      "them": { "role": "سرپرست", "persona": "a kind supervisor showing a new older employee around on the first day", "voice": "b" },
+      "turns": [
+        { "them": ["Good morning! Welcome to your first day.", "صبح به‌خیر! به روز اول کارتان خوش آمدید."],
+          "replies": [
+            { "en": "Good morning. Thank you.", "fa": "صبح به‌خیر. ممنون.", "keys": ["morning", "thank"] }
+          ] },
+        { "them": ["You will work at this table. Do you have any questions?", "شما سر این میز کار می‌کنید. سؤالی دارید؟"],
+          "replies": [
+            { "en": "Yes. Can you show me how to do this?", "fa": "بله. می‌شود نشانم بدهید این را چطور انجام بدهم؟", "keys": ["show"], "then": ["Of course. Watch me first, then you try.", "البته. اول نگاه کنید، بعد خودتان امتحان کنید."], "thenCheck": { "right": "اول نگاه کنید، بعد خودتان امتحان کنید.", "wrong": ["اول خودتان امتحان کنید، بعد من نشان می‌دهم.", "لازم نیست یاد بگیرید. خودم انجام می‌دهم."] } },
+            { "en": "When is my break?", "fa": "وقت استراحتم کی است؟", "keys": ["break"], "then": ["Your break is at twelve. Now, please start here.", "استراحتتان ساعت دوازده است. حالا لطفاً از اینجا شروع کنید."], "thenCheck": { "q": "وقت استراحت چه ساعتی است؟", "right": "ساعت ۱۲", "wrong": ["ساعت ۲", "ساعت ۱۱"] } }
+          ] },
+        { "them": ["Good job! You learn fast.", "کارتان خوب بود! زود یاد می‌گیرید."],
+          "replies": [
+            { "en": "Thank you. I'm done. What should I do next?", "fa": "ممنون. کارم تمام شد. حالا چه کار کنم؟", "keys": ["done", "finished", "next"], "then": ["Please help Anna with the boxes.", "لطفاً در جابه‌جا کردن جعبه‌ها به آنا کمک کنید."], "thenCheck": { "right": "لطفاً در جابه‌جا کردن جعبه‌ها به آنا کمک کنید.", "wrong": ["لطفاً جعبه‌ها را به آنا بدهید و بروید.", "لطفاً از آنا بپرسید جعبه‌ها کجاست."] } },
+            { "en": "Thank you.", "fa": "ممنون.", "keys": ["thank"] }
+          ] },
+        { "them": ["Can you work on Saturday?", "شنبه می‌توانید کار کنید؟"],
+          "check": { "q": "دربارهٔ کدام روز پرسید؟", "right": "شنبه", "wrong": ["یکشنبه", "پنج‌شنبه"] },
+          "replies": [
+            { "en": "Yes, I can. What time do I start?", "fa": "بله، می‌توانم. چه ساعتی شروع کنم؟", "keys": ["yes", "what time", "i can"], "then": ["You start at nine.", "ساعت نُه شروع می‌کنید."], "thenCheck": { "q": "چه ساعتی شروع می‌کنید؟", "right": "ساعت ۹", "wrong": ["ساعت ۵", "ساعت ۹ و نیم"] } },
+            { "en": "I'm sorry, I can't on Saturday.", "fa": "متأسفم، شنبه نمی‌توانم.", "keys": ["sorry", "can't", "cannot", "no"], "then": ["That's okay. No problem.", "اشکالی ندارد."] }
+          ] },
+        { "them": ["All right. See you tomorrow!", "بسیار خب. فردا می‌بینمتان!"],
+          "replies": [
+            { "en": "See you tomorrow. Goodbye!", "fa": "فردا می‌بینمتان. خداحافظ!", "keys": ["tomorrow", "bye", "goodbye"] }
+          ] }
+      ]
+    }
+  ]
+}

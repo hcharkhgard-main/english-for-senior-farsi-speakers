@@ -1,0 +1,57 @@
+{
+  "id": "home-repair",
+  "scenario": "home",
+  "stage": 2,
+  "order": 13,
+  "minutes": 8,
+  "title": { "fa": "خبر دادن خرابی در خانه", "en": "Reporting a problem at home" },
+  "intro": "در این درس یاد می‌گیرید به مدیر ساختمان یا تعمیرکار بگویید چه چیزی خراب شده و بپرسید کی برای تعمیر می‌آیند.",
+  "canDo": "حالا می‌توانید خرابی خانه را خبر بدهید و بپرسید تعمیرکار کی می‌آید.",
+  "mission": "اگر چیزی در خانه خراب شد، خودتان به مدیر ساختمان یا صاحب‌خانه خبر بدهید؛ مثلاً: The sink is leaking.",
+  "them": { "role": "مدیر ساختمان", "voice": "b" },
+  "phrases": [
+    { "en": "The sink is leaking.", "fa": "سینک نشتی دارد.", "ph": "دِ سینک ایز لیکینگ", "note": "leaking یعنی آب از آن چکه می‌کند. toilet یعنی توالت و faucet یعنی شیر آب.", "chunks": ["The sink", "is leaking."] },
+    { "en": "The heater is not working.", "fa": "بخاری کار نمی‌کند.", "ph": "دِ هیتِر ایز نات وِرکینگ", "note": "به‌جای heater بگویید: air conditioner (کولر)، stove (اجاق)، refrigerator (یخچال).", "chunks": ["The heater", "is not working."] },
+    { "en": "The power is out.", "fa": "برق رفته است.", "ph": "دِ پاوِر ایز آوت", "note": "وقتی برق کل خانه قطع شده است.", "chunks": ["The power", "is out."] },
+    { "en": "When can someone come?", "fa": "چه وقت کسی می‌تواند بیاید؟", "ph": "وِن کَن سام‌وان کام؟", "note": "برای پرسیدن زمان آمدن تعمیرکار.", "chunks": ["When can", "someone come?"] },
+    { "en": "I live in apartment 12.", "fa": "من در آپارتمان شمارهٔ ۱۲ زندگی می‌کنم.", "ph": "آی لیو این اَپارتمِنت …", "note": "شمارهٔ واحد خودتان را بگویید.", "chunks": ["I live", "in apartment 12."], "own": ["12"] }
+  ],
+  "dialogue": {
+    "setting": "به دفتر مدیریت ساختمان زنگ زده‌اید.",
+    "lines": [
+      ["them", "Maple Apartments, this is Linda.", "آپارتمان‌های مِیپل، لیندا هستم."],
+      ["you", "Hello. I live in apartment 12. The sink is leaking.", "سلام. من در آپارتمان شمارهٔ ۱۲ زندگی می‌کنم. سینک نشتی دارد."],
+      ["them", "I'm sorry to hear that. Is it the kitchen sink?", "متأسفم. سینک آشپزخانه است؟"],
+      ["you", "Yes, the kitchen sink. When can someone come?", "بله، سینک آشپزخانه. چه وقت کسی می‌تواند بیاید؟"],
+      ["them", "I can send someone tomorrow morning, between nine and eleven.", "می‌توانم فردا صبح، بین ساعت نُه و یازده، کسی را بفرستم."],
+      ["you", "Tomorrow morning is good. Thank you.", "فردا صبح خوب است. ممنون."]
+    ]
+  },
+  "respond": {
+    "setting": "تعمیرکار دمِ در آمده است.",
+    "them": ["Hi, I'm here for the repair. What's the problem?", "سلام، برای تعمیر آمده‌ام. مشکل چیست؟"],
+    "ok": [
+      ["The sink is leaking.", "سینک نشتی دارد."],
+      ["The heater is not working.", "بخاری کار نمی‌کند."]
+    ],
+    "off": ["When can someone come?", "چه وقت کسی می‌تواند بیاید؟", "تعمیرکار همین الان آمده است. به او بگویید چه چیزی خراب شده."],
+    "off2": 5
+  },
+  "task": [
+    ["هوا سرد است و خانه گرم نمی‌شود.", 2],
+    ["به مدیر ساختمان زنگ زده‌اید و می‌خواهید بدانید تعمیرکار کی می‌آید.", 4]
+  ],
+  "grammar": {
+    "title": "… is not working",
+    "explain": "برای هر وسیله‌ای که خراب شده، اسمش را بگویید و بعد «is not working». شکل کوتاهش «isn't working» است.",
+    "examples": [
+      ["The heater is not working.", "بخاری کار نمی‌کند."],
+      ["The light is not working.", "چراغ کار نمی‌کند."],
+      ["The elevator isn't working.", "آسانسور کار نمی‌کند."]
+    ],
+    "wrong": "The heater no work.",
+    "right": "The heater is not working.",
+    "why": "برای وسیله‌ای که کار نمی‌کند می‌گوییم «is not working»: اول «is not» و بعد «working»."
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

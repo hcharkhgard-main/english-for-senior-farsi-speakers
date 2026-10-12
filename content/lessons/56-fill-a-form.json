@@ -1,0 +1,60 @@
+{
+  "id": "fill-a-form",
+  "scenario": "office",
+  "stage": 2,
+  "order": 56,
+  "minutes": 8,
+  "safetyCritical": true,
+  "title": { "fa": "کمک گرفتن برای پر کردن فرم", "en": "Getting help with a form" },
+  "intro": "در مطب، اداره و مدرسه زیاد پیش می‌آید که فرمی کاغذی به دستتان بدهند. در این درس یاد می‌گیرید برای پر کردن فرم کمک بخواهید و کلمه‌های رایج روی فرم‌ها را بشناسید.",
+  "note": "این درس برای یادگیری زبان است و مشاورهٔ حقوقی نیست. فرمی را که نمی‌فهمید امضا نکنید؛ اول از کارمند، مترجم یا فرد مورد اعتمادتان کمک بخواهید.",
+  "canDo": "حالا می‌توانید برای پر کردن فرم کمک بخواهید و بپرسید کجا را امضا کنید.",
+  "mission": "هر وقت فرمی به دستتان دادند و جایی را نفهمیدید، با انگشت نشانش بدهید و بپرسید: What do I write here?",
+  "them": { "role": "کارمند اداره", "voice": "b" },
+  "phrases": [
+    { "en": "Can you help me with this form?", "fa": "می‌شود در پر کردن این فرم کمکم کنید؟", "ph": "کَن یو هِلپ می ویت دیس فُرم؟", "note": "دو کلمه‌ای که بالای بیشتر فرم‌ها می‌بینید: «First name» یعنی اسم کوچک و «Last name» یعنی نام خانوادگی.", "chunks": ["Can you help me", "with this form?"] },
+    { "en": "What do I write here?", "fa": "اینجا چه بنویسم؟", "ph": "وات دو آی رایت هی‌یِر؟", "note": "جای خالی را با انگشت نشان بدهید و بپرسید. روی فرم‌ها: «Date of birth» یعنی تاریخ تولد، «Address» یعنی آدرس و «Phone number» یعنی شمارهٔ تلفن.", "chunks": ["What do I write", "here?"] },
+    { "en": "What does this word mean?", "fa": "این کلمه یعنی چه؟", "ph": "وات داز دیس وِرد مین؟", "note": "کلمه را نشان بدهید و بپرسید. یک کلمهٔ مهم روی فرم‌ها: «Emergency contact» یعنی کسی که در وضعیت اضطراری به او خبر می‌دهند. آنجا اسم و تلفن یکی از نزدیکانتان را بنویسید.", "chunks": ["What does", "this word mean?"] },
+    { "en": "Where do I sign?", "fa": "کجا را امضا کنم؟", "ph": "وِر دو آی ساین؟", "note": "پایین فرم: «Signature» یعنی امضا و «Date» یعنی تاریخ همان روز. چیزی را که نمی‌فهمید امضا نکنید؛ اول بپرسید.", "chunks": ["Where do I", "sign?"] },
+    { "en": "Can I take it home?", "fa": "می‌توانم آن را به خانه ببرم؟", "ph": "کَن آی تِیک ایت هُم؟", "note": "اگر فرم طولانی یا سخت است، بپرسید می‌توانید آن را ببرید و با کمک خانواده پر کنید.", "chunks": ["Can I take it", "home?"] }
+  ],
+  "dialogue": {
+    "setting": "در اداره فرمی به شما داده‌اند و برای پر کردنش از کارمند کمک می‌خواهید.",
+    "lines": [
+      ["you", "Excuse me. Can you help me with this form?", "ببخشید. می‌شود در پر کردن این فرم کمکم کنید؟"],
+      ["them", "Of course. What do you need?", "البته. چه کمکی لازم دارید؟"],
+      ["you", "What do I write here?", "اینجا چه بنویسم؟"],
+      ["them", "Your date of birth. The month, the day, and the year.", "تاریخ تولدتان. ماه، روز و سال."],
+      ["you", "Okay. What does this word mean?", "باشد. این کلمه یعنی چه؟"],
+      ["them", "Emergency contact. Write a family member's name and phone number.", "کسی که در وضعیت اضطراری به او خبر می‌دهند. اسم و شمارهٔ تلفن یکی از اعضای خانواده‌تان را بنویسید."],
+      ["you", "Thank you. Where do I sign?", "ممنون. کجا را امضا کنم؟"],
+      ["them", "Right here, at the bottom.", "همین‌جا، پایین صفحه."]
+    ]
+  },
+  "respond": {
+    "setting": "کارمند فرمی چندصفحه‌ای به دستتان می‌دهد.",
+    "them": ["Please fill out this form.", "لطفاً این فرم را پر کنید."],
+    "ok": [
+      ["Can you help me with this form?", "می‌شود در پر کردن این فرم کمکم کنید؟"],
+      ["Okay. Can I take it home?", "باشد. می‌توانم آن را به خانه ببرم؟"]
+    ],
+    "off": ["Right here, at the bottom.", "همین‌جا، پایین صفحه.", "این جواب کارمند است، وقتی می‌پرسید کجا را امضا کنید. اینجا تازه فرم را به شما داده‌اند؛ اگر کمک لازم دارید، همین را بگویید."]
+  },
+  "task": [
+    ["می‌خواهید معنی یکی از کلمه‌های روی فرم را بپرسید.", 3],
+    ["فرم را پر کرده‌اید و می‌خواهید بپرسید امضایتان باید کجا باشد.", 4]
+  ],
+  "grammar": {
+    "title": "کلمه‌های روی فرم",
+    "explain": "بیشتر فرم‌ها همین چند کلمه را دارند: «First name» اسم کوچک، «Last name» نام خانوادگی، «Date of birth» تاریخ تولد، «Address» آدرس، «Phone number» شمارهٔ تلفن، «Signature» امضا، «Date» تاریخ همان روز و «Emergency contact» کسی که در وضعیت اضطراری به او خبر می‌دهند.",
+    "examples": [
+      ["First name: Maryam.", "اسم کوچک: مریم"],
+      ["Last name: Ahmadi.", "نام خانوادگی: احمدی"],
+      ["Date of birth: March 5th, 1958.", "تاریخ تولد: ۵ مارس ۱۹۵۸"]
+    ],
+    "wrong": "Last name: Maryam.",
+    "right": "Last name: Ahmadi.",
+    "why": "«Last name» جای نام خانوادگی است، نه اسم کوچک. اسم کوچک را جلوی «First name» بنویسید."
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

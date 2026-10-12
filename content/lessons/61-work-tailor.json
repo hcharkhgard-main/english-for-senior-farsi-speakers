@@ -1,0 +1,175 @@
+{
+  "id": "work-tailor",
+  "scenario": "work",
+  "stage": 3,
+  "minutes": 9,
+  "title": {
+    "fa": "سر کار: خیاطی و تعمیر لباس",
+    "en": "At work: tailoring and alterations"
+  },
+  "intro": "در این درس شما خیاط هستید و مشتری لباسی آورده که باید کوتاه یا تنگ شود. یاد می‌گیرید بپرسید چه می‌خواهد، از او بخواهید لباس را بپوشد و قیمت و روز تحویل را بگویید.",
+  "note": "در آمریکا مزد تعمیر لباس را معمولاً برای هر تکه جدا حساب می‌کنند. بعضی مغازه‌ها پول را موقع آوردن لباس می‌گیرند و بعضی موقع تحویل دادن آن. قیمت و روز تحویل را روی رسید مشتری بنویسید.",
+  "canDo": "حالا می‌توانید بپرسید مشتری چه می‌خواهد، از او بخواهید لباس را بپوشد و قیمت و روز تحویل را بگویید.",
+  "mission": "اگر خیاطی می‌کنید، به مشتری بعدی بگویید: Please try it on. و اگر خودتان لباسی برای تعمیر بردید، گوش کنید خیاط روز تحویل را چطور می‌گوید.",
+  "them": {
+    "role": "مشتری",
+    "voice": "b"
+  },
+  "phrases": [
+    {
+      "en": "How can I help you?",
+      "fa": "چه کمکی از من برمی‌آید؟",
+      "ph": "هاو کَن آی هِلپ یو؟",
+      "note": "وقتی مشتری وارد مغازه می‌شود. اول سلام کنید: «Hi! How can I help you?» مشتری معمولاً با یکی از این کلمه‌ها می‌گوید چه می‌خواهد: alterations یعنی تعمیر لباس، hem یعنی کوتاه کردن لبهٔ شلوار یا دامن، و take in یعنی تنگ کردن.",
+      "chunks": [
+        "How can I",
+        "help you?"
+      ]
+    },
+    {
+      "en": "Please try it on.",
+      "fa": "لطفاً آن را پرو کنید.",
+      "ph": "پْلیز تْرای ایت آن",
+      "note": "باید لباس را روی تن مشتری ببینید. برای شلوار که در انگلیسی جمع است بگویید: «Please try them on.»",
+      "chunks": [
+        "Please",
+        "try it on."
+      ]
+    },
+    {
+      "en": "How short would you like it?",
+      "fa": "چقدر کوتاهش کنم؟",
+      "ph": "هاو شُرت وُد یو لایک ایت؟",
+      "note": "برای کوتاه کردن پیراهن، دامن یا آستین. با سنجاق جایش را نشان بدهید و بپرسید: «Is this okay?»",
+      "chunks": [
+        "How short",
+        "would you like it?"
+      ]
+    },
+    {
+      "en": "It will be ready on Friday.",
+      "fa": "جمعه آماده می‌شود.",
+      "ph": "ایت ویل بی رِدی آن فْرایدِی",
+      "note": "به‌جای Friday روز دیگری بگویید. برای «فردا» بدون on بگویید: «It will be ready tomorrow.»",
+      "chunks": [
+        "It will be ready",
+        "on Friday."
+      ]
+    },
+    {
+      "en": "That will be twenty dollars.",
+      "fa": "بیست دلار می‌شود.",
+      "ph": "دَت ویل بی تْوِنتی دالِرز",
+      "note": "برای گفتن قیمت. اگر چند تکه لباس است، قیمت هر کدام را جدا بگویید.",
+      "chunks": [
+        "That will be",
+        "twenty dollars."
+      ]
+    }
+  ],
+  "dialogue": {
+    "setting": "خانمی با یک پیراهن وارد مغازهٔ خیاطی شما می‌شود.",
+    "lines": [
+      [
+        "you",
+        "Hi! How can I help you?",
+        "سلام! چه کمکی از من برمی‌آید؟"
+      ],
+      [
+        "them",
+        "Hi. This dress is too long.",
+        "سلام. این پیراهن زیادی بلند است."
+      ],
+      [
+        "you",
+        "No problem. Please try it on.",
+        "مشکلی نیست. لطفاً آن را پرو کنید."
+      ],
+      [
+        "them",
+        "Okay. How does it look?",
+        "باشد. چطور است؟"
+      ],
+      [
+        "you",
+        "It's a little long. How short would you like it?",
+        "کمی بلند است. چقدر کوتاهش کنم؟"
+      ],
+      [
+        "them",
+        "To the knee, please.",
+        "تا زانو، لطفاً."
+      ],
+      [
+        "you",
+        "Okay. It will be ready on Friday. That will be twenty dollars.",
+        "باشد. جمعه آماده می‌شود. بیست دلار می‌شود."
+      ],
+      [
+        "them",
+        "Great. Thank you!",
+        "عالی. ممنون!"
+      ]
+    ]
+  },
+  "respond": {
+    "setting": "مشتری کتش را برای تنگ کردن پیش شما گذاشته است.",
+    "them": [
+      "When can I pick it up?",
+      "کی می‌توانم بیایم بگیرمش؟"
+    ],
+    "ok": [
+      [
+        "It will be ready on Friday.",
+        "جمعه آماده می‌شود."
+      ],
+      [
+        "On Friday, after two o'clock.",
+        "جمعه، بعد از ساعت دو."
+      ]
+    ],
+    "off": [
+      "That will be twenty dollars.",
+      "بیست دلار می‌شود.",
+      "مشتری قیمت را نپرسید؛ پرسید کی برای گرفتن لباس بیاید. روز تحویل را بگویید."
+    ],
+    "off2": 2
+  },
+  "task": [
+    [
+      "مشتری می‌پرسد کوتاه کردن دامنش چقدر می‌شود.",
+      5
+    ],
+    [
+      "مشتری لباس را آورده، ولی باید آن را روی تنش ببینید تا سنجاق بزنید.",
+      2
+    ]
+  ],
+  "grammar": {
+    "title": "It will be ready …",
+    "explain": "برای چیزی که بعداً آماده می‌شود بگویید «It will be ready» و بعد زمان را بگویید. قبل از اسم روز «on» می‌آید.",
+    "examples": [
+      [
+        "It will be ready on Friday.",
+        "جمعه آماده می‌شود."
+      ],
+      [
+        "It will be ready tomorrow.",
+        "فردا آماده می‌شود."
+      ],
+      [
+        "It will be ready in one week.",
+        "یک هفتهٔ دیگر آماده می‌شود."
+      ]
+    ],
+    "wrong": "It will ready on Friday.",
+    "right": "It will be ready on Friday.",
+    "why": "بعد از «will» همیشه یک فعل می‌آید؛ اینجا آن فعل «be» است."
+  },
+  "review": {
+    "status": "draft",
+    "language": null,
+    "teaching": null,
+    "safety": null
+  }
+}

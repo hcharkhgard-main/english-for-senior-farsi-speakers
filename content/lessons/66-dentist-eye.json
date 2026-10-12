@@ -1,0 +1,66 @@
+{
+  "id": "dentist-eye",
+  "scenario": "clinic",
+  "stage": 2,
+  "minutes": 8,
+  "safetyCritical": true,
+  "title": { "fa": "دندان‌پزشک و چشم‌پزشک", "en": "Dentist and eye doctor" },
+  "intro": "در این درس یاد می‌گیرید به دندان‌پزشک بگویید دندانتان درد می‌کند یا شکسته است، و به چشم‌پزشک بگویید خوب نمی‌بینید یا عینک تازه لازم دارید.",
+  "note": "این درس برای یادگیری زبان است و توصیهٔ پزشکی نیست. بیمهٔ دندان‌پزشکی و عینک معمولاً از بیمهٔ درمانی جداست؛ قبل از وقت گرفتن بپرسید: «Do you take my insurance?‎»",
+  "canDo": "حالا می‌توانید مشکل دندان یا چشمتان را به دکتر بگویید و حرف‌های سادهٔ دندان‌پزشک را بفهمید.",
+  "mission": "جمله‌ای را که به کارتان می‌آید روی کاغذ بنویسید و برای وقت بعدیِ دندان‌پزشکی یا چشم‌پزشکی در کیفتان بگذارید: I need a cleaning. یا I need new glasses.",
+  "them": { "role": "دکتر", "voice": "k" },
+  "phrases": [
+    { "en": "I have a toothache.", "fa": "دندانم درد می‌کند.", "ph": "آی هَو اِ توتِیک", "note": "tooth یعنی دندان و ache یعنی درد. همین‌طور: headache یعنی سردرد.", "chunks": ["I have", "a toothache."] },
+    { "en": "My tooth broke.", "fa": "دندانم شکسته است.", "ph": "مای توت بْرُک", "note": "اگر پرکردگیِ دندانتان افتاده است، بگویید: «My filling fell out.‎»", "chunks": ["My tooth", "broke."] },
+    { "en": "I need a cleaning.", "fa": "می‌خواهم دندان‌هایم را جرم‌گیری کنم.", "ph": "آی نید اِ کْلینینگ", "note": "cleaning در دندان‌پزشکی یعنی جرم‌گیری و تمیز کردن دندان‌ها.", "chunks": ["I need", "a cleaning."] },
+    { "en": "I can't see well.", "fa": "خوب نمی‌بینم.", "ph": "آی کَنت سی وِل", "note": "چشم‌پزشک معمولاً تابلویی از حرف‌ها نشان می‌دهد و می‌گوید: «Read the letters, please.‎» یعنی «لطفاً حرف‌ها را بخوانید.»", "chunks": ["I can't", "see well."] },
+    { "en": "I need new glasses.", "fa": "عینک تازه لازم دارم.", "ph": "آی نید نیو گْلَسِز", "note": "glasses یعنی عینک. به عینک مطالعه می‌گویند «reading glasses».", "chunks": ["I need", "new glasses."] }
+  ],
+  "dialogue": {
+    "setting": "دندانتان درد می‌کند و روی صندلی دندان‌پزشکی نشسته‌اید.",
+    "lines": [
+      ["them", "Hello. What seems to be the problem?", "سلام. چه مشکلی دارید؟"],
+      ["you", "I have a toothache.", "دندانم درد می‌کند."],
+      ["them", "Okay. Please sit back and open wide.", "باشد. لطفاً تکیه بدهید و دهانتان را کاملاً باز کنید."],
+      ["them", "Does this hurt?", "درد می‌گیرد؟"],
+      ["you", "Yes, it does.", "بله، درد می‌گیرد."],
+      ["them", "I see. We need to take an X-ray.", "متوجه شدم. باید عکس رادیولوژی بگیریم."],
+      ["you", "Okay. I need a cleaning, too.", "باشد. دندان‌هایم را هم می‌خواهم جرم‌گیری کنم."],
+      ["them", "Sure. You can make an appointment at the front desk.", "حتماً. می‌توانید از میز پذیرش وقت بگیرید."]
+    ]
+  },
+  "respond": {
+    "setting": "این بار در مطب چشم‌پزشک هستید.",
+    "them": ["What brings you in today?", "امروز برای چه مشکلی آمده‌اید؟"],
+    "ok": [
+      ["I can't see well.", "خوب نمی‌بینم."],
+      ["I need new glasses.", "عینک تازه لازم دارم."],
+      ["I can't see well. I need new glasses.", "خوب نمی‌بینم. عینک تازه لازم دارم."]
+    ],
+    "off": ["I need a cleaning.", "می‌خواهم دندان‌هایم را جرم‌گیری کنم.", "این را به دندان‌پزشک می‌گویند. اینجا مطب چشم‌پزشک است؛ از چشم یا عینکتان بگویید."],
+    "off2": 1
+  },
+  "task": [
+    ["موقع غذا خوردن، تکه‌ای از دندانتان جدا شده است.", 2],
+    ["دندانتان درد نمی‌کند؛ فقط می‌خواهید دندان‌هایتان را تمیز و جرم‌گیری کنند.", 3]
+  ],
+  "grammar": {
+    "title": "glasses (عینک)",
+    "explain": "در انگلیسی «glasses» (عینک) همیشه جمع است، چون دو شیشه دارد. برای همین قبلش «a» نمی‌آید و با «are» می‌آید، نه «is».",
+    "examples": [
+      ["I need new glasses.", "عینک تازه لازم دارم."],
+      ["My glasses are broken.", "عینکم شکسته است."],
+      ["Where are my glasses?", "عینکم کجاست؟"]
+    ],
+    "wrong": "I need a new glasses.",
+    "right": "I need new glasses.",
+    "why": "در فارسی «عینک» مفرد است، ولی در انگلیسی «glasses» جمع است و «a» نمی‌گیرد. اگر بخواهید بگویید «یک عینک»، بگویید «a pair of glasses»."
+  },
+  "variants": [
+    { "en": "Open your mouth wide, please.", "fa": "لطفاً دهانتان را کاملاً باز کنید.", "like": "Okay. Please sit back and open wide." },
+    { "en": "Tell me if this hurts.", "fa": "اگر درد گرفت، به من بگویید.", "like": "Does this hurt?" },
+    { "en": "What can I do for you today?", "fa": "امروز چه کاری برایتان انجام بدهم؟", "like": "Hello. What seems to be the problem?" }
+  ],
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

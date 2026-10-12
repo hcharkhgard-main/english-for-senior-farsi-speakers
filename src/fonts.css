@@ -1,0 +1,8 @@
+@font-face { font-family: "Vazirmatn"; font-weight: 400 500; font-style: normal; font-display: swap; src: url("__FONT__/vazirmatn-400.woff2") format("woff2"); }
+@font-face { font-family: "Vazirmatn"; font-weight: 600; font-style: normal; font-display: swap; src: url("__FONT__/vazirmatn-600.woff2") format("woff2"); }
+@font-face { font-family: "Vazirmatn"; font-weight: 700 900; font-style: normal; font-display: swap; src: url("__FONT__/vazirmatn-800.woff2") format("woff2"); }
+@font-face { font-family: "Atkinson Hyperlegible"; font-weight: 400; font-style: normal; font-display: swap; src: url("__FONT__/atkinson-400.woff2") format("woff2"); }
+@font-face { font-family: "Atkinson Hyperlegible"; font-weight: 700; font-style: normal; font-display: swap; src: url("__FONT__/atkinson-700.woff2") format("woff2"); }
+/* English digits come from the phone's own font: the zero of Atkinson Hyperlegible has a slash through it, which readers used to Persian digits can take for another character. */
+@font-face { font-family: "Hamrah Digits"; font-weight: 400; src: local("Helvetica Neue"), local("HelveticaNeue"), local("Arial"), local("Roboto"), local("Noto Sans"), local("DejaVu Sans"); unicode-range: U+30-39; }
+@font-face { font-family: "Hamrah Digits"; font-weight: 700; src: local("Helvetica Neue Bold"), local("HelveticaNeue-Bold"), local("Arial Bold"), local("Arial-BoldMT"), local("Roboto Bold"), local("Noto Sans Bold"), local("DejaVu Sans Bold"); unicode-range: U+30-39; }

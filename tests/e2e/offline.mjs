@@ -1,0 +1,235 @@
+// The service worker, tested in a browser: what is stored, what a link can and cannot do to it,
+// how a new version arrives, and two copies of the app on one address.
+//   HAMRAH_SITE=<built site> PORT=<port> node tests/e2e/offline.mjs
+// Covers: a link to any file of the site cannot replace the stored app (the app still opens
+// offline afterwards); a new version waits while a lesson is open and is switched on at the home
+// screen or the next start, with one reload; cache names carry the site's path, so a second copy
+// on the same origin does not delete the first copy's lessons; files left by the earlier naming
+// scheme are taken over; installation survives a font that fails to download; a lesson opened in the
+// first moments of the first visit (before the service worker is in charge) is kept all the same.
+//
+// "No connection" here means that the browser is told it is offline AND the test's server stops
+// answering. Playwright's setOffline alone does not cut the service worker's own requests: a file
+// missing from the stored app would quietly be fetched, and these checks could not notice it.
+import { chromium } from 'playwright';
+import http from 'node:http';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
+const PORT = +(process.env.PORT || 8140), SITE = process.env.HAMRAH_SITE ? path.resolve(process.env.HAMRAH_SITE) : path.join(ROOT, 'site'), ORIGIN = `http://localhost:${PORT}`;
+
+// "version B": the same site with another build id and a marker in its script, laid over the real one
+const B = fs.mkdtempSync(path.join(os.tmpdir(), 'hamrah-b-'));
+const idA = /const BUILD = '([0-9a-f]+)'/.exec(fs.readFileSync(path.join(SITE, 'sw.js'), 'utf8'))[1];
+for (const f of ['sw.js', 'index.html']) fs.writeFileSync(path.join(B, f), fs.readFileSync(path.join(SITE, f), 'utf8').replaceAll(idA, 'bbbbbbbbbb'));
+fs.writeFileSync(path.join(B, 'app.js'), fs.readFileSync(path.join(SITE, 'app.js'), 'utf8') + '\n;window.__hamrahBuild="B";');
+
+// a small server: / and the two "copies" /one/ and /two/ serve the site; `overlay` lays version B on top; `fail` breaks chosen files;
+// `slow` holds chosen files back for a while; `dead` drops every connection (the server is "unplugged")
+let overlay = null, fail = null, slow = null, slowMs = 2500, dead = false;
+const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.json': 'application/json; charset=utf-8', '.webmanifest': 'application/manifest+json', '.mp3': 'audio/mpeg', '.woff2': 'font/woff2', '.png': 'image/png', '.svg': 'image/svg+xml', '.wasm': 'application/wasm', '.ort': 'application/octet-stream', '.txt': 'text/plain; charset=utf-8' };
+const server = http.createServer(async (req, res) => {
+  if (dead) { req.socket.destroy(); return; }
+  let p = decodeURIComponent(new URL(req.url, 'http://x').pathname);
+  for (const pre of ['/one/', '/two/']) if (p.startsWith(pre)) p = p.slice(pre.length - 1);
+  if (p.endsWith('/')) p += 'index.html';
+  if (fail && fail.test(p)) { res.writeHead(503); res.end('injected failure'); return; }
+  if (slow && slow.test(p)) { await new Promise((r) => setTimeout(r, slowMs)); if (dead) { req.socket.destroy(); return; } }
+  let f = overlay && fs.existsSync(path.join(overlay, p)) ? path.join(overlay, p) : path.join(SITE, p);
+  if (!path.resolve(f).startsWith(overlay && f.startsWith(overlay) ? overlay : SITE) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) { res.writeHead(404); res.end('not found'); return; }
+  res.writeHead(200, { 'Content-Type': TYPES[path.extname(f)] || 'application/octet-stream', 'Cache-Control': 'no-cache' });
+  fs.createReadStream(f).pipe(res);
+}).listen(PORT);
+await new Promise((r) => setTimeout(r, 300));
+const useA = () => { overlay = null; }, useB = () => { overlay = B; };
+const unplug = async (ctx) => { dead = true; await ctx.setOffline(true); };
+const plug = async (ctx) => { dead = false; await ctx.setOffline(false); };
+
+const results = [];
+const check = (name, ok, detail = '') => { results.push(!!ok); console.log(`${ok ? 'PASS' : 'FAIL'}  ${name}${detail ? '  — ' + (typeof detail === 'string' ? detail : JSON.stringify(detail)) : ''}`); };
+const b = await chromium.launch({ executablePath: process.env.CHROMIUM || '/opt/pw-browsers/chromium', args: ['--autoplay-policy=no-user-gesture-required'] });
+const ready = (page) => page.waitForFunction(() => window.hamrah && document.querySelector('.topbar'), null, { timeout: 30000 });
+const controlled = (page) => page.waitForFunction(() => navigator.serviceWorker.controller, null, { timeout: 30000 });
+const cacheNames = (page) => page.evaluate(() => caches.keys());
+const waiting = (page) => page.evaluate(async () => { const r = await navigator.serviceWorker.getRegistration(); return !!(r && r.waiting); });
+const phone = { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, locale: 'fa-IR' };
+// Starts each clip and reports what happened: { plays: n } when all could be played, 'offline' for a sound that is neither stored nor reachable.
+const playAll = (page, clips) => page.evaluate(async (clips) => {
+  const a = window.hamrah, res = {};
+  for (const c of clips) { const pr = a.audio.play(c); await new Promise((r) => setTimeout(r, 300)); const playing = !!a.audio.current; a.audio.stop(); let r = await pr; if (r === 'stopped' && playing) r = 'plays'; res[r] = (res[r] || 0) + 1; }
+  return res;
+}, clips);
+const lessonClips = (page, id) => page.evaluate((id) => window.hamrah.content.lessons[id].phrases.map((p) => ({ lang: 'en', voice: p.voice || 's', speed: 'n', text: p.say || p.en })), id);
+const audioStored = (page) => page.evaluate(async () => { const n = (await caches.keys()).find((k) => k.endsWith('|audio')); return n ? (await (await caches.open(n)).keys()).map((k) => k.url.split('/').pop().split('.')[0]) : []; });
+
+try {
+  // ---- a link to a file of the site cannot replace the stored app ---------------------------------
+  {
+    const ctx = await b.newContext(phone);
+    const page = await ctx.newPage();
+    await page.goto(ORIGIN + '/'); await ready(page); await controlled(page); await page.waitForTimeout(1200);
+    const stored = () => page.evaluate(async () => { const n = (await caches.keys()).find((k) => k.includes('shell-')); const r = await (await caches.open(n)).match('index.html'); return r ? `${r.headers.get('content-type')} ${(await r.text()).slice(0, 15)}` : 'missing'; });
+    const before = await stored();
+    for (const target of ['content.json', 'icons/icon.svg', 'sw.js', 'audio/index.json', 'app.js?x=1', 'nosuchfile']) {
+      const p2 = await ctx.newPage(); await p2.goto(`${ORIGIN}/${target}`).catch(() => {}); await p2.waitForTimeout(500); await p2.close();
+    }
+    check('after opening six other addresses of the site, the stored app page is unchanged (still HTML)', (await stored()) === before && /^text\/html/.test(before), await stored());
+    await unplug(ctx);
+    const p3 = await ctx.newPage(); await p3.goto(ORIGIN + '/').catch(() => {});
+    const ok = await ready(p3).then(() => true).catch(() => false);
+    check('…and the app still opens with no connection (server stopped)', ok);
+    if (ok) {
+      await p3.evaluate(() => { window.hamrah.store.update((s) => { s.onboard.done = true; s.settings.auto = false; }); window.hamrah.go('sos'); }); await p3.waitForTimeout(300);
+      check('…with the emergency phrases', (await p3.locator('.mini-play').count()) >= 12);
+      const sos = await p3.evaluate(() => window.hamrah.content.emergency.phrases.flatMap((p) => ['n', 's'].map((speed) => ({ lang: 'en', voice: 's', speed, text: p.say || p.en }))));
+      const heard = await playAll(p3, sos);
+      check('…and every emergency phrase has its sound, at both speeds, with the server stopped', heard.plays === sos.length, heard);
+      // the control: this is what a sound that was NOT stored looks like — so the checks above can fail
+      const never = await playAll(p3, await lessonClips(p3, 'bank-help'));
+      check('(control) a lesson that was never opened has no sound now: the test really is cut off', !never.plays && never.offline > 0, never);
+    }
+    const p4 = await ctx.newPage(); await p4.goto(ORIGIN + '/index.html?source=homescreen').catch(() => {});
+    check('the app also opens offline from its other address (index.html, with a query)', await ready(p4).then(() => true).catch(() => false));
+    await plug(ctx); await ctx.close();
+  }
+  // ---- a lesson opened in the first moments of the first visit is kept for later ------------------
+  // The service worker is held back, so the lesson's sound is fetched by the page itself, before the worker is in charge.
+  {
+    slow = /^\/sw\.js$/; slowMs = 9000;
+    const ctx = await b.newContext(phone);
+    const page = await ctx.newPage(); await page.goto(ORIGIN + '/'); await ready(page);
+    const early = await page.evaluate(async () => {
+      const a = window.hamrah; a.store.update((s) => { s.onboard.done = true; s.settings.auto = false; });
+      const controlled = !!navigator.serviceWorker.controller;
+      a.go('lesson.store-where'); await a.audio.loadIndex(); await a.audio.warm(a.audio.deps('l-store-where'));
+      return controlled;
+    });
+    const clips = await lessonClips(page, 'store-where');
+    const online = await playAll(page, clips);
+    const atOnce = { stored: await audioStored(page), controlled: await page.evaluate(() => !!navigator.serviceWorker.controller) };
+    slow = null; slowMs = 2500;
+    await controlled(page); await page.waitForTimeout(2500);
+    const stored = await audioStored(page);
+    check('first visit: the lesson was opened before the service worker was in charge, and its sound played', early === false && online.plays === clips.length, { controlledThen: early, online });
+    check('…its sound file is stored at once, without waiting for the service worker', atOnce.controlled === false && atOnce.stored.some((x) => /^l-store-where/.test(x)), atOnce);
+    check('…and is still stored when the service worker has taken charge', stored.some((x) => /^l-store-where/.test(x)), stored.join(','));
+    check('…and the first sounds, which come with the app, are not stored a second time', !stored.some((x) => /^(core|words)$/.test(x)), stored.join(','));
+    await unplug(ctx);
+    await page.reload().catch(() => {});
+    const again = await ready(page).then(() => true).catch(() => false);
+    const later = again ? await page.evaluate(() => { window.hamrah.go('lesson.store-where'); }).then(() => playAll(page, clips)) : {};
+    check('…so with the server stopped the app restarts and the whole lesson can be heard', again && later.plays === clips.length, later);
+    await plug(ctx); await ctx.close();
+  }
+  // ---- update while in a lesson: nothing happens until home ------------------------------------
+  {
+    const ctx = await b.newContext(phone);
+    const page = await ctx.newPage(); let loads = 0; page.on('load', () => loads++);
+    const errors = []; page.on('pageerror', (e) => errors.push(e.message));
+    await page.goto(ORIGIN + '/'); await ready(page); await controlled(page);
+    await page.evaluate(() => { window.hamrah.store.update((s) => { s.onboard.done = true; s.settings.auto = false; }); window.hamrah.go('home', { reset: true }); });
+    const names0 = await cacheNames(page);
+    check('cache names carry the path of this copy and the build', names0.some((n) => n === `hamrah|/|shell-${idA}`) && names0.some((n) => n === 'hamrah|/|audio') || names0.some((n) => n === `hamrah|/|shell-${idA}`), names0.join(' , '));
+    await page.evaluate(() => window.hamrah.go('lesson.social-hello')); await page.waitForTimeout(400);
+    await page.locator('[data-next]').click(); await page.waitForTimeout(450); await page.locator('[data-next]').click(); await page.waitForTimeout(300);
+    await page.evaluate(() => { window.__mark = 'same page'; });
+    useB();
+    await page.evaluate(async () => { const r = await navigator.serviceWorker.getRegistration(); await r.update(); });
+    await page.waitForFunction(async () => { const r = await navigator.serviceWorker.getRegistration(); return !!(r && r.waiting); }, null, { timeout: 30000 });
+    await page.waitForTimeout(1500);
+    const mid = await page.evaluate(() => ({ mark: window.__mark, build: window.__hamrahBuild || 'A', hash: location.hash, lbl: document.querySelector('.progress .lbl').textContent }));
+    check('a new version found in the middle of a lesson waits: no reload, same screen', mid.mark === 'same page' && mid.build === 'A' && mid.hash === '#lesson.social-hello' && (await waiting(page)), mid);
+    const before = loads;
+    await page.locator('.tb-btn', { hasText: 'خانه' }).click();
+    await page.waitForFunction(() => window.__hamrahBuild === 'B' && window.hamrah && document.querySelector('.choice'), null, { timeout: 30000 }).catch(() => {});
+    await page.waitForTimeout(2500);
+    const fin = await page.evaluate(() => ({ mark: window.__mark || null, build: window.__hamrahBuild || 'A', hash: location.hash, choices: document.querySelectorAll('.choice').length }));
+    check('on reaching home the new version is switched on and the page reloads exactly once', fin.build === 'B' && fin.mark === null && fin.hash === '#home' && fin.choices === 4 && loads - before === 1, { ...fin, reloads: loads - before });
+    const names1 = await cacheNames(page);
+    check('the old version\'s files are gone, the new version\'s are stored', names1.includes('hamrah|/|shell-bbbbbbbbbb') && !names1.includes(`hamrah|/|shell-${idA}`), names1.join(' , '));
+    check('the lesson position survived the update', await page.evaluate(() => { const s = window.hamrah.store.state; return (s.at && s.at['social-hello'] && s.at['social-hello'].pos === 2) || (s.current && s.current.pos === 2); }));
+    await unplug(ctx); await page.reload().catch(() => {});
+    await ready(page).then(() => check('offline start (server stopped) works on the new version', true)).catch(() => check('offline start (server stopped) works on the new version', false));
+    check('…and it is version B that starts offline', (await page.evaluate(() => window.__hamrahBuild).catch(() => null)) === 'B');
+    await plug(ctx);
+    check('no page errors during the update', errors.length === 0, errors.slice(0, 2).join(' | '));
+    await ctx.close();
+  }
+  // ---- update found while the app is closed: applied at the next start -------------------------
+  {
+    useA();
+    const ctx = await b.newContext(phone);
+    let page = await ctx.newPage();
+    await page.goto(ORIGIN + '/'); await ready(page); await controlled(page);
+    await page.evaluate(() => { window.hamrah.store.update((s) => { s.onboard.done = true; }); window.hamrah.go('settings'); });
+    useB();
+    await page.evaluate(async () => { const r = await navigator.serviceWorker.getRegistration(); await r.update(); });
+    await page.waitForFunction(async () => { const r = await navigator.serviceWorker.getRegistration(); return !!(r && r.waiting); }, null, { timeout: 30000 });
+    check('with Settings open, the new version waits', (await page.evaluate(() => window.__hamrahBuild || 'A')) === 'A');
+    await page.close();
+    page = await ctx.newPage(); let loads = 0; page.on('load', () => loads++);
+    await page.goto(ORIGIN + '/');
+    await page.waitForFunction(() => window.__hamrahBuild === 'B' && window.hamrah && document.querySelector('.choice'), null, { timeout: 30000 }).catch(() => {});
+    await page.waitForTimeout(2000);
+    check('next start: the new version is in use (at most one extra reload)', (await page.evaluate(() => window.__hamrahBuild)) === 'B' && loads <= 2, `loads ${loads}`);
+    await ctx.close();
+  }
+  // ---- two copies on one origin + caches left by the earlier version ----------------------------
+  {
+    useA();
+    const ctx = await b.newContext(phone);
+    const seed = await ctx.newPage();
+    await seed.goto(ORIGIN + '/one/config.json');
+    await seed.evaluate(async (origin) => {         // what the previous release left behind, for two different copies
+      const a = await caches.open('hamrah-audio-v1');
+      await a.put(origin + '/one/audio/old-pack.mp3', new Response('one', { headers: { 'Content-Type': 'audio/mpeg' } }));
+      await a.put(origin + '/elsewhere/audio/their-pack.mp3', new Response('theirs', { headers: { 'Content-Type': 'audio/mpeg' } }));
+      const s1 = await caches.open('hamrah-shell-oldbuild'); await s1.put(origin + '/one/index.html', new Response('old one')); await s1.put(origin + '/elsewhere/index.html', new Response('old elsewhere'));
+      const r = await caches.open('hamrah-asr-v1'); await r.put(origin + '/one/asr/tokens.txt', new Response('tok'));
+    }, ORIGIN);
+    const one = await ctx.newPage(); await one.goto(ORIGIN + '/one/'); await ready(one); await controlled(one);
+    await one.evaluate(() => { window.hamrah.store.update((s) => { s.onboard.done = true; }); });
+    await one.evaluate(async () => { await window.hamrah.audio.loadIndex(); await window.hamrah.audio.warm(['l-social-hello']); });
+    await one.waitForTimeout(800);
+    const packs = (page, name) => page.evaluate(async (name) => (await (await caches.open(name)).keys()).map((r) => new URL(r.url).pathname), name);
+    const oneAudio0 = await packs(one, 'hamrah|/one/|audio');
+    const two = await ctx.newPage(); await two.goto(ORIGIN + '/two/'); await ready(two); await controlled(two);
+    await two.evaluate(async () => { await window.hamrah.audio.loadIndex(); await window.hamrah.audio.warm(['l-store-where']); });
+    await two.waitForTimeout(1200);
+    const names = await cacheNames(two);
+    const oneAudio1 = await packs(two, 'hamrah|/one/|audio'), twoAudio = await packs(two, 'hamrah|/two/|audio');
+    check('each copy has its own caches', names.some((n) => n.startsWith('hamrah|/one/|shell-')) && names.some((n) => n.startsWith('hamrah|/two/|shell-')), names.join(' , '));
+    check('opening the second copy did not delete the first copy\'s lesson audio', oneAudio0.some((p) => /social-hello/.test(p)) && JSON.stringify(oneAudio0.filter((p) => !/old-pack/.test(p))) === JSON.stringify(oneAudio1.filter((p) => !/old-pack/.test(p))) && twoAudio.some((p) => /store-where/.test(p)), { one: oneAudio1.length, two: twoAudio.length });
+    const legacy = await two.evaluate(async () => { const out = {}; for (const n of ['hamrah-audio-v1', 'hamrah-shell-oldbuild', 'hamrah-asr-v1']) out[n] = (await caches.has(n)) ? (await (await caches.open(n)).keys()).map((r) => new URL(r.url).pathname) : null; return out; });
+    const asrName = names.find((n) => n.startsWith('hamrah|/one/|asr-'));
+    check('files of the earlier version: this copy\'s were taken over or removed, another site\'s were left alone', JSON.stringify(legacy['hamrah-audio-v1']) === '["/elsewhere/audio/their-pack.mp3"]' && JSON.stringify(legacy['hamrah-shell-oldbuild']) === '["/elsewhere/index.html"]' && legacy['hamrah-asr-v1'] === null && !!asrName && (await packs(two, asrName)).includes('/one/asr/tokens.txt'), legacy);
+    check('an old audio pack that is no longer in the curriculum was dropped', !oneAudio1.some((p) => /old-pack/.test(p)), oneAudio1.join(','));
+    check('the page and the service worker agree on the pronunciation-checker cache name', await one.evaluate(async (asrName) => { await window.hamrah.speech.isCached(); return caches.has(asrName); }, asrName), asrName);
+    await ctx.close();
+  }
+  // ---- install with one extra file failing -----------------------------------------------------------
+  {
+    fail = /^\/fonts\//;
+    const ctx = await b.newContext(phone);
+    const page = await ctx.newPage(); await page.goto(ORIGIN + '/'); await ready(page);
+    const ok = await controlled(page).then(() => true).catch(() => false);
+    check('installation succeeds although every font failed to download', ok);
+    fail = null;
+    await page.reload(); await ready(page); await page.evaluate(() => document.fonts.ready); await page.waitForTimeout(800);
+    const stored = await page.evaluate(async () => { const n = (await caches.keys()).find((k) => k.includes('shell-')); return (await (await caches.open(n)).keys()).filter((r) => /fonts\//.test(r.url)).length; });
+    check('the fonts are stored the next time they are used', stored > 0, `fonts stored: ${stored}`);
+    fail = /^\/(app\.js|content\.json)$/;
+    const ctx2 = await b.newContext(); const p2 = await ctx2.newPage(); await p2.goto(ORIGIN + '/one/config.json');
+    const res = await p2.evaluate(async () => { try { const r = await navigator.serviceWorker.register('sw.js'); await new Promise((res) => setTimeout(res, 2500)); return { active: !!r.active, installing: !!r.installing, waiting: !!r.waiting }; } catch (e) { return { error: String(e) }; } });
+    check('if a file the app cannot start without fails, nothing half-installed is left in charge', !res.active, res);
+    fail = null;
+    await ctx.close(); await ctx2.close();
+  }
+} catch (err) {
+  check('test run completed', false, String(err && err.message).slice(0, 300));
+} finally { await b.close(); server.close(); fs.rmSync(B, { recursive: true, force: true }); }
+console.log(`\n${results.filter(Boolean).length}/${results.length} checks passed`);
+process.exit(results.every(Boolean) ? 0 : 1);

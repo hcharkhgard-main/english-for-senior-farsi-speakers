@@ -1,0 +1,184 @@
+{
+  "id": "airport-checkin",
+  "scenario": "travel",
+  "stage": 3,
+  "minutes": 9,
+  "title": {
+    "fa": "فرودگاه: تحویل بار و پیدا کردن گیت",
+    "en": "At the airport: check-in and the gate"
+  },
+  "intro": "در این درس یاد می‌گیرید در فرودگاه چمدان تحویل بدهید، صندلی مناسب بخواهید، گیت پرواز را پیدا کنید و اگر راه رفتن برایتان سخت است، ویلچر بخواهید.",
+  "canDo": "حالا می‌توانید در فرودگاه چمدان تحویل بدهید، گیت را بپرسید و کمک بخواهید.",
+  "mission": "در سفر بعدی، وقتی چمدانتان را تحویل می‌دهید، خودتان به کارمند بگویید: I'd like to check this bag.",
+  "them": {
+    "role": "کارمند هواپیمایی",
+    "voice": "k"
+  },
+  "phrases": [
+    {
+      "en": "I'd like to check this bag.",
+      "fa": "می‌خواهم این چمدان را تحویل بدهم.",
+      "ph": "آیْد لایک تو چِک دیس بَگ",
+      "note": "چمدانی که به قسمت بار می‌رود. کیف دستی را «carry-on» می‌گویند.",
+      "chunks": [
+        "I'd like",
+        "to check",
+        "this bag."
+      ]
+    },
+    {
+      "en": "Can I have an aisle seat?",
+      "fa": "می‌شود صندلی کنار راهرو بدهید؟",
+      "ph": "کَن آی هَو اَن آیْل سیت؟",
+      "note": "aisle seat کنار راهرو است و window seat کنار پنجره.",
+      "chunks": [
+        "Can I have",
+        "an aisle seat?"
+      ]
+    },
+    {
+      "en": "I need a wheelchair, please.",
+      "fa": "ویلچر لازم دارم، لطفاً.",
+      "ph": "آی نید اِ ویل‌چِر، پْلیز",
+      "note": "کمک با ویلچر در فرودگاه رایگان است. اگر راه رفتنِ طولانی برایتان سخت است، خجالت نکشید و بخواهید.",
+      "chunks": [
+        "I need",
+        "a wheelchair,",
+        "please."
+      ]
+    },
+    {
+      "en": "Where is gate twelve?",
+      "fa": "گیت دوازده کجاست؟",
+      "ph": "وِر ایز گِیت تْوِلْو؟",
+      "note": "شمارهٔ گیت روی کارت پرواز (boarding pass) نوشته شده است، ولی گاهی عوض می‌شود؛ تابلوهای فرودگاه را هم نگاه کنید.",
+      "chunks": [
+        "Where is",
+        "gate twelve?"
+      ]
+    },
+    {
+      "en": "Is the flight on time?",
+      "fa": "پرواز سرِ وقت است؟",
+      "ph": "ایز دِ فْلایت آن تایم؟",
+      "note": "delayed یعنی تأخیر دارد و canceled یعنی لغو شده است.",
+      "chunks": [
+        "Is the flight",
+        "on time?"
+      ]
+    }
+  ],
+  "dialogue": {
+    "setting": "در فرودگاه، جلوی باجهٔ هواپیمایی هستید.",
+    "lines": [
+      [
+        "them",
+        "Good morning. Where are you flying today?",
+        "صبح به‌خیر. امروز به کجا پرواز می‌کنید؟"
+      ],
+      [
+        "you",
+        "To Los Angeles. I'd like to check this bag.",
+        "به لس‌آنجلس. می‌خواهم این چمدان را تحویل بدهم."
+      ],
+      [
+        "them",
+        "Sure. Can I see your passport or ID?",
+        "حتماً. می‌شود گذرنامه یا کارت شناسایی‌تان را ببینم؟"
+      ],
+      [
+        "you",
+        "Here you go. Can I have an aisle seat?",
+        "بفرمایید. می‌شود صندلی کنار راهرو بدهید؟"
+      ],
+      [
+        "them",
+        "Yes, I have one. Here is your boarding pass.",
+        "بله، دارم. این هم کارت پرواز شما."
+      ],
+      [
+        "you",
+        "Thank you. Where is gate twelve?",
+        "ممنون. گیت دوازده کجاست؟"
+      ],
+      [
+        "them",
+        "Go through security, then turn right.",
+        "از بازرسی رد شوید، بعد به راست بپیچید."
+      ]
+    ]
+  },
+  "respond": {
+    "setting": "کارمند هواپیمایی از شما می‌پرسد.",
+    "them": [
+      "Do you need any help getting to the gate?",
+      "برای رفتن تا گیت کمک لازم دارید؟"
+    ],
+    "ok": [
+      [
+        "Yes. I need a wheelchair, please.",
+        "بله. ویلچر لازم دارم، لطفاً."
+      ],
+      [
+        "No, thank you. Where is gate twelve?",
+        "نه، ممنون. گیت دوازده کجاست؟"
+      ]
+    ],
+    "off": [
+      "I'd like to check this bag.",
+      "می‌خواهم این چمدان را تحویل بدهم.",
+      "چمدان را تحویل داده‌اید. او پرسید برای رسیدن به گیت کمک می‌خواهید یا نه."
+    ],
+    "off2": 2
+  },
+  "variants": [
+    {
+      "en": "What's your final destination?",
+      "fa": "مقصد نهایی‌تان کجاست؟",
+      "like": "Good morning. Where are you flying today?"
+    },
+    {
+      "en": "Do you need wheelchair assistance?",
+      "fa": "کمک با ویلچر لازم دارید؟",
+      "like": "Do you need any help getting to the gate?",
+      "voice": "m"
+    }
+  ],
+  "task": [
+    [
+      "روی تابلو چیزی دربارهٔ پروازتان نوشته‌اند و می‌خواهید بدانید تأخیر دارد یا نه.",
+      5
+    ],
+    [
+      "راه تا گیت طولانی است و زانویتان درد می‌کند.",
+      3
+    ]
+  ],
+  "grammar": {
+    "title": "on time / late / early",
+    "explain": "«on time» یعنی سرِ وقت، «late» یعنی دیر و «early» یعنی زود.",
+    "examples": [
+      [
+        "The flight is on time.",
+        "پرواز سرِ وقت است."
+      ],
+      [
+        "The bus is late.",
+        "اتوبوس دیر کرده است."
+      ],
+      [
+        "We are early.",
+        "زود رسیده‌ایم."
+      ]
+    ],
+    "wrong": "The flight is in time.",
+    "right": "The flight is on time.",
+    "why": "برای «سرِ وقت» می‌گوییم «on time»."
+  },
+  "review": {
+    "status": "draft",
+    "language": null,
+    "teaching": null,
+    "safety": null
+  }
+}

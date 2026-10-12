@@ -1,0 +1,65 @@
+{
+  "id": "incoming-call",
+  "scenario": "phone",
+  "stage": 2,
+  "order": 54,
+  "minutes": 8,
+  "safetyCritical": true,
+  "title": { "fa": "جواب دادن به تلفن", "en": "Answering the phone" },
+  "intro": "وقتی تلفن زنگ می‌زند و کسی به انگلیسی حرف می‌زند، لازم نیست دستپاچه شوید. در این درس یاد می‌گیرید تلفن را جواب بدهید، بپرسید چه کسی زنگ زده و پیغام بگیرید.",
+  "note": "اگر تماس‌گیرنده را نمی‌شناسید، اطلاعات شخصی مثل آدرس، تاریخ تولد یا شمارهٔ کارت به او ندهید. هر وقت خواستید می‌توانید تلفن را قطع کنید؛ این کار بی‌ادبی نیست.",
+  "canDo": "حالا می‌توانید تلفن را جواب بدهید، بپرسید چه کسی زنگ زده و پیغام بگیرید.",
+  "mission": "کاغذ و قلمی کنار تلفن بگذارید و این جمله را سه بار بلند بگویید تا برای تماس بعدی آماده باشید: Who is calling, please?",
+  "them": { "role": "تماس‌گیرنده", "voice": "m" },
+  "phrases": [
+    { "en": "Hello?", "fa": "الو؟", "ph": "هِلُو؟", "note": "در آمریکا وقتی گوشی را برمی‌دارند فقط می‌گویند «Hello?\u200e». لازم نیست اسمتان را بگویید.", "chunks": ["Hello?"] },
+    { "en": "Who is calling, please?", "fa": "ببخشید، شما؟", "ph": "هو ایز کالینگ، پْلیز؟", "note": "قبل از هر جوابی بپرسید چه کسی پشت خط است. این سؤال کاملاً مؤدبانه است.", "chunks": ["Who is calling,", "please?"] },
+    { "en": "He's not here right now.", "fa": "او الان اینجا نیست.", "ph": "هی‌ز نات هی‌یِر رایت ناو", "note": "برای خانم‌ها بگویید «She's not here right now». اگر تماس‌گیرنده را نمی‌شناسید، لازم نیست بگویید او کجاست یا کی برمی‌گردد.", "chunks": ["He's not here", "right now."] },
+    { "en": "Can I take a message?", "fa": "پیغامی دارید که به او بگویم؟", "ph": "کَن آی تِیک اِ مِسِج؟", "note": "بعد اسم و شمارهٔ تماس‌گیرنده را بپرسید و یادداشت کنید: «What is your name and number?\u200e»", "chunks": ["Can I take", "a message?"] },
+    { "en": "I think you have the wrong number.", "fa": "فکر می‌کنم اشتباه گرفته‌اید.", "ph": "آی تینک یو هَو دِ رانگ نامبِر", "note": "وقتی سراغ کسی را می‌گیرند که شما نمی‌شناسید. بعد می‌توانید خداحافظی کنید و تلفن را قطع کنید.", "chunks": ["I think", "you have", "the wrong number."] }
+  ],
+  "dialogue": {
+    "setting": "تلفن خانه زنگ می‌زند. کسی با پسرتان علی کار دارد، ولی علی خانه نیست.",
+    "lines": [
+      ["you", "Hello?", "الو؟"],
+      ["them", "Hi, is Ali there?", "سلام، علی هست؟"],
+      ["you", "He's not here right now. Who is calling, please?", "او الان اینجا نیست. ببخشید، شما؟"],
+      ["them", "This is David. I work with Ali.", "دیوید هستم. همکار علی‌ام."],
+      ["you", "Can I take a message?", "پیغامی دارید که به او بگویم؟"],
+      ["them", "Yes, please. Ask him to call me at 555-0199.", "بله، لطفاً. بگویید به شمارهٔ \u200e۵۵۵-۰۱۹۹ به من زنگ بزند."],
+      ["you", "David, 555-0199. Okay. I'll tell him.", "دیوید، \u200e۵۵۵-۰۱۹۹. باشد. به او می‌گویم."],
+      ["them", "Thank you. Goodbye!", "ممنون. خداحافظ!"]
+    ]
+  },
+  "respond": {
+    "setting": "تلفن زنگ می‌زند و کسی سراغ خانمی را می‌گیرد که شما نمی‌شناسید.",
+    "them": ["Hi, can I speak to Jennifer?", "سلام، می‌توانم با جنیفر صحبت کنم؟"],
+    "ok": [
+      ["I think you have the wrong number.", "فکر می‌کنم اشتباه گرفته‌اید."],
+      ["Sorry, there is no Jennifer here.", "ببخشید، اینجا کسی به اسم جنیفر نداریم."]
+    ],
+    "off": ["Can I take a message?", "پیغامی دارید که به او بگویم؟", "این جمله برای وقتی است که آن شخص را می‌شناسید ولی الان خانه نیست. اینجا کسی به این اسم ندارید؛ بگویید اشتباه گرفته‌اند."],
+    "off2": 3
+  },
+  "variants": [
+    { "en": "May I speak with Ali?", "fa": "می‌توانم با علی صحبت کنم؟", "like": "Hi, is Ali there?", "voice": "b" },
+    { "en": "Can you have him call me back?", "fa": "می‌شود بگویید به من زنگ بزند؟", "like": "Yes, please. Ask him to call me at 555-0199." }
+  ],
+  "task": [
+    ["کسی زنگ زده و با پسرتان کار دارد. می‌خواهید بگویید پسرتان الان خانه نیست.", 3],
+    ["کسی زنگ زده و خودش را معرفی نکرده است. می‌خواهید بدانید کیست.", 2]
+  ],
+  "grammar": {
+    "title": "Who is calling? / This is …",
+    "explain": "پشت تلفن برای پرسیدن اسم طرف می‌گویند «Who is calling?\u200e» و برای معرفی خودشان می‌گویند «This is» و بعد اسم.",
+    "examples": [
+      ["Who is calling, please?", "ببخشید، شما؟"],
+      ["This is Maryam.", "مریم هستم."],
+      ["This is David, from the bank.", "دیوید هستم، از بانک."]
+    ],
+    "wrong": "Who you are?",
+    "right": "Who is calling, please?",
+    "why": "«Who you are?\u200e» در انگلیسی درست نیست. شکل درستش، یعنی «Who are you?\u200e»، هم پشت تلفن کمی تند به گوش می‌رسد. مؤدبانه‌اش همین است: «Who is calling, please?\u200e»"
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

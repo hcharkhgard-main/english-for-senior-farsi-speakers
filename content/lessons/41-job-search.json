@@ -1,0 +1,172 @@
+{
+  "id": "job-search",
+  "scenario": "work",
+  "stage": 3,
+  "minutes": 9,
+  "title": {
+    "fa": "پیدا کردن کار",
+    "en": "Looking for a job"
+  },
+  "intro": "در این درس یاد می‌گیرید بپرسید جایی استخدام می‌کند یا نه، دربارهٔ تجربه‌تان چند جملهٔ ساده بگویید و بگویید چه روزهایی می‌توانید کار کنید.",
+  "canDo": "حالا می‌توانید دربارهٔ کار بپرسید و چند جملهٔ ساده دربارهٔ تجربه و وقت خودتان بگویید.",
+  "mission": "بارِ بعد که بیرون رفتید، ببینید پشت شیشهٔ کدام مغازه‌ها نوشته‌اند Now Hiring و اگر دنبال کار هستید، داخل بروید و بپرسید: Are you hiring?",
+  "them": {
+    "role": "مدیر فروشگاه",
+    "voice": "a"
+  },
+  "phrases": [
+    {
+      "en": "Are you hiring?",
+      "fa": "استخدام می‌کنید؟",
+      "ph": "آر یو هایرینگ؟",
+      "note": "تابلوی «Now Hiring» یعنی استخدام می‌کنیم.",
+      "chunks": [
+        "Are you",
+        "hiring?"
+      ]
+    },
+    {
+      "en": "I'm looking for a part-time job.",
+      "fa": "دنبال کار پاره‌وقت می‌گردم.",
+      "ph": "آیْم لُکینگ فُر اِ پارت تایم جاب",
+      "note": "part-time یعنی پاره‌وقت و full-time یعنی تمام‌وقت.",
+      "chunks": [
+        "I'm looking for",
+        "a part-time job."
+      ]
+    },
+    {
+      "en": "I have experience in cooking.",
+      "fa": "در آشپزی تجربه دارم.",
+      "ph": "آی هَو اِکسپیرییِنس این کوکینگ",
+      "note": "به‌جای cooking کار خودتان را بگویید: sewing (خیاطی)، teaching (تدریس)، sales (فروشندگی).",
+      "chunks": [
+        "I have experience",
+        "in cooking."
+      ],
+      "own": [
+        "cooking"
+      ]
+    },
+    {
+      "en": "I can work in the mornings.",
+      "fa": "صبح‌ها می‌توانم کار کنم.",
+      "ph": "آی کَن وِرک این دِ مُرنینگز",
+      "note": "on weekends یعنی آخر هفته‌ها.",
+      "chunks": [
+        "I can work",
+        "in the mornings."
+      ]
+    },
+    {
+      "en": "When can I start?",
+      "fa": "از کی می‌توانم شروع کنم؟",
+      "ph": "وِن کَن آی سْتارت؟",
+      "note": "وقتی به شما می‌گویند قبول شده‌اید.",
+      "chunks": [
+        "When",
+        "can I start?"
+      ]
+    }
+  ],
+  "dialogue": {
+    "setting": "پشت شیشهٔ یک نانوایی تابلوی «Now Hiring» دیده‌اید و داخل رفته‌اید.",
+    "lines": [
+      [
+        "you",
+        "Excuse me. Are you hiring?",
+        "ببخشید. استخدام می‌کنید؟"
+      ],
+      [
+        "them",
+        "Yes, we are. Do you have any experience?",
+        "بله، استخدام می‌کنیم. تجربه‌ای دارید؟"
+      ],
+      [
+        "you",
+        "Yes. I have experience in cooking.",
+        "بله. در آشپزی تجربه دارم."
+      ],
+      [
+        "them",
+        "Great. When can you work?",
+        "عالی. چه وقت‌هایی می‌توانید کار کنید؟"
+      ],
+      [
+        "you",
+        "I can work in the mornings.",
+        "صبح‌ها می‌توانم کار کنم."
+      ],
+      [
+        "them",
+        "Perfect. You're hired! Please fill out this form.",
+        "عالی است. استخدام شدید! لطفاً این فرم را پر کنید."
+      ],
+      [
+        "you",
+        "Thank you. When can I start?",
+        "ممنون. از کی می‌توانم شروع کنم؟"
+      ]
+    ]
+  },
+  "respond": {
+    "setting": "مدیر با شما صحبت می‌کند.",
+    "them": [
+      "What kind of job are you looking for?",
+      "دنبال چه جور کاری هستید؟"
+    ],
+    "ok": [
+      [
+        "I'm looking for a part-time job.",
+        "دنبال کار پاره‌وقت می‌گردم."
+      ],
+      [
+        "I have experience in cooking.",
+        "در آشپزی تجربه دارم."
+      ]
+    ],
+    "off": [
+      "When can I start?",
+      "از کی می‌توانم شروع کنم؟",
+      "هنوز زود است! اول بگویید دنبال چه کاری هستید."
+    ],
+    "off2": 1
+  },
+  "task": [
+    [
+      "از جلوی فروشگاهی رد می‌شوید و می‌خواهید بدانید استخدام می‌کنند یا نه.",
+      1
+    ],
+    [
+      "مدیر می‌پرسد چه ساعت‌هایی وقتتان آزاد است.",
+      4
+    ]
+  ],
+  "grammar": {
+    "title": "I can … / I have …",
+    "explain": "برای گفتن توانایی‌تان بگویید «I can» و برای تجربه‌تان «I have experience in».",
+    "examples": [
+      [
+        "I can work in the mornings.",
+        "صبح‌ها می‌توانم کار کنم."
+      ],
+      [
+        "I can drive.",
+        "می‌توانم رانندگی کنم."
+      ],
+      [
+        "I have experience in sales.",
+        "در فروشندگی تجربه دارم."
+      ]
+    ],
+    "wrong": "I have experience for cooking.",
+    "right": "I have experience in cooking.",
+    "why": "بعد از experience کلمهٔ «in» می‌آید."
+  },
+  "review": {
+    "status": "draft",
+    "language": null,
+    "teaching": null,
+    "safety": null
+  }
+}

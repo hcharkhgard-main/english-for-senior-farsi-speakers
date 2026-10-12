@@ -1,0 +1,1137 @@
+{
+ "version": 1,
+ "roleplays": [
+  {
+   "id": "rp-checkin",
+   "scenario": "travel",
+   "stage": 2,
+   "title": "تحویل بار در فرودگاه",
+   "setting": "در فرودگاه، جلوی باجهٔ هواپیمایی هستید.",
+   "goal": "چمدان تحویل بدهید، صندلی انتخاب کنید و گیت را بپرسید.",
+   "them": {
+    "role": "کارمند هواپیمایی",
+    "persona": "a helpful airline check-in agent",
+    "voice": "b"
+   },
+   "turns": [
+    {
+     "them": [
+      "Good morning. Where are you flying today?",
+      "صبح به‌خیر. امروز به کجا پرواز می‌کنید؟"
+     ],
+     "check": {
+      "q": "چه پرسید؟",
+      "right": "امروز به کجا پرواز می‌کنید؟",
+      "wrong": [
+       "امروز از کجا آمده‌اید؟",
+       "پروازتان چه ساعتی است؟"
+      ]
+     },
+     "replies": [
+      {
+       "en": "To Los Angeles.",
+       "fa": "به لس‌آنجلس.",
+       "keys": [
+        "los",
+        "angeles"
+       ]
+      },
+      {
+       "en": "To New York. Here is my passport.",
+       "fa": "به نیویورک. این گذرنامهٔ من است.",
+       "keys": [
+        "york",
+        "passport"
+       ]
+      }
+     ],
+     "open": true
+    },
+    {
+     "them": [
+      "Are you checking any bags?",
+      "چمدانی برای تحویل دارید؟"
+     ],
+     "check": {
+      "q": "چه پرسید؟",
+      "right": "چمدانی برای تحویل دارید؟",
+      "wrong": [
+       "چمدانتان را خودتان بسته‌اید؟",
+       "چمدانتان سنگین است؟"
+      ]
+     },
+     "replies": [
+      {
+       "en": "Yes. I'd like to check this bag.",
+       "fa": "بله. می‌خواهم این چمدان را تحویل بدهم.",
+       "keys": [
+        "check",
+        "yes"
+       ]
+      },
+      {
+       "en": "No. I only have a small bag.",
+       "fa": "نه. فقط یک کیف کوچک دارم.",
+       "keys": [
+        "no",
+        "small"
+       ]
+      }
+     ]
+    },
+    {
+     "them": [
+      "Would you like a window seat or an aisle seat?",
+      "صندلی کنار پنجره می‌خواهید یا کنار راهرو؟"
+     ],
+     "check": {
+      "q": "چه پرسید؟",
+      "right": "صندلی کنار پنجره می‌خواهید یا کنار راهرو؟",
+      "wrong": [
+       "می‌خواهید جلو بنشینید یا عقب؟",
+       "پنجره را ببندم یا باز بگذارم؟"
+      ]
+     },
+     "replies": [
+      {
+       "en": "An aisle seat, please.",
+       "fa": "کنار راهرو، لطفاً.",
+       "keys": [
+        "aisle"
+       ]
+      },
+      {
+       "en": "A window seat, please.",
+       "fa": "کنار پنجره، لطفاً.",
+       "keys": [
+        "window"
+       ]
+      }
+     ]
+    },
+    {
+     "them": [
+      "Here is your boarding pass. Do you need any help?",
+      "این هم کارت پرواز شما. کمکی لازم دارید؟"
+     ],
+     "replies": [
+      {
+       "en": "Yes. I need a wheelchair, please.",
+       "fa": "بله. ویلچر لازم دارم، لطفاً.",
+       "keys": [
+        "wheelchair"
+       ],
+       "then": [
+        "Of course. Please wait here. Someone will come.",
+        "البته. لطفاً همین‌جا منتظر بمانید. کسی می‌آید."
+       ],
+       "thenCheck": {
+        "right": "لطفاً همین‌جا منتظر بمانید. کسی می‌آید.",
+        "wrong": [
+         "لطفاً به گیت بروید. آنجا ویلچر هست.",
+         "متأسفم، ویلچر نداریم."
+        ]
+       }
+      },
+      {
+       "en": "Where is gate twelve?",
+       "fa": "گیت دوازده کجاست؟",
+       "keys": [
+        "gate"
+       ],
+       "then": [
+        "Go through security, then turn right.",
+        "از بازرسی رد شوید، بعد به راست بپیچید."
+       ],
+       "thenCheck": {
+        "right": "از بازرسی رد شوید، بعد به راست بپیچید.",
+        "wrong": [
+         "از بازرسی رد شوید، بعد به چپ بپیچید.",
+         "قبل از بازرسی به راست بپیچید."
+        ]
+       }
+      },
+      {
+       "en": "Is the flight on time?",
+       "fa": "پرواز سرِ وقت است؟",
+       "keys": [
+        "time",
+        "flight"
+       ],
+       "then": [
+        "Yes, it is on time.",
+        "بله، سرِ وقت است."
+       ],
+       "thenCheck": {
+        "right": "بله، سرِ وقت است.",
+        "wrong": [
+         "نه، تأخیر دارد.",
+         "نه، لغو شده است."
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "them": [
+      "Have a nice flight!",
+      "پرواز خوبی داشته باشید!"
+     ],
+     "replies": [
+      {
+       "en": "Thank you very much!",
+       "fa": "خیلی ممنون!",
+       "keys": [
+        "thank"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "rp-plane",
+   "scenario": "travel",
+   "stage": 2,
+   "title": "داخل هواپیما",
+   "setting": "در هواپیما نشسته‌اید و مهماندار با شما صحبت می‌کند.",
+   "goal": "به سؤال‌های مهماندار جواب بدهید و چیزی بخواهید.",
+   "them": {
+    "role": "مهماندار",
+    "persona": "a kind flight attendant serving passengers",
+    "voice": "k"
+   },
+   "turns": [
+    {
+     "them": [
+      "Welcome aboard. Can I see your boarding pass?",
+      "خوش آمدید. می‌شود کارت پروازتان را ببینم؟"
+     ],
+     "check": {
+      "q": "چه خواست؟",
+      "right": "کارت پروازتان را",
+      "wrong": [
+       "گذرنامه‌تان را",
+       "کیفتان را"
+      ]
+     },
+     "replies": [
+      {
+       "en": "Here you go. Can you help me with my bag?",
+       "fa": "بفرمایید. می‌شود کمک کنید کیفم را بالا بگذارم؟",
+       "keys": [
+        "help",
+        "bag"
+       ],
+       "then": [
+        "Of course. I will put it up here.",
+        "البته. آن را این بالا می‌گذارم."
+       ]
+      },
+      {
+       "en": "Here you go.",
+       "fa": "بفرمایید.",
+       "keys": [
+        "here"
+       ]
+      }
+     ]
+    },
+    {
+     "them": [
+      "Please fasten your seat belt.",
+      "لطفاً کمربندتان را ببندید."
+     ],
+     "check": {
+      "right": "لطفاً کمربندتان را ببندید.",
+      "wrong": [
+       "لطفاً کمربندتان را باز کنید.",
+       "لطفاً صندلی‌تان را عوض کنید."
+      ]
+     },
+     "replies": [
+      {
+       "en": "Okay. Thank you.",
+       "fa": "باشد. ممنون.",
+       "keys": [
+        "okay",
+        "thank"
+       ]
+      },
+      {
+       "en": "Can you help me, please?",
+       "fa": "می‌شود لطفاً کمکم کنید؟",
+       "keys": [
+        "help"
+       ],
+       "then": [
+        "Sure. Like this.",
+        "حتماً. این‌طوری."
+       ]
+      }
+     ]
+    },
+    {
+     "them": [
+      "Would you like chicken or pasta?",
+      "مرغ میل دارید یا پاستا؟"
+     ],
+     "check": {
+      "q": "چه پرسید؟",
+      "right": "مرغ میل دارید یا پاستا؟",
+      "wrong": [
+       "مرغ میل دارید یا ماهی؟",
+       "چای میل دارید یا قهوه؟"
+      ]
+     },
+     "replies": [
+      {
+       "en": "Chicken, please.",
+       "fa": "مرغ، لطفاً.",
+       "keys": [
+        "chicken"
+       ]
+      },
+      {
+       "en": "Pasta, please.",
+       "fa": "پاستا، لطفاً.",
+       "keys": [
+        "pasta"
+       ]
+      }
+     ]
+    },
+    {
+     "them": [
+      "And something to drink?",
+      "و نوشیدنی؟"
+     ],
+     "replies": [
+      {
+       "en": "Water, please.",
+       "fa": "آب، لطفاً.",
+       "keys": [
+        "water"
+       ]
+      },
+      {
+       "en": "Tea, please.",
+       "fa": "چای، لطفاً.",
+       "keys": [
+        "tea"
+       ]
+      }
+     ]
+    },
+    {
+     "them": [
+      "Is there anything else you need?",
+      "چیز دیگری لازم دارید؟"
+     ],
+     "replies": [
+      {
+       "en": "Can I have a blanket, please?",
+       "fa": "می‌شود لطفاً یک پتو بدهید؟",
+       "keys": [
+        "blanket"
+       ],
+       "then": [
+        "Here you are.",
+        "بفرمایید."
+       ]
+      },
+      {
+       "en": "I don't feel well.",
+       "fa": "حالم خوب نیست.",
+       "keys": [
+        "feel",
+        "well"
+       ],
+       "then": [
+        "I'm sorry. I will bring you some water.",
+        "متأسفم. برایتان آب می‌آورم."
+       ],
+       "thenCheck": {
+        "right": "متأسفم. برایتان آب می‌آورم.",
+        "wrong": [
+         "متأسفم. کاری از من برنمی‌آید.",
+         "متأسفم. برایتان دارو می‌آورم."
+        ]
+       }
+      },
+      {
+       "en": "No, thank you.",
+       "fa": "نه، ممنون.",
+       "keys": [
+        "no"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "rp-taxi",
+   "scenario": "directions",
+   "stage": 2,
+   "title": "سوار شدن به تاکسی",
+   "setting": "جلوی فرودگاه سوار تاکسی می‌شوید.",
+   "goal": "مقصد را بگویید و دربارهٔ زمان و کرایه بپرسید.",
+   "them": {
+    "role": "رانندهٔ تاکسی",
+    "persona": "a friendly taxi driver",
+    "voice": "m"
+   },
+   "turns": [
+    {
+     "them": [
+      "Hello! Where to?",
+      "سلام! کجا می‌روید؟"
+     ],
+     "replies": [
+      {
+       "en": "I'm going to this address.",
+       "fa": "به این آدرس می‌روم.",
+       "keys": [
+        "address"
+       ],
+       "then": [
+        "Okay. Twenty-five Oak Street.",
+        "باشد. خیابان اوک، پلاک بیست و پنج."
+       ],
+       "thenCheck": {
+        "q": "راننده کدام آدرس را تکرار کرد؟",
+        "right": "25 Oak Street",
+        "wrong": [
+         "29 Oak Street",
+         "25 Oak Avenue"
+        ]
+       }
+      },
+      {
+       "en": "To the hospital, please.",
+       "fa": "به بیمارستان، لطفاً.",
+       "keys": [
+        "hospital"
+       ],
+       "then": [
+        "Okay. The hospital.",
+        "باشد. بیمارستان."
+       ]
+      }
+     ],
+     "open": true
+    },
+    {
+     "them": [
+      "Do you have any bags?",
+      "ساک یا چمدانی دارید؟"
+     ],
+     "check": {
+      "q": "چه پرسید؟",
+      "right": "ساک یا چمدانی دارید؟",
+      "wrong": [
+       "پول نقد دارید؟",
+       "آدرس را دارید؟"
+      ]
+     },
+     "replies": [
+      {
+       "en": "Yes. Can you help me with my bags?",
+       "fa": "بله. می‌شود در بردن ساک‌هایم کمکم کنید؟",
+       "keys": [
+        "yes"
+       ],
+       "then": [
+        "Sure. I will put them in the trunk.",
+        "حتماً. آن‌ها را در صندوق عقب می‌گذارم."
+       ]
+      },
+      {
+       "en": "No, just this one.",
+       "fa": "نه، فقط همین یکی.",
+       "keys": [
+        "no",
+        "just"
+       ]
+      }
+     ]
+    },
+    {
+     "them": [
+      "Okay, let's go.",
+      "خب، برویم."
+     ],
+     "replies": [
+      {
+       "en": "How long will it take?",
+       "fa": "چقدر طول می‌کشد؟",
+       "keys": [
+        "long"
+       ],
+       "then": [
+        "About twenty minutes.",
+        "حدود بیست دقیقه."
+       ],
+       "thenCheck": {
+        "q": "چقدر طول می‌کشد؟",
+        "right": "حدود ۲۰ دقیقه",
+        "wrong": [
+         "حدود ۱۲ دقیقه",
+         "حدود ۳۰ دقیقه"
+        ]
+       }
+      },
+      {
+       "en": "How much will it cost?",
+       "fa": "کرایه‌اش چقدر می‌شود؟",
+       "keys": [
+        "much",
+        "cost"
+       ],
+       "then": [
+        "About thirty dollars.",
+        "حدود سی دلار."
+       ],
+       "thenCheck": {
+        "q": "کرایه حدود چقدر می‌شود؟",
+        "right": "$30",
+        "wrong": [
+         "$13",
+         "$40"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "them": [
+      "We're on the highway now.",
+      "(در راه) الان در بزرگراه هستیم."
+     ],
+     "replies": [
+      {
+       "en": "Please slow down.",
+       "fa": "لطفاً آهسته‌تر بروید.",
+       "keys": [
+        "slow",
+        "too fast"
+       ],
+       "then": [
+        "Oh, sorry. No problem.",
+        "ببخشید. مشکلی نیست."
+       ]
+      },
+      {
+       "en": "Okay. Thank you.",
+       "fa": "باشد. ممنون.",
+       "keys": [
+        "okay",
+        "thank"
+       ]
+      }
+     ]
+    },
+    {
+     "them": [
+      "Here we are. That's thirty dollars.",
+      "رسیدیم. سی دلار می‌شود."
+     ],
+     "check": {
+      "q": "چقدر باید بدهید؟",
+      "right": "$30",
+      "wrong": [
+       "$13",
+       "$50"
+      ]
+     },
+     "replies": [
+      {
+       "en": "Can I pay with a card?",
+       "fa": "می‌توانم با کارت پرداخت کنم؟",
+       "keys": [
+        "card"
+       ],
+       "then": [
+        "Yes, you can.",
+        "بله، می‌توانید."
+       ]
+      },
+      {
+       "en": "Here you go. Thank you.",
+       "fa": "بفرمایید. ممنون.",
+       "keys": [
+        "here"
+       ]
+      }
+     ]
+    },
+    {
+     "them": [
+      "Thank you. Have a good day!",
+      "ممنون. روز خوبی داشته باشید!"
+     ],
+     "replies": [
+      {
+       "en": "You too. Goodbye!",
+       "fa": "شما هم همین‌طور. خداحافظ!",
+       "keys": [
+        "too",
+        "bye",
+        "goodbye"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "rp-urgent",
+   "scenario": "clinic",
+   "stage": 2,
+   "safetyCritical": true,
+   "title": "درمانگاه فوری (Urgent Care)",
+   "setting": "بدون وقت قبلی به درمانگاه فوری رفته‌اید.",
+   "goal": "بگویید چه مشکلی دارید و دربارهٔ انتظار و بیمه بپرسید.",
+   "note": "این فقط تمرین زبان است و توصیهٔ پزشکی نیست.",
+   "them": {
+    "role": "منشی درمانگاه",
+    "persona": "an urgent care receptionist registering a walk-in patient; never give medical advice",
+    "voice": "b"
+   },
+   "turns": [
+    {
+     "them": [
+      "Hello. Do you have an appointment?",
+      "سلام. وقت قبلی دارید؟"
+     ],
+     "replies": [
+      {
+       "en": "No. I don't have an appointment.",
+       "fa": "نه. وقت قبلی ندارم.",
+       "keys": [
+        "no",
+        "don't"
+       ]
+      },
+      {
+       "en": "No. I'd like to see a doctor today.",
+       "fa": "نه. می‌خواهم امروز دکتر مرا ببیند.",
+       "keys": [
+        "doctor",
+        "today"
+       ]
+      }
+     ]
+    },
+    {
+     "them": [
+      "That's okay. What is the problem?",
+      "اشکالی ندارد. مشکل چیست؟"
+     ],
+     "check": {
+      "right": "اشکالی ندارد. مشکل چیست؟",
+      "wrong": [
+       "متأسفم. بدون وقت قبلی نمی‌شود.",
+       "اشکالی ندارد. فردا بیایید."
+      ]
+     },
+     "replies": [
+      {
+       "en": "I cut my hand.",
+       "fa": "دستم را بریده‌ام.",
+       "keys": [
+        "cut",
+        "hand"
+       ]
+      },
+      {
+       "en": "I have a fever and a cough.",
+       "fa": "تب دارم و سرفه می‌کنم.",
+       "keys": [
+        "fever",
+        "cough"
+       ]
+      },
+      {
+       "en": "My back hurts.",
+       "fa": "کمرم درد می‌کند.",
+       "keys": [
+        "back"
+       ]
+      }
+     ]
+    },
+    {
+     "them": [
+      "I'm sorry. Do you have insurance?",
+      "متأسفم. بیمه دارید؟"
+     ],
+     "replies": [
+      {
+       "en": "Yes. Do you take my insurance?",
+       "fa": "بله. بیمهٔ مرا قبول می‌کنید؟",
+       "keys": [
+        "yes",
+        "take",
+        "have insurance"
+       ],
+       "then": [
+        "Yes, we do.",
+        "بله، قبول می‌کنیم."
+       ]
+      },
+      {
+       "en": "No. How much is the visit?",
+       "fa": "نه. هزینهٔ ویزیت چقدر است؟",
+       "keys": [
+        "no",
+        "much",
+        "don't"
+       ],
+       "then": [
+        "I will give you the price list.",
+        "فهرست قیمت‌ها را به شما می‌دهم."
+       ],
+       "thenCheck": {
+        "right": "فهرست قیمت‌ها را به شما می‌دهم.",
+        "wrong": [
+         "ویزیت رایگان است.",
+         "بدون بیمه نمی‌توانیم شما را بپذیریم."
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "them": [
+      "Please fill out this form and have a seat.",
+      "لطفاً این فرم را پر کنید و بنشینید."
+     ],
+     "check": {
+      "right": "لطفاً این فرم را پر کنید و بنشینید.",
+      "wrong": [
+       "لطفاً این فرم را امضا کنید و بروید.",
+       "لطفاً این فرم را به دکتر بدهید."
+      ]
+     },
+     "replies": [
+      {
+       "en": "How long is the wait?",
+       "fa": "چقدر باید منتظر بمانم؟",
+       "keys": [
+        "long",
+        "wait"
+       ],
+       "then": [
+        "About thirty minutes.",
+        "حدود سی دقیقه."
+       ],
+       "thenCheck": {
+        "q": "چقدر باید منتظر بمانید؟",
+        "right": "حدود ۳۰ دقیقه",
+        "wrong": [
+         "حدود ۱۳ دقیقه",
+         "حدود ۳ ساعت"
+        ]
+       }
+      },
+      {
+       "en": "Can you help me with this form?",
+       "fa": "می‌شود در پر کردن این فرم کمکم کنید؟",
+       "keys": [
+        "help",
+        "form"
+       ],
+       "then": [
+        "Of course. Let's do it together.",
+        "البته. بیایید با هم پرش کنیم."
+       ]
+      }
+     ]
+    },
+    {
+     "them": [
+      "The nurse will call your name.",
+      "پرستار اسمتان را صدا می‌زند."
+     ],
+     "replies": [
+      {
+       "en": "Thank you.",
+       "fa": "ممنون.",
+       "keys": [
+        "thank"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "rp-bill",
+   "scenario": "phone",
+   "stage": 3,
+   "safetyCritical": true,
+   "title": "پرداخت قبض برق با تلفن",
+   "setting": "خودتان به شماره‌ای که روی قبض برق نوشته شده زنگ زده‌اید.",
+   "goal": "مبلغ قبض را بپرسید و شمارهٔ پیگیری بگیرید.",
+   "note": "در این تمرین شمارهٔ کارت یا حساب واقعی‌تان را نگویید. در واقعیت هم فقط وقتی شمارهٔ کارت بدهید که خودتان به شمارهٔ رسمیِ روی قبض زنگ زده‌اید.",
+   "phone": true,
+   "scripted": true,
+   "them": {
+    "role": "کارمند شرکت برق",
+    "persona": "",
+    "voice": "a"
+   },
+   "turns": [
+    {
+     "them": [
+      "Thank you for calling City Power. How can I help you?",
+      "ممنون که با شرکت برق تماس گرفتید. چه کمکی از من برمی‌آید؟"
+     ],
+     "replies": [
+      {
+       "en": "I'd like to pay my electricity bill.",
+       "fa": "می‌خواهم قبض برقم را بپردازم.",
+       "keys": [
+        "pay"
+       ]
+      },
+      {
+       "en": "How much do I owe?",
+       "fa": "چقدر بدهکارم؟",
+       "keys": [
+        "owe",
+        "much",
+        "much is my bill"
+       ]
+      }
+     ]
+    },
+    {
+     "them": [
+      "Sure. What is your account number?",
+      "حتماً. شمارهٔ اشتراکتان چند است؟"
+     ],
+     "check": {
+      "q": "کدام شماره را خواست؟",
+      "right": "شمارهٔ اشتراک",
+      "wrong": [
+       "شمارهٔ کارت بانکی",
+       "شمارهٔ تلفن"
+      ]
+     },
+     "replies": [
+      {
+       "en": "My account number is on the bill. One moment, please.",
+       "fa": "شمارهٔ اشتراکم روی قبض نوشته شده است. یک لحظه، لطفاً.",
+       "keys": [
+        "account",
+        "moment"
+       ],
+       "then": [
+        "Take your time.",
+        "عجله نکنید."
+       ]
+      }
+     ]
+    },
+    {
+     "them": [
+      "Thank you. You owe eighty-two dollars.",
+      "ممنون. هشتاد و دو دلار بدهکارید."
+     ],
+     "check": {
+      "q": "چقدر بدهکارید؟",
+      "right": "$82",
+      "wrong": [
+       "$28",
+       "$92"
+      ]
+     },
+     "replies": [
+      {
+       "en": "When is it due?",
+       "fa": "مهلت پرداختش تا کی است؟",
+       "keys": [
+        "due",
+        "when"
+       ],
+       "then": [
+        "It is due on Friday.",
+        "مهلت پرداختش جمعه است."
+       ],
+       "thenCheck": {
+        "q": "مهلت پرداخت تا چه روزی است؟",
+        "right": "جمعه",
+        "wrong": [
+         "پنج‌شنبه",
+         "شنبه"
+        ]
+       }
+      },
+      {
+       "en": "Okay. Thank you.",
+       "fa": "باشد. ممنون.",
+       "keys": [
+        "okay"
+       ]
+      }
+     ]
+    },
+    {
+     "them": [
+      "Would you like to pay now?",
+      "می‌خواهید همین الان پرداخت کنید؟"
+     ],
+     "replies": [
+      {
+       "en": "Yes, please.",
+       "fa": "بله، لطفاً.",
+       "keys": [
+        "yes",
+        "okay",
+        "pay now"
+       ],
+       "then": [
+        "Okay. One moment, please.",
+        "باشد. یک لحظه، لطفاً."
+       ]
+      }
+     ]
+    },
+    {
+     "them": [
+      "Your payment is complete. Is there anything else?",
+      "پرداخت شما انجام شد. کار دیگری دارید؟"
+     ],
+     "check": {
+      "right": "پرداخت شما انجام شد.",
+      "wrong": [
+       "پرداخت شما انجام نشد.",
+       "باید دوباره پرداخت کنید."
+      ]
+     },
+     "replies": [
+      {
+       "en": "Can I have a confirmation number?",
+       "fa": "می‌شود شمارهٔ پیگیری بدهید؟",
+       "keys": [
+        "confirmation",
+        "number"
+       ],
+       "then": [
+        "Yes. It is four, seven, two, nine.",
+        "بله. چهار، هفت، دو، نُه."
+       ],
+       "thenCheck": {
+        "q": "شمارهٔ پیگیری چیست؟",
+        "right": "4729",
+        "wrong": [
+         "4792",
+         "4279"
+        ]
+       }
+      },
+      {
+       "en": "No, thank you. Goodbye.",
+       "fa": "نه، ممنون. خداحافظ.",
+       "keys": [
+        "no",
+        "bye",
+        "goodbye"
+       ]
+      }
+     ]
+    }
+   ],
+   "praise": "خیلی خوب بود. یادتان باشد: شمارهٔ پیگیری را همیشه یادداشت کنید."
+  },
+  {
+   "id": "rp-salon",
+   "scenario": "services",
+   "stage": 2,
+   "title": "در آرایشگاه و سالن ناخن",
+   "setting": "وارد یک سالن آرایش شده‌اید.",
+   "goal": "بگویید چه خدمتی می‌خواهید و بگویید راضی هستید یا نه.",
+   "them": {
+    "role": "آرایشگر",
+    "persona": "a friendly hairdresser at a salon that also does nails",
+    "voice": "b"
+   },
+   "turns": [
+    {
+     "them": [
+      "Hi! Welcome. What can I do for you today?",
+      "سلام! خوش آمدید. امروز چه کاری برایتان انجام بدهم؟"
+     ],
+     "replies": [
+      {
+       "en": "I'd like a haircut, please.",
+       "fa": "می‌خواهم موهایم را کوتاه کنم، لطفاً.",
+       "keys": [
+        "haircut"
+       ]
+      },
+      {
+       "en": "I'd like a manicure, please.",
+       "fa": "مانیکور می‌خواهم، لطفاً.",
+       "keys": [
+        "manicure"
+       ]
+      },
+      {
+       "en": "I'd like a haircut. How much is it?",
+       "fa": "می‌خواهم موهایم را کوتاه کنم. قیمتش چقدر است؟",
+       "keys": [
+        "much"
+       ],
+       "then": [
+        "A haircut is twenty-five dollars.",
+        "کوتاه کردن مو بیست و پنج دلار است."
+       ],
+       "thenCheck": {
+        "q": "کوتاه کردن مو چقدر است؟",
+        "right": "$25",
+        "wrong": [
+         "$29",
+         "$45"
+        ]
+       }
+      }
+     ]
+    },
+    {
+     "them": [
+      "Sure. Please have a seat. How would you like it?",
+      "حتماً. بفرمایید بنشینید. چطور می‌خواهید؟"
+     ],
+     "replies": [
+      {
+       "en": "Just a trim, please.",
+       "fa": "فقط کمی کوتاه کنید، لطفاً.",
+       "keys": [
+        "trim"
+       ]
+      },
+      {
+       "en": "Short, please.",
+       "fa": "کوتاه، لطفاً.",
+       "keys": [
+        "short"
+       ]
+      },
+      {
+       "en": "This color, please.",
+       "fa": "این رنگ، لطفاً.",
+       "keys": [
+        "color"
+       ]
+      }
+     ]
+    },
+    {
+     "them": [
+      "Okay. How is this?",
+      "باشد. این‌طور چطور است؟"
+     ],
+     "check": {
+      "q": "چه پرسید؟",
+      "right": "این‌طور چطور است؟",
+      "wrong": [
+       "این چیست؟",
+       "حالتان چطور است؟"
+      ]
+     },
+     "replies": [
+      {
+       "en": "A little shorter, please.",
+       "fa": "کمی کوتاه‌تر، لطفاً.",
+       "keys": [
+        "shorter"
+       ],
+       "then": [
+        "No problem.",
+        "مشکلی نیست."
+       ]
+      },
+      {
+       "en": "That's good. Thank you.",
+       "fa": "خوب است. ممنون.",
+       "keys": [
+        "that's good",
+        "it's good",
+        "very good",
+        "looks good",
+        "good thank",
+        "i like",
+        "yes",
+        "okay",
+        "perfect",
+        "good"
+       ]
+      }
+     ]
+    },
+    {
+     "them": [
+      "All done! That's twenty-five dollars.",
+      "تمام شد! بیست و پنج دلار می‌شود."
+     ],
+     "check": {
+      "q": "چقدر باید بدهید؟",
+      "right": "$25",
+      "wrong": [
+       "$29",
+       "$35"
+      ]
+     },
+     "replies": [
+      {
+       "en": "Card, please.",
+       "fa": "کارت، لطفاً.",
+       "keys": [
+        "card"
+       ],
+       "then": [
+        "Sure. Please insert your card here.",
+        "حتماً. لطفاً کارتتان را اینجا وارد کنید."
+       ],
+       "thenCheck": {
+        "right": "لطفاً کارتتان را اینجا وارد کنید.",
+        "wrong": [
+         "لطفاً کارتتان را به من بدهید.",
+         "فقط پول نقد قبول می‌کنیم."
+        ]
+       }
+      },
+      {
+       "en": "Here you go. Thank you.",
+       "fa": "بفرمایید. ممنون.",
+       "keys": [
+        "here"
+       ]
+      }
+     ]
+    },
+    {
+     "them": [
+      "Thank you! See you next time.",
+      "ممنون! دفعهٔ بعد می‌بینمتان."
+     ],
+     "replies": [
+      {
+       "en": "Thank you. Goodbye!",
+       "fa": "ممنون. خداحافظ!",
+       "keys": [
+        "thank",
+        "bye",
+        "goodbye"
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

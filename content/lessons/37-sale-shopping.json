@@ -1,0 +1,174 @@
+{
+  "id": "sale-shopping",
+  "scenario": "store",
+  "stage": 3,
+  "minutes": 8,
+  "title": {
+    "fa": "حراج و خرید هدیه",
+    "en": "Sales and gift shopping"
+  },
+  "intro": "«بلک فرایدی» روزِ بعد از شکرگزاری است و فروشگاه‌ها حراج بزرگ دارند. قبل از کریسمس هم همه هدیه می‌خرند. در این درس دربارهٔ تخفیف، صف و رسید هدیه سؤال می‌کنید.",
+  "canDo": "حالا می‌توانید دربارهٔ قیمت حراج و تخفیف بپرسید و رسید هدیه بخواهید.",
+  "mission": "هر وقت جنسی حراج بود، قبل از خرید از فروشنده بپرسید: Is this the sale price?",
+  "them": {
+    "role": "فروشنده",
+    "voice": "a"
+  },
+  "phrases": [
+    {
+      "en": "Is this the sale price?",
+      "fa": "این قیمتِ حراج است؟",
+      "ph": "ایز دیس دِ سِیل پْرایس؟",
+      "note": "گاهی قیمتِ روی جنس هنوز قیمتِ قبل از تخفیف است.",
+      "chunks": [
+        "Is this",
+        "the sale price?"
+      ]
+    },
+    {
+      "en": "How much is it after the discount?",
+      "fa": "بعد از تخفیف چقدر می‌شود؟",
+      "ph": "هاو ماچ ایز ایت اَفتِر دِ دیسکاونت؟",
+      "note": "discount یعنی تخفیف.",
+      "chunks": [
+        "How much is it",
+        "after the discount?"
+      ]
+    },
+    {
+      "en": "Where does the line start?",
+      "fa": "صف از کجا شروع می‌شود؟",
+      "ph": "وِر داز دِ لاین سْتارت؟",
+      "note": "در روزهای حراج صف‌ها طولانی است.",
+      "chunks": [
+        "Where does",
+        "the line start?"
+      ]
+    },
+    {
+      "en": "Can I get a gift receipt?",
+      "fa": "می‌شود رسید هدیه بدهید؟",
+      "ph": "کَن آی گِت اِ گیفت ریسیت؟",
+      "note": "روی رسید هدیه قیمت نوشته نمی‌شود. کسی که هدیه را می‌گیرد می‌تواند با آن جنس را عوض کند.",
+      "chunks": [
+        "Can I get",
+        "a gift receipt?"
+      ]
+    },
+    {
+      "en": "Can I return it after the holidays?",
+      "fa": "بعد از تعطیلات می‌توانم پسش بدهم؟",
+      "ph": "کَن آی ریتِرن ایت اَفتِر دِ هالیدِیز؟",
+      "note": "قبل از خرید بپرسید تا کی می‌شود جنس را پس داد.",
+      "chunks": [
+        "Can I return it",
+        "after the holidays?"
+      ]
+    }
+  ],
+  "dialogue": {
+    "setting": "روز حراج است و فروشگاه خیلی شلوغ است.",
+    "lines": [
+      [
+        "you",
+        "Excuse me. Is this the sale price?",
+        "ببخشید. این قیمتِ حراج است؟"
+      ],
+      [
+        "them",
+        "Yes. Everything in this section is forty percent off.",
+        "بله. همهٔ جنس‌های این قسمت چهل درصد تخفیف دارد."
+      ],
+      [
+        "you",
+        "How much is it after the discount?",
+        "بعد از تخفیف چقدر می‌شود؟"
+      ],
+      [
+        "them",
+        "It's thirty dollars.",
+        "سی دلار."
+      ],
+      [
+        "you",
+        "Good. Where does the line start?",
+        "خوب است. صف از کجا شروع می‌شود؟"
+      ],
+      [
+        "them",
+        "The line starts over there, by the door.",
+        "صف از آنجا شروع می‌شود، کنار در."
+      ],
+      [
+        "you",
+        "Thank you. Can I get a gift receipt?",
+        "ممنون. می‌شود رسید هدیه بدهید؟"
+      ],
+      [
+        "them",
+        "Sure. Just ask the cashier.",
+        "حتماً. کافی است به صندوق‌دار بگویید."
+      ]
+    ]
+  },
+  "respond": {
+    "setting": "پای صندوق، صندوق‌دار می‌پرسد:",
+    "them": [
+      "Is this a gift?",
+      "این هدیه است؟"
+    ],
+    "ok": [
+      [
+        "Yes. Can I get a gift receipt?",
+        "بله. می‌شود رسید هدیه بدهید؟"
+      ],
+      [
+        "No, it's for me.",
+        "نه، برای خودم است."
+      ]
+    ],
+    "off": [
+      "Where does the line start?",
+      "صف از کجا شروع می‌شود؟",
+      "شما الان پای صندوق هستید. صندوق‌دار پرسید این خرید هدیه است یا نه."
+    ],
+    "off2": 1
+  },
+  "task": [
+    [
+      "می‌خواهید بدانید اگر نوه‌تان هدیه را دوست نداشت، می‌شود آن را پس داد یا نه.",
+      5
+    ],
+    [
+      "فروشگاه خیلی شلوغ است و نمی‌دانید کجا باید بایستید.",
+      3
+    ]
+  ],
+  "grammar": {
+    "title": "… percent off",
+    "explain": "برای تخفیف، اول عددِ درصد را می‌گویند و آخرش «off». «Half price» یعنی نصف قیمت.",
+    "examples": [
+      [
+        "Forty percent off.",
+        "چهل درصد تخفیف."
+      ],
+      [
+        "It's half price.",
+        "نصف قیمت است."
+      ],
+      [
+        "Buy one, get one free.",
+        "یکی بخرید، یکی رایگان ببرید."
+      ]
+    ],
+    "wrong": "It is off forty percent.",
+    "right": "It's forty percent off.",
+    "why": "کلمهٔ «off» آخر می‌آید."
+  },
+  "review": {
+    "status": "draft",
+    "language": null,
+    "teaching": null,
+    "safety": null
+  }
+}

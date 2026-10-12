@@ -1,0 +1,171 @@
+{
+  "id": "work-first-day",
+  "scenario": "work",
+  "stage": 3,
+  "minutes": 9,
+  "title": {
+    "fa": "روزهای اول سر کار",
+    "en": "First days at work"
+  },
+  "intro": "در این درس یاد می‌گیرید سر کار بپرسید چه کاری را چطور انجام بدهید، وقت استراحتتان کی است و اگر مریض شدید چطور خبر بدهید.",
+  "canDo": "حالا می‌توانید سر کار سؤال کنید، بگویید کارتان تمام شده و خبر بدهید که نمی‌توانید بیایید.",
+  "mission": "هر جا کاری را بلد نبودید، سرِ کار، در کلاس یا در فروشگاه، بپرسید: Can you show me how to do this?",
+  "them": {
+    "role": "سرپرست",
+    "voice": "k"
+  },
+  "phrases": [
+    {
+      "en": "What time do I start?",
+      "fa": "چه ساعتی شروع کنم؟",
+      "ph": "وات تایم دو آی سْتارت؟",
+      "note": "برای پایان کار: «What time do I finish?\u200e»",
+      "chunks": [
+        "What time",
+        "do I start?"
+      ]
+    },
+    {
+      "en": "Can you show me how to do this?",
+      "fa": "می‌شود نشانم بدهید این را چطور انجام بدهم؟",
+      "ph": "کَن یو شُو می هاو تو دو دیس؟",
+      "note": "پرسیدن بهتر از اشتباه انجام دادن است.",
+      "chunks": [
+        "Can you show me",
+        "how to do this?"
+      ]
+    },
+    {
+      "en": "I'm done. What should I do next?",
+      "fa": "کارم تمام شد. حالا چه کار کنم؟",
+      "ph": "آیْم دان. وات شُد آی دو نِکست؟",
+      "note": "وقتی کاری که به شما داده‌اند تمام شده است.",
+      "chunks": [
+        "I'm done.",
+        "What should I do",
+        "next?"
+      ]
+    },
+    {
+      "en": "When is my break?",
+      "fa": "وقت استراحتم کی است؟",
+      "ph": "وِن ایز مای بْرِیک؟",
+      "note": "break یعنی وقت استراحت و lunch break یعنی وقت ناهار.",
+      "chunks": [
+        "When is",
+        "my break?"
+      ]
+    },
+    {
+      "en": "I can't come to work today. I'm sick.",
+      "fa": "امروز نمی‌توانم سر کار بیایم. مریضم.",
+      "ph": "آی کَنت کام تو وِرک تودِی. آیْم سیک",
+      "note": "هر چه زودتر، قبل از شروع ساعت کار، زنگ بزنید یا پیام بدهید.",
+      "chunks": [
+        "I can't come",
+        "to work today.",
+        "I'm sick."
+      ]
+    }
+  ],
+  "dialogue": {
+    "setting": "روز اول کارتان است و سرپرست به شما خوشامد می‌گوید.",
+    "lines": [
+      [
+        "them",
+        "Good morning! Welcome to your first day.",
+        "صبح به‌خیر! به روز اول کارتان خوش آمدید."
+      ],
+      [
+        "you",
+        "Good morning. Thank you.",
+        "صبح به‌خیر. ممنون."
+      ],
+      [
+        "them",
+        "You'll work at this table. Do you have any questions?",
+        "شما سر این میز کار می‌کنید. سؤالی دارید؟"
+      ],
+      [
+        "you",
+        "Yes. Can you show me how to do this?",
+        "بله. می‌شود نشانم بدهید این را چطور انجام بدهم؟"
+      ],
+      [
+        "them",
+        "Of course. Watch me first, then you try.",
+        "البته. اول نگاه کنید، بعد خودتان امتحان کنید."
+      ],
+      [
+        "you",
+        "Okay. When is my break?",
+        "باشد. وقت استراحتم کی است؟"
+      ],
+      [
+        "them",
+        "Your break is at twelve. It's thirty minutes.",
+        "استراحتتان ساعت دوازده است. سی دقیقه."
+      ]
+    ]
+  },
+  "respond": {
+    "setting": "سرپرست برنامهٔ هفتهٔ بعد را می‌چیند.",
+    "them": [
+      "Can you work on Saturday?",
+      "شنبه می‌توانید کار کنید؟"
+    ],
+    "ok": [
+      [
+        "Yes, I can. What time do I start?",
+        "بله، می‌توانم. چه ساعتی شروع کنم؟"
+      ],
+      [
+        "I'm sorry, I can't on Saturday.",
+        "متأسفم، شنبه نمی‌توانم."
+      ]
+    ],
+    "off": [
+      "When is my break?",
+      "وقت استراحتم کی است؟",
+      "سرپرست پرسید شنبه می‌توانید بیایید یا نه. اول جواب او را بدهید."
+    ],
+    "off2": 3
+  },
+  "task": [
+    [
+      "صبح با تب از خواب بیدار شده‌اید و به محل کار زنگ می‌زنید.",
+      5
+    ],
+    [
+      "کاری را که به شما داده بودند تمام کرده‌اید.",
+      3
+    ]
+  ],
+  "grammar": {
+    "title": "Yes, I can. / No, I can't.",
+    "explain": "وقتی می‌پرسند «Can you …\u200e؟»، جواب کوتاه «Yes, I can» یا «No, I can't» است. بعد از can فعل بدون «to» می‌آید.",
+    "examples": [
+      [
+        "Yes, I can.",
+        "بله، می‌توانم."
+      ],
+      [
+        "No, I can't.",
+        "نه، نمی‌توانم."
+      ],
+      [
+        "I can work on Monday.",
+        "دوشنبه می‌توانم کار کنم."
+      ]
+    ],
+    "wrong": "I can to work on Monday.",
+    "right": "I can work on Monday.",
+    "why": "بعد از «can» کلمهٔ «to» نمی‌آید."
+  },
+  "review": {
+    "status": "draft",
+    "language": null,
+    "teaching": null,
+    "safety": null
+  }
+}

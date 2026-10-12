@@ -1,0 +1,68 @@
+{
+  "_comment": "How the voice generator should read text. Numbers, dates, phone numbers and spelled names are handled by tools/spoken.mjs; this file holds the exceptions. 'exact' replaces a whole English sentence; 'replace' swaps a fragment in English text; 'replaceFa' swaps a fragment in Farsi text. The letters of the alphabet are in 'exact' with a full stop after them (\"A.\"), so that each is read as the name of the letter standing alone: the letter A must not sound like the article \"a\".",
+  "exact": {
+    "A": "A.",
+    "B": "B.",
+    "C": "C.",
+    "D": "D.",
+    "E": "E.",
+    "F": "F.",
+    "G": "G.",
+    "H": "H.",
+    "I": "I.",
+    "J": "J.",
+    "K": "K.",
+    "L": "L.",
+    "M": "M.",
+    "N": "N.",
+    "O": "O.",
+    "P": "P.",
+    "Q": "Q.",
+    "R": "R.",
+    "S": "S.",
+    "T": "T.",
+    "U": "U.",
+    "V": "V.",
+    "W": "W.",
+    "X": "X.",
+    "Y": "Y.",
+    "Z": "Z.",
+    "A as in apple.": "A, as in apple."
+  },
+  "replace": [
+    [
+      "911,",
+      "Nine one one,"
+    ],
+    [
+      "911",
+      "nine one one"
+    ],
+    [
+      "ID",
+      "I.D."
+    ],
+    [
+      "PIN",
+      "pin"
+    ],
+    [
+      "copay",
+      "co-pay"
+    ],
+    [
+      "Copay",
+      "Co-pay"
+    ],
+    [
+      "Nowruz",
+      "Norooz"
+    ]
+  ],
+  "replaceFa": [
+    [
+      "‎",
+      ""
+    ]
+  ]
+}

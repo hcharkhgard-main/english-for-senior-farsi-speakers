@@ -1,0 +1,195 @@
+{
+  "id": "urgent-care",
+  "scenario": "clinic",
+  "stage": 2,
+  "minutes": 9,
+  "safetyCritical": true,
+  "title": {
+    "fa": "درمانگاه فوری (بدون وقت قبلی)",
+    "en": "Urgent care"
+  },
+  "intro": "درمانگاه فوری (Urgent care) جایی است که بدون وقت قبلی می‌شود رفت، برای مشکلی که خطر جانی ندارد ولی نمی‌شود چند روز برایش صبر کرد. اگر مطمئن نیستید کجا باید بروید، به مطب دکترتان زنگ بزنید؛ در وضعیت اضطراری با ۹۱۱ تماس بگیرید. در این درس جمله‌های لازم را یاد می‌گیرید.",
+  "note": "این درس برای یادگیری زبان است و توصیهٔ پزشکی نیست. در وضعیت اضطراری با ۹۱۱ تماس بگیرید.",
+  "canDo": "حالا می‌توانید در درمانگاه فوری بگویید وقت قبلی ندارید و مشکلتان چیست.",
+  "mission": "در محله‌تان دنبال تابلوی Urgent Care بگردید یا از خانواده بپرسید نزدیک‌ترینش کجاست، و آدرسش را در گوشی‌تان نگه دارید.",
+  "them": {
+    "role": "منشی درمانگاه",
+    "voice": "b"
+  },
+  "phrases": [
+    {
+      "en": "I don't have an appointment.",
+      "fa": "وقت قبلی ندارم.",
+      "ph": "آی دُنت هَو اَن اَپُینتمِنت",
+      "note": "در درمانگاه فوری وقت قبلی لازم نیست.",
+      "chunks": [
+        "I don't have",
+        "an appointment."
+      ]
+    },
+    {
+      "en": "I'd like to see a doctor today.",
+      "fa": "می‌خواهم امروز دکتر مرا ببیند.",
+      "ph": "آیْد لایک تو سی اِ داکتِر تودِی",
+      "note": "اول فرمی به شما می‌دهند که اسم و آدرستان را بنویسید.",
+      "chunks": [
+        "I'd like",
+        "to see a doctor",
+        "today."
+      ]
+    },
+    {
+      "en": "I cut my hand.",
+      "fa": "دستم را بریده‌ام.",
+      "ph": "آی کات مای هَند",
+      "note": "I fell یعنی زمین خوردم؛ I burned my hand یعنی دستم سوخت.",
+      "chunks": [
+        "I cut",
+        "my hand."
+      ]
+    },
+    {
+      "en": "How long is the wait?",
+      "fa": "چقدر باید منتظر بمانم؟",
+      "ph": "هاو لانگ ایز دِ وِیت؟",
+      "note": "wait یعنی انتظار.",
+      "chunks": [
+        "How long",
+        "is the wait?"
+      ]
+    },
+    {
+      "en": "Do you take my insurance?",
+      "fa": "بیمهٔ مرا قبول می‌کنید؟",
+      "ph": "دو یو تِیک مای اینشورِنس؟",
+      "note": "کارت بیمه‌تان را نشان بدهید. اگر بیمه ندارید، بپرسید: «How much is the visit?\u200e»",
+      "chunks": [
+        "Do you take",
+        "my insurance?"
+      ]
+    }
+  ],
+  "dialogue": {
+    "setting": "دستتان را بریده‌اید و به درمانگاه فوری رفته‌اید.",
+    "lines": [
+      [
+        "them",
+        "Hello. How can I help you?",
+        "سلام. چه کمکی از من برمی‌آید؟"
+      ],
+      [
+        "you",
+        "Hello. I don't have an appointment. I'd like to see a doctor today.",
+        "سلام. وقت قبلی ندارم. می‌خواهم امروز دکتر مرا ببیند."
+      ],
+      [
+        "them",
+        "That's okay. What is the problem?",
+        "اشکالی ندارد. مشکل چیست؟"
+      ],
+      [
+        "you",
+        "I cut my hand.",
+        "دستم را بریده‌ام."
+      ],
+      [
+        "them",
+        "I'm sorry. Please fill out this form. Do you have insurance?",
+        "متأسفم. لطفاً این فرم را پر کنید. بیمه دارید؟"
+      ],
+      [
+        "you",
+        "Yes. Do you take my insurance?",
+        "بله. بیمهٔ مرا قبول می‌کنید؟"
+      ],
+      [
+        "them",
+        "Yes, we do. Please have a seat.",
+        "بله، قبول می‌کنیم. لطفاً بنشینید."
+      ],
+      [
+        "you",
+        "Thank you. How long is the wait?",
+        "ممنون. چقدر باید منتظر بمانم؟"
+      ]
+    ]
+  },
+  "respond": {
+    "setting": "تازه وارد درمانگاه شده‌اید و منشی می‌پرسد.",
+    "them": [
+      "Do you have an appointment?",
+      "وقت قبلی دارید؟"
+    ],
+    "ok": [
+      [
+        "No. I don't have an appointment.",
+        "نه. وقت قبلی ندارم."
+      ],
+      [
+        "No. I'd like to see a doctor today.",
+        "نه. می‌خواهم امروز دکتر مرا ببیند."
+      ]
+    ],
+    "off": [
+      "How long is the wait?",
+      "چقدر باید منتظر بمانم؟",
+      "اول جواب منشی را بدهید: وقت قبلی دارید یا نه؟"
+    ],
+    "off2": 5
+  },
+  "variants": [
+    {
+      "en": "What are you here for today?",
+      "fa": "امروز برای چه آمده‌اید؟",
+      "like": "That's okay. What is the problem?"
+    },
+    {
+      "en": "Can you fill this out for me?",
+      "fa": "می‌شود این را پر کنید؟",
+      "like": "I'm sorry. Please fill out this form. Do you have insurance?",
+      "voice": "m"
+    },
+    {
+      "en": "Go ahead and take a seat.",
+      "fa": "بفرمایید بنشینید.",
+      "like": "Yes, we do. Please have a seat."
+    }
+  ],
+  "task": [
+    [
+      "نیم ساعت است نشسته‌اید و می‌خواهید بدانید چقدر دیگر باید صبر کنید.",
+      4
+    ],
+    [
+      "کارت بیمه در دستتان است و نمی‌دانید اینجا قبولش می‌کنند یا نه.",
+      5
+    ]
+  ],
+  "grammar": {
+    "title": "cut / fell / hurt",
+    "explain": "برای اتفاقی که افتاده، فعل شکل گذشته می‌گیرد. بعضی فعل‌ها شکل گذشتهٔ مخصوص دارند (fall می‌شود fell) و بعضی اصلاً عوض نمی‌شوند (cut و hurt).",
+    "examples": [
+      [
+        "I cut my hand.",
+        "دستم را بریده‌ام."
+      ],
+      [
+        "I fell down.",
+        "زمین خوردم."
+      ],
+      [
+        "I hurt my back.",
+        "کمرم آسیب دید."
+      ]
+    ],
+    "wrong": "I fall down yesterday.",
+    "right": "I fell down yesterday.",
+    "why": "گذشتهٔ «fall» می‌شود «fell»."
+  },
+  "review": {
+    "status": "draft",
+    "language": null,
+    "teaching": null,
+    "safety": null
+  }
+}

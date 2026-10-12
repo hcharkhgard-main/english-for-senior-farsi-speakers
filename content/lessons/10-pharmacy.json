@@ -1,0 +1,64 @@
+{
+  "id": "pharmacy",
+  "scenario": "clinic",
+  "stage": 2,
+  "order": 10,
+  "minutes": 8,
+  "safetyCritical": true,
+  "title": { "fa": "گرفتن دارو از داروخانه", "en": "At the pharmacy" },
+  "intro": "در این درس یاد می‌گیرید داروی نسخه‌تان را بگیرید و از داروساز بپرسید چطور باید آن را مصرف کنید.",
+  "note": "این درس برای یادگیری زبان است. برای طرز مصرف دارو همیشه به حرف دکتر و داروساز خودتان عمل کنید.",
+  "canDo": "حالا می‌توانید داروی نسخه‌تان را بگیرید و بپرسید چطور باید مصرفش کنید.",
+  "mission": "دفعهٔ بعد که دارو می‌گیرید، خودتان بگویید: I'm here to pick up my prescription.",
+  "them": { "role": "داروساز", "voice": "m" },
+  "phrases": [
+    { "en": "I'm here to pick up my prescription.", "fa": "آمده‌ام داروی نسخه‌ام را بگیرم.", "ph": "آیْم هی‌یِر تو پیک آپ مای پْرِسکْریپشِن", "note": "prescription یعنی نسخه. بعدش اسم و تاریخ تولدتان را می‌پرسند.", "chunks": ["I'm here", "to pick up", "my prescription."] },
+    { "en": "How do I take this medicine?", "fa": "این دارو را چطور باید مصرف کنم؟", "ph": "هاو دو آی تِیک دیس مِدیسِن؟", "note": "داروساز می‌تواند رایگان برایتان توضیح بدهد. حتماً بپرسید.", "chunks": ["How do I take", "this medicine?"] },
+    { "en": "How many times a day?", "fa": "روزی چند بار؟", "ph": "هاو مِنی تایمز اِ دِی؟", "note": "once یعنی یک بار، twice یعنی دو بار، three times یعنی سه بار.", "chunks": ["How many times", "a day?"] },
+    { "en": "Should I take it with food?", "fa": "باید با غذا بخورم؟", "ph": "شُد آی تِیک ایت ویت فود؟", "note": "with food یعنی همراه غذا.", "chunks": ["Should I take it", "with food?"] },
+    { "en": "Could you write that down, please?", "fa": "می‌شود لطفاً آن را بنویسید؟", "ph": "کُد یو رایت دَت داون، پْلیز؟", "note": "نوشته را می‌توانید بعداً به خانواده‌تان هم نشان بدهید.", "chunks": ["Could you", "write that down,", "please?"] }
+  ],
+  "dialogue": {
+    "setting": "در داروخانه، نوبت شماست.",
+    "lines": [
+      ["you", "Hello. I'm here to pick up my prescription.", "سلام. آمده‌ام داروی نسخه‌ام را بگیرم."],
+      ["them", "Sure. What's your name and date of birth?", "حتماً. اسم و تاریخ تولدتان چیست؟"],
+      ["you", "Maryam Ahmadi. March 5th, 1958.", "مریم احمدی. ۵ مارس ۱۹۵۸."],
+      ["them", "Here it is. Do you have any questions about your medicine?", "بفرمایید. دربارهٔ دارویتان سؤالی دارید؟"],
+      ["you", "Yes. How do I take this medicine?", "بله. این دارو را چطور باید مصرف کنم؟"],
+      ["them", "The directions are on the label. I can go over them with you.", "دستور مصرف روی برچسب نوشته شده است. می‌توانیم با هم مرورش کنیم."],
+      ["you", "Yes, please.", "بله، لطفاً."]
+    ]
+  },
+  "respond": {
+    "setting": "داروساز دارو را به شما داده است.",
+    "them": ["Do you have any questions for me?", "از من سؤالی دارید؟"],
+    "ok": [
+      ["Yes. How do I take this medicine?", "بله. این دارو را چطور باید مصرف کنم؟"],
+      ["How many times a day?", "روزی چند بار؟"],
+      ["Should I take it with food?", "باید با غذا بخورم؟"]
+    ],
+    "off": ["I'm here to pick up my prescription.", "آمده‌ام داروی نسخه‌ام را بگیرم.", "دارو را گرفته‌اید. حالا وقت پرسیدنِ طرز مصرف است."]
+  },
+  "variants": [
+    { "en": "Last name and date of birth?", "fa": "نام خانوادگی و تاریخ تولدتان؟", "like": "Sure. What's your name and date of birth?", "voice": "b" },
+    { "en": "Do you have any questions for the pharmacist?", "fa": "از داروساز سؤالی دارید؟", "like": "Do you have any questions for me?" }
+  ],
+  "task": [
+    ["داروساز توضیح می‌دهد، ولی می‌ترسید یادتان برود.", 5],
+    ["نمی‌دانید دارو را با شکم خالی بخورید یا همراه غذا.", 4]
+  ],
+  "grammar": {
+    "title": "How … ?",
+    "explain": "سؤال‌هایی که با «How» شروع می‌شوند یعنی «چطور» یا «چقدر». وقتی می‌پرسید کاری را چطور انجام بدهید، بعد از How بگویید «do I» و بعد آن کار.",
+    "examples": [
+      ["How do I take this?", "این را چطور مصرف کنم؟"],
+      ["How many times a day?", "روزی چند بار؟"],
+      ["How much is it?", "قیمتش چقدر است؟"]
+    ],
+    "wrong": "How I take this?",
+    "right": "How do I take this?",
+    "why": "وقتی بعد از How یک کار (مثل take) می‌آید، بین How و I کلمهٔ «do» لازم است: «How do I take this?\u200e» ولی «How many» و «How much» همین‌طور که هستند درست‌اند."
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

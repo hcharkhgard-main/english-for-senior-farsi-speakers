@@ -1,0 +1,59 @@
+{
+  "id": "directions-ask",
+  "scenario": "directions",
+  "stage": 1,
+  "order": 5,
+  "minutes": 8,
+  "title": { "fa": "پرسیدن آدرس", "en": "Asking for directions" },
+  "intro": "در این درس یاد می‌گیرید آدرس بپرسید و کلمه‌های چپ، راست و مستقیم را بفهمید.",
+  "canDo": "حالا می‌توانید آدرس جایی را بپرسید و راهنمایی ساده را بفهمید.",
+  "mission": "بارِ بعد که بیرون رفتید، از کارمند یک مغازه یا از یک رهگذر بپرسید: Excuse me. Where is the bus stop?",
+  "them": { "role": "رهگذر", "voice": "m" },
+  "phrases": [
+    { "en": "Where is the bus stop?", "fa": "ایستگاه اتوبوس کجاست؟", "ph": "وِر ایز دِ باس سْتاپ؟", "note": "به‌جای bus stop اسم هر جایی را بگویید: pharmacy (داروخانه)، bank (بانک).", "chunks": ["Where is", "the bus stop?"] },
+    { "en": "Is it far from here?", "fa": "از اینجا دور است؟", "ph": "ایز ایت فار فْرام هی‌یِر؟", "note": "برای اینکه بدانید می‌شود پیاده رفت یا نه.", "chunks": ["Is it far", "from here?"] },
+    { "en": "Go straight, then turn left.", "fa": "مستقیم بروید، بعد به چپ بپیچید.", "ph": "گُو سْتْرِیت، دِن تِرن لِفت", "note": "این را بیشتر می‌شنوید. left یعنی چپ و right یعنی راست.", "chunks": ["Go straight,", "then", "turn left."] },
+    { "en": "It's on the right.", "fa": "سمت راست است.", "ph": "ایتس آن دِ رایت", "note": "on the left یعنی سمت چپ.", "chunks": ["It's", "on the right."] },
+    { "en": "Can you show me on the map?", "fa": "می‌شود روی نقشه نشانم بدهید؟", "ph": "کَن یو شُو می آن دِ مَپ؟", "note": "نقشهٔ گوشی‌تان را نشان بدهید و این را بگویید.", "chunks": ["Can you show me", "on the map?"] }
+  ],
+  "dialogue": {
+    "setting": "در خیابان هستید و ایستگاه اتوبوس را پیدا نمی‌کنید.",
+    "lines": [
+      ["you", "Excuse me. Where is the bus stop?", "ببخشید. ایستگاه اتوبوس کجاست؟"],
+      ["them", "Go straight, then turn left. It's on the right.", "مستقیم بروید، بعد به چپ بپیچید. سمت راست است."],
+      ["you", "Could you repeat that, please?", "می‌شود لطفاً دوباره بگویید؟"],
+      ["them", "Go straight, then turn left. It's on the right.", "مستقیم بروید، بعد به چپ بپیچید. سمت راست است."],
+      ["you", "Is it far from here?", "از اینجا دور است؟"],
+      ["them", "No, it's very close. About two minutes.", "نه، خیلی نزدیک است. حدود دو دقیقه."],
+      ["you", "Thank you very much!", "خیلی ممنون!"],
+      ["them", "You're welcome. Have a nice day!", "خواهش می‌کنم. روز خوبی داشته باشید!"]
+    ]
+  },
+  "respond": {
+    "setting": "رهگذری می‌بیند که دور و برتان را نگاه می‌کنید.",
+    "them": ["Are you lost? Can I help you?", "راه را گم کرده‌اید؟ می‌توانم کمکتان کنم؟"],
+    "ok": [
+      ["Yes, please. Where is the bus stop?", "بله، لطفاً. ایستگاه اتوبوس کجاست؟"],
+      ["Can you show me on the map?", "می‌شود روی نقشه نشانم بدهید؟"]
+    ],
+    "off": ["It's on the right.", "سمت راست است.", "این جمله را کسی می‌گوید که دارد آدرس می‌دهد. شما باید بگویید کجا می‌خواهید بروید یا آدرس را بپرسید."],
+    "off2": 3
+  },
+  "task": [
+    ["می‌خواهید بدانید می‌توانید پیاده بروید یا راه زیاد است.", 2],
+    ["راهنمایی را نمی‌فهمید، ولی گوشی‌تان نقشه دارد.", 5]
+  ],
+  "grammar": {
+    "title": "on the left / on the right",
+    "explain": "وقتی می‌گوییم چیزی «سمت چپ» یا «سمت راست» است، «on the» می‌آید. بعد از turn فقط left یا right می‌گوییم: Turn left. برای «کنارِ» بگویید «next to».",
+    "examples": [
+      ["It's on the left.", "سمت چپ است."],
+      ["It's on the right.", "سمت راست است."],
+      ["It's next to the bank.", "کنار بانک است."]
+    ],
+    "wrong": "It's in the right.",
+    "right": "It's on the right.",
+    "why": "برای «سمتِ …» می‌گوییم «on the left / on the right»، نه «in»."
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

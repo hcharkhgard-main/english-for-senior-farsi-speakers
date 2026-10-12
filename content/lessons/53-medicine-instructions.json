@@ -1,0 +1,63 @@
+{
+  "id": "medicine-instructions",
+  "scenario": "clinic",
+  "stage": 2,
+  "order": 53,
+  "minutes": 7,
+  "safetyCritical": true,
+  "listenFirst": true,
+  "title": { "fa": "فهمیدن دستور مصرف دارو", "en": "Understanding medicine instructions" },
+  "intro": "این درس بیشتر برای گوش دادن است. داروساز یا دکتر دربارهٔ طرز مصرف دارو جمله‌هایی مثل این‌ها می‌گوید. لازم نیست خودتان بگویید؛ کافی است وقتی شنیدید، بفهمید.",
+  "note": "این جمله‌ها فقط نمونه‌اند، برای یادگیری زبان. دستور واقعی داروی شما همان است که روی برچسب داروی خودتان نوشته شده و داروساز خودتان می‌گوید. همیشه بخواهید دستور را برایتان بنویسند.",
+  "canDo": "حالا می‌توانید جمله‌های ساده دربارهٔ طرز مصرف دارو را وقتی می‌شنوید بفهمید.",
+  "mission": "برچسب یکی از داروهایتان را نگاه کنید و کلمه‌های آشنای این درس را رویش پیدا کنید، مثل tablet یا twice؛ هر چه را نفهمیدید حدس نزنید و از داروسازتان بپرسید.",
+  "them": { "role": "داروساز", "voice": "m" },
+  "phrases": [
+    { "en": "Take one tablet twice a day.", "fa": "روزی دو بار، هر بار یک قرص بخورید.", "ph": "تِیک وان تَبلِت تْوایس اِ دِی", "note": "«tablet» و «pill» هر دو یعنی قرص. «twice a day» یعنی روزی دو بار. به عددها خوب گوش کنید.", "voice": "m", "chunks": ["Take one tablet", "twice a day."] },
+    { "en": "Take it with food.", "fa": "آن را همراه غذا بخورید.", "ph": "تِیک ایت ویت فود", "note": "برعکسِ آن «on an empty stomach» است، یعنی با معدهٔ خالی.", "voice": "m", "chunks": ["Take it", "with food."] },
+    { "en": "Take it for ten days.", "fa": "آن را ده روز بخورید.", "ph": "تِیک ایت فُر تِن دِیز", "note": "«for ten days» یعنی به مدت ده روز. مدت را خوب گوش کنید: «seven days» (هفت روز)، «two weeks» (دو هفته).", "voice": "m", "chunks": ["Take it", "for ten days."] },
+    { "en": "Don't drive after taking this.", "fa": "بعد از خوردن این دارو رانندگی نکنید.", "ph": "دُنت دْرایو اَفتِر تِیکینگ دیس", "note": "هر وقت «Don't» شنیدید، یعنی کاری را نباید بکنید. بخواهید دوباره بگویند تا مطمئن شوید درست فهمیده‌اید.", "voice": "m", "chunks": ["Don't drive", "after taking this."] },
+    { "en": "Come back in two weeks.", "fa": "دو هفتهٔ دیگر دوباره بیایید.", "ph": "کام بَک این تو ویکس", "note": "این را بیشتر دکتر می‌گوید. «in two weeks» یعنی دو هفتهٔ دیگر.", "voice": "m", "chunks": ["Come back", "in two weeks."] }
+  ],
+  "dialogue": {
+    "setting": "در داروخانه، داروساز دارو را به شما می‌دهد و طرز مصرفش را می‌گوید.",
+    "lines": [
+      ["them", "Here is your medicine. Take one tablet twice a day.", "این داروی شماست. روزی دو بار، هر بار یک قرص بخورید."],
+      ["you", "One tablet, twice a day. Okay.", "یک قرص، روزی دو بار. باشد."],
+      ["them", "Take it with food.", "آن را همراه غذا بخورید."],
+      ["you", "With food. For how many days?", "همراه غذا. چند روز؟"],
+      ["them", "Take it for ten days.", "آن را ده روز بخورید."],
+      ["you", "Could you write that down, please?", "می‌شود لطفاً آن را بنویسید؟"],
+      ["them", "Of course. It's also on the label.", "البته. روی برچسب دارو هم نوشته شده است."],
+      ["you", "Thank you very much.", "خیلی ممنون."]
+    ]
+  },
+  "respond": {
+    "setting": "داروساز دستور دارو را تند گفته و مطمئن نیستید درست فهمیده باشید.",
+    "them": ["Take one tablet twice a day.", "روزی دو بار، هر بار یک قرص بخورید."],
+    "ok": [
+      ["Could you repeat that, please?", "می‌شود لطفاً دوباره بگویید؟"],
+      ["Could you write that down, please?", "می‌شود لطفاً آن را بنویسید؟"],
+      ["One tablet, twice a day. Is that right?", "یک قرص، روزی دو بار. درست است؟"]
+    ],
+    "off": ["Take it with food.", "آن را همراه غذا بخورید.", "این را داروساز به شما می‌گوید. اگر مطمئن نیستید درست فهمیده‌اید، بخواهید دوباره بگویند یا برایتان بنویسند."],
+    "off2": 3
+  },
+  "task": [
+    ["داروساز می‌خواهد بگوید این دارو را با معدهٔ خالی نخورید.", 2],
+    ["داروساز می‌خواهد بگوید بعد از خوردن این دارو پشت فرمان ننشینید.", 4]
+  ],
+  "grammar": {
+    "title": "once / twice / three times",
+    "explain": "برای اینکه بگویند دارو را روزی چند بار بخورید: «once a day» یعنی روزی یک بار و «twice a day» یعنی روزی دو بار. از سه به بعد، عدد را با «times» می‌گویند: «three times a day».",
+    "examples": [
+      ["Once a day.", "روزی یک بار."],
+      ["Twice a day.", "روزی دو بار."],
+      ["Three times a day.", "روزی سه بار."]
+    ],
+    "wrong": "Three time a day.",
+    "right": "Three times a day.",
+    "why": "در فارسی می‌گوییم «سه بار» و کلمهٔ «بار» عوض نمی‌شود، ولی در انگلیسی وقتی بیشتر از یک بار است، «times» با «s» می‌آید."
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}
