@@ -86,6 +86,7 @@ export function tokens(text) {
     const nt = w.match(/^([a-z]+)n't$/);                         // don't, isn't, haven't … -> do not, is not, have not
     if (nt) { out.push(nt[1], 'not'); continue; }
     if (w.endsWith("'s")) w = w.slice(0, -2) + 's';
+    if (w === 'ok') w = 'okay';                                   // recognisers write both "OK" and "okay"
     out.push(w.replace(/'/g, ''));
   }
   return out;

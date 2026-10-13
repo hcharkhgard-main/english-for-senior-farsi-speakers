@@ -186,8 +186,8 @@ export const TABLE = {
       // QA round 5 second recheck, L1: the likeliest answers ("Okay", "Thank you") are understood again, with a sentence of the lesson
       replies: ["Could you write that down, please?", "One tablet, twice a day. Is that right?", "Thank you very much."],
       r1: ["Could you write that down, please?", "Write it down, please", "Can you write it?"],
-      r2: ["Is that right?", "One tablet twice a day, is that right", "Twice a day, right?", "One tablet twice a day", "One tablet twice a day okay", "Okay, is that right?"],
-      r3: ["Thank you", "Okay", "Okay, thank you", "Thanks", "Got it", "I understand", "Thank you very much", "Twice a day, okay"],
+      r2: ["Is that right?", "One tablet twice a day, is that right", "Twice a day, right?", "One tablet twice a day", "One tablet twice a day okay", "Okay, is that right?", "Twice a day, okay", "Okay. Twice a day?", "Okay, one tablet"],
+      r3: ["Thank you", "Okay", "Okay, thank you", "Thanks", "Got it", "I understand", "Thank you very much", "OK", "OK, thank you"],
       unsure: ["Two tablets once a day", "Three times a day", "Yes"],
       repeat: ["Could you repeat that, please?", "I don't understand"],
     },
