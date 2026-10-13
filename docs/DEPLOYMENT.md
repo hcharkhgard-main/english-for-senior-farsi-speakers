@@ -32,7 +32,10 @@ every stored file with the size and SHA-256 listed in the worker each time it se
 always fetched from the network, so that list cannot be changed on the phone): a replaced page, script, lesson
 file, sound pack or pronunciation-checker file is deleted and downloaded again, and without a connection it is
 not served at all. It cannot stop another project from deleting the stored app and the worker, or from changing
-the progress. Publish Hamrah from an account or organisation that hosts nothing else, or give it a custom domain.
+the progress. Publish Hamrah from an account or organisation that hosts nothing else, or give it a custom domain —
+**or** make sure every other Pages project of the account is your own and loads no outside code. The live copy on
+`hcharkhgard-main.github.io` shares its address only with the owner's `FloridaClassFarsiE` app, which was checked on
+12 October 2026 and found harmless (see `docs/STATUS.md`, item 7); re-check before publishing anything else there.
 
 ## 2. On each parent's iPhone (not yet tried on a real device)
 

@@ -51,16 +51,17 @@ Latest review scores (0–10, from the reviewers' own reports):
 5. **Licence of the Farsi voice model** used to generate the Farsi audio is not stated by its publisher
    (see `THIRD-PARTY.md`).
 6. **The optional live AI partner** has been tested only against a simulated model, never a real one.
-7. **Address of its own.** The live site is on `hcharkhgard-main.github.io`, an address shared with every other
-   GitHub Pages project of that account: any of them could read what Hamrah keeps on the phone — which is now only
-   the learning progress and settings. Personal details («اطلاعات من») are no longer stored at all (kept in memory
-   while the app is open, erased from phones that had them saved by an earlier version), but any of those projects
-   can replace the stored app, which would then run as Hamrah and could see the details while they are typed (QA
-   round 4, security M1). Since then the service worker checks every stored file against this version's list
-   (size and SHA-256) each time it serves it, and deletes and re-downloads a copy that is not the listed file, so a
-   replaced page, script, lesson file, sound or recogniser file is no longer served. That is a backstop, not a cure:
-   such a project can still delete Hamrah's stored files and its service worker (the app then needs a connection
-   again, and a site-wide service worker of `hcharkhgard-main.github.io` could take its place), read and change
-   the progress, and use the optional AI service. Move it to an account or organisation that hosts nothing else,
-   or to a custom domain, before the learners rely on it — progress does not move with the address
+7. **Shared address — checked, acceptable as it is.** The live site is on `hcharkhgard-main.github.io`, which browsers
+   treat as one site together with every other GitHub Pages project of that account. Code on any of those pages could
+   read or change what Hamrah keeps on the phone (only learning progress and settings — personal details are never
+   stored) and could delete or try to replace its offline copy; the service worker refuses any stored file that is
+   not this version's (size and SHA-256 checked each time it is served), but that is a backstop, not a cure.
+   On 12 October 2026 the only other project on that address, `FloridaClassFarsiE` (the owner's Florida Class E
+   practice app), was checked: a single file with its own script only, no scripts from other sites (only Google Fonts
+   stylesheets), no service worker, no network requests, and only its own two storage keys
+   (`fl-classe-practice-v1`, `fl-classe-keywords-v1`). Both apps can therefore stay where they are.
+   **Re-check before publishing anything else from this account** that loads outside code (analytics, ads, chat
+   widgets, CDN libraries), registers a service worker for the whole address, or can be edited by other people; in
+   that case give Hamrah an address of its own — a free GitHub organisation or a custom domain — preferably before
+   the learners have much progress, because progress does not move with the address
    (see `docs/DEPLOYMENT.md`, "Use an address of its own").
