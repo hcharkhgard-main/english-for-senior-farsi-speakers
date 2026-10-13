@@ -1,0 +1,66 @@
+{
+  "id": "cinema",
+  "scenario": "leisure",
+  "stage": 2,
+  "minutes": 8,
+  "title": { "fa": "سینما", "en": "At the movies" },
+  "intro": "در آمریکا بلیت سینما را از گیشه، از دستگاه بلیت‌فروشی یا با گوشی می‌خرید. خیلی از سینماها برای سالمندان بلیت ارزان‌تر دارند، و بیشتر سینماها دستگاه زیرنویس (closed captioning) را مجانی به شما می‌دهند. در این درس یاد می‌گیرید بلیت بخرید، صندلی انتخاب کنید و خوراکی بگیرید.",
+  "note": "پیش از شروع فیلم گوشی‌تان را بی‌صدا کنید و در سالن با تلفن حرف نزنید. روی پرده هم می‌نویسند: «Please silence your cell phone.‎»",
+  "canDo": "حالا می‌توانید در سینما بلیت بخرید، صندلی انتخاب کنید، دستگاه زیرنویس بخواهید و سالنتان را پیدا کنید.",
+  "mission": "دفعهٔ بعد که به سینما رفتید، پای گیشه بپرسید: Do you have closed captioning devices? با زیرنویس، فیلم را بهتر می‌فهمید.",
+  "them": { "role": "فروشندهٔ سینما", "voice": "b" },
+  "phrases": [
+    { "en": "Two tickets for the seven o'clock show, please.", "fa": "دو بلیت برای سانس ساعت هفت، لطفاً.", "ph": "تو تیکِتس فُر دِ سِوِن اُکْلاک شُو، پْلیز", "note": "show یعنی سانس. به‌جای seven o'clock ساعتی را بگویید که می‌خواهید. اگر سالمند هستید بپرسید: «Do you have senior tickets?‎» (بلیت سالمند دارید؟)", "chunks": ["Two tickets", "for the seven o'clock show,", "please."] },
+    { "en": "Do you have closed captioning devices?", "fa": "دستگاه زیرنویس دارید؟", "ph": "دو یو هَو کْلُزد کَپشِنینگ دیوایسِز؟", "note": "closed captioning یعنی زیرنویس انگلیسیِ همهٔ حرف‌های فیلم. بیشتر سینماها دستگاه کوچکی دارند که روی جای لیوانِ صندلی می‌گذارید و زیرنویس را نشان می‌دهد. مجانی است؛ از گیشه بخواهید.", "chunks": ["Do you have", "closed captioning devices?"] },
+    { "en": "Can we sit in the middle?", "fa": "می‌شود وسط بنشینیم؟", "ph": "کَن وی سیت این دِ میدِل؟", "note": "در خیلی از سینماها صندلی را موقع خریدن بلیت انتخاب می‌کنید. row یعنی ردیف: «Row F» یعنی ردیف اِف. اگر صندلی کنار راهرو می‌خواهید بگویید: «Can we sit on the aisle?‎»", "chunks": ["Can we sit", "in the middle?"] },
+    { "en": "A small popcorn and a water, please.", "fa": "یک پاپ‌کورن کوچک و یک آب، لطفاً.", "ph": "اِ سْمال پاپ‌کُرن اَند اِ واتِر، پْلیز", "note": "اندازه‌ها: small (کوچک)، medium (متوسط)، large (بزرگ). اندازه‌های سینما بزرگ است؛ small هم معمولاً زیاد است.", "chunks": ["A small popcorn", "and a water,", "please."] },
+    { "en": "Theater five, on your left.", "fa": "سالن پنج، سمت چپ.", "ph": "تی‌یِتِر فایو، آن یُر لِفت", "note": "این را کارکن سینما می‌گوید. theater اینجا یعنی سالن نمایش فیلم. شمارهٔ سالن روی بلیت هم نوشته شده است.", "heard": true, "voice": "b", "chunks": ["Theater five,", "on your left."] }
+  ],
+  "dialogue": {
+    "setting": "با همسرتان به سینما رفته‌اید و پای گیشه هستید.",
+    "lines": [
+      ["them", "Hi! What movie would you like to see?", "سلام! چه فیلمی می‌خواهید ببینید؟"],
+      ["you", "This one. Two tickets for the seven o'clock show, please.", "(به عکس فیلم اشاره می‌کنید) این یکی. دو بلیت برای سانس ساعت هفت، لطفاً."],
+      ["them", "Sure. Where would you like to sit?", "حتماً. کجا می‌خواهید بنشینید؟"],
+      ["you", "Can we sit in the middle?", "می‌شود وسط بنشینیم؟"],
+      ["them", "Okay. Row F, seats eight and nine. That's twenty-four dollars.", "بسیار خب. ردیف اِف، صندلی هشت و نُه. می‌شود بیست و چهار دلار."],
+      ["you", "Here you go. Do you have closed captioning devices?", "بفرمایید. دستگاه زیرنویس دارید؟"],
+      ["them", "Yes, here you go. The movie starts in ten minutes.", "بله، بفرمایید. فیلم ده دقیقهٔ دیگر شروع می‌شود."],
+      ["you", "Which theater is it?", "کدام سالن است؟"],
+      ["them", "Theater five, on your left.", "سالن پنج، سمت چپ."]
+    ]
+  },
+  "respond": {
+    "setting": "پای پیشخوان خوراکی، یک پاپ‌کورن کوچک سفارش داده‌اید و فروشنده می‌پرسد.",
+    "them": ["Would you like to upgrade to a large? It's only one dollar more.", "می‌خواهید بزرگش کنید؟ فقط یک دلار بیشتر است."],
+    "ok": [
+      ["Small is fine, thank you.", "همان کوچک خوب است، ممنون."],
+      ["Sure, a large, please.", "بله، بزرگ لطفاً."]
+    ],
+    "off": ["Can we sit in the middle?", "می‌شود وسط بنشینیم؟", "فروشنده پرسید پاپ‌کورنتان را با یک دلار بیشتر بزرگ کند یا نه. بگویید «Small is fine, thank you.‎» یا اگر بزرگ می‌خواهید «Sure, a large, please.‎»"],
+    "off2": 2
+  },
+  "variants": [
+    { "en": "You're in theater five, down the hall on the left.", "fa": "سالن شما شمارهٔ پنج است؛ در راهرو، سمت چپ.", "like": "Theater five, on your left." },
+    { "en": "The show starts in ten minutes.", "fa": "سانس ده دقیقهٔ دیگر شروع می‌شود.", "like": "The movie starts in ten minutes." },
+    { "en": "Do you want to make that a large?", "fa": "می‌خواهید بزرگش کنید؟", "like": "Would you like to upgrade to a large?" }
+  ],
+  "task": [
+    ["فیلم را انتخاب کرده‌اید. شما و همسرتان می‌خواهید سانس ساعت هفت را ببینید.", 1],
+    ["انگلیسیِ فیلم برایتان تند است و می‌خواهید زیرنویس داشته باشید.", 2]
+  ],
+  "grammar": {
+    "title": "in the middle / on the aisle",
+    "explain": "برای جای نشستن بگویید in the middle (وسط)، in the back (عقب)، in the front (جلو). ولی برای «کنار راهرو» بگویید on the aisle.",
+    "examples": [
+      ["Can we sit in the middle?", "می‌شود وسط بنشینیم؟"],
+      ["Can we sit in the back?", "می‌شود عقب بنشینیم؟"],
+      ["I'd like a seat on the aisle.", "صندلی کنار راهرو می‌خواهم."]
+    ],
+    "wrong": "Can we sit on the middle?",
+    "right": "Can we sit in the middle?",
+    "why": "برای «وسط»، «جلو» و «عقب» in می‌آید: in the middle، in the front، in the back.",
+    "fresh": { "en": "Can we sit in the front?", "wrong": "Can we sit on the front?", "fa": "می‌شود جلو بنشینیم؟" }
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

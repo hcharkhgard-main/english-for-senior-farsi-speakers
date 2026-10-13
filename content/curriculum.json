@@ -26,7 +26,7 @@
     {
       "id": 2,
       "title": "گام دوم: کارهای روزمره بدون کمک دیگران",
-      "desc": "دکتر و داروخانه، تلفن، اتوبوس و تاکسی، بانک، رستوران، خانه، پست، اداره، همسایه‌ها و مهمانی.",
+      "desc": "دکتر و داروخانه، تلفن، اتوبوس و تاکسی، بانک، رستوران، خانه، پست، اداره، همسایه‌ها، مهمانی، سینما و بیرون رفتن با دوستان.",
       "lessons": [
         "card-reader",
         "clinic-checkin",
@@ -58,13 +58,15 @@
         "neighbor-chat",
         "school-pickup",
         "holiday-greetings",
-        "dinner-guest"
+        "dinner-guest",
+        "cinema",
+        "out-with-friends"
       ]
     },
     {
       "id": 3,
       "title": "گام سوم: گفت‌وگو با اعتمادبه‌نفس",
-      "desc": "گفت‌وگوهای بلندتر: بیمه، قبض و صاحب‌خانه، رانندگی، فرودگاه، اداره، مراسم و کار.",
+      "desc": "گفت‌وگوهای بلندتر: بیمه، قبض و صاحب‌خانه، رانندگی، فرودگاه، اداره، مراسم، باشگاه ورزشی و کار.",
       "lessons": [
         "appointment-change",
         "customer-service",
@@ -75,6 +77,7 @@
         "sale-shopping",
         "community-library",
         "senior-center",
+        "gym",
         "driving-car",
         "driving-police",
         "car-accident",
@@ -175,6 +178,9 @@
     "work-bridal": ["rp-bridal", "rp-groom"],
     "work-customers": "rp-unhappy-customer",
     "wedding-congrats": "rp-wedding",
-    "condolences": "rp-condolence"
+    "condolences": "rp-condolence",
+    "cinema": "rp-cinema",
+    "out-with-friends": "rp-friends",
+    "gym": "rp-gym"
   }
 }

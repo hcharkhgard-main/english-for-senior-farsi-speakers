@@ -86,6 +86,7 @@ const P = {
   gift: '<rect x="4" y="9" width="16" height="11" rx="1.5"/><path d="M3 9h18V6.5H3zM12 6.5V20M12 6.5C10.5 3.5 7 3.5 7.5 5.5S12 6.5 12 6.5zM12 6.5c1.500-3 5-3 4.500-1S12 6.500 12 6.500z"/>',
   work: '<rect x="3.5" y="7.5" width="17" height="12" rx="2"/><path d="M9 7.500V5.500a1.500 1.500 0 0 1 1.500-1.500h3A1.500 1.500 0 0 1 15 5.500v2M3.500 13h17"/>',
   scissors: '<circle cx="6.5" cy="17" r="2.5"/><circle cx="17.5" cy="17" r="2.5"/><path d="M8.5 15.500L18 4M15.500 15.500L6 4"/>',
+  leisure: '<path d="M7.5 12h9M3.5 10v4M20.5 10v4"/><rect x="5" y="7" width="3" height="10" rx="1"/><rect x="16" y="7" width="3" height="10" rx="1"/>',
   card: '<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="11" r="2"/><path d="M5.5 16a3 3 0 0 1 6 0M14 10h4M14 13.5h3"/>',
   needle: '<path d="M19.5 4.500L8 16M19.5 4.500c1 1 .500 2.500-.500 3.500M8 16l-3.500 3.500M10 6c-3-1.500-6 .500-5 3s5 1 6.500 4-1 5-4 4"/>',
   wave: '<path d="M4 10v4M8 7v10M12 4v16M16 8v8M20 10.500v3"/>',

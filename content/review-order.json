@@ -40,6 +40,7 @@
     "clothes-shopping": ["clothes"],
     "neighbor-chat": ["weather"],
     "holiday-greetings": ["occasions"],
-    "work-first-day": ["work"]
+    "work-first-day": ["work"],
+    "cinema": ["leisure"]
   }
 }

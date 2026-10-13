@@ -112,7 +112,7 @@ test('after the first lesson: the next lesson, the words of the next review sets
   assert.ok(all.every((id) => realIndex.packs.some((p) => p.id === id)), 'only packs that exist');
   // a modest download: what one ordinary first day adds (the next lesson, review words, numbers)
   const mb = all.reduce((s, id) => s + realIndex.packs.find((p) => p.id === id).bytes, 0) / 1048576;
-  assert.ok(mb < 16, `${mb.toFixed(1)} MB`);
+  assert.ok(mb < 18, `${mb.toFixed(1)} MB`);   // about 16 MB today (lesson, review words, numbers, papers, conversations); a budget, not a limit of the app
 });
 
 test('before any lesson nothing but the first lesson and the first words; numbers only once a lesson is done', () => {

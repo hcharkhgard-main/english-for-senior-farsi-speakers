@@ -1,0 +1,67 @@
+{
+  "id": "gym",
+  "scenario": "leisure",
+  "stage": 3,
+  "minutes": 9,
+  "safetyCritical": true,
+  "title": { "fa": "باشگاه ورزشی", "en": "At the gym" },
+  "intro": "در آمریکا خیلی‌ها به باشگاه ورزشی (gym) یا مرکز ورزشی محله می‌روند. خیلی جاها برای سالمندان تخفیف یا کلاس مخصوص دارند، و بعضی بیمه‌های سالمندان هم هزینهٔ باشگاه را می‌دهند؛ از بیمه‌تان بپرسید. در این درس یاد می‌گیرید عضو شوید، بپرسید با دستگاه چطور کار کنید و حرف‌های مربی را بفهمید.",
+  "note": "این درس فقط برای یادگیری زبان است و توصیهٔ ورزشی نیست. پیش از شروع ورزش تازه با دکترتان صحبت کنید. اگر موقع ورزش درد، سرگیجه یا تنگی نفس داشتید، دست نگه دارید و به یکی از کارکنان خبر بدهید. اگر قفسهٔ سینه‌تان درد گرفت، به ۹۱۱ زنگ بزنید.",
+  "canDo": "حالا می‌توانید در باشگاه ورزشی عضو شوید، بپرسید با دستگاه چطور کار کنید و حرف‌های مربی را بفهمید.",
+  "mission": "اگر نزدیک خانه‌تان باشگاه یا مرکز ورزشی هست، سری بزنید و بپرسید: Do you have a senior discount?",
+  "them": { "role": "کارمند و مربی باشگاه", "voice": "a" },
+  "phrases": [
+    { "en": "Do you have a senior discount?", "fa": "برای سالمندان تخفیف دارید؟", "ph": "دو یو هَو اِ سینیِر دیسکاونت؟", "note": "senior یعنی سالمند. سنِ تخفیف هر جا فرق دارد؛ معمولاً از ۵۵ تا ۶۵ سالگی. اگر کلاس می‌خواهید بپرسید: «What classes do you have?‎» (چه کلاس‌هایی دارید؟)", "chunks": ["Do you have", "a senior discount?"] },
+    { "en": "Can you show me how to use this?", "fa": "می‌شود نشانم بدهید با این چطور کار کنم؟", "ph": "کَن یو شُو می هاو تو یوز دیس؟", "note": "با this به دستگاهی که جلویتان است اشاره کنید. machine یعنی دستگاه. کارکنان باشگاه معمولاً با کمال میل نشانتان می‌دهند.", "chunks": ["Can you show me", "how to use this?"] },
+    { "en": "How many sets should I do?", "fa": "چند ست انجام بدهم؟", "ph": "هاو مِنی سِتس شُد آی دو؟", "note": "set یعنی یک دور حرکت که چند بار پشت سر هم تکرار می‌کنید. جواب معمولاً این‌طور است: «Three sets of ten.‎» یعنی سه ست، هر ست ده بار. گاهی هم می‌گویند «ten reps» یعنی ده تکرار.", "chunks": ["How many sets", "should I do?"] },
+    { "en": "I have a bad knee. What exercises can I do?", "fa": "زانویم مشکل دارد. چه ورزش‌هایی می‌توانم بکنم؟", "ph": "آی هَو اِ بَد نی. وات اِکسِرسایزِز کَن آی دو؟", "note": "bad knee یعنی زانویی که مشکل یا درد دارد. به‌جای knee می‌توانید بگویید: back (کمر)، shoulder (شانه). مربی می‌تواند راهنمایی کند، ولی دربارهٔ سلامتتان حرفِ آخر را دکترتان می‌زند.", "chunks": ["I have a bad knee.", "What exercises", "can I do?"] },
+    { "en": "Are you done with this?", "fa": "کارتان با این تمام شده؟", "ph": "آر یو دان ویت دیس؟", "note": "این را کسی می‌گوید که منتظر همان دستگاه است. اگر کارتان تمام شده: «Yes, go ahead.‎» (بله، بفرمایید). اگر نه: «Almost. One more set.‎» (تقریباً. یک ست دیگر مانده). گاهی هم می‌پرسند: «Is anyone using this?‎» (کسی از این استفاده می‌کند؟)", "heard": true, "voice": "a", "chunks": ["Are you done", "with this?"] }
+  ],
+  "dialogue": {
+    "setting": "برای اولین بار به مرکز ورزشی محله آمده‌اید. اول با کارمند پذیرش و بعد با مربی صحبت می‌کنید.",
+    "lines": [
+      ["them", "Hi! Welcome. How can I help you?", "سلام! خوش آمدید. چه کمکی از دستم برمی‌آید؟"],
+      ["you", "Hi. I'd like to join. Do you have a senior discount?", "سلام. می‌خواهم عضو شوم. برای سالمندان تخفیف دارید؟"],
+      ["them", "Yes. Seniors pay twenty dollars a month, and the classes are free.", "بله. سالمندان ماهی بیست دلار می‌پردازند و کلاس‌ها هم رایگان است."],
+      ["you", "Can you show me how to use this?", "(کمی بعد، کنار یک دستگاه، به مربی) می‌شود نشانم بدهید با این چطور کار کنم؟"],
+      ["them", "Sure. Sit here and keep your back straight.", "حتماً. اینجا بنشینید و کمرتان را صاف نگه دارید."],
+      ["you", "How many sets should I do?", "چند ست انجام بدهم؟"],
+      ["them", "Three sets of ten. Take your time.", "سه ست، هر ست ده بار. عجله نکنید."],
+      ["you", "I have a bad knee. What exercises can I do?", "زانویم مشکل دارد. چه ورزش‌هایی می‌توانم بکنم؟"],
+      ["them", "Please talk to your doctor first. Then we can make a plan together.", "لطفاً اول با دکترتان صحبت کنید. بعد با هم برنامه‌ای می‌ریزیم."]
+    ]
+  },
+  "respond": {
+    "setting": "روی یک دستگاه ورزش می‌کنید. یک نفر جلو می‌آید و از شما می‌پرسد.",
+    "them": ["Are you done with this?", "کارتان با این تمام شده؟"],
+    "ok": [
+      ["Yes, go ahead.", "بله، بفرمایید."],
+      ["Almost. One more set.", "تقریباً. یک ست دیگر مانده."]
+    ],
+    "off": ["How many sets should I do?", "چند ست انجام بدهم؟", "او می‌خواهد بداند کارتان با این دستگاه تمام شده یا نه، چون منتظر آن است. اگر تمام شده بگویید «Yes, go ahead.‎» و اگر نه، «Almost. One more set.‎»"],
+    "off2": 1
+  },
+  "variants": [
+    { "en": "Is anyone using this?", "fa": "کسی از این استفاده می‌کند؟", "like": "Are you done with this?" },
+    { "en": "Do three sets of ten reps.", "fa": "سه ست انجام بدهید، هر ست ده تکرار.", "like": "Three sets of ten. Take your time." },
+    { "en": "For seniors, it's twenty dollars a month.", "fa": "برای سالمندان ماهی بیست دلار است.", "like": "Yes. Seniors pay twenty dollars a month, and the classes are free." }
+  ],
+  "task": [
+    ["دستگاهی را می‌بینید که بلد نیستید با آن کار کنید. یکی از کارکنان باشگاه نزدیک شماست.", 2],
+    ["زانویتان مشکل دارد و می‌خواهید از مربی بپرسید چه ورزش‌هایی می‌توانید بکنید.", 4]
+  ],
+  "grammar": {
+    "title": "how to …",
+    "explain": "برای «چطور … کنم» بگویید how to و بعد فعل: how to use (چطور کار کنم)، how to open (چطور باز کنم).",
+    "examples": [
+      ["Can you show me how to use this?", "می‌شود نشانم بدهید با این چطور کار کنم؟"],
+      ["Can you show me how to open the locker?", "می‌شود نشانم بدهید کمد را چطور باز کنم؟"],
+      ["I don't know how to swim.", "شنا بلد نیستم."]
+    ],
+    "wrong": "Can you show me how use this?",
+    "right": "Can you show me how to use this?",
+    "why": "بین how و فعل، to می‌آید: how to use، how to open، how to start.",
+    "fresh": { "en": "Can you show me how to start it?", "wrong": "Can you show me how start it?", "fa": "می‌شود نشانم بدهید چطور روشنش کنم؟" }
+  },
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null }
+}

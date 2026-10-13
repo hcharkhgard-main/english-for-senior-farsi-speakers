@@ -24,7 +24,8 @@
     {"id": "papers", "title": "اداره و مدارک"},
     {"id": "safety", "title": "وضعیت اضطراری و ایمنی"},
     {"id": "occasions", "title": "جشن و مراسم"},
-    {"id": "work", "title": "کار و شغل"}
+    {"id": "work", "title": "کار و شغل"},
+    {"id": "leisure", "title": "ورزش، تفریح و سینما"}
   ],
   "words": [
     ["hello", "سلام", "هِلُو", "Hello! How are you?", "سلام! حال شما چطور است؟", "👋", "basics", 1],
@@ -727,6 +728,34 @@
     ["awake", "به‌هوش، بیدار", "اِوِیک", "Is he awake?", "به‌هوش است؟", "", "safety", 1],
     ["breathing", "نفس کشیدن", "بْریدینگ", "Is he breathing?", "نفس می‌کشد؟", "", "safety", 1],
     ["oxygen machine", "دستگاه اکسیژن", "آکْسیجِن مَشین", "My husband uses an oxygen machine.", "شوهرم از دستگاه اکسیژن استفاده می‌کند.", "", "health", 3],
-    ["interested", "علاقه‌مند", "اینتِرِستِد", "I'm not interested, thank you.", "علاقه‌ای ندارم، ممنون.", "", "describe", 2]
+    ["interested", "علاقه‌مند", "اینتِرِستِد", "I'm not interested, thank you.", "علاقه‌ای ندارم، ممنون.", "", "describe", 2],
+    ["gym", "باشگاه ورزشی", "جیم", "I go to the gym on Mondays.", "دوشنبه‌ها به باشگاه می‌روم.", "🏋️", "leisure", 3],
+    ["membership", "عضویت", "مِمبِرشیپ", "How much is a membership?", "عضویت چقدر است؟", "", "leisure", 3],
+    ["locker room", "رختکن", "لاکِر روم", "Where is the locker room?", "رختکن کجاست؟", "", "leisure", 3],
+    ["locker", "کمد (در رختکن)", "لاکِر", "Can you show me how to open the locker?", "می‌شود نشانم بدهید کمد را چطور باز کنم؟", "", "leisure", 3],
+    ["treadmill", "تردمیل", "تْرِدمیل", "I walk on the treadmill.", "روی تردمیل راه می‌روم.", "", "leisure", 3],
+    ["weights", "وزنه‌ها", "وِیتس", "These weights are too heavy for me.", "این وزنه‌ها برایم زیادی سنگین است.", "", "leisure", 3],
+    ["stretch", "نرمش کردن، حرکات کششی انجام دادن", "سْتْرِچ", "We stretch at the end of the class.", "آخر کلاس نرمش می‌کنیم.", "", "leisure", 3],
+    ["sore", "دردناک؛ کوفته (مثلاً بعد از ورزش)", "سُر", "My legs are sore today.", "امروز پاهایم کوفته است.", "", "health", 3],
+    ["trainer", "مربی", "تْرِینِر", "The trainer can show you.", "مربی می‌تواند نشانتان بدهد.", "", "leisure", 3],
+    ["set", "ست (یک دور حرکت ورزشی)", "سِت", "Do three sets of ten.", "سه ست انجام بدهید، هر ست ده بار.", "", "leisure", 3],
+    ["machine", "دستگاه", "مَشین", "How do I use this machine?", "با این دستگاه چطور کار کنم؟", "", "leisure", 3],
+    ["pool", "استخر", "پول", "Is the pool open today?", "استخر امروز باز است؟", "🏊", "leisure", 3],
+    ["senior", "سالمند", "سینیِر", "Do you have a senior discount?", "برای سالمندان تخفیف دارید؟", "", "people", 2],
+    ["soda", "نوشابه", "سُودا", "Just a soda, please.", "فقط یک نوشابه، لطفاً.", "🥤", "food", 2],
+    ["alcohol", "الکل", "اَلکُهال", "Is there alcohol in this?", "این الکل دارد؟", "", "food", 2],
+    ["beer", "آبجو", "بی‌یِر", "No beer for me, thank you.", "برای من آبجو نه، ممنون.", "", "food", 2],
+    ["wine", "شراب", "واین", "Is there wine in this sauce?", "این سس شراب دارد؟", "", "food", 2],
+    ["tab", "حساب باز (در بار)", "تَب", "Do you want to start a tab?", "می‌خواهید حساب باز کنم که آخر شب یک‌جا بپردازید؟", "", "leisure", 2],
+    ["split", "تقسیم کردن (پول)", "سْپْلیت", "Let's split the check.", "بیایید صورت‌حساب را دانگی حساب کنیم.", "", "money", 2],
+    ["cheers", "به سلامتی!", "چی‌یِرز", "Cheers, everyone!", "به سلامتیِ همه!", "", "leisure", 2],
+    ["movie", "فیلم", "مووی", "What movie do you want to see?", "چه فیلمی می‌خواهید ببینید؟", "🎬", "leisure", 2],
+    ["theater", "سینما، سالن نمایش فیلم", "تی‌یِتِر", "Theater five is on the left.", "سالن پنج سمت چپ است.", "", "leisure", 2],
+    ["seat", "صندلی (جای نشستن)", "سیت", "Is this seat taken?", "این صندلی جای کسی است؟", "💺", "leisure", 2],
+    ["row", "ردیف", "رُو", "Our seats are in row F.", "صندلی‌هایمان در ردیف اِف است.", "", "leisure", 2],
+    ["popcorn", "پاپ‌کورن", "پاپ‌کُرن", "A small popcorn, please.", "یک پاپ‌کورن کوچک، لطفاً.", "🍿", "leisure", 2],
+    ["subtitles", "زیرنویس (ترجمهٔ حرف‌های فیلم)", "سابتایتِلز", "Does this movie have subtitles?", "این فیلم زیرنویس دارد؟", "", "leisure", 2],
+    ["closed captions", "زیرنویس انگلیسی (همهٔ حرف‌ها و صداهای فیلم)", "کْلُزد کَپشِنز", "Do you have closed captions?", "زیرنویس انگلیسی دارید؟", "", "leisure", 2],
+    ["snack", "خوراکی (تنقلات)", "سْنَک", "Where can I buy a snack?", "کجا می‌شود خوراکی خرید؟", "", "food", 2]
   ]
 }

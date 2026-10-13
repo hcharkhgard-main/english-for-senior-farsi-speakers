@@ -1,0 +1,298 @@
+{
+  "version": 1,
+  "review": { "status": "draft", "language": null, "teaching": null, "safety": null },
+  "roleplays": [
+    {
+      "id": "rp-gym",
+      "scenario": "leisure",
+      "stage": 3,
+      "safetyCritical": true,
+      "title": "اولین روز در باشگاه",
+      "setting": "برای اولین بار به مرکز ورزشی محله آمده‌اید. اول کارمند پذیرش و بعد یک مربی با شما صحبت می‌کنند.",
+      "goal": "عضو شوید، دربارهٔ قیمت و کلاس‌ها بپرسید و از مربی بخواهید کار با دستگاه را نشانتان بدهد.",
+      "note": "این فقط تمرین زبان است و توصیهٔ ورزشی نیست. پیش از شروع ورزش تازه با دکترتان صحبت کنید.",
+      "them": {
+        "role": "کارمند پذیرش و مربی باشگاه",
+        "persona": "a friendly front-desk worker, then a trainer named Mike, at a community fitness center in a clearly simulated practice visit; short, simple sentences; seniors pay twenty dollars a month and the classes (yoga, water aerobics, chair exercise) are free; show a machine step by step (sit here, keep your back straight, three sets of ten, take your time, wipe it down when you're done); when the learner mentions pain, a bad knee or any health problem, say kindly to talk to their doctor first and never suggest exercises, treatments or medicine; never ask for personal details",
+        "voice": "a"
+      },
+      "turns": [
+        {
+          "them": ["Hi! Welcome to the fitness center. How can I help you?", "سلام! به مرکز ورزشی خوش آمدید. چه کمکی از دستم برمی‌آید؟"],
+          "replies": [
+            { "en": "Hi. I'd like to join. Do you have a senior discount?", "fa": "سلام. می‌خواهم عضو شوم. برای سالمندان تخفیف دارید؟", "keys": ["senior discount", "discount", "join", "sign up"] },
+            { "en": "Hi. How much is a membership?", "fa": "سلام. عضویت چقدر است؟", "keys": ["how much", "membership", "price", "cost"] }
+          ]
+        },
+        {
+          "them": ["Seniors pay twenty dollars a month, and the classes are free.", "سالمندان ماهی بیست دلار می‌پردازند و کلاس‌ها هم رایگان است."],
+          "check": {
+            "q": "چه گفت؟",
+            "right": "سالمندان ماهی بیست دلار می‌دهند و کلاس‌ها رایگان است.",
+            "wrong": ["سالمندان ماهی دوازده دلار می‌دهند و کلاس‌ها رایگان است.", "سالمندان ماهی بیست دلار می‌دهند و کلاس‌ها پول جدا دارد."]
+          },
+          "replies": [
+            { "en": "Great. I'd like to sign up.", "fa": "عالی است. می‌خواهم ثبت‌نام کنم.", "keys": ["sign up", "join", "great"] },
+            { "en": "What classes do you have?", "fa": "چه کلاس‌هایی دارید؟", "keys": ["what classes", "classes", "class"],
+              "then": ["We have yoga, water aerobics, and chair exercise.", "یوگا، ایروبیک در آب و ورزش روی صندلی داریم."],
+              "thenCheck": { "q": "چه کلاس‌هایی دارند؟", "right": "یوگا، ایروبیک در آب و ورزش روی صندلی", "wrong": ["یوگا، شنا و دوچرخه‌سواری", "فقط ایروبیک در آب"] } },
+            { "en": "Could you say that again, please?", "fa": "می‌شود لطفاً دوباره بگویید؟", "keys": ["again", "say"],
+              "then": ["Sure. Twenty dollars a month. Two, zero. And the classes are free.", "حتماً. ماهی بیست دلار. دو، صفر. کلاس‌ها هم رایگان است."],
+              "thenCheck": { "q": "عضویت ماهی چقدر است؟", "right": "$20", "wrong": ["$12", "$200"] } }
+          ]
+        },
+        {
+          "them": ["Hi, I'm Mike. I'm a trainer here. Is this your first time at a gym?", "(کمی بعد، مربی) سلام، من مایک هستم، مربی اینجا. اولین بار است به باشگاه می‌آیید؟"],
+          "check": {
+            "q": "چه پرسید؟",
+            "right": "اولین بار است به باشگاه می‌آیید؟",
+            "wrong": ["هفته‌ای چند بار ورزش می‌کنید؟", "مربی شخصی می‌خواهید؟"]
+          },
+          "replies": [
+            { "en": "Yes, it is. Can you show me how to use this?", "fa": "بله، اولین بار است. می‌شود نشانم بدهید با این چطور کار کنم؟", "keys": ["show me", "how to use", "first time", "yes"] },
+            { "en": "No, but I need help with this machine.", "fa": "نه، ولی با این دستگاه کمک لازم دارم.", "keys": ["need help", "help", "machine", "no"] }
+          ]
+        },
+        {
+          "them": ["Sure. Sit here and keep your back straight. Do three sets of ten.", "حتماً. اینجا بنشینید و کمرتان را صاف نگه دارید. سه ست انجام بدهید، هر ست ده بار."],
+          "check": {
+            "q": "مربی چه گفت؟",
+            "right": "بنشینید، کمرتان را صاف نگه دارید و سه ست ده‌تایی انجام بدهید.",
+            "wrong": ["بنشینید، کمرتان را صاف نگه دارید و ده ست سه‌تایی انجام بدهید.", "بایستید، زانوهایتان را صاف نگه دارید و سه ست ده‌تایی انجام بدهید."]
+          },
+          "replies": [
+            { "en": "Okay. Like this?", "fa": "باشد. این‌طوری؟", "keys": ["like this", "okay", "yes"],
+              "then": ["Yes, that's good. Take your time.", "بله، خوب است. عجله نکنید."] },
+            { "en": "I have a bad knee. Is this okay for me?", "fa": "زانویم مشکل دارد. این برای من اشکالی ندارد؟", "keys": ["knee", "bad knee", "knee hurts"],
+              "then": ["Please talk to your doctor first. Then we can make a plan together.", "لطفاً اول با دکترتان صحبت کنید. بعد با هم برنامه‌ای می‌ریزیم."],
+              "thenCheck": { "q": "مربی چه گفت؟", "right": "اول با دکترتان صحبت کنید؛ بعد با هم برنامه می‌ریزید.", "wrong": ["این دستگاه برای زانو خیلی خوب است.", "امروز نباید ورزش کنید و باید به خانه بروید."] } },
+            { "en": "I have a bad back. Is this okay for me?", "fa": "کمرم مشکل دارد. این برای من اشکالی ندارد؟", "keys": ["bad back", "back hurts", "back pain", "for my back"],
+              "then": ["Please talk to your doctor first. Then we can make a plan together.", "لطفاً اول با دکترتان صحبت کنید. بعد با هم برنامه‌ای می‌ریزیم."],
+              "thenCheck": { "q": "مربی چه گفت؟", "right": "اول با دکترتان صحبت کنید؛ بعد با هم برنامه می‌ریزید.", "wrong": ["این دستگاه برای کمر خیلی خوب است.", "امروز نباید ورزش کنید و باید به خانه بروید."] } },
+            { "en": "Sorry, how many sets?", "fa": "ببخشید، چند ست؟", "keys": ["how many"],
+              "then": ["Three sets. Ten times each.", "سه ست. هر ست ده بار."],
+              "thenCheck": { "q": "چند ست؟", "right": "سه ست، هر ست ده بار", "wrong": ["ده ست، هر ست سه بار", "دو ست، هر ست ده بار"] } }
+          ]
+        },
+        {
+          "them": ["Good job! Please wipe down the machine when you're done.", "(کمی بعد) خیلی خوب بود! وقتی کارتان تمام شد، لطفاً دستگاه را تمیز کنید."],
+          "check": {
+            "q": "چه باید بکنید؟",
+            "right": "وقتی کارتان تمام شد، دستگاه را تمیز کنید.",
+            "wrong": ["وقتی کارتان تمام شد، دستگاه را خاموش کنید.", "وقتی کارتان تمام شد، به پذیرش بروید."]
+          },
+          "replies": [
+            { "en": "Okay. Where are the wipes?", "fa": "باشد. دستمال‌ها کجاست؟", "keys": ["where", "wipes", "paper towels"],
+              "then": ["They're on the wall, next to the water fountain.", "روی دیوار است، کنار آبخوری."],
+              "thenCheck": { "q": "دستمال‌ها کجاست؟", "right": "روی دیوار، کنار آبخوری", "wrong": ["روی دیوار، کنار در", "روی میز پذیرش"] } },
+            { "en": "Sure. Thank you for your help.", "fa": "حتماً. ممنون از کمکتان.", "keys": ["thank", "sure", "okay", "yes"] }
+          ]
+        },
+        {
+          "them": ["Excuse me. Are you done with this?", "(یک نفر دیگر) ببخشید. کارتان با این تمام شده؟"],
+          "check": {
+            "q": "چه پرسید؟",
+            "right": "کارتان با این دستگاه تمام شده؟",
+            "wrong": ["می‌شود کمکم کنید؟", "این دستگاه خراب است؟"]
+          },
+          "replies": [
+            { "en": "Yes, go ahead.", "fa": "بله، بفرمایید.", "keys": ["yes", "go ahead", "sure", "okay", "i'm done"] },
+            { "en": "Almost. One more set.", "fa": "تقریباً. یک ست دیگر مانده.", "keys": ["almost", "one more", "not yet", "no"] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rp-friends",
+      "scenario": "leisure",
+      "stage": 2,
+      "title": "یک عصر با همکارها",
+      "setting": "بعد از کار، با همکارتان «جِن» به یک بار و رستوران رفته‌اید. اول کارکن بار و بعد جِن با شما حرف می‌زنند.",
+      "goal": "نوشیدنی‌ای را که دوست دارید سفارش بدهید، کمی گپ بزنید و آخر شب صورت‌حساب را حساب کنید.",
+      "note": "این فقط تمرین زبان است. هر نوشیدنی‌ای که دوست دارید سفارش بدهید؛ نوشیدنی بدون الکل کاملاً عادی است. حواستان به لیوانتان باشد و از قبل بدانید چطور به خانه برمی‌گردید.",
+      "them": {
+        "role": "کارکن بار و همکارتان",
+        "persona": "a friendly bartender, then a coworker named Jen, during an after-work evening at a casual bar and grill in a clearly simulated practice; keep it light, short and kind; the bartender checks everyone's ID, and without ID serves soda, juice, iced tea or water but no alcohol; a soda, juice or iced tea is just as normal as a beer, and never encourage anyone to drink alcohol or to drink more; small talk only about the week, work in general, movies or the weekend; never ask for personal details",
+        "voice": "k"
+      },
+      "turns": [
+        {
+          "them": ["Hi there. Can I see your ID, please?", "سلام. می‌شود لطفاً کارت شناسایی‌تان را ببینم؟"],
+          "check": {
+            "q": "چه می‌خواهد؟",
+            "right": "کارت شناسایی‌تان را",
+            "wrong": ["اسمتان را", "شمارهٔ میزتان را"]
+          },
+          "replies": [
+            { "en": "Sure. Here you go.", "fa": "حتماً. بفرمایید.", "keys": ["here you go", "here it is", "sure", "yes", "okay"] },
+            { "en": "Sorry, I don't have it with me.", "fa": "ببخشید، همراهم نیست.", "keys": ["don't have", "do not have", "not with me", "no"],
+              "then": ["That's okay. I can't serve you alcohol without ID, but we have soda, juice, and iced tea.", "اشکالی ندارد. بدون کارت شناسایی نمی‌توانم به شما مشروب بدهم، ولی نوشابه، آب‌میوه و چای سرد داریم."],
+              "thenCheck": { "q": "چه گفت؟", "right": "بدون کارت شناسایی مشروب نمی‌دهد، ولی نوشیدنی بدون الکل دارند.", "wrong": ["بدون کارت شناسایی باید از آنجا بروید.", "بدون کارت شناسایی هم هر نوشیدنی‌ای می‌دهد."] },
+              "skip": 1 }
+          ]
+        },
+        {
+          "them": ["Thanks. What can I get you?", "ممنون. چه برایتان بیاورم؟"],
+          "replies": [
+            { "en": "Do you have anything without alcohol?", "fa": "نوشیدنی بدون الکل دارید؟", "keys": ["without alcohol", "no alcohol", "non-alcoholic", "alcohol", "don't drink", "do not drink"],
+              "then": ["Sure. We have soda, juice, and iced tea.", "بله. نوشابه، آب‌میوه و چای سرد داریم."],
+              "thenCheck": { "q": "چه نوشیدنی‌هایی بدون الکل دارند؟", "right": "نوشابه، آب‌میوه و چای سرد", "wrong": ["فقط آب", "قهوه، چای داغ و شیر"] } },
+            { "en": "Just a soda, please.", "fa": "فقط یک نوشابه، لطفاً.", "keys": ["soda", "coke"], "skip": 1 },
+            { "en": "Juice, please.", "fa": "آب‌میوه، لطفاً.", "keys": ["juice"], "skip": 1 },
+            { "en": "Just a water, please.", "fa": "فقط یک آب، لطفاً.", "keys": ["water"], "skip": 2 },
+            { "en": "A beer, please.", "fa": "یک آبجو، لطفاً.", "keys": ["beer"], "skip": 1 }
+          ]
+        },
+        {
+          "them": ["So, what would you like?", "خب، چه میل دارید؟"],
+          "replies": [
+            { "en": "Just a soda, please.", "fa": "فقط یک نوشابه، لطفاً.", "keys": ["soda", "coke"] },
+            { "en": "Juice, please.", "fa": "آب‌میوه، لطفاً.", "keys": ["juice"] },
+            { "en": "An iced tea, please.", "fa": "یک چای سرد، لطفاً.", "keys": ["iced tea", "ice tea", "tea"] },
+            { "en": "Just a water, please.", "fa": "فقط یک آب، لطفاً.", "keys": ["water"], "skip": 1 }
+          ]
+        },
+        {
+          "them": ["Do you want to start a tab, or pay now?", "می‌خواهید حساب باز کنم و آخر شب بپردازید، یا الان می‌پردازید؟"],
+          "check": {
+            "q": "چه پرسید؟",
+            "right": "آخر شب یک‌جا می‌پردازید یا همین الان؟",
+            "wrong": ["کارت می‌دهید یا نقد؟", "سر میز می‌نشینید یا پای بار؟"]
+          },
+          "replies": [
+            { "en": "I'll pay now, please.", "fa": "الان می‌پردازم، لطفاً.", "keys": ["pay now", "now"] },
+            { "en": "Start a tab, please.", "fa": "لطفاً حساب باز کنید.", "keys": ["start a tab", "tab", "later"] }
+          ]
+        },
+        {
+          "them": ["So, how was your week?", "(جِن) خب، این هفته چطور گذشت؟"],
+          "replies": [
+            { "en": "Good, thanks. How was yours?", "fa": "خوب بود، ممنون. هفتهٔ شما چطور بود؟", "keys": ["good", "fine", "great", "how was yours", "and you", "not bad", "okay"],
+              "then": ["Pretty good! I'm happy it's Friday.", "خوب بود! خوشحالم که جمعه است."] },
+            { "en": "Busy, but good. And yours?", "fa": "شلوغ بود، ولی خوب بود. مال شما چطور؟", "keys": ["busy"],
+              "then": ["Same here! I'm happy it's Friday.", "من هم همین‌طور! خوشحالم که جمعه است."] }
+          ]
+        },
+        {
+          "them": ["This one's on me!", "(آخر شب، جِن) این دفعه مهمان من!"],
+          "check": {
+            "q": "جِن چه گفت؟",
+            "right": "این دفعه او حساب می‌کند.",
+            "wrong": ["صورت‌حساب را دانگی حساب می‌کنند.", "این دفعه شما حساب می‌کنید."]
+          },
+          "replies": [
+            { "en": "Thank you! Next time it's on me.", "fa": "ممنون! دفعهٔ بعد مهمان من.", "keys": ["thank", "next time"] },
+            { "en": "That's very kind, but let's split it.", "fa": "خیلی لطف دارید، ولی بیایید دانگی حساب کنیم.", "keys": ["split", "kind"] }
+          ]
+        },
+        {
+          "them": ["Okay! Do you have a ride home?", "باشد! برای برگشتن به خانه وسیله دارید؟"],
+          "check": {
+            "q": "چه پرسید؟",
+            "right": "وسیله‌ای برای برگشتن به خانه دارید؟",
+            "wrong": ["خانه‌تان کجاست؟", "فردا سر کار می‌آیید؟"]
+          },
+          "replies": [
+            { "en": "Yes, my son is picking me up.", "fa": "بله، پسرم دنبالم می‌آید.", "keys": ["son", "daughter", "picking me up", "pick me up"] },
+            { "en": "Yes, I'll take a taxi.", "fa": "بله، تاکسی می‌گیرم.", "keys": ["taxi", "cab", "uber", "lyft"] },
+            { "en": "Yes, I'll take the bus.", "fa": "بله، با اتوبوس می‌روم.", "keys": ["bus"] },
+            { "en": "Could you give me a ride?", "fa": "می‌شود مرا برسانید؟", "keys": ["give me a ride", "ride"],
+              "then": ["Of course! I'll drive you home.", "حتماً! شما را به خانه می‌رسانم."] },
+            { "en": "Yes, I do. Thank you.", "fa": "بله، دارم. ممنون.", "keys": ["yes", "i do", "i'm okay", "i'm fine"] },
+            { "en": "No, I don't.", "fa": "نه، ندارم.", "keys": ["no"],
+              "then": ["That's okay. I can drive you home.", "اشکالی ندارد. من شما را به خانه می‌رسانم."] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "rp-cinema",
+      "scenario": "leisure",
+      "stage": 2,
+      "title": "بلیت سینما",
+      "setting": "با همسرتان به سینما رفته‌اید. اول پای گیشه هستید و بعد پای پیشخوان خوراکی.",
+      "goal": "برای خودتان و همسرتان دو بلیت بخرید، صندلی انتخاب کنید، دربارهٔ بلیت سالمندان و زیرنویس بپرسید و سالنتان را پیدا کنید.",
+      "them": {
+        "role": "فروشندهٔ سینما",
+        "persona": "a friendly movie theater cashier, then a snack bar worker, in a clearly simulated practice visit; short, simple sentences; tickets are twelve dollars, or nine dollars for seniors; seats are chosen at the counter (row F in the middle, row D on the aisle); closed captioning devices are free at the counter; the movie is in theater five on the left and starts in ten minutes; a small popcorn can be made a large for one dollar more; never ask for personal details",
+        "voice": "b"
+      },
+      "turns": [
+        {
+          "them": ["Hi! What movie would you like to see?", "سلام! چه فیلمی می‌خواهید ببینید؟"],
+          "replies": [
+            { "en": "Two tickets for the seven o'clock show, please.", "fa": "دو بلیت برای سانس ساعت هفت، لطفاً.", "keys": ["seven", "two tickets", "tickets"] },
+            { "en": "This one, please. Two tickets.", "fa": "(به عکس فیلم اشاره می‌کنید) این یکی، لطفاً. دو بلیت.", "keys": ["this one", "this movie"] }
+          ]
+        },
+        {
+          "them": ["Sure. Where would you like to sit?", "حتماً. کجا می‌خواهید بنشینید؟"],
+          "replies": [
+            { "en": "Can we sit in the middle?", "fa": "می‌شود وسط بنشینیم؟", "keys": ["middle", "center"],
+              "then": ["Sure. Row F, seats eight and nine.", "حتماً. ردیف اِف، صندلی هشت و نُه."],
+              "thenCheck": { "q": "صندلی‌هایتان کجاست؟", "right": "ردیف F، صندلی ۸ و ۹", "wrong": ["ردیف F، صندلی ۱۸ و ۱۹", "ردیف S، صندلی ۸ و ۹"] } },
+            { "en": "Can we sit on the aisle?", "fa": "می‌شود کنار راهرو بنشینیم؟", "keys": ["aisle"],
+              "then": ["Sure. Row D, seats one and two.", "حتماً. ردیف دی، صندلی یک و دو."],
+              "thenCheck": { "q": "صندلی‌هایتان کجاست؟", "right": "ردیف D، صندلی ۱ و ۲", "wrong": ["ردیف B، صندلی ۱ و ۲", "ردیف D، صندلی ۱۰ و ۱۲"] } },
+            { "en": "Anywhere is fine.", "fa": "هر جا باشد خوب است.", "keys": ["anywhere", "any seat", "doesn't matter"] }
+          ]
+        },
+        {
+          "them": ["That's twenty-four dollars, please.", "می‌شود بیست و چهار دلار، لطفاً."],
+          "check": {
+            "q": "چقدر باید بپردازید؟",
+            "right": "$24",
+            "wrong": ["$14", "$42"]
+          },
+          "replies": [
+            { "en": "Do you have senior tickets?", "fa": "بلیت سالمند دارید؟", "keys": ["senior"],
+              "then": ["Yes. With two senior tickets, it's eighteen dollars.", "بله. با دو بلیت سالمند، می‌شود هجده دلار."],
+              "thenCheck": { "q": "با بلیت سالمند چقدر می‌شود؟", "right": "$18", "wrong": ["$80", "$24"] } },
+            { "en": "Here you go.", "fa": "بفرمایید.", "keys": ["here you go", "here", "card", "cash", "okay"] }
+          ]
+        },
+        {
+          "them": ["Here are your tickets. Theater five, on your left. The movie starts in ten minutes.", "این هم بلیت‌هایتان. سالن پنج، سمت چپ. فیلم ده دقیقهٔ دیگر شروع می‌شود."],
+          "check": {
+            "q": "سالنتان کجاست؟",
+            "right": "سالن ۵، سمت چپ",
+            "wrong": ["سالن ۹، سمت چپ", "سالن ۵، سمت راست"]
+          },
+          "replies": [
+            { "en": "Do you have closed captioning devices?", "fa": "دستگاه زیرنویس دارید؟", "keys": ["caption", "captioning", "captions", "subtitles"],
+              "then": ["Yes. Here you go. It's free.", "بله. بفرمایید. مجانی است."],
+              "thenCheck": { "q": "چه گفت؟", "right": "بله، دارند و مجانی است.", "wrong": ["نه، ندارند.", "بله، دارند ولی پنج دلار است."] } },
+            { "en": "Could you say that again, please?", "fa": "می‌شود لطفاً دوباره بگویید؟", "keys": ["again", "say", "which theater"],
+              "then": ["Sure. Theater five. Five. On your left.", "حتماً. سالن پنج. پنج. سمت چپ."] },
+            { "en": "Thank you.", "fa": "ممنون.", "keys": ["thank", "okay"] }
+          ]
+        },
+        {
+          "them": ["Hi! What can I get for you?", "(پای پیشخوان خوراکی) سلام! چه میل دارید؟"],
+          "replies": [
+            { "en": "A small popcorn and a water, please.", "fa": "یک پاپ‌کورن کوچک و یک آب، لطفاً.", "keys": ["popcorn"] },
+            { "en": "Just a water, please.", "fa": "فقط یک آب، لطفاً.", "keys": ["water"], "skip": 1 }
+          ]
+        },
+        {
+          "them": ["Would you like to upgrade to a large? It's only one dollar more.", "می‌خواهید بزرگش کنید؟ فقط یک دلار بیشتر است."],
+          "check": {
+            "q": "چه پرسید؟",
+            "right": "می‌خواهید با یک دلار بیشتر، پاپ‌کورن بزرگ بگیرید؟",
+            "wrong": ["می‌خواهید با ده دلار بیشتر، پاپ‌کورن بزرگ بگیرید؟", "پاپ‌کورن کوچک تمام شده؛ بزرگ می‌خواهید؟"]
+          },
+          "replies": [
+            { "en": "Small is fine, thank you.", "fa": "همان کوچک خوب است، ممنون.", "keys": ["small", "no thank", "no thanks", "no"] },
+            { "en": "Sure, a large, please.", "fa": "بله، بزرگ لطفاً.", "keys": ["large", "sure", "yes", "okay"] }
+          ]
+        },
+        {
+          "them": ["Here you go. Enjoy the movie!", "بفرمایید. فیلم خوش بگذرد!"],
+          "replies": [
+            { "en": "Thank you!", "fa": "ممنون!", "keys": ["thank", "thanks"] }
+          ]
+        }
+      ]
+    }
+  ]
+}

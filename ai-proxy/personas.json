@@ -29,6 +29,21 @@
         "You're welcome. Have a good day!"
       ]
     },
+    "rp-cinema": {
+      "role": "a friendly movie theater cashier, then a snack bar worker, in a clearly simulated practice visit; short, simple sentences; tickets are twelve dollars, or nine dollars for seniors; seats are chosen at the counter (row F in the middle, row D on the aisle); closed captioning devices are free at the counter; the movie is in theater five on the left and starts in ten minutes; a small popcorn can be mad",
+      "scene": "با همسرتان به سینما رفته‌اید. اول پای گیشه هستید و بعد پای پیشخوان خوراکی.",
+      "goal": "برای خودتان و همسرتان دو بلیت بخرید، صندلی انتخاب کنید، دربارهٔ بلیت سالمندان و زیرنویس بپرسید و سالنتان را پیدا کنید.",
+      "phone": false,
+      "outline": [
+        "Hi! What movie would you like to see?",
+        "Sure. Where would you like to sit?",
+        "That's twenty-four dollars, please.",
+        "Here are your tickets. Theater five, on your left. The movie starts in ten minutes.",
+        "Hi! What can I get for you?",
+        "Would you like to upgrade to a large? It's only one dollar more.",
+        "Here you go. Enjoy the movie!"
+      ]
+    },
     "rp-clothes": {
       "role": "a friendly clothing store employee helping a customer with a jacket: the fitting room in the back on the left, a larger or smaller size, twenty percent off today, and returns within thirty days with the receipt; short, simple sentences; never ask for personal details",
       "scene": "در فروشگاه لباس، یک ژاکت پسندیده‌اید و می‌خواهید آن را امتحان کنید.",
@@ -283,6 +298,8 @@
     "rp-door": "safety-critical",
     "rp-emergency": "safety-critical",
     "rp-er": "safety-critical",
+    "rp-friends": "asks for personal details",
+    "rp-gym": "safety-critical",
     "rp-home": "asks for personal details",
     "rp-incoming": "safety-critical",
     "rp-insurance": "safety-critical",

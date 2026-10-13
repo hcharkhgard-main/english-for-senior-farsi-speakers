@@ -91,6 +91,12 @@
       "icon": "gift"
     },
     {
+      "id": "leisure",
+      "title": "ورزش، تفریح و دوستان",
+      "en": "Leisure and friends",
+      "icon": "leisure"
+    },
+    {
       "id": "work",
       "title": "کار و شغل",
       "en": "Work and jobs",
