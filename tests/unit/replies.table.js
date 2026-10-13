@@ -183,10 +183,12 @@ export const TABLE = {
     1: { them: "Here is your medicine. Take one tablet twice a day.",
       // QA round 5 recheck, M2: the lesson's dialogue now checks back ("Is that right?"), so the "…Okay." reply, no longer
       // taught there, gave way to another sentence of the lesson; a read-back is taken as the check-back
-      replies: ["Could you write that down, please?", "One tablet, twice a day. Is that right?"],
+      // QA round 5 second recheck, L1: the likeliest answers ("Okay", "Thank you") are understood again, with a sentence of the lesson
+      replies: ["Could you write that down, please?", "One tablet, twice a day. Is that right?", "Thank you very much."],
       r1: ["Could you write that down, please?", "Write it down, please", "Can you write it?"],
-      r2: ["Is that right?", "One tablet twice a day, is that right", "Twice a day, right?", "One tablet twice a day", "One tablet twice a day okay"],
-      unsure: ["Two tablets once a day", "Three times a day", "Yes", "Thank you", "Okay", "Twice a day, okay"],
+      r2: ["Is that right?", "One tablet twice a day, is that right", "Twice a day, right?", "One tablet twice a day", "One tablet twice a day okay", "Okay, is that right?"],
+      r3: ["Thank you", "Okay", "Okay, thank you", "Thanks", "Got it", "I understand", "Thank you very much", "Twice a day, okay"],
+      unsure: ["Two tablets once a day", "Three times a day", "Yes"],
       repeat: ["Could you repeat that, please?", "I don't understand"],
     },
     2: { them: "Take it with food.",
@@ -195,11 +197,11 @@ export const TABLE = {
       unsure: ["Okay", "Yes", "Without food", "No food", "Thank you"],
       repeat: ["Could you repeat that, please?"],
     },
+    // QA round 5 second recheck, L1: "Could you write that down" is offered at T1 and T4 only, not three times
     3: { them: "Take it for ten days.",
-      replies: ["Could you write that down, please?", "Thank you very much."],
-      r1: ["Could you write that down", "Write it down please", "write", "Can you write it"],
-      r2: ["Thank you", "Thank you very much", "Thanks"],
-      unsure: ["Okay", "Ten days", "Yes"],
+      replies: ["Thank you very much."],
+      r1: ["Thank you", "Thank you very much", "Thanks"],
+      unsure: ["Okay", "Ten days", "Yes", "Could you write that down", "write"],
       repeat: ["Could you repeat that, please?", "Slowly, please"],
     },
     4: { them: "Don't drive after taking this.",
@@ -1345,7 +1347,7 @@ export const TABLE = {
       r1: ["Where is the post office?", "Post office", "The post office, please", "post"],
       r2: ["Is there a bank near here?", "Where is the bank?", "A bank", "bank", "Is there an ATM near here?", "Is there a bank or ATM near here?"],      // QA round 5 recheck, L4
       // QA round 4, language L8: the most likely other place now has its own answer
-      r3: ["Is there a pharmacy near here?", "Where is the pharmacy?", "Pharmacy", "A pharmacy, please", "Is there a drugstore near here?", "Is there a pharmacies near here", "Is there a drug store near here?", "Is there a CVS near here?", "Is there a Walgreens near here?"],
+      r3: ["Is there a pharmacy near here?", "Where is the pharmacy?", "Pharmacy", "A pharmacy, please", "Is there a drugstore near here?", "Is there a pharmacies near here", "Is there a drug store near here?", "Is there a CVS near here?", "Is there a Walgreens near here?", "Is there a Walgreen near here?"],      // second recheck, L3
       r4: ["No thank you", "No", "No, that's all", "That's all", "That is all, thank you"],
       // QA round 5, teaching L6: another place than the one in a reply rules that reply out
       unsure: ["Yes", "Yes please", "Where is the library?", "Thank you", "Is there a hospital near here?", "Is there a supermarket near here?", "Where is the hospital?", "Is there a hospital near the bank?", "Is there a gas station near here?"],
@@ -2032,9 +2034,13 @@ export const TABLE = {
       replies: ["Yes, I'm okay. Are you okay?", "I'm okay. I'm not hurt.", "My neck hurts a little.", "No. I'm hurt."],
       r1: ["Yes", "Yes, please", "Yes, I'm okay", "I am fine", "I am okay", "I'm okay. Are you okay?", "I'm fine", "I'm good", "No, no, I'm okay"],
       // QA round 5 recheck, M1: «نه، خوبم» said in English is not "I'm hurt"
-      r2: ["No, I'm okay", "No, I'm fine", "No, I'm good", "No, I am okay", "No pain", "I'm not hurt", "Not hurt", "No problem"],
+      r2: ["No, I'm okay", "No, I'm fine", "No, I'm good", "No, I am okay", "No pain", "I'm not hurt", "Not hurt", "No problem",
+        // QA round 5 second recheck, M1: the forms people really use («نه، خوبم، ممنون»)
+        "No, I'm okay, thank you", "No, I'm okay. Thanks", "No, I'm okay. Are you okay?", "No, I'm okay. And you?", "No, I'm okay, are you?",
+        "No, it's okay", "No, I'm ok", "Oh no, I'm okay", "No, I am okay, thank you", "No, I'm fine, thank you"],
       r3: ["My neck hurts", "My neck hurts a little", "Yes, but my neck hurts"],
-      r4: ["No", "No, thank you", "I am hurt", "I'm hurt", "I'm not okay", "No, I am not okay", "My back hurts", "My head hurts", "I have pain", "I'm in pain", "No, my back hurts"],      // QA round 5, teaching M1
+      r4: ["No", "No, thank you", "I am hurt", "I'm hurt", "I'm not okay", "No, I am not okay", "My back hurts", "My head hurts", "I have pain", "I'm in pain", "No, my back hurts",      // QA round 5, teaching M1
+        "No, no", "No, it's not okay", "No, I'm hurt", "No, I'm in pain", "No, I'm okay, but my back hurts"],      // second recheck, M1: still hurt
       repeat: ["I don't understand", "Again, please", "What?"],
       unsure: ["Okay", "Thank you", "No, I'm not hurt", "Pain"],
     },

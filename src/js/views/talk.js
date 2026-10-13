@@ -141,7 +141,7 @@ export function roleplayView(app, id) {
     const lines = [];
     for (let i = S.log.length - 1; i >= 0 && S.log[i].who === 'them'; i--) lines.unshift(S.log[i]);
     S.unsure = null; S.note = null;
-    S.again = { kind: pick.repair || 'again', heard, slow: !!pick.slow, fix: heard ? correct(heard, content.corrections) : null };
+    S.again = { kind: pick.repair || 'again', heard, slow: !!pick.slow, fix: heard ? correct(heard, content.corrections) : null, lines: S.silent ? lines.map((l) => l.en) : null };
     app.render();
     later(app, 150, async () => {
       if (app.ui.rp !== S) return;
@@ -153,7 +153,8 @@ export function roleplayView(app, id) {
         await new Promise((go) => setTimeout(go, 400));
         if (app.ui.rp !== S || app.audio.current || app.speech.busy) return;
       }
-      playNow(app, lines.map((l) => clipEn(l.en, voice, pick.slow ? 's' : 'n')), { quiet: true, gap: 500 });
+      // the partner's line has no sound on the phone and there is no connection (S.silent): it is shown again instead
+      if (!S.silent) playNow(app, lines.map((l) => clipEn(l.en, voice, pick.slow ? 's' : 'n')), { quiet: true, gap: 500 });
     });
     settle();
   };
@@ -376,9 +377,11 @@ export function roleplayView(app, id) {
 
   if (S.again) {
     // asked by voice: what the phone heard is shown; asked with the button: only what happens next
-    const kind = S.again.heard ? S.again.kind : S.again.slow ? 'tapSlow' : 'again';
+    // (no sound for the line: S.silent — the note says so, and the line is shown again to read)
+    const kind = S.again.lines ? 'silent' : S.again.heard ? S.again.kind : S.again.slow ? 'tapSlow' : 'again';
     const box = note(h('div', { class: 'stack' }, h('b', null, t('rp.repeat.' + kind)), S.again.heard ? h('span', null, t('say.heard') + ' ', en(S.again.heard)) : null,
-      S.again.fix ? h('span', null, h('b', null, t('fix.title') + ' '), en(S.again.fix.fixed), ' — ', S.again.fix.why) : null), 'info', S.again.slow ? 'slow' : 'repeat');
+      S.again.lines && S.again.lines.length ? h('span', { 'data-again-text': '' }, en(S.again.lines.join(' '))) : null,
+      S.again.fix ? h('span', null, h('b', null, t('fix.title') + ' '), en(S.again.fix.fixed), ' — ', S.again.fix.why) : null), 'info', S.again.slow && !S.again.lines ? 'slow' : 'repeat');
     box.setAttribute('data-new', '');
     main.append(box);
   }

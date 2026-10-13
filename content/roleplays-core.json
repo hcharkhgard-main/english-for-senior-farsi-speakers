@@ -177,7 +177,8 @@
           "check": { "q": "چطور باید بخورید؟", "right": "روزی دو بار، هر بار یک قرص", "wrong": ["روزی یک بار، هر بار دو قرص", "روزی سه بار، هر بار یک قرص"] },
           "replies": [
             { "en": "Could you write that down, please?", "fa": "می‌شود لطفاً آن را بنویسید؟", "keys": ["write"], "then": ["Of course. It's also on the label.", "البته. روی برچسب دارو هم نوشته شده است."] },
-            { "en": "One tablet, twice a day. Is that right?", "fa": "یک قرص، روزی دو بار. درست است؟", "keys": ["is that right", "right"], "then": ["Yes, that's right. One tablet, twice a day.", "بله، درست است. روزی دو بار، هر بار یک قرص."] }
+            { "en": "One tablet, twice a day. Is that right?", "fa": "یک قرص، روزی دو بار. درست است؟", "keys": ["is that right", "right"], "then": ["Yes, that's right. One tablet, twice a day.", "بله، درست است. روزی دو بار، هر بار یک قرص."] },
+            { "en": "Thank you very much.", "fa": "خیلی ممنون.", "keys": ["thank", "thanks", "okay", "got it", "i understand"] }
           ] },
         { "them": ["Take it with food.", "آن را همراه غذا بخورید."],
           "check": { "q": "چطور باید بخورید؟", "right": "همراه غذا", "wrong": ["با معدهٔ خالی", "قبل از غذا"] },
@@ -187,7 +188,6 @@
         { "them": ["Take it for ten days.", "آن را ده روز بخورید."],
           "check": { "q": "چند روز باید بخورید؟", "right": "ده روز", "wrong": ["دو هفته", "دو روز"] },
           "replies": [
-            { "en": "Could you write that down, please?", "fa": "می‌شود لطفاً آن را بنویسید؟", "keys": ["write"], "then": ["Of course. It's also on the label.", "البته. روی برچسب دارو هم نوشته شده است."] },
             { "en": "Thank you very much.", "fa": "خیلی ممنون.", "keys": ["thank", "thanks"] }
           ] },
         { "them": ["Don't drive after taking this.", "بعد از خوردن این دارو رانندگی نکنید."],

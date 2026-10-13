@@ -403,6 +403,18 @@ test('the longer turn (QA round 4, M1): only what the other person says in one t
       for (const o of G.options.filter((x) => !x.right)) assert.ok(!/(^|\. )بردارید\.|بفرمایید\.|شرکت برق، بخش|خوش آمدید|چه کمکی از من برمی‌آید/.test(o.fa), `${id}: ${o.fa}`);
     }
   }
+  // QA round 5 second recheck: a wrong answer does not carry a question the right one lacks, so it is never longer by a sentence
+  const nSent = (x) => x.split(/[.؟?!]\s*/).filter((w) => w.trim()).length;
+  for (const id of ['work-first-day', 'customer-service']) {
+    const L = content.lessons[id];
+    if (!L) continue;
+    for (let i = 0; i < 20; i++) for (const g of [0, 1, 2]) {
+      const G = longGist(L, i / 20 + 0.01, g);
+      if (!G) continue;
+      const right = G.options.find((x) => x.right).fa;
+      for (const o of G.options.filter((x) => !x.right)) assert.equal(nSent(o.fa), nSent(right), `${id}: ${o.fa}`);
+    }
+  }
   // a made-up dialogue: two lines with the learner between are never one turn; two side by side are
   const D = (lines) => ({ dialogue: { lines }, phrases: [] });
   const them = (en, fa) => ({ who: 'them', en, fa }), you = (en) => ({ who: 'you', en, fa: 'ـ' });

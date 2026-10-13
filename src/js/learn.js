@@ -442,7 +442,7 @@ export function longGist(L, seed, g = 0) {
   // the whole meaning: for one line its own Farsi (the halves in it are the sentences the line has); for two lines, both
   const whole = T.lines.map((l) => l.fa.trim()).join(' ');
   // (without the small words of a reply that start it: «باشد.»، «البته.» would give the stand-in away)
-  const gist = (l) => { const e = sentencesOf(l.en), f = sentencesOf(l.fa); const keep = f.filter((_, i) => e.length === f.length && !(REPLY_START.test(e[i]) && wordCount(e[i]) <= 3)); return (keep.length ? keep : f).join(' '); };
+  const gist = (l) => { const e = sentencesOf(l.en), f = sentencesOf(l.fa); const keep = f.filter((_, i) => e.length === f.length && !(REPLY_START.test(e[i]) && wordCount(e[i]) <= 3)), told = keep.filter((x) => { const i = f.indexOf(x); return !/\?\s*$/.test(e[i]) && wordCount(e[i]) >= 3; }); return (told.length && told.length < keep.length && keep.every((x) => told.includes(x) || /\?\s*$/.test(e[f.indexOf(x)])) ? told : keep.length ? keep : f).join(' '); };
   const swap = (part, by) => (T.lines.length === 2 ? T.lines.map((l) => (l.fa === part.fa ? gist(by) : l.fa.trim())).join(' ')
     : sentencesOf(T.lines[0].fa).map((s) => (s === part.fa ? gist(by) : s)).join(' '));
   return { lines: T.lines, options: [{ fa: whole, right: true }, { fa: swap(last, x), right: false }, { fa: swap(first, y), right: false }] };

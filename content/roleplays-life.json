@@ -470,7 +470,7 @@
           "check": { "q": "چه پرسید؟", "right": "حالتان خوب است؟", "wrong": ["ماشینتان سالم است؟", "بیمه دارید؟"] },
           "replies": [
             { "en": "Yes, I'm okay. Are you okay?", "fa": "بله، خوبم. شما خوبید؟", "keys": ["i'm okay", "i am okay", "yes", "fine", "i'm good", "i am good"], "then": ["I'm fine, thank you.", "من خوبم، ممنون."] },
-            { "en": "I'm okay. I'm not hurt.", "fa": "خوبم. آسیبی ندیده‌ام.", "keys": ["not hurt", "no pain", "no problem", "no i'm okay", "no i'm fine", "no i am okay", "no i am fine", "no i'm good"], "then": ["Good. I'm fine, too.", "خوب است. من هم خوبم."] },
+            { "en": "I'm okay. I'm not hurt.", "fa": "خوبم. آسیبی ندیده‌ام.", "keys": ["not hurt", "no pain", "no problem", "no i'm okay", "no i'm fine", "no i am okay", "no i am fine", "no i'm good", "no i'm ok", "no it's okay", "no it is okay"], "then": ["Good. I'm fine, too.", "خوب است. من هم خوبم."] },
             { "en": "My neck hurts a little.", "fa": "گردنم کمی درد می‌کند.", "keys": ["neck", "hurts a little"], "then": ["I'm sorry. If you need help, we can call 911.", "متأسفم. اگر کمک لازم دارید، می‌توانیم به ۹۱۱ زنگ بزنیم."], "thenCheck": { "right": "اگر کمک لازم دارید، می‌توانیم به ۹۱۱ زنگ بزنیم.", "wrong": ["اگر کمک لازم دارید، به بیمه زنگ بزنید.", "چیزی نیست؛ لازم نیست به کسی زنگ بزنیم."] } },
             { "en": "No. I'm hurt.", "fa": "نه. آسیب دیده‌ام.", "keys": ["not okay", "no", "i'm hurt", "i am hurt", "hurt", "i have pain", "in pain"], "skip": 1, "then": ["I'm sorry. I'm calling 911 now. Please stay here.", "متأسفم. همین الان به ۹۱۱ زنگ می‌زنم. لطفاً همین‌جا بمانید."], "thenCheck": { "right": "همین الان به ۹۱۱ زنگ می‌زند.", "wrong": ["به بیمه‌اش زنگ می‌زند.", "می‌گوید خودتان به ۹۱۱ زنگ بزنید."] } }
           ] },

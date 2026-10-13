@@ -257,6 +257,13 @@ try {
     const quiet = await page.evaluate(() => { const c = document.querySelector('[data-check]'); const last = [...document.querySelectorAll('.bubble.them')].pop();
       return { check: !!c, fa: c ? !!last.querySelector('.fa-line') : null, plays: document.querySelectorAll('main [data-play]').length }; });
     check('…there, no meaning is shown above a question about the line, and there are no sound buttons', (!quiet.check || quiet.fa === false) && quiet.plays === 0, quiet);
+    // (QA round 5 second recheck, L2) «Could you repeat that, please?» does not promise a sound that cannot play: the line is shown again to read
+    if (quiet.check) { const right = await page.evaluate((rid) => window.hamrah.content.roleplays.find((r) => r.id === rid).turns[0].check.right, silentId); await page.waitForTimeout(700); await page.locator('[data-check]').locator('..').getByText(right, { exact: true }).first().click().catch(() => {}); await page.waitForTimeout(1500); }
+    const hasAgain = await page.locator('[data-again]').count();
+    if (hasAgain) { await page.waitForTimeout(700); await page.locator('[data-again]').click(); await page.waitForTimeout(1500); }
+    const rep = await page.evaluate(() => { const n = [...document.querySelectorAll('main .note')].map((x) => x.textContent).join(' | '); const lastThem = [...document.querySelectorAll('.bubble.them')].pop();
+      return { note: n, text: (document.querySelector('[data-again-text]') || {}).textContent || '', line: lastThem ? (lastThem.querySelector('[lang="en"]') || {}).textContent || '' : '', plays: document.querySelectorAll('main [data-play]').length }; });
+    check('…there, «Could you repeat that?» says honestly that the line has no sound and shows it again to read', hasAgain > 0 && rep.note.includes(T['rp.repeat.silent']) && !rep.note.includes(T['rp.repeat.again']) && rep.text.length > 5 && rep.text.includes(rep.line.trim()) && rep.plays === 0, { hasAgain, rep: { ...rep, note: rep.note.slice(0, 160) } });
     await plug(ctx); await ctx.close();
   }
   // ---- another site on the same address replaces stored files (QA round 4, security M1) ----------
