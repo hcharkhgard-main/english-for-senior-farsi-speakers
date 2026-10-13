@@ -253,6 +253,10 @@ try {
     await page.getByText(T['rp.start']).click(); await page.waitForSelector('.bubble.them'); await page.waitForTimeout(800);
     const shown = await page.evaluate(() => { const b = document.querySelector('.bubble.them'); return { mask: !!b.querySelector('.phone-mask'), en: (b.querySelector('[lang="en"]') || {}).textContent || '' }; });
     check('…a phone conversation whose sound is not on the phone says so calmly, and its first line can be read', !!silentId && before.includes(T['talk.offline']) && !shown.mask && shown.en.length > 5, { silentId, before: before.slice(0, 120), shown });
+    // (QA round 5 recheck, L3) a question about the line does not show its meaning above it, and no sound button that cannot play is offered
+    const quiet = await page.evaluate(() => { const c = document.querySelector('[data-check]'); const last = [...document.querySelectorAll('.bubble.them')].pop();
+      return { check: !!c, fa: c ? !!last.querySelector('.fa-line') : null, plays: document.querySelectorAll('main [data-play]').length }; });
+    check('…there, no meaning is shown above a question about the line, and there are no sound buttons', (!quiet.check || quiet.fa === false) && quiet.plays === 0, quiet);
     await plug(ctx); await ctx.close();
   }
   // ---- another site on the same address replaces stored files (QA round 4, security M1) ----------
@@ -289,6 +293,8 @@ try {
     const off = await p3.evaluate(() => ({ replaced: !!window.__replaced, app: !!window.hamrah })).catch(() => ({ replaced: false, app: false }));
     const offText = await p3.evaluate(() => ({ lang: document.documentElement.lang, dir: document.documentElement.dir, text: document.body ? document.body.innerText : '' })).catch(() => ({ text: '' }));
     check('…and without a connection a replaced page is not run at all', !off.replaced && !off.app, off);
+    const retry = await p3.evaluate((label) => { const x = [...document.querySelectorAll('button')].find((e) => e.textContent.trim() === label); return x ? Math.round(x.getBoundingClientRect().height) : 0; }, T['offline.page.retry']).catch(() => 0);
+    check('…with a large button to try again (QA round 5 recheck, L7)', retry >= 56, { retry });
     check('…the learner sees a calm page in Farsi instead of the English word "Offline" (QA round 5, usability L5)', offText.lang === 'fa' && offText.dir === 'rtl' && offText.text.includes(T['offline.page.title']) && offText.text.includes('911') && !/^Offline$/.test(offText.text.trim()), offText);
     await plug(ctx); await ctx.close();
   }

@@ -469,9 +469,17 @@
         { "them": ["Oh no, I'm so sorry! Are you okay?", "ای وای، خیلی متأسفم! حالتان خوب است؟"],
           "check": { "q": "چه پرسید؟", "right": "حالتان خوب است؟", "wrong": ["ماشینتان سالم است؟", "بیمه دارید؟"] },
           "replies": [
-            { "en": "Yes, I'm okay. Are you okay?", "fa": "بله، خوبم. شما خوبید؟", "keys": ["i'm okay", "i am okay", "yes", "fine"], "then": ["I'm fine, thank you.", "من خوبم، ممنون."] },
+            { "en": "Yes, I'm okay. Are you okay?", "fa": "بله، خوبم. شما خوبید؟", "keys": ["i'm okay", "i am okay", "yes", "fine", "i'm good", "i am good"], "then": ["I'm fine, thank you.", "من خوبم، ممنون."] },
+            { "en": "I'm okay. I'm not hurt.", "fa": "خوبم. آسیبی ندیده‌ام.", "keys": ["not hurt", "no pain", "no problem", "no i'm okay", "no i'm fine", "no i am okay", "no i am fine", "no i'm good"], "then": ["Good. I'm fine, too.", "خوب است. من هم خوبم."] },
             { "en": "My neck hurts a little.", "fa": "گردنم کمی درد می‌کند.", "keys": ["neck", "hurts a little"], "then": ["I'm sorry. If you need help, we can call 911.", "متأسفم. اگر کمک لازم دارید، می‌توانیم به ۹۱۱ زنگ بزنیم."], "thenCheck": { "right": "اگر کمک لازم دارید، می‌توانیم به ۹۱۱ زنگ بزنیم.", "wrong": ["اگر کمک لازم دارید، به بیمه زنگ بزنید.", "چیزی نیست؛ لازم نیست به کسی زنگ بزنیم."] } },
-            { "en": "No. I'm hurt.", "fa": "نه. آسیب دیده‌ام.", "keys": ["not okay", "no", "i'm hurt", "i am hurt", "hurt", "pain"], "then": ["I'm sorry. I'm calling 911 now. Please stay here.", "متأسفم. همین الان به ۹۱۱ زنگ می‌زنم. لطفاً همین‌جا بمانید."], "thenCheck": { "right": "همین الان به ۹۱۱ زنگ می‌زند.", "wrong": ["به بیمه‌اش زنگ می‌زند.", "می‌گوید خودتان به ۹۱۱ زنگ بزنید."] } }
+            { "en": "No. I'm hurt.", "fa": "نه. آسیب دیده‌ام.", "keys": ["not okay", "no", "i'm hurt", "i am hurt", "hurt", "i have pain", "in pain"], "skip": 1, "then": ["I'm sorry. I'm calling 911 now. Please stay here.", "متأسفم. همین الان به ۹۱۱ زنگ می‌زنم. لطفاً همین‌جا بمانید."], "thenCheck": { "right": "همین الان به ۹۱۱ زنگ می‌زند.", "wrong": ["به بیمه‌اش زنگ می‌زند.", "می‌گوید خودتان به ۹۱۱ زنگ بزنید."] } }
+          ] },
+        { "them": ["Do you want to call the police?", "می‌خواهید به پلیس زنگ بزنیم؟"],
+          "check": { "q": "چه پرسید؟", "right": "می‌خواهید به پلیس زنگ بزنیم؟", "wrong": ["می‌خواهید به بیمه زنگ بزنیم؟", "به پلیس زنگ زده‌اید؟"] },
+          "replies": [
+            { "en": "Yes. Let's call the police.", "fa": "بله. بیایید به پلیس زنگ بزنیم.", "keys": ["yes", "police", "let's call"], "then": ["Okay. I'm calling them now.", "باشد. همین الان زنگ می‌زنم."], "thenCheck": { "right": "همین الان به پلیس زنگ می‌زند.", "wrong": ["فردا به پلیس زنگ می‌زند.", "می‌گوید خودتان زنگ بزنید."] } },
+            { "en": "No, I don't think so.", "fa": "نه، فکر نمی‌کنم لازم باشد.", "keys": ["no", "don't think", "not necessary"], "then": ["Okay. I'd still like to call them, just to be safe.", "باشد. ولی من ترجیح می‌دهم برای احتیاط به پلیس زنگ بزنم."], "thenCheck": { "right": "برای احتیاط خودش به پلیس زنگ می‌زند.", "wrong": ["قبول می‌کند که به پلیس زنگ نزنید.", "می‌خواهد شما به پلیس زنگ بزنید."] } },
+            { "en": "Wait, please. I need to call my son.", "fa": "لطفاً صبر کنید. باید به پسرم زنگ بزنم.", "keys": ["call my son", "son", "wait"], "then": ["Of course. Call your son. I'll call the police.", "البته. شما به پسرتان زنگ بزنید. من به پلیس زنگ می‌زنم."], "thenCheck": { "right": "شما به پسرتان زنگ بزنید؛ او به پلیس زنگ می‌زند.", "wrong": ["شما به پلیس زنگ بزنید؛ او به پسرتان زنگ می‌زند.", "لازم نیست به پلیس زنگ بزنید."] } }
           ] },
         { "them": ["Let me give you my insurance information.", "بگذارید اطلاعات بیمه‌ام را به شما بدهم."],
           "check": { "q": "چه گفت؟", "right": "می‌خواهد اطلاعات بیمه‌اش را به شما بدهد.", "wrong": ["اطلاعات بیمهٔ شما را می‌خواهد.", "می‌گوید بیمه ندارد."] },
@@ -484,13 +492,6 @@
           "replies": [
             { "en": "Yes. Here is my license.", "fa": "بله. این گواهینامهٔ من است.", "keys": ["here is my", "yes", "here", "okay", "sure"] },
             { "en": "Can I see your license, too?", "fa": "می‌شود من هم گواهینامهٔ شما را ببینم؟", "keys": ["your license", "see your"], "then": ["Of course. Here you go.", "البته. بفرمایید."] }
-          ] },
-        { "them": ["Do you want to call the police?", "می‌خواهید به پلیس زنگ بزنیم؟"],
-          "check": { "q": "چه پرسید؟", "right": "می‌خواهید به پلیس زنگ بزنیم؟", "wrong": ["می‌خواهید به بیمه زنگ بزنیم؟", "به پلیس زنگ زده‌اید؟"] },
-          "replies": [
-            { "en": "Yes. Let's call the police.", "fa": "بله. بیایید به پلیس زنگ بزنیم.", "keys": ["yes", "police", "let's call"], "then": ["Okay. I'm calling them now.", "باشد. همین الان زنگ می‌زنم."], "thenCheck": { "right": "همین الان به پلیس زنگ می‌زند.", "wrong": ["فردا به پلیس زنگ می‌زند.", "می‌گوید خودتان زنگ بزنید."] } },
-            { "en": "No, I don't think so.", "fa": "نه، فکر نمی‌کنم لازم باشد.", "keys": ["no", "don't think", "not necessary"], "then": ["Okay. I'd still like to call them, just to be safe.", "باشد. ولی من ترجیح می‌دهم برای احتیاط به پلیس زنگ بزنم."], "thenCheck": { "right": "برای احتیاط خودش به پلیس زنگ می‌زند.", "wrong": ["قبول می‌کند که به پلیس زنگ نزنید.", "می‌خواهد شما به پلیس زنگ بزنید."] } },
-            { "en": "Wait, please. I need to call my son.", "fa": "لطفاً صبر کنید. باید به پسرم زنگ بزنم.", "keys": ["call my son", "son", "wait"], "then": ["Of course. Call your son. I'll call the police.", "البته. شما به پسرتان زنگ بزنید. من به پلیس زنگ می‌زنم."], "thenCheck": { "right": "شما به پسرتان زنگ بزنید؛ او به پلیس زنگ می‌زند.", "wrong": ["شما به پلیس زنگ بزنید؛ او به پسرتان زنگ می‌زند.", "لازم نیست به پلیس زنگ بزنید."] } }
           ] },
         { "them": ["The police are on the way. They'll be here in about twenty minutes. Let's wait here.", "پلیس در راه است. حدود بیست دقیقهٔ دیگر می‌رسند. بیایید همین‌جا منتظر بمانیم."],
           "check": { "q": "پلیس کی می‌رسد؟", "right": "حدود بیست دقیقهٔ دیگر", "wrong": ["حدود دوازده دقیقهٔ دیگر", "حدود دو ساعت دیگر"] },
@@ -565,7 +566,7 @@
         { "them": ["This jacket is on sale today. It's twenty percent off.", "این ژاکت امروز حراج است. بیست درصد تخفیف دارد."],
           "check": { "q": "چه گفت؟", "right": "امروز حراج است؛ بیست درصد تخفیف دارد.", "wrong": ["امروز حراج است؛ دوازده درصد تخفیف دارد.", "امروز حراج نیست."] },
           "replies": [
-            { "en": "Great. I'll take it.", "fa": "عالی است. همین را می‌خرم.", "keys": ["i'll take", "take it", "i will take", "great", "buy", "okay"] },
+            { "en": "Great. I'll take it.", "fa": "عالی است. همین را می‌خرم.", "keys": ["i'll take", "take it", "i will take", "buy"] },
             { "en": "How much is it?", "fa": "قیمتش چند است؟", "keys": ["how much", "price"], "then": ["With the discount, it's forty dollars.", "با تخفیف، چهل دلار است."], "thenCheck": { "q": "با تخفیف قیمتش چند است؟", "right": "$40", "wrong": ["$14", "$44"] } }
           ] },
         { "them": ["Here is your receipt. You can return it within thirty days.", "(پای صندوق) این رسیدتان است. تا سی روز می‌توانید پسش بدهید."],

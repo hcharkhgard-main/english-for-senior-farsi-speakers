@@ -23,7 +23,7 @@
     "setting": "در داروخانه، داروساز دارو را به شما می‌دهد و طرز مصرفش را می‌گوید.",
     "lines": [
       ["them", "Here is your medicine. Take one tablet twice a day.", "این داروی شماست. روزی دو بار، هر بار یک قرص بخورید."],
-      ["you", "One tablet, twice a day. Okay.", "یک قرص، روزی دو بار. باشد."],
+      ["you", "One tablet, twice a day. Is that right?", "یک قرص، روزی دو بار. درست است؟"],
       ["them", "Yes, that's right. One tablet, twice a day.", "بله، درست است. روزی دو بار، هر بار یک قرص."],
       ["them", "Take it with food.", "آن را همراه غذا بخورید."],
       ["you", "With food. For how many days?", "همراه غذا. چند روز؟"],

@@ -108,6 +108,7 @@ export function loadContent() {
 //                                                (`title` and `note` are '' when not given)
 //   conversation.turns[i].check                  { q, right, wrong: [a, b] }   about that turn's partner line; `q` is null
 //   conversation.turns[i].replies[j].thenCheck   the same, about that reply's `then` line     when the default question is meant
+//   conversation.turns[i].replies[j].skip        n (1 or more): the next n turns are left out after this reply; absent when not given
 //   content.papers          [{ id, title, kind, stage, lesson (id or null), note ('' when none), safetyCritical (boolean),
 //                              lines: [{ en, fa, strong (boolean) }], questions: [{ fa, line }] }]   `line` is 1-based, as written
 //   content.practice / content.practiceAll, content.essentials, content.numbersAfter, content.mine — see loadContent
@@ -179,7 +180,9 @@ export function normaliseRoleplay(R, problems = []) {
         replies: t.replies.map((r) => {
           const thenCheck = normaliseCheck(r.thenCheck, `${W} reply "${r.en}"`, problems);
           if (thenCheck && !r.then) problems.push(`${W} reply "${r.en}": "thenCheck" without a "then" line`);
-          return { en: r.en, fa: r.fa, keys: r.keys || [], then: r.then ? { en: r.then[0], fa: r.then[1] } : null, ...(thenCheck && r.then ? { thenCheck } : {}) };
+          // "skip": n — after this reply the next n turns are left out ("I'm calling 911 now" makes "Do you want to call the police?" moot)
+          if (r.skip != null && !(Number.isInteger(r.skip) && r.skip >= 1 && i + 1 + r.skip < R.turns.length)) problems.push(`${W} reply "${r.en}": "skip" must be a whole number of turns (1 or more) that leaves at least one turn after it`);
+          return { en: r.en, fa: r.fa, keys: r.keys || [], then: r.then ? { en: r.then[0], fa: r.then[1] } : null, ...(thenCheck && r.then ? { thenCheck } : {}), ...(Number.isInteger(r.skip) && r.skip >= 1 ? { skip: r.skip } : {}) };
         }),
       };
     }),

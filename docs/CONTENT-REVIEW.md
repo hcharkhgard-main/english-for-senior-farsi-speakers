@@ -98,6 +98,7 @@ is absent or empty in the file is absent in the app's data too.
 | lesson, conversation | `them.voice` | `"s"` is the learner's voice; partners are `"m"`, `"b"`, `"k"` (a second woman) or `"a"` (a second man). | One of the five |
 | conversation turn | `"check": { "q"?, "right", "wrong": [a, b] }` | A Farsi question about that turn's partner line, asked before the replies appear. `q` defaults to «چه گفت؟». | One right answer, exactly two wrong ones, all different |
 | conversation reply | `"thenCheck": { … }` | The same, about that reply's `then` line. | As above, and the reply has a `then` |
+| conversation reply | `"skip": 1` | After this reply the next turn(s) are left out, because the reply makes them moot ("No. I'm hurt." → the other driver calls 911, so the police question is not asked). | A whole number, 1 or more, that leaves at least one turn after it |
 | `curriculum.json` | `"essentials": [lesson ids]` | The lessons everybody does first, whatever they answer at the first-run questions. After them, safety-critical lessons of an earlier stage are never skipped either. | Stage 1 lessons that exist; one of them an emergency lesson (warning) |
 | `curriculum.json` | `"practice": { lesson: "rp-id" or ["rp-id", …] }` | The conversation(s) offered when the lesson is finished; the first is the main one. | The ids exist |
 | `curriculum.json` | `"numbersAfter": [lesson ids]` | Lessons whose last screen also offers «شنیدن عددها». | The ids exist |

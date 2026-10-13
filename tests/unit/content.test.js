@@ -56,6 +56,23 @@ test('conversation: check and thenCheck keep one shape; without them a turn is a
   assert.deepEqual(VOICES, ['s', 'm', 'b', 'k', 'a']);
 });
 
+test('conversation: a reply can skip the turns it makes moot; "skip" must leave a turn after it', () => {
+  const problems = [];
+  const turn = (en, replies) => ({ them: [en, 'ن'], replies });
+  const R = normaliseRoleplay({ id: 'rp-y', them: { role: 'ن', voice: 'm' }, turns: [
+    turn('Are you okay?', [{ en: 'Yes.', fa: 'بله.' }, { en: 'No. I\'m hurt.', fa: 'نه.', skip: 1, then: ['I\'m calling 911.', 'زنگ می‌زنم.'] }]),
+    turn('Call the police?', [{ en: 'Yes.', fa: 'بله.', skip: 0 }]),
+    turn('Insurance?', [{ en: 'Here.', fa: 'بفرمایید.', skip: 1 }]),
+    turn('Bye.', [{ en: 'Bye.', fa: 'خداحافظ.', skip: 1.5 }]),
+  ] }, problems);
+  assert.equal(R.turns[0].replies[1].skip, 1);
+  assert.equal('skip' in R.turns[0].replies[0], false, 'no skip: the field is absent');
+  assert.equal(problems.length, 3, 'skip 0, a skip past the last turn and a fraction are each reported');
+  assert.equal('skip' in R.turns[1].replies[0], false);
+  assert.equal(R.turns[2].replies[0].skip, 1, 'reported, but kept as written');
+  assert.equal('skip' in R.turns[3].replies[0], false);
+});
+
 test('paper: lines and questions keep their form; the line number of an answer counts from 1', () => {
   const problems = [];
   const P = normalisePaper({ id: 'bill-1', title: 'قبض برق', kind: 'bill', stage: 2, lesson: 'pay-bill-phone', note: ' ساختگی ', lines: [{ en: 'Amount due: $45.20', fa: 'مبلغ', strong: true }, { en: 'Due date: March 5', fa: 'مهلت' }], questions: [{ fa: 'چقدر؟', line: 1 }] }, 0, problems);

@@ -108,7 +108,9 @@ if (target === 'pwa') {
     return '<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
       + `<title>${esc(S['app.name'])}</title><style>body{font:20px/1.8 system-ui,-apple-system,sans-serif;margin:0;padding:24px;background:#faf6ee;color:#1d2433}h1{font-size:26px;line-height:1.5}`
       + '@media (prefers-color-scheme:dark){body{background:#151a24;color:#eef1f6}}</style></head><body>'
-      + `<h1>${esc(S['offline.page.title'])}</h1><p>${esc(S['offline.page.body'])}</p><p>${esc(S['sos.noCall'])}</p></body></html>`;
+      + `<h1>${esc(S['offline.page.title'])}</h1><p>${esc(S['offline.page.body'])}</p><p>${esc(S['sos.noCall'])}</p>`
+      // an installed app cannot simply be "opened again": a large button tries once more (QA round 5 recheck, L7)
+      + `<p><button type="button" onclick="location.reload()" style="font:inherit;min-height:56px;padding:0 24px;border-radius:14px;border:2px solid currentColor;background:transparent;color:inherit">${esc(S['offline.page.retry'])}</button></p></body></html>`;
   };
   const htmlSrc = fs.readFileSync(src('index.html'), 'utf8'), swSrc = fs.readFileSync(src('sw.js'), 'utf8');
   const audioIdx = fs.existsSync(path.join(out, 'audio', 'index.json')) ? fs.readFileSync(path.join(out, 'audio', 'index.json'), 'utf8') : '';

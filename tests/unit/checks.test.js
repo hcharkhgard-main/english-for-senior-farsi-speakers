@@ -5,7 +5,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { loadContent, audioRequests } from '../../tools/content.mjs';
-import { checkOf, CHECK_TRIES } from '../../src/js/views/talk.js';
+import { checkOf, CHECK_TRIES, nextTurn } from '../../src/js/views/talk.js';
 import { tokens } from '../../src/js/match.js';
 import { liveBlock } from '../../src/js/ai-prompt.js';
 import { safetyFlagProblems } from '../../tools/safety-flags.mjs';
@@ -127,4 +127,26 @@ test('every lesson, conversation and paper about a clinic, a bank, an emergency,
   assert.equal(safetyFlagProblems(L({ scenario: 'bank', safetyCritical: true })).length, 0, 'flagged');
   assert.equal(safetyFlagProblems(L({ note: 'PIN', safetyCritical: false })).length, 0, 'decided: not safety-critical');
   assert.equal(safetyFlagProblems({ lessons: {}, roleplays: [], papers: [{ id: 'p', note: 'کارت هدیه نخرید.', safetyCritical: false }] }).length, 1, 'papers have no opt-out');
+});
+
+test('rp-car-accident: the police question is asked only where nobody has called 911 yet (QA round 5 recheck, L1)', () => {
+  const R = byId('rp-car-accident');
+  // every route through the scene, as talk.js walks it: [the partner lines heard, in order]
+  const routes = [];
+  const walk = (n, heard) => {
+    if (n >= R.turns.length) { routes.push(heard); return; }
+    const t = R.turns[n];
+    for (const r of t.replies) walk(nextTurn(n, r), [...heard, t.them.en, ...(r.then ? [r.then.en] : [])]);
+  };
+  walk(0, []);
+  const police = (h) => h.filter((x) => x === 'Do you want to call the police?').length;
+  for (const h of routes) {
+    const called = h.some((x) => /calling 911/.test(x));
+    assert.equal(police(h), called ? 0 : 1, h.join(' / '));
+    assert.ok(h.includes('Let me give you my insurance information.') && h.some((x) => /^The police are on the way/.test(x)), h.join(' / '));
+  }
+  assert.ok(routes.some((h) => h.some((x) => /calling 911/.test(x))), 'the hurt route exists');
+  assert.equal(nextTurn(2, null), 3, 'an answer in the learner\'s own words moves on one turn');
+  assert.equal(nextTurn(0, { en: 'x' }), 1);
+  assert.equal(nextTurn(0, { en: 'x', skip: 1 }), 2);
 });

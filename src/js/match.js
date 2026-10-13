@@ -471,9 +471,9 @@ const KIN = group('son daughter husband wife brother sister mother father grands
 for (const g of [FUNC, ...CLASH, [...ORD_ONES, ...ORD_TENS.filter(Boolean)]]) for (const w of g) EXACT.add(w);
 // Places: "Is there a hospital near here?" is not "Is there a bank near here?". Kept out of the exact-word list
 // above, so a place word the recogniser spells a little differently is still recognised. Words for the same kind
-// of place count as one ("drugstore" / "pharmacy").
-const PLACE = group('bank hospital pharmacy drugstore supermarket grocery library clinic restaurant school airport church mosque hotel museum mall post');
-const PLACE_SAME = { drugstore: 'pharmacy', grocery: 'supermarket' };
+// of place count as one ("drugstore" / "pharmacy" / "CVS", "ATM" / "bank").
+const PLACE = group('bank atm hospital pharmacy drugstore drug cvs walgreens supermarket grocery library clinic restaurant school airport church mosque hotel museum mall post station');
+const PLACE_SAME = { drugstore: 'pharmacy', drug: 'pharmacy', cvs: 'pharmacy', walgreen: 'pharmacy', grocery: 'supermarket', atm: 'bank' };
 const singular = (w) => (w.length > 3 && w.endsWith('s') && !w.endsWith('ss') ? w.slice(0, -1) : w);
 const groupOf = (w, groups) => { const c = CARDINAL.get(w) || w; return groups.findIndex((g) => g.has(c) || g.has(singular(c)) || g.has(c.replace(/ies$/, 'y'))); };
 function clashes(t, hrd, al, own) {
@@ -521,10 +521,13 @@ export function pickReply(replies, heardText, open = false, ask = '') {
   const echo = / or /.test(' ' + tokens(ask).join(' ') + ' ') ? [] : tokens(ask).filter((w) => !FUNC.has(w));
   let near = 0;
   const list = [];
+  // a bare "no" key does not win when the learner said exactly a key phrase of another reply: "No, I'm okay" is not "No."
+  const saidAll = hrd.filter((w) => w !== 'please' && !FILLER.has(w)).map(plain).filter((w, j, a) => w !== a[j - 1]).join(' ');     // "No, no, I'm okay" is "No, I'm okay"
+  const longHit = replies.map((r) => (r.keys || []).map((k) => tokens(k)).some((k) => k.length > 1 && k.map(plain).join(' ') === saidAll));
   replies.forEach((r, i) => {
     const t = tokens(r.en), sc = scoreSpeech(r.en, heardText);
     const al = sc.tokens.map((p) => ({ m: p.ok ? 1 : 0, j: p.j }));
-    const keys = (r.keys || []).map((k) => tokens(k)).filter((k) => k.length && (k.length === 1 && k[0] === 'no' ? heardNoIdiom : heardJoined).includes(' ' + k.map(plain).join(' ') + ' '));
+    const keys = (r.keys || []).map((k) => tokens(k)).filter((k) => k.length && !(k.length === 1 && k[0] === 'no' && longHit.some((x, j) => x && j !== i)) && (k.length === 1 && k[0] === 'no' ? heardNoIdiom : heardJoined).includes(' ' + k.map(plain).join(' ') + ' '));
     // the kinds of request this reply itself makes; its key words may add to them ("repeat", "again"), never make one of a plain answer
     const own = rep && repairKind(r.en, { strict: true });
     const kinds = own ? new Set([...own.kinds, ...(r.keys || []).flatMap((k) => { const x = repairKind(k, { strict: true }); return x ? x.kinds : []; })]) : null;
@@ -543,7 +546,7 @@ export function pickReply(replies, heardText, open = false, ask = '') {
     const enough = !off && s >= 0.6 && (keyWord || content.some((k) => sc.tokens[k].ok || hrd.some((w) => wordMatch(t[k], w) >= 0.9)) || ((keyHit || !content.length) && !stray))
       && !(open && stray)           // where the learner gives their own details, their own words are shown ("My last name is Rezaei")
       && !hrd.some((w, j) => !taken.has(j) && !FUNC.has(w) && !known.some((q) => wordMatch(q, w) >= 0.9) && options.some((o, k) => k !== i && o.some((q) => wordMatch(q, w) >= 0.9)));    // a word of another reply: "I'm looking for milk" is not "I'm looking for bread."
-    const whole = keys.some((k) => k.length > 1 && k.map(plain).join(' ') === hrd.filter((w) => w !== 'please' && !FILLER.has(w)).map(plain).join(' '));     // the learner said exactly one of this reply's key phrases
+    const whole = keys.some((k) => k.length > 1 && k.map(plain).join(' ') === saidAll);     // the learner said exactly one of this reply's key phrases
     if (!enough) near = Math.max(near, Math.min(s, 0.59));
     const fit = (2 * sc.score * sc.precision) / ((sc.score + sc.precision) || 1) + (keyHit ? 0.2 : 0);
     list.push({ i, s, fit, quality: sc.quality, enough, full: enough && ((sc.score >= 0.8 && sc.precision >= 0.8) || whole), shares, unknown: saysUnknown(t) || keys.some((k) => saysUnknown(k)) });

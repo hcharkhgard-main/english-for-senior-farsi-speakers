@@ -18,6 +18,9 @@ export function checkOf(c) {
   const wrong = c.wrong.filter((x, i) => typeof x === 'string' && x.trim() && x !== c.right && c.wrong.indexOf(x) === i);
   return wrong.length ? { q: typeof c.q === 'string' ? c.q.trim() : '', right: c.right, wrong } : null;
 }
+// The turn after `reply`: a reply can leave out the turns it makes moot ("skip", see tools/content.mjs) — after
+// "No. I'm hurt." the other driver calls 911, so "Do you want to call the police?" is not asked.
+export const nextTurn = (n, reply) => n + 1 + (reply && Number.isInteger(reply.skip) ? reply.skip : 0);
 // After this many wrong taps the line is simply shown, with its meaning, and the conversation goes on.
 export const CHECK_TRIES = 2;
 
@@ -172,7 +175,7 @@ export function roleplayView(app, id) {
     S.log.push({ who: 'you', en: own ? heard : reply.en, fa: own ? '' : reply.fa, heard: !own && heard ? heard : null });
     const fix = heard ? correct(heard, content.corrections) : null;
     S.note = fix ? { kind: 'fix', en: fix.fixed, fa: fix.why } : null;
-    S.turn += 1;
+    S.turn = nextTurn(S.turn, reply);
     S.queue = [];
     if (reply && reply.then) S.queue.push(themLine(reply.then, reply.thenCheck));
     if (S.turn < R.turns.length) S.queue.push(themLine(R.turns[S.turn].them, R.turns[S.turn].check));
@@ -289,7 +292,8 @@ export function roleplayView(app, id) {
     const held = m === asked;        // the learner is being asked what this line said: no text yet, and its buttons are in the question below
     // heard but not yet read; when the conversation is over everything can be read
     const masked = them && !S.done && !m.shown && !S.silent && (held || !S.showText);
-    const withFa = !masked && m.fa && (S.showFa || S.done || !them || m.asked === 'shown');
+    // (in a conversation that can only be read this time, the line asked about keeps its meaning back: it is the answer)
+    const withFa = !masked && m.fa && !(S.silent && held) && (S.showFa || S.done || !them || m.asked === 'shown');
     return h('div', { class: `bubble ${m.who}`, 'data-new': i === S.fresh && !S.again && !S.done ? '' : null },
       h('span', { class: 'who' }, them ? R.them.role : t('talk.you')),
       masked ? h('p', { class: 'phone-mask' }, R.phone ? t('rp.audioOnly') : t('rp.listenOnly')) : en(m.en, 'p'),
@@ -298,9 +302,10 @@ export function roleplayView(app, id) {
       m.asked === 'right' ? h('p', { class: 'caught' }, icon('check'), m.check.q || !withFa ? h('span', null, t('rp.check.rightIs') + ' ', answerText(m.check.right)) : h('span', null, t('rp.check.right'))) : null,
       m.heard ? h('p', { class: 'fa-line' }, t('say.heard') + ' ', en(m.heard)) : null,
       // every line that is still hidden keeps its own controls, not only the newest one
-      them && !held && (isLast || masked || S.done) ? h('div', { class: 'tools is-tight' },
-        listenBtn(app, clipEn(m.en, voice, 'n'), { label: t('audio.again'), small: true }),
-        S.done ? null : listenBtn(app, clipEn(m.en, voice, 's'), { label: t('audio.slow'), cls: 'btn-ghost', ic: 'slow', small: true }),
+      // (no sound buttons where the sound is not on the phone and there is no connection: S.silent)
+      them && !held && (isLast || masked || S.done) && !(S.silent && S.done) ? h('div', { class: 'tools is-tight' },
+        S.silent ? null : listenBtn(app, clipEn(m.en, voice, 'n'), { label: t('audio.again'), small: true }),
+        S.done || S.silent ? null : listenBtn(app, clipEn(m.en, voice, 's'), { label: t('audio.slow'), cls: 'btn-ghost', ic: 'slow', small: true }),
         S.done ? null : masked ? btn(t('rp.showText'), { cls: 'btn-ghost', icon: 'eye', small: true, onclick: () => { m.shown = true; rerender(); } })
           : isLast ? btn(S.showFa ? t('talk.hideFa') : t('talk.showFa'), { cls: 'btn-ghost', icon: 'eye', small: true, onclick: () => { S.showFa = !S.showFa; rerender(); } }) : null) : null);
   })));
@@ -332,7 +337,7 @@ export function roleplayView(app, id) {
       main.append(h('section', { class: 'card', 'data-check': 'shown' }, h('h2', null, t('rp.check.shown')),
         en(asked.en, 'p', 'en-line'), h('p', { class: 'fa-line' }, asked.fa),
         c.q && /[0-9۰-۹]/.test(c.right) ? h('p', null, h('b', null, c.q + ' '), answerText(c.right)) : null,      // a number is also shown the way it is written
-        hear(),
+        S.silent ? null : hear(),
         btn(t('rp.check.go'), { cls: 'btn-primary', block: true, 'data-go': '', onclick: () => { if (performance.now() >= S.lock) checked(asked, 'shown'); } })));
     } else {
       const state = (asked.quiz ||= { tried: {}, solved: null });
@@ -340,7 +345,7 @@ export function roleplayView(app, id) {
       const options = shuffle([{ id: 'r', right: true, text: c.right }, ...c.wrong.map((x, k) => ({ id: 'w' + k, right: false, text: x }))], mix(S.seed, 50 + S.log.indexOf(asked)))
         .map((o) => ({ ...o, label: h('span', null, answerText(o.text)) }));
       main.append(h('section', { class: 'card', 'data-check': '' }, S.silent ? null : h('p', { class: 'eyebrow' }, t('rp.check.eyebrow')),      // («درست شنیدید؟» not where the line could only be read)
-        h('h2', { tabindex: '-1', 'data-check-q': '' }, c.q || t('rp.check.q')), hear()));
+        h('h2', { tabindex: '-1', 'data-check-q': '' }, c.q || t('rp.check.q')), S.silent ? null : hear()));      // the sound is not on the phone: no buttons that cannot play
       const choices = quiz(app, 'rpq', options, { missNote: t('listen.again'),
         onMiss: () => { if (Object.keys(state.tried).length >= Math.min(CHECK_TRIES, c.wrong.length)) { asked.reveal = true; S.lock = performance.now() + 600; } },
         onSolved: () => checked(asked, 'right') });
@@ -390,7 +395,7 @@ export function roleplayView(app, id) {
     const replies = turn.open ? ownReplies(turn.replies, me, { month: (m) => t('month.' + m) }) : turn.replies;
     const mixed = shuffle(replies, mix(S.seed, S.turn));
     if (turn.open) main.append(h('p', { class: 'muted small' }, replies.some((r) => r.mine) ? t('rp.open.mine') : t('rp.open')));
-    main.append(h('div', { class: 'stack replies' }, [...mixed.filter((r) => r.mine), ...mixed.filter((r) => !r.mine)].map((r) => h('div', { class: 'opt-wrap' }, miniPlay(app, replyClip(r), t('audio.listen')),
+    main.append(h('div', { class: 'stack replies' }, [...mixed.filter((r) => r.mine), ...mixed.filter((r) => !r.mine)].map((r) => h('div', { class: 'opt-wrap' }, S.silent ? null : miniPlay(app, replyClip(r), t('audio.listen')),
       h('button', { type: 'button', class: 'opt', 'data-mine': r.mine ? '' : null, onclick: () => { if (performance.now() >= S.lock) choose(r); } }, h('span', { class: 'body' }, r.mine ? h('span', { class: 'eyebrow' }, t('own.title')) : null, en(r.en), S.help || r.mine ? h('span', { class: 'sub' }, r.fa) : null))))));
     if (ask) main.append(againBtn(tapAgain));
     if (micOn(app)) main.append(h('div', { class: 'row' }, h('button', { type: 'button', class: 'mic-btn', onclick: speakScripted }, icon('mic'), t('rp.speak'))));

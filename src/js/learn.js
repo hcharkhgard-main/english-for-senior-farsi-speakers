@@ -427,7 +427,10 @@ export function longGist(L, seed, g = 0) {
   const turns = longTurns(L);
   if (!turns.length) return null;
   const size = (x) => x.lines.reduce((n, l) => n + l.en.length, 0);
-  const T = turns.slice().sort((p, q) => size(q) - size(p))[0];      // the longest: most often two facts
+  const asks = (x) => x.parts.filter((p) => /\?\s*$/.test(p.en)).length;
+  // the turn whose parts are all statements (a closing "Do you have any questions?" is no fact to catch;
+  // QA round 5 recheck L5), and among those the longest: most often two facts
+  const T = turns.slice().sort((p, q) => (asks(p) - asks(q)) || (size(q) - size(p)))[0];
   const [first, last] = [T.parts[0], T.parts[T.parts.length - 1]];
   // a stand-in for one half: something else this person says, of different meaning
   // (only lines that state something: not a greeting or the offer of help, and not one that, without the small words of a
